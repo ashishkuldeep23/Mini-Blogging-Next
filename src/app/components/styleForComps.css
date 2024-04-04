@@ -1,0 +1,143 @@
+#main_loader {
+    /* transform: rotateZ(45deg); */
+    perspective: 1000px;
+    border-radius: 50%;
+    width: 88px;
+    height: 88px;
+    /* color: #000; */
+    /* Now color of one ring is controlled by tailwind on the basis of themeMode value. */
+}
+
+#main_loader:before,
+#main_loader:after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: inherit;
+    height: inherit;
+    border-radius: 50%;
+    transform: rotateX(70deg);
+    animation: 1s spin linear infinite;
+}
+
+#main_loader:after {
+    /* color: #FF3D00; */
+    color: #00ccff;
+    transform: rotateY(70deg);
+    animation-delay: .4s;
+}
+
+@keyframes rotate {
+    0% {
+        transform: translate(-50%, -50%) rotateZ(0deg);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) rotateZ(360deg);
+    }
+}
+
+@keyframes rotateccw {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) rotate(-360deg);
+    }
+}
+
+@keyframes spin {
+
+    0%,
+    100% {
+        box-shadow: .2em 0px 0 0px currentcolor;
+    }
+
+    12% {
+        box-shadow: .2em .2em 0 0 currentcolor;
+    }
+
+    25% {
+        box-shadow: 0 .2em 0 0px currentcolor;
+    }
+
+    37% {
+        box-shadow: -.2em .2em 0 0 currentcolor;
+    }
+
+    50% {
+        box-shadow: -.2em 0 0 0 currentcolor;
+    }
+
+    62% {
+        box-shadow: -.2em -.2em 0 0 currentcolor;
+    }
+
+    75% {
+        box-shadow: 0px -.2em 0 0 currentcolor;
+    }
+
+    87% {
+        box-shadow: .2em -.2em 0 0 currentcolor;
+    }
+}
+
+
+
+/* Masker text div style here --------> */
+
+.single_text {
+    /* transition: 0.35 font-weight , 0.35 color; */
+    transition: 0.35s all
+}
+
+/* that text */
+
+.single_text:hover {
+    cursor: pointer;
+    font-weight: 100;
+    /* background: #83fcfc; */
+    color: red;
+    -webkit-text-fill-color:red ;
+    /* transform: translate(0px 30px); */
+    transform: translateY(-15px) scale(1.25);
+    z-index: 10;
+}
+
+
+/* to right */
+.single_text:hover+.single_text {
+
+    font-weight: 300;
+    color: #fe5f5f;
+    -webkit-text-fill-color:#fe5f5f ;
+    transform: translateY(-10px)  scale(1.05);
+}
+
+.single_text:hover+.single_text+.single_text {
+
+    font-weight: 600;
+    color: #faacac;
+    -webkit-text-fill-color:#faacac ;
+}
+
+
+/* to left */
+
+.single_text:has(+ .single_text:hover) {
+
+    font-weight: 300;
+    color: #fe5f5f;
+    -webkit-text-fill-color:#fe5f5f ;
+    transform: translateY(-10px)  scale(1.05);
+}
+
+.single_text:has(+ .single_text + .single_text:hover) {
+
+    font-weight: 600;
+    color: #faacac;
+    -webkit-text-fill-color:#faacac ;
+}

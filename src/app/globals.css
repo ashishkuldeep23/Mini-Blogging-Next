@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+* {
+    scroll-behavior: smooth;
+}
+
+
+::-webkit-scrollbar {
+    width: 4px;
+    background-color: rgb(144, 144, 144);
+}
+
+
+::-webkit-scrollbar-thumb {
+    border-radius: 5vh;
+    background-color: black;
+}
+
+
+.ai_heading {
+
+    color: transparent;
+
+    /* color:  ; */
+    /* background-color: ; */
+    /* background: linear-gradient(40deg, red, blue, red); */
+    /* background: radial-gradient(); */
+
+    background: radial-gradient(closest-side, #ff7100, #ff7100, #00dcff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 1px var(--text);
+}
+
+
+/* Card related code starts here ==========> */
+
+.card_background {
+    background: linear-gradient(40deg, #ff7100, #ff7100, #00dcff);
+}
+
+.card_container {
+    perspective: 200px;
+}
+
+.single_Card {
+    transform: rotate3d(-2, 1, -3, 3deg);
+    box-shadow: 10px -10px 10px gray;
+}
+
+.single_Card:hover {
+    z-index: 10;
+    box-shadow: none;
+}
