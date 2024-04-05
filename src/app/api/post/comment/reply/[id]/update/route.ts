@@ -2,69 +2,63 @@ import { connect } from "@/dbConfig/dbConfig";
 import Post from "@/models/postModel";
 import Comment from "@/models/commentModel";
 import Reply from "@/models/replyModel";
+
 import { NextRequest, NextResponse } from "next/server";
 
 
 
 connect()
 
-export async function POST(req: NextRequest) {
+
+export async function PUT(req: NextRequest, context: any) {
 
     try {
 
-        // console.log("fsdfsdfsdfsdfsfd")
+
+        let commentID = context?.params?.id
+
+        if (!commentID) {
+            return NextResponse.json({ success: false, message: 'comment Id is not given. or Not vaild' }, { status: 400 })
+        }
+
 
         const reqBody = await req.json()
 
         // console.log(reqBody)
 
-        const { userId, commentId, reply } = reqBody
+        const { userId, commentId, replyId, reply, index } = reqBody
 
-        if (!userId || !commentId || !reply) {
+        if (!userId || !commentId || !replyId || index === undefined || !reply) {
             return NextResponse.json({ success: false, message: 'Mandatory fields not given.' }, { status: 400 })
         }
 
 
-        // if(!author){
-        //     return NextResponse.json({ success: false, message: 'Author id is not given.' }, { status: 404 })
-        // }
-
-
-        // // // find comment by given commentId
+        // // // Logic for update comment ------------> 
 
         let findComment = await Comment.findById(commentId)
+        if (!findComment) return NextResponse.json({ success: false, message: 'No comment found with given post id.' }, { status: 404 })
 
-        if (!findComment) return NextResponse.json({ success: false, message: 'No Comment found with given post id.' }, { status: 404 })
+        // console.log({ findComment })
 
-
-        // console.log(findPost)
-
-
-        let createReply = new Reply(reqBody)
-
-        createReply = await createReply.save()
-
-        // findPost.comments.unshift(createComment._id)
-
-        // findPost = await findPost.save()
-
-        findComment.replies.unshift(createReply._id)
-
-        findComment = await findComment.save()
+        let findReply = await Reply.findById(replyId)
+        if (!findReply) return NextResponse.json({ success: false, message: 'No reply found with given post id.' }, { status: 404 })
 
 
-        // console.log(findPost)
+        // // // If previous text and current text matched ------>
+        // // // Check reply present ----->
+        if (findReply.reply === reply) return NextResponse.json({ success: false, message: 'Please give different reply.' }, { status: 400 })
 
 
-        // // // Jsut getting for comment data avilable below. 
-        await Comment.findById("660cba65c543855317a68f02")
-        await Reply.findById("660cba65c543855317a68f02")
+        // // // // check commnet given by same user or not --->
+        if (findReply.userId.toString() !== userId) return NextResponse.json({ success: false, message: 'Seem like reply is not given by you' }, { status: 403 })
 
 
-        // return NextResponse.json({ success: true, data: createNewPost, message: "User created." }, { status: 201 })
+        // // // Now here update the text ----->
+        findReply.reply = reply
+        await findReply.save()
 
 
-        let getUpdatedComment = await Comment.findById(findComment._id)
+        let updatedComment = await Comment.findById(commentId)
             .populate({
                 path: "userId",
                 // match: { isDeleted: false },
@@ -88,15 +82,17 @@ export async function POST(req: NextRequest) {
 
 
 
+        // console.log({ updatedComment })
+
 
         return NextResponse.json(
             {
                 success: true,
-                data: getUpdatedComment,
+                data: updatedComment,
                 message: "New comment created."
             },
             {
-                status: 201
+                status: 200
             }
         )
 

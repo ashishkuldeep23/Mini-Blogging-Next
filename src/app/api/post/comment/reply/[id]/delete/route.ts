@@ -32,9 +32,9 @@ export async function PUT(req: NextRequest, context: any) {
 
         // console.log(reqBody)
 
-        const { userId, commentId, replyId } = reqBody
+        const { userId, commentId, replyId, index } = reqBody
 
-        if (!userId || !commentId || !replyId) {
+        if (!userId || !commentId || !replyId || index === undefined) {
             return NextResponse.json({ success: false, message: 'Mandatory fields not given.' }, { status: 400 })
         }
 
@@ -52,37 +52,32 @@ export async function PUT(req: NextRequest, context: any) {
         let findReply = await Reply.findById(replyId)
         if (!findReply) return NextResponse.json({ success: false, message: 'No reply found with given post id.' }, { status: 404 })
 
-        // console.log({ findReply })
 
 
         // // // // check commnet given by same user or not --->
         if (findReply.userId.toString() !== userId) return NextResponse.json({ success: false, message: 'Seem like reply is not given by you' }, { status: 403 })
 
 
-        let updateReply = await Reply.findByIdAndDelete(findReply._id )
-
-        // console.log({ updateReply })
+        let updateReply = await Reply.findByIdAndDelete(findReply._id)
 
 
-        // // now remove comment id from post of comments ---->
-        let index = findComment.replies.findIndex((ele: any) => ele._id === updateReply._id)
+        // // // Here removing _id from comment of replies ---->
         let deleted = findComment.replies.splice(index, 1)
 
-
         // console.log({ deleted })
-
         await findComment.save()
 
 
 
-        // // // // now remove comment id from post of comments ---->
-        // let index = findPost.comments.findIndex((ele: any) => ele._id === updatedComment._id)
-        // findPost.comments.splice(index, 1)
-        // await findPost.save()
-
+        // console.log({ findComment })
 
 
         let updatedComment = await Comment.findById(commentId)
+            .populate({
+                path: "userId",
+                // match: { isDeleted: false },
+                select: "-updatedAt -createdAt -__v -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password",
+            })
             .populate({
                 path: "likesId",
                 // match: { isDeleted: false },

@@ -27,7 +27,6 @@ interface UpdatingComment {
 }
 
 
-
 const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
 
     const { data: session, status } = useSession()
@@ -101,9 +100,9 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
             dispatch(setSinglePostdata(json.data))
         }
 
-        // else {
-        //     dispatch(setErrMsg(json.message))
-        // }
+        else {
+            toast.error(json.message)
+        }
 
 
         // console.log(data)
@@ -135,19 +134,19 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
     }
 
 
+    const updatePostHandler = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        event.stopPropagation()
 
+        toast.success("Update post")
 
-    useEffect(() => {
+    }
 
-        // console.log(params)
+    const deletePostHandler = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        event.stopPropagation()
+        toast.success("Delete post")
 
+    }
 
-        if (params !== "/") {
-            setShowComment(true)
-        }
-
-
-    }, [])
 
 
     useEffect(() => {
@@ -175,6 +174,20 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
     }, [session])
 
 
+
+    // // // Below useEffect is very imp. this decide show rest ui or not ---->
+
+    useEffect(() => {
+
+        // console.log(params)
+
+        if (params !== "/") {
+            setShowComment(true)
+        }
+
+
+    }, [])
+
     return (
         <div className=' relative'>
 
@@ -184,6 +197,7 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
             <div className=" relative  mt-2">
 
 
+                {/* Like comments buttons -----> */}
                 <div className='flex gap-5'>
 
                     {/* Like btn */}
@@ -217,6 +231,33 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
                         <span><AiOutlineRetweet /> </span>
                     </button>
 
+
+
+                    {
+
+                        post?.author?.email === session?.user?.email
+                        &&
+
+                        <div className=' ml-auto mr-1 flex gap-0'>
+                            <button
+                                className=" border px-2 rounded-lg mx-0.5 hover:bg-blue-500"
+                                onClick={updatePostHandler}
+                            >
+                                <BiPencil />
+                            </button>
+
+                            <button
+                                className=" border px-2 rounded-lg  mx-0.5 hover:bg-red-500"
+                                onClick={deletePostHandler}
+                            >
+                                <AiTwotoneDelete />
+                            </button>
+                        </div>
+
+                    }
+
+
+
                 </div>
 
                 {
@@ -236,6 +277,7 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
 
 
                 {
+                    // // // In home page this section will show noting jsut a empty tag ----->
                     post.comments.length > 0
                     &&
                     <AllComments
@@ -320,7 +362,9 @@ function PostCommentForm(
             dispatch(setSinglePostdata(json.data))
             setCommentValue({ value: "" })
         }
-
+        else {
+            toast.error(json.message)
+        }
 
 
         setIsLoading(false)
@@ -408,18 +452,23 @@ function PostCommentForm(
 
                 <div className=" flex flex-wrap items-center">
                     {
-                        ["👍", "😍", "😀", "👌", "👎", "Good", 'Nice', "OSM", "Informative", "Bad!", ",", "."].map((ele, i) => {
+                        ["👍", "😍", "😀", "👌", "👎", "Good", 'Nice', "OSM", "Informative", "Bad!", ",", ".", "X"].map((ele, i) => {
                             return (
                                 <button
                                     key={i}
-                                    className=" border border-l-2 border-b-2 p-0.5 m-0.5 rounded text-xs"
+                                    className={`border border-l-2 border-b-2 p-0.5 m-0.5 rounded text-xs ${ele === "X" && "ml-2 border-red-500"} `}
 
                                     onClick={() => {
                                         if (commentValue.value) {
 
                                             if (ele === "," || ele === ".") {
                                                 setCommentValue({ value: `${commentValue.value}${ele}` })
-                                            } else {
+                                            } 
+
+                                            else if(ele === "X"){
+                                                setCommentValue({ value: `` })
+                                            }
+                                            else {
                                                 setCommentValue({ value: `${commentValue.value} ${ele}` })
                                             }
 
@@ -435,7 +484,13 @@ function PostCommentForm(
 
                                     }}
 
-                                >{ele}</button>
+                                >{
+
+                                        ele === "X"
+                                            ? <span className='px-1 font-bold bg-red-500 text-white '>{ele}</span>
+                                            : ele
+
+                                    }</button>
                             )
                         })
                     }
@@ -569,7 +624,9 @@ const SingleCommentUI = ({
 
             dispatch(setUpdateComment({ comment: json.data, whatUpadate: 'like' }))
         }
-
+        else {
+            toast.error(json.message)
+        }
 
 
         setIsLoading(false)
@@ -734,24 +791,23 @@ const SingleCommentUI = ({
     )
 }
 
-
-
-
-// interface CommentWithReply extends Comment{
-// }
-
-
-
-
 function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean, comment: Comment, }) {
 
     const themeMode = useThemeData().mode
 
     const { data: session, status } = useSession()
 
+    const dispatch = useDispatch<AppDispatch>()
+
     const [seeMoreBtn, setSeeMoreBtn] = useState(false)
 
     const [replyText, setReplyText] = useState<string>("")
+
+    const [updatingReply, setUpdatingReply] = useState({
+        mode: false,
+        index: 0,
+        id: "",
+    })
 
     const [likedBy, setLikedBy] = useState<UserDataInterface[]>([])
 
@@ -781,7 +837,9 @@ function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean
             setReplies(json.data.replies)
 
         }
-
+        else {
+            toast.error(json.message)
+        }
         setIsLoading(false)
 
     }
@@ -819,12 +877,16 @@ function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean
             // setCommentValue({ value: "" })
 
             setReplyText("")
-
             setLikedBy(json.data.likesId)
-
             setReplies(json.data.replies)
-        }
 
+            // // // Data containing updated comment ----->
+            dispatch(setUpdateComment({ comment: json.data, whatUpadate: 'update' }))
+
+        }
+        else {
+            toast.error(json.message)
+        }
 
 
         setIsLoading(false)
@@ -832,11 +894,13 @@ function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean
 
     }
 
-    async function commentEditHandler(id: string) {
+    async function commentEditHandler(id: string, index: number) {
 
-    }
 
-    async function commentDeleteHandler(id: string) {
+        if (!replyText) return toast.error("Please give comment for this post.")
+
+        if (!session?.user?.id) return toast.error("Please login to give a comment for this post.")
+
 
         setIsLoading(true)
 
@@ -847,14 +911,73 @@ function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean
             },
             body: JSON.stringify({
                 userId: session?.user?.id,
+                reply: replyText,
+                commentId: comment._id,
                 replyId: id,
-                commentId: comment._id
+                index: index
+            })
+        }
+        const response = await fetch(`/api/post/comment/reply/${comment._id}/update`, option)
+        let json = await response.json();
+
+        // console.log(json)
+
+        if (json.success) {
+            // dispatch(updateOnePost(json.data))
+            // dispatch(setSinglePostdata(json.data))
+            // setCommentValue({ value: "" })
+
+            setReplyText("")
+            setLikedBy(json.data.likesId)
+            setReplies(json.data.replies)
+
+            // // // Data containing updated comment ----->
+            dispatch(setUpdateComment({ comment: json.data, whatUpadate: 'update' }))
+
+
+
+            setUpdatingReply({
+                mode: false,
+                index: 0,
+                id: ''
+            });
+
+
+
+        }
+        else {
+            toast.error(json.message)
+        }
+
+
+        setIsLoading(false)
+
+
+
+        // // // Back to normal ----->
+
+    }
+
+    async function commentDeleteHandler(id: string, index: number) {
+
+        setIsLoading(true)
+
+        const option: RequestInit = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userId: session?.user?.id,
+                commentId: comment._id,
+                replyId: id,
+                index: index
             })
         }
         const response = await fetch(`/api/post/comment/reply/${comment._id}/delete`, option)
         let json = await response.json();
 
-        console.log(json)
+        // console.log(json)
 
         if (json.success) {
             // dispatch(updateOnePost(json.data))
@@ -863,8 +986,15 @@ function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean
 
             setLikedBy(json.data.likesId)
             setReplies(json.data.replies)
-        }
 
+
+            // // // Data containing updated comment ----->
+            dispatch(setUpdateComment({ comment: json.data, whatUpadate: 'update' }))
+
+        }
+        else {
+            toast.error(json.message)
+        }
 
 
         setIsLoading(false)
@@ -938,7 +1068,7 @@ function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean
                         className=' flex flex-wrap flex-col sm:flex-row mt-1 w-full'
                     >
                         <input
-                            className={` w-[100%] sm:w-[83%] h-full border rounded px-2 mx-0.5 ${!themeMode ? "bg-black text-white" : "bg-white text-black"} `}
+                            className={` w-[100%] sm:w-[82%] h-full border rounded px-2 mx-0.5 ${!themeMode ? "bg-black text-white" : "bg-white text-black"} `}
                             type="text"
                             placeholder='Your reply for this comment.'
                             value={replyText}
@@ -946,9 +1076,19 @@ function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean
 
                         />
                         <button
-                            className={`font-semibold  ml-auto sm:ml-1 border py-0 text-sm rounded px-1 ${themeMode ? "bg-green-400" : "bg-green-600"}`}
-                            onClick={submitReplyHandler}
-                        >Reply</button>
+                            className={`font-semibold  ml-auto md:ml-1 border py-0 text-sm rounded px-1 ${themeMode ? "bg-green-400" : "bg-green-600"}`}
+                            onClick={() => {
+                                if (!updatingReply.mode) {
+                                    submitReplyHandler()
+                                } else {
+                                    commentEditHandler(updatingReply.id, updatingReply.index)
+                                }
+                            }}
+                        >{
+
+                                !updatingReply.mode ? "Reply" : "Update"
+
+                            }</button>
                     </div>
 
                     <p
@@ -1040,14 +1180,24 @@ function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean
                                                     <div className='border rounded-full px-1 flex items-center gap-1'>
                                                         <button
                                                             className=' px-0.5 rounded-full hover:bg-blue-500 '
-                                                            onClick={() => { commentEditHandler(ele._id) }}
+                                                            onClick={() => {
+
+                                                                setUpdatingReply({
+                                                                    mode: true,
+                                                                    index: i,
+                                                                    id: ele._id,
+                                                                });
+
+                                                                setReplyText(ele.reply);
+
+                                                            }}
                                                         >
                                                             <BiPencil />
                                                         </button>
 
                                                         <button
                                                             className=' px-0.5 rounded-full hover:bg-red-500 '
-                                                            onClick={() => { commentDeleteHandler(ele._id) }}
+                                                            onClick={() => { commentDeleteHandler(ele._id, i) }}
                                                         >
                                                             <AiTwotoneDelete />
                                                         </button>

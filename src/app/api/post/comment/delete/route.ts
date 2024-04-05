@@ -1,6 +1,7 @@
 import { connect } from "@/dbConfig/dbConfig";
 import Post from "@/models/postModel";
 import Comment from "@/models/commentModel";
+import Reply from "@/models/replyModel";
 import { NextRequest, NextResponse } from "next/server";
 
 
@@ -56,6 +57,11 @@ export async function PUT(req: NextRequest) {
         let index = findPost.comments.findIndex((ele: any) => ele._id === updatedComment._id)
         findPost.comments.splice(index, 1)
         await findPost.save()
+
+
+        // // // Now delete all replies for this comment (working so fantastic as expected) ------->
+        let deled = await Reply.deleteMany({ commentId: updatedComment._id })
+        // console.log(deled)
 
 
 
