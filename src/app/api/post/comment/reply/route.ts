@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
             .populate({
                 path: "likesId",
                 // match: { isDeleted: false },
-                select: "-updatedAt -createdAt -__v -_id -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password",
+                select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password",
             })
             .populate({
                 path: "replies",

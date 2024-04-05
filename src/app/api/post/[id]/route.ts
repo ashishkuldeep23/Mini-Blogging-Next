@@ -39,7 +39,7 @@ export async function GET(req: NextRequest, context: any) {
             .populate({
                 path: "author",
                 // match: { isDeleted: false },
-                select: "-updatedAt -createdAt -__v -_id -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password",
+                select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password",
             })
             .populate({
                 path: "comments",
@@ -47,7 +47,7 @@ export async function GET(req: NextRequest, context: any) {
                 populate: {
                     path: "userId",
                     // match: { isDeleted: false },
-                    select: "-updatedAt -createdAt -__v -_id -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password",
+                    select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password",
                 }
             })
             .select("-updatedAt -createdAt -__v ")

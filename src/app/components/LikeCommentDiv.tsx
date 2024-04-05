@@ -50,6 +50,9 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
     })
 
 
+    const [commentIds, setCommentIds] = useState<string[]>([])
+
+
     const dispatch = useDispatch<AppDispatch>()
 
 
@@ -132,6 +135,8 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
     }
 
 
+
+
     useEffect(() => {
 
         // console.log(params)
@@ -143,6 +148,22 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
 
 
     }, [])
+
+
+    useEffect(() => {
+
+        if (post.comments.length > 0) {
+
+            let idsOfComments = post.comments.map((ele) => ele?.userId?._id)
+
+            // console.log(idsOfComments)
+
+            setCommentIds(idsOfComments)
+
+        }
+
+
+    }, [post])
 
 
     useEffect(() => {
@@ -161,6 +182,8 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
 
 
             <div className=" relative  mt-2">
+
+
                 <div className='flex gap-5'>
 
                     {/* Like btn */}
@@ -175,7 +198,9 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
 
                     {/* comment btn */}
                     <button
-                        className=' border px-1 rounded-lg flex items-center gap-1'
+                        className={`border px-1 rounded-lg flex items-center gap-1
+                            ${commentIds.includes(userID.toString()) && "text-yellow-500 border-yellow-500 shadow-md shadow-yellow-500"}
+                        `}
                         onClick={(e) => { commentBtnClicked(e) }}
                     >
                         <span>{post.comments.length}</span>
@@ -514,6 +539,7 @@ const SingleCommentUI = ({
 
     // console.log(session?.user.email)
 
+
     async function likeComment() {
         // alert("Like Comment")
 
@@ -542,7 +568,6 @@ const SingleCommentUI = ({
             // dispatch(setSinglePostdata(json.data))
 
             dispatch(setUpdateComment({ comment: json.data, whatUpadate: 'like' }))
-
         }
 
 
@@ -634,7 +659,7 @@ const SingleCommentUI = ({
                             <div>
 
                                 <button
-                                    className=" border rounded p-1 mx-1"
+                                    className=" border rounded p-1 mx-1 hover:bg-blue-500"
                                     onClick={() => {
                                         updateSingleComment()
                                     }}
@@ -645,7 +670,7 @@ const SingleCommentUI = ({
 
                                 <button
                                     onClick={deleteSingleComment}
-                                    className=" border rounded p-1 mx-1"
+                                    className=" border rounded p-1 mx-1 hover:bg-red-500"
                                 >
                                     <AiTwotoneDelete />
 
@@ -665,7 +690,7 @@ const SingleCommentUI = ({
 
                         <button
                             className={`flex gap-0.5 items-center justify-center mb-1.5 border p-1 rounded text-xs
-                            ${comment?.likesId?.includes(session?.user?.id || "") && "text-rose-500 border-rose-500 shadow-md shadow-rose-500"}
+                                     ${comment?.likesId?.includes(session?.user?.id || "") && "text-rose-500 border-rose-500 shadow-md shadow-rose-500"}
                             `}
                             onClick={() => { likeComment() }}
                         >
@@ -732,12 +757,14 @@ function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean
 
     const [replies, setReplies] = useState<ReplyInterFace[]>([])
 
-    const [isLoading, setIsLoading] = useState<boolean>(true)
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
 
     async function getCommentData() {
 
-        setIsLoading(true)
+        if (comment.likesId.length === 0 && comment.replies.length === 0)
+
+            setIsLoading(true)
 
         const response = await fetch(`/api/post/comment/reply/${comment._id}`)
         let json = await response.json();
@@ -761,13 +788,14 @@ function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean
 
     async function submitReplyHandler() {
 
-        setIsLoading(true)
+
 
         if (!replyText) return toast.error("Please give comment for this post.")
 
         if (!session?.user?.id) return toast.error("Please login to give a comment for this post.")
 
 
+        setIsLoading(true)
 
         const option: RequestInit = {
             method: 'POST',
@@ -804,8 +832,46 @@ function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean
 
     }
 
+    async function commentEditHandler(id: string) {
 
-    // console.log(comment)
+    }
+
+    async function commentDeleteHandler(id: string) {
+
+        setIsLoading(true)
+
+        const option: RequestInit = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userId: session?.user?.id,
+                replyId: id,
+                commentId: comment._id
+            })
+        }
+        const response = await fetch(`/api/post/comment/reply/${comment._id}/delete`, option)
+        let json = await response.json();
+
+        console.log(json)
+
+        if (json.success) {
+            // dispatch(updateOnePost(json.data))
+            // dispatch(setSinglePostdata(json.data))
+            // setCommentValue({ value: "" })
+
+            setLikedBy(json.data.likesId)
+            setReplies(json.data.replies)
+        }
+
+
+
+        setIsLoading(false)
+    }
+
+
+
 
     useEffect(() => {
 
@@ -842,7 +908,7 @@ function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean
                     </p>
 
                     <button
-                        className=" relative mt-0.5  ml-auto mr-0 flex gap-0.5 items-center justify-center border p-0.5 rounded text-[0.6rem]"
+                        className={`relative mt-0.5  ml-auto mr-0 flex gap-0.5 items-center justify-center border p-0.5 rounded text-[0.6rem] font-semibold font-serif ${seeMoreBtn && " bg-yellow-400 text-black "} `}
 
                         onClick={() => { setSeeMoreBtn((last) => !last); getCommentData() }}
 
@@ -867,12 +933,12 @@ function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean
                     className={`overflow-hidden relative rounded px-1 py-0.5  flex flex-col ${!seeMoreBtn ? " h-1 border-0 opacity-100 " : " h-auto border opacity-100"}  transition-all `}
                 >
 
-
+                    {/* Input for reply -------> */}
                     <div
-                        className=' mt-1'
+                        className=' flex flex-wrap flex-col sm:flex-row mt-1 w-full'
                     >
                         <input
-                            className={`w-[88%] h-full border rounded px-2 mx-0.5 ${!themeMode ? "bg-black text-white" : "bg-white text-black"} `}
+                            className={` w-[100%] sm:w-[83%] h-full border rounded px-2 mx-0.5 ${!themeMode ? "bg-black text-white" : "bg-white text-black"} `}
                             type="text"
                             placeholder='Your reply for this comment.'
                             value={replyText}
@@ -880,7 +946,7 @@ function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean
 
                         />
                         <button
-                            className=' border py-0 text-sm rounded px-1'
+                            className={`font-semibold  ml-auto sm:ml-1 border py-0 text-sm rounded px-1 ${themeMode ? "bg-green-400" : "bg-green-600"}`}
                             onClick={submitReplyHandler}
                         >Reply</button>
                     </div>
@@ -909,24 +975,31 @@ function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean
                     {
                         likedBy.length > 0
                         &&
-                        <div className=' border rounded my-1 p-0.5'>
+                        <div className='border rounded my-1 p-0.5'>
 
-                            <p>Liked By 👇</p>
+                            <p>Likes 👇</p>
 
-                            {
-                                likedBy.map((ele, i) => {
-                                    return (
-                                        <Fragment key={i}>
 
-                                            <div className='border rounded-full pr-2 flex items-center gap-1 w-fit'>
+                            <div
+                                className=' flex gap-1 flex-wrap'
+                            >
 
-                                                <ImageReact className='w-7 rounded-full border' src={ele?.profilePic} />
-                                                <p>{ele.username}</p>
-                                            </div>
-                                        </Fragment>
-                                    )
-                                })
-                            }
+                                {
+                                    likedBy.map((ele, i) => {
+                                        return (
+                                            <Fragment key={i}>
+
+                                                <div className='border rounded-full pr-2 flex items-center gap-1 w-fit'>
+
+                                                    <ImageReact className='w-7 rounded-full border' src={ele?.profilePic} />
+                                                    <p className='text-xs capitalize'>{ele.username}</p>
+                                                </div>
+                                            </Fragment>
+                                        )
+                                    })
+                                }
+                            </div>
+
 
                         </div>
 
@@ -941,25 +1014,55 @@ function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean
                         <div className=' border rounded my-1 p-0.5'>
 
 
-                            <p>Replies are</p>
+                            <p>Replies 👇</p>
 
                             {
                                 replies.map((ele, i) => {
                                     return (
                                         <div
                                             key={i}
-                                            className=' border rounded-full pl-2 mt-1 w-full flex items-center justify-between flex-wrap gap-1'
+                                            className=' border rounded-full pl-4 sm:pl-1.5 mt-1 w-full flex items-center justify-between flex-wrap gap-0.5 overflow-hidden'
                                         >
+
+
                                             <div>
 
                                                 <p>{ele.reply}</p>
                                             </div>
 
 
-                                            <div className='border rounded-full pr-2 flex items-center gap-1'>
+                                            <div className=' ml-auto flex justify-center items-center gap-1 flex-wrap'>
 
-                                                <ImageReact className='w-7 rounded-full border' src={ele?.userId?.profilePic} />
-                                                <p>{ele?.userId?.username}</p>
+
+                                                {
+                                                    session?.user?.email === ele.userId.email
+                                                    &&
+                                                    <div className='border rounded-full px-1 flex items-center gap-1'>
+                                                        <button
+                                                            className=' px-0.5 rounded-full hover:bg-blue-500 '
+                                                            onClick={() => { commentEditHandler(ele._id) }}
+                                                        >
+                                                            <BiPencil />
+                                                        </button>
+
+                                                        <button
+                                                            className=' px-0.5 rounded-full hover:bg-red-500 '
+                                                            onClick={() => { commentDeleteHandler(ele._id) }}
+                                                        >
+                                                            <AiTwotoneDelete />
+                                                        </button>
+                                                    </div>
+                                                }
+
+
+
+                                                <div className='border rounded-full pr-2 flex items-center gap-1'>
+
+                                                    <ImageReact className='w-7 rounded-full border' src={ele?.userId?.profilePic} />
+                                                    <p className=' text-xs capitalize'>{ele?.userId?.username}</p>
+
+                                                </div>
+
                                             </div>
 
                                         </div>

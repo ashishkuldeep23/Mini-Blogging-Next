@@ -2,6 +2,7 @@ import { connect } from "@/dbConfig/dbConfig";
 import Post from "@/models/postModel";
 import User from "@/models/userModel";
 import Comment from "@/models/commentModel";
+import Reply from "@/models/replyModel";
 import { NextRequest, NextResponse } from "next/server";
 
 
@@ -38,6 +39,7 @@ export async function PUT(req: NextRequest) {
 
         // // // Jsut getting for comment data avilable below. 
         await Comment.findById("660cba65c543855317a68f02")
+        await Reply.findById("660cba65c543855317a68f02")
 
 
         let findComment = await Comment.findById(commentId)
@@ -52,9 +54,10 @@ export async function PUT(req: NextRequest) {
 
 
 
+        // // // Not needed in like comment -----> (Any one can like comment)
         // // // Comment by ------>
         // // // // check commnet given by same user or not --->
-        if (findComment.userId._id.toString() !== userId) return NextResponse.json({ success: false, message: 'Seem like comment is not given by you' }, { status: 403 })
+        // if (findComment.userId._id.toString() !== userId) return NextResponse.json({ success: false, message: 'Seem like comment is not given by you' }, { status: 403 })
 
 
 
@@ -62,8 +65,8 @@ export async function PUT(req: NextRequest) {
         // // // Now written logic for likes ------>
 
         if (!findComment.likesId.includes(userId)) {
+            findComment.likesId.unshift(userId)
             findComment.likes = findComment.likes + 1
-            findComment.likesId.push(userId)
         } else {
 
             // console.log(postData)
@@ -74,10 +77,7 @@ export async function PUT(req: NextRequest) {
             // console.log(findIndex)
 
             findComment.likesId.splice(findIndex, 1)
-
-
             findComment.likes = findComment.likes - 1
-
         }
 
 

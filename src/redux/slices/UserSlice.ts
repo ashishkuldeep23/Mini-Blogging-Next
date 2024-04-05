@@ -54,6 +54,7 @@ export const logInUser = createAsyncThunk('user/login', async (body: { email: st
 
 
 export interface UserDataInterface {
+    _id: string,
     username: string,
     profilePic: string,
     email: string,
@@ -77,6 +78,7 @@ const initialState: UserInter = {
     isError: false,
     errMsg: "",
     userData: {
+        _id: "",
         username: "",
         profilePic: "",
         email: "",
