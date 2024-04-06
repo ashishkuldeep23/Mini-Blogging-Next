@@ -13,12 +13,6 @@ import toast from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 
 
-
-interface SinglePostData extends PostInterFace {
-
-}
-
-
 const Page = ({ params }: any) => {
 
     const themeMode = useThemeData().mode
@@ -29,7 +23,7 @@ const Page = ({ params }: any) => {
 
     const singlePostdata = usePostData().singlePostdata
 
-    const [singlePost, setSinglePost] = useState<SinglePostData>({
+    const [singlePost, setSinglePost] = useState<PostInterFace>({
         _id: "",
         title: "",
         category: "",
@@ -153,8 +147,7 @@ const Page = ({ params }: any) => {
 
 export default Page
 
-
-function MainPostUI({ singlePost }: { singlePost: SinglePostData }) {
+function MainPostUI({ singlePost }: { singlePost: PostInterFace }) {
 
     const themeMode = useThemeData().mode
 
@@ -195,19 +188,12 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostData }) {
                 <div className=" flex flex-wrap gap-0.[2px] text-violet-500 font-semibold ">
                     {
 
-                        singlePost.hashthats.length > 0
+                        (singlePost.hashthats.length > 0)
+                        &&
+                        singlePost.hashthats.map((hash, i) => {
+                            return <p className="ml-1.5" key={i}>{hash}</p>
+                        })
 
-                            ?
-
-                            singlePost.hashthats.map((hash, i) => {
-                                return <p className="ml-1.5" key={i}>{hash}</p>
-                            })
-
-                            : <>
-                                <p>#promp</p>
-                                <p>#ai</p>
-                                <p>#write</p>
-                            </>
                     }
                 </div>
 

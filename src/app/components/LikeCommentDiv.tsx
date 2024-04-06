@@ -1,8 +1,8 @@
 'Use client'
 
-import { Comment, PostInterFace, ReplyInterFace, setSinglePostdata, setUpdateComment } from '@/redux/slices/PostSlice';
+import { Comment, PostInterFace, ReplyInterFace, setDeleteSinglePost, setSinglePostdata, setUpdateComment } from '@/redux/slices/PostSlice';
 import { useSession } from 'next-auth/react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import React, { Fragment, RefObject, useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useDispatch } from "react-redux";
@@ -34,6 +34,8 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
     const textAreaInputRef = useRef<HTMLTextAreaElement>(null)
 
     const params = usePathname()
+
+    const router = useRouter()
 
     const [showComment, setShowComment] = useState(false)
 
@@ -141,9 +143,49 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
 
     }
 
-    const deletePostHandler = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+
+
+    const deletePostHandler = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.stopPropagation()
-        toast.success("Delete post")
+
+
+        setIsLoading(true)
+
+        const option: RequestInit = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                postId: post._id,
+                userId: session?.user?.id
+            })
+        }
+        const response = await fetch('/api/post/delete', option)
+        let json = await response.json();
+
+        console.log(json)
+
+        if (json.success) {
+            // dispatch(updateOnePost(json.data))
+            // dispatch(setSinglePostdata(json.data))
+
+            dispatch(setDeleteSinglePost(json.data))
+
+            if (params !== '/') {
+                router.push("/")
+            }
+
+        }
+
+        else {
+            toast.error(json.message)
+        }
+
+
+        // console.log(data)
+
+        setIsLoading(false)
 
     }
 
@@ -463,9 +505,9 @@ function PostCommentForm(
 
                                             if (ele === "," || ele === ".") {
                                                 setCommentValue({ value: `${commentValue.value}${ele}` })
-                                            } 
+                                            }
 
-                                            else if(ele === "X"){
+                                            else if (ele === "X") {
                                                 setCommentValue({ value: `` })
                                             }
                                             else {
@@ -473,7 +515,16 @@ function PostCommentForm(
                                             }
 
                                         } else {
-                                            setCommentValue({ value: `${commentValue.value}${ele}` })
+
+
+
+                                            if (ele === "X") {
+                                                setCommentValue({ value: `` })
+                                            }
+                                            else {
+                                                setCommentValue({ value: `${ele}` })
+                                            }
+
                                         }
 
 
@@ -791,6 +842,7 @@ const SingleCommentUI = ({
     )
 }
 
+
 function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean, comment: Comment, }) {
 
     const themeMode = useThemeData().mode
@@ -1091,12 +1143,60 @@ function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean
                             }</button>
                     </div>
 
-                    <p
-                        className=' text-xs text-end'
-                    >
-                        {comment.likes} likes and {comment.replies.length} replies.
-                    </p>
 
+                    <div className='mb-2 flex justify-between items-center flex-wrap'>
+
+                        <div className=" flex flex-wrap items-center">
+                            {
+                                ["👍", "😍", "😀", "👌", "👎", "X"].map((ele, i) => {
+                                    return (
+                                        <button
+                                            key={i}
+                                            className={` overflow-hidden text-xs mx-0.5 my-[2px] border border-l-2 border-b-2  rounded  ${ele === "X" && "ml-3 border-red-500 rounded-xl "} `}
+
+                                            onClick={() => {
+                                                if (replyText) {
+
+                                                    if (ele === "X") {
+                                                        setReplyText('')
+                                                    }
+                                                    else {
+                                                        setReplyText(`${replyText} ${ele}`)
+                                                    }
+
+                                                } else {
+
+                                                    if (ele === "X") {
+                                                        setReplyText('')
+                                                    }
+                                                    else {
+                                                        setReplyText(`${ele}`)
+                                                    }
+
+                                                }
+
+
+                                            }}
+
+                                        >{
+
+                                                ele === "X"
+                                                    ? <span className='px-1 font-bold bg-red-500 text-white '>{ele}</span>
+                                                    : ele
+
+                                            }</button>
+                                    )
+                                })
+                            }
+                        </div>
+
+                        <p
+                            className=' text-xs text-end ml-auto'
+                        >
+                            {comment.likes} likes and {comment.replies.length} replies.
+                        </p>
+
+                    </div>
 
 
 

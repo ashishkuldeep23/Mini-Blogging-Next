@@ -165,7 +165,6 @@ const SearchByDiv = () => {
   )
 }
 
-
 function AllPostDiv() {
 
   const allPostData = usePostData().allPost
@@ -246,7 +245,6 @@ function AllPostDiv() {
 
 // export default AllPostDiv
 
-
 function Card({ ele }: { ele: PostInterFace }) {
 
   const themeMode = useThemeData().mode
@@ -321,19 +319,11 @@ function Card({ ele }: { ele: PostInterFace }) {
         <div className=" flex flex-wrap gap-0.[2px] text-violet-500 font-semibold ">
           {
 
-            ele.hashthats.length > 0
-
-              ?
-
-              ele.hashthats.map((hash, i) => {
-                return <p className="ml-1.5" key={i}>{hash}</p>
-              })
-
-              : <>
-                <p>#promp</p>
-                <p>#ai</p>
-                <p>#write</p>
-              </>
+            (ele.hashthats.length > 0)
+            &&
+            ele.hashthats.map((hash, i) => {
+              return <p className="ml-1.5" key={i}>{hash}</p>
+            })
           }
         </div>
 
@@ -349,7 +339,6 @@ function Card({ ele }: { ele: PostInterFace }) {
     </div>
   )
 }
-
 
 const FooterDiv = () => {
 

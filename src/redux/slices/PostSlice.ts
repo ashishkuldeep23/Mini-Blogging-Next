@@ -189,6 +189,21 @@ const psotSlice = createSlice({
 
         },
 
+        setDeleteSinglePost(state, action: PayloadAction<PostInterFace>) {
+            state.singlePostdata = action.payload
+
+
+            let currentState = current(state)
+
+            let findIndex = [...currentState.allPost].findIndex(ele => ele._id === action.payload._id)
+
+            // console.log(findIndex)
+
+            state.allPost.splice(findIndex, 1)
+
+
+        },
+
 
         setUpdateComment(state, action: PayloadAction<UpdateCommentInput>) {
             let currentState = current(state)
@@ -327,6 +342,7 @@ export const {
     setAllPosts,
     setSinglePostdata,
     setUpdateComment,
+    setDeleteSinglePost
     // setDeleteComment
 } = psotSlice.actions
 
