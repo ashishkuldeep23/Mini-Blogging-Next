@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
-import { createNewPost, setWriteFullFilledVal, usePostData } from '@/redux/slices/PostSlice';
+import { createNewPost, setWriteFullFilledVal, usePostData, updatePost } from '@/redux/slices/PostSlice';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast/headless';
@@ -21,7 +21,6 @@ export interface NewPostType {
     url: string,
     origin: string,
     hashs: string[],
-
 }
 
 
@@ -31,24 +30,25 @@ const NewPostPage = () => {
 
     const themeMode = useThemeData().mode
 
+    const { singlePostdata, updatingPost, writePostFullFilled, isLoading } = usePostData()
+
     const router = useRouter()
 
     const { data: session, status } = useSession()
 
-    const { writePostFullFilled, isLoading } = usePostData()
 
-    const [newPostData, setNewPostData] = useState<NewPostType>({
+    const initialNewPostData: NewPostType = {
         title: "",
         category: "",
         content: "",
         url: "",
         origin: "",
         hashs: [],
-    })
+    }
 
+    const [newPostData, setNewPostData] = useState<NewPostType>(initialNewPostData)
 
     const [newHash, setNewHash] = useState<string>("")
-
 
     type TypeCatAndHash = {
         categories: string[],
@@ -99,14 +99,30 @@ const NewPostPage = () => {
 
         even.preventDefault()
 
-        console.log(session)
+        // console.log(session)
 
         if (status === "unauthenticated") {
             router.push("/")
         }
 
         if (session?.user?.id) {
-            dispatch(createNewPost({ body: newPostData, userId: session?.user?.id }))
+
+
+            if (updatingPost && singlePostdata?._id) {
+
+                // alert("now call dispatch for update.")
+
+                dispatch(updatePost({
+                    body: newPostData,
+                    userId: session?.user?.id,
+                    postId: singlePostdata?._id
+                }))
+            } else {
+
+                dispatch(createNewPost({ body: newPostData, userId: session?.user?.id }))
+            }
+
+
         } else {
 
             toast.error("Plese Login again.")
@@ -116,6 +132,20 @@ const NewPostPage = () => {
 
     }
 
+
+
+
+
+    // // // DO THIS ON REDUX --------->
+
+    // async function updatePost() {
+
+
+    //     // // // when post is updated ------>
+    //     // dispatch(setSinglePostdata(post))
+    //     // dispatch(setUpdatingPost(true))
+
+    // }
 
 
 
@@ -132,11 +162,38 @@ const NewPostPage = () => {
     useEffect(() => {
 
         if (writePostFullFilled) {
-            router.push("/")
             dispatch(setWriteFullFilledVal(false))
+            router.push("/")
         }
 
     }, [writePostFullFilled])
+
+
+
+    // // // Update post here =============> 
+
+    useEffect(() => {
+
+        if (updatingPost && singlePostdata?._id) {
+
+
+            setNewPostData(
+                {
+                    title: singlePostdata?.title,
+                    category: singlePostdata?.category,
+                    content: singlePostdata?.promptReturn,
+                    url: singlePostdata?.urlOfPrompt,
+                    origin: singlePostdata?.aiToolName,
+                    hashs: [...singlePostdata?.hashthats],
+                }
+            );
+
+
+        }
+
+
+    }, [singlePostdata])
+
 
 
     const classNamesForInputs = ` w-[68%] border rounded-sm px-1 ${!themeMode ? " bg-slate-900 text-white" : " bg-slate-100 text-black"}`
@@ -407,6 +464,10 @@ const NewPostPage = () => {
 
                             </div>
 
+
+
+                            {/* UI of given data shown here -------> */}
+
                             <div
                                 className={`rounded p-1 border w-full sm:w-2/5 ${!themeMode ? " bg-black" : " bg-white"}`}
                             >
@@ -500,13 +561,19 @@ const NewPostPage = () => {
                             <button
                                 className={`px-8 mx-8 my-1 rounded-full font-bold bg-green-400 hover:bg-green-600 transition-all ${themeMode ? "text-green-900" : "text-green-900"}`}
                                 onClick={(e) => { submitFormData(e) }}
-                            >Create</button>
+                            >
+
+                                {
+
+                                    !updatingPost ? "Create" : "Update"
+                                }
+                            </button>
                         </div>
 
 
-                        <div>
 
-                        </div>
+
+                        <div></div>
 
                     </div>
 

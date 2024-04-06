@@ -30,6 +30,10 @@ export async function PUT(req: NextRequest) {
         if (findPost.isDeleted) return NextResponse.json({ success: false, message: 'Post is aleady deleted.' }, { status: 404 })
 
 
+        if (findPost.author.toString() !== userId) return NextResponse.json({ success: false, message: 'Post is not given by you.' }, { status: 400 })
+
+
+
         // // // Now delete post --------->
         findPost.isDeleted = true
         let updatedPost = await findPost.save()

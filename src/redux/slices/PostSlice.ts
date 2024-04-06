@@ -55,6 +55,44 @@ export const createNewPost = createAsyncThunk("post/createNewPost", async ({ bod
 
 
 
+// interface UpdatePostBody extends NewPostType {
+//     postId: string
+// }
+
+
+
+export const updatePost = createAsyncThunk("post/updatePost", async ({ body, userId , postId }: { body: NewPostType, userId: string, postId: string }) => {
+
+    let makeBody = {
+        title: body.title,
+        category: body.category,
+        promptReturn: body.content,
+        urlOfPrompt: body.url,
+        aiToolName: body.origin,
+        hashthats: body.hashs,
+        author: userId,
+        postId : postId
+    }
+
+
+    const options: RequestInit = {
+        credentials: 'include',
+        method: "PUT",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(makeBody)
+    }
+
+
+    const response = await fetch('/api/post/update', options)
+    let data = await response.json();
+    return data
+
+})
+
+
+
 export interface ReplyInterFace {
     commentId: string
     reply: string
@@ -107,8 +145,35 @@ interface PostSliceInterFace {
     errMsg: string,
     allPost: PostInterFace[],
     singlePostId: string,
+    updatingPost: boolean,
     singlePostdata?: PostInterFace
 }
+
+
+
+const innitialSingleState: PostInterFace = {
+
+    _id: "",
+    title: "",
+    category: "",
+    promptReturn: "",
+    urlOfPrompt: "",
+    aiToolName: "",
+    hashthats: [""],
+    author: {
+        username: "",
+        email: "",
+        profilePic: "",
+        isVerified: false,
+        isAdmin: false
+    },
+    likes: 0,
+    likesId: [""],
+    comments: [],
+    isDeleted: false
+}
+
+
 
 const initialState: PostSliceInterFace = {
     isLoading: false,
@@ -118,26 +183,8 @@ const initialState: PostSliceInterFace = {
     errMsg: "",
     allPost: [],
     singlePostId: "",
-    singlePostdata: {
-        _id: "",
-        title: "",
-        category: "",
-        promptReturn: "",
-        urlOfPrompt: "",
-        aiToolName: "",
-        hashthats: [""],
-        author: {
-            username: "",
-            email: "",
-            profilePic: "",
-            isVerified: false,
-            isAdmin: false
-        },
-        likes: 0,
-        likesId: [""],
-        comments: [],
-        isDeleted: false
-    }
+    updatingPost: false,
+    singlePostdata: innitialSingleState
 }
 
 
@@ -174,6 +221,10 @@ const psotSlice = createSlice({
             state.allPost = action.payload
         },
 
+        setUpdatingPost(state, action: PayloadAction<boolean>) {
+            state.updatingPost = action.payload
+        },
+
         setSinglePostdata(state, action: PayloadAction<PostInterFace>) {
             state.singlePostdata = action.payload
 
@@ -185,6 +236,8 @@ const psotSlice = createSlice({
             // console.log(findIndex)
 
             state.allPost.splice(findIndex, 1, action.payload)
+
+            state.singlePostdata = action.payload
 
 
         },
@@ -322,6 +375,63 @@ const psotSlice = createSlice({
             })
 
 
+            // Update post
+
+            .addCase(updatePost.pending, (state) => {
+                state.writePostFullFilled = false
+                state.isLoading = true
+                state.errMsg = ''
+            })
+
+            .addCase(updatePost.fulfilled, (state, action) => {
+
+                // console.log(action.payload)
+
+                if (action.payload.success === true) {
+                    // state.isFullfilled = true
+
+                    state.writePostFullFilled = true
+
+                    // state.allPost = action.payload.data
+                    toast.success(`${action.payload.message}`)
+
+                    console.log(action.payload.data)
+
+
+
+
+                    state.singlePostdata = action.payload.data
+                    let currentState = current(state)
+
+                    let findIndex = [...currentState.allPost].findIndex(ele => ele._id === action.payload.data._id)
+
+                    state.allPost.splice(findIndex, 1, action.payload.data)
+
+                    state.singlePostdata = action.payload.data
+
+
+
+                    // state.allPost.unshift(action.payload.data)
+
+                } else {
+                    toast.error(`${action.payload.message || "Fetch failed."}`)
+                    state.isError = true
+                    state.errMsg = action.payload.message
+                }
+
+                state.isLoading = false
+
+            })
+
+            .addCase(updatePost.rejected, (state, action) => {
+
+                state.isLoading = false
+                state.isError = true
+                toast.error(` ${action.error.message || "SignUp failed"}`)
+                state.errMsg = action.error.message || 'Error'
+            })
+
+
 
         // // // some reducers that trigger by others ---->
         // .addCase("post/createNewPost/fulfilled", (state, action: PayloadAction<any, never>) => {
@@ -342,7 +452,8 @@ export const {
     setAllPosts,
     setSinglePostdata,
     setUpdateComment,
-    setDeleteSinglePost
+    setDeleteSinglePost,
+    setUpdatingPost
     // setDeleteComment
 } = psotSlice.actions
 

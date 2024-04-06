@@ -1,6 +1,6 @@
 'Use client'
 
-import { Comment, PostInterFace, ReplyInterFace, setDeleteSinglePost, setSinglePostdata, setUpdateComment } from '@/redux/slices/PostSlice';
+import { Comment, PostInterFace, ReplyInterFace, setDeleteSinglePost, setSinglePostdata, setUpdateComment, setUpdatingPost } from '@/redux/slices/PostSlice';
 import { useSession } from 'next-auth/react'
 import { usePathname, useRouter } from 'next/navigation'
 import React, { Fragment, RefObject, useEffect, useRef, useState } from 'react'
@@ -16,7 +16,7 @@ import { AiOutlineRetweet, AiTwotoneDelete } from "react-icons/ai";
 import { BiPencil } from "react-icons/bi";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { UserDataInterface } from '@/redux/slices/UserSlice';
-
+import Link from 'next/link';
 
 
 
@@ -139,8 +139,16 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
     const updatePostHandler = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.stopPropagation()
 
-        toast.success("Update post")
+        // toast.success("Update post")
 
+        // // // All dispatches here -------->
+        dispatch(setSinglePostdata(post))
+        dispatch(setUpdatingPost(true))
+
+
+        // // // Page navigation here  -------->
+        router.push('new-post')
+        // router.replace('new-post')
     }
 
 
@@ -281,12 +289,20 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
                         &&
 
                         <div className=' ml-auto mr-1 flex gap-0'>
-                            <button
-                                className=" border px-2 rounded-lg mx-0.5 hover:bg-blue-500"
-                                onClick={updatePostHandler}
-                            >
-                                <BiPencil />
-                            </button>
+
+                            {/* <Link href={`/}`}> */}
+
+
+                                <button
+                                    className=" border px-2 rounded-lg mx-0.5 hover:bg-blue-500"
+                                    onClick={updatePostHandler}
+                                >
+                                    <BiPencil />
+                                </button>
+
+                            {/* </Link> */}
+
+
 
                             <button
                                 className=" border px-2 rounded-lg  mx-0.5 hover:bg-red-500"
