@@ -33,32 +33,28 @@ export async function POST(req: NextRequest) {
 
 
 
-        interface ResData {
-            postCategories: string[],
-            posthashtags: string[],
-            allPostsLength: number
-        }
-
-
-        let data: ResData = {
-            postCategories: [],
-            posthashtags: [],
-            allPostsLength: 0
-        }
-
-
-
         // console.log({ getAllPosts })
 
+        // let cat = new Set([...getAllPosts.map((ele: any) => ele.category)])
 
-        data.postCategories = getAllPosts.map((ele: any) => ele.category)
+        // console.log(cat)
+
+
+        let postCategories = [...new Set(getAllPosts.map((ele: any) => ele.category))]
 
         let allHashs = getAllPosts.map((ele: any) => ele.hashthats)
 
-        data.posthashtags = allHashs.flat()
+        let posthashtags = [...new Set(allHashs.flat())]
         // console.log({ allHashs })
 
-        data.allPostsLength = getAllPosts.length
+        let allPostsLength = getAllPosts.length
+
+
+        let data = {
+            postCategories,
+            posthashtags,
+            allPostsLength
+        }
 
 
         let response = NextResponse.json({ success: true, data: data, message: "All post fetched." }, { status: 200 })

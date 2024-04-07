@@ -388,7 +388,7 @@ const NewPostPage = () => {
 
                                                 className={`${classNamesForInputs} my-1`}
                                                 name="" id="category_product"
-                                            // value={newProduct.category && newProduct.category}
+                                                value={newPostData.category ? newPostData.category : ''}
                                             >
 
                                                 {
