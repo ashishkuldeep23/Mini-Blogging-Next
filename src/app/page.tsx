@@ -1,6 +1,6 @@
 'use client'
 
-import {  useThemeData } from "@/redux/slices/ThemeSlice";
+import { useThemeData } from "@/redux/slices/ThemeSlice";
 import Navbar from "./components/Navbar";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -233,7 +233,7 @@ function AllPostDiv() {
 
           allPostData.map((ele, i) => {
             return (
-              <Card key={i} ele={ele} />
+              <SinglePostCard key={i} ele={ele} />
             )
           })
 
@@ -254,7 +254,7 @@ function AllPostDiv() {
 
 // export default AllPostDiv
 
-function Card({ ele }: { ele: PostInterFace }) {
+export function SinglePostCard({ ele }: { ele: PostInterFace }) {
 
   const themeMode = useThemeData().mode
 

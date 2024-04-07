@@ -4,6 +4,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { useSelector } from "react-redux"
 import { RootState } from "../store"
 import toast from "react-hot-toast"
+import { PostInterFace } from "./PostSlice"
 
 
 
@@ -53,6 +54,18 @@ export const logInUser = createAsyncThunk('user/login', async (body: { email: st
 
 
 
+export const getUserData = createAsyncThunk('user/getUserData', async (userId: string) => {
+    const option: RequestInit = {
+        cache: 'no-store',
+        method: "GET"
+    }
+    const response = await fetch(`/api/users/${userId}`, option)
+    let data = await response.json();
+    return data
+})
+
+
+
 export interface UserDataInterface {
     _id: string,
     username: string,
@@ -68,11 +81,11 @@ interface UserInter {
     isFullfilled: boolean,
     isError: boolean,
     errMsg: string
-    userData: UserDataInterface
+    userData: UserDataInterface,
+    allPostOfUser: PostInterFace[],
 }
 
 const initialState: UserInter = {
-
     isLoading: false,
     isFullfilled: false,
     isError: false,
@@ -84,7 +97,8 @@ const initialState: UserInter = {
         email: "",
         isVerified: false,
         isAdmin: false
-    }
+    },
+    allPostOfUser: []
 }
 
 const userSlice = createSlice({
@@ -95,7 +109,7 @@ const userSlice = createSlice({
         setUserDataBySession(state, action) {
 
             // console.log(action.payload)
-            state.userData.username = action.payload.email
+            state.userData.username = action.payload.name
             state.userData.profilePic = action.payload.image
             state.userData.email = action.payload.email
         }
@@ -178,6 +192,60 @@ const userSlice = createSlice({
                 toast.error(` ${action.error.message || "SignUp failed"}`)
                 state.errMsg = action.error.message || 'Error'
             })
+
+
+            .addCase(getUserData.pending, (state) => {
+                state.isLoading = true
+                state.errMsg = ''
+            })
+
+            .addCase(getUserData.fulfilled, (state, action) => {
+
+                // console.log(action)
+
+
+                // console.log(action.payload)
+
+                if (action.payload.success === true) {
+
+                    // console.log("All good ------>")
+                    state.allPostOfUser = action.payload.data.posts
+
+
+                    // // // rest data set ------>
+                    state.userData = action.payload.data.user
+
+                    
+
+
+
+                    // state.postCategories = action.payload.data.postCategories
+                    // state.posthashtags = action.payload.data.posthashtags
+                    // state.allPostsLength = action.payload.data.allPostsLength
+
+                    state.isFullfilled = true
+
+                } else {
+                    toast.error(`${action.payload.message || "Fetch failed."}`)
+                    state.isError = true
+                    state.errMsg = action.payload.message
+                }
+
+                state.isLoading = false
+
+            })
+
+            .addCase(getUserData.rejected, (state, action) => {
+
+                // console.log(action)
+
+                state.isLoading = false
+                state.isError = true
+                toast.error(` ${action.error.message || "SignUp failed"}`)
+                state.errMsg = action.error.message || 'Error'
+            })
+
+
 
 
     }
