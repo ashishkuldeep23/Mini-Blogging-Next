@@ -4,7 +4,7 @@
 import ImageReact from '@/app/components/ImageReact'
 // import HomeButton from '@/app/components/HomeButton'
 import Navbar from '@/app/components/Navbar'
-import { SinglePostCard } from '@/app/page'
+import SinglePostCard from '@/app/components/SinglePostCard'
 import { useThemeData } from '@/redux/slices/ThemeSlice'
 import { getUserData, useUserState } from '@/redux/slices/UserSlice'
 import { AppDispatch } from '@/redux/store'
