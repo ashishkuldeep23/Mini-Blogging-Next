@@ -6,10 +6,13 @@ import Comment from "@/models/commentModel";
 import { NextRequest, NextResponse } from "next/server"
 import { isValidObjectId, model, modelNames, models } from "mongoose"
 
-connect()
+
 
 
 export async function GET(req: NextRequest, context: any) {
+
+    
+    connect()
 
 
     // // // This is used to print all register models

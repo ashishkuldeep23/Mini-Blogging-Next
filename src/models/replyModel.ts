@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 
-const replyScheam = new mongoose.Schema({
+const ReplyScheam = new mongoose.Schema({
 
     reply: {
         type: String,
@@ -26,7 +26,7 @@ const replyScheam = new mongoose.Schema({
 }, { timestamps: true })
 
 
-const Reply = mongoose.models.replies || mongoose.model("replies", replyScheam);
+const Reply = mongoose.models.replies || mongoose.model("replies", ReplyScheam);
 
 export default Reply;
 

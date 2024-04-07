@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 
-const commentsScheam = new mongoose.Schema({
+const CommentsScheam = new mongoose.Schema({
 
     comment: {
         type: String,
@@ -40,7 +40,7 @@ const commentsScheam = new mongoose.Schema({
 }, { timestamps: true })
 
 
-const Comment = mongoose.models.comments || mongoose.model("comments", commentsScheam);
+const Comment = mongoose.models.comments || mongoose.model("comments", CommentsScheam);
 
 export default Comment;
 

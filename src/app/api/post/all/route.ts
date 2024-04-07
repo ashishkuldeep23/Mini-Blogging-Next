@@ -1,12 +1,19 @@
 import { connect } from "@/dbConfig/dbConfig";
 import Post from "@/models/postModel";
+import { modelNames } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
 
-connect()
+// connect()
 
 
 export async function POST(req: NextRequest) {
+
+
+    connect()
+
+    console.log(modelNames())
+
 
     // console.log("Called --------------->")
 
