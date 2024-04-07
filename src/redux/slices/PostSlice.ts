@@ -9,19 +9,30 @@ import { UserDataInterface } from "./UserSlice"
 
 
 // // // Not using now -------->
-export const getAllPosts = createAsyncThunk('post/getAllPost', async () => {
+// export const getAllPosts = createAsyncThunk('post/getAllPost', async () => {
+//     const option: RequestInit = {
+//         cache: 'no-store'
+//     }
+//     const response = await fetch('/api/post/all', option)
+//     let data = await response.json();
+//     return data
+//     // const response = await axios.post("/api/users/signup", body)
+//     // return response.data
+// })
 
+
+
+// // Not using now -------->
+export const getCatAndHash = createAsyncThunk('post/getCatAndHash', async () => {
     const option: RequestInit = {
-        cache: 'no-store'
+        cache: 'no-store',
+        method: "POST"
     }
-
-    const response = await fetch('/api/post/all', option)
+    const response = await fetch('/api/post/cathash', option)
     let data = await response.json();
     return data
-
-    // const response = await axios.post("/api/users/signup", body)
-    // return response.data
 })
+
 
 
 export const createNewPost = createAsyncThunk("post/createNewPost", async ({ body, userId }: { body: NewPostType, userId: string }) => {
@@ -54,11 +65,9 @@ export const createNewPost = createAsyncThunk("post/createNewPost", async ({ bod
 })
 
 
-
 // interface UpdatePostBody extends NewPostType {
 //     postId: string
 // }
-
 
 
 export const updatePost = createAsyncThunk("post/updatePost", async ({ body, userId, postId }: { body: NewPostType, userId: string, postId: string }) => {
@@ -147,6 +156,10 @@ interface PostSliceInterFace {
     singlePostId: string,
     updatingPost: boolean,
     singlePostdata?: PostInterFace
+
+    postCategories: string[],
+    posthashtags: string[],
+    allPostsLength: number
 }
 
 
@@ -174,7 +187,6 @@ const innitialSingleState: PostInterFace = {
 }
 
 
-
 const initialState: PostSliceInterFace = {
     isLoading: false,
     isFullfilled: false,
@@ -184,7 +196,10 @@ const initialState: PostSliceInterFace = {
     allPost: [],
     singlePostId: "",
     updatingPost: false,
-    singlePostdata: innitialSingleState
+    singlePostdata: innitialSingleState,
+    postCategories: [],
+    posthashtags: [],
+    allPostsLength: 0,
 }
 
 
@@ -297,22 +312,69 @@ const psotSlice = createSlice({
 
             // // Get all posts 
 
-            .addCase(getAllPosts.pending, (state) => {
+            // // // Now using here now ----->
+
+            // .addCase(getAllPosts.pending, (state) => {
+            //     state.isLoading = true
+            //     state.errMsg = ''
+            // })
+
+            // .addCase(getAllPosts.fulfilled, (state, action) => {
+
+            //     console.log(action)
+
+
+            //     // console.log(action.payload)
+
+            //     if (action.payload.success === true) {
+
+            //         state.allPost = action.payload.data
+            //         // toast.success(`${action.payload.message}`)
+            //         state.isFullfilled = true
+
+            //     } else {
+            //         toast.error(`${action.payload.message || "Fetch failed."}`)
+            //         state.isError = true
+            //         state.errMsg = action.payload.message
+            //     }
+
+            //     state.isLoading = false
+
+            // })
+
+            // .addCase(getAllPosts.rejected, (state, action) => {
+
+            //     console.log(action)
+
+
+            //     state.isLoading = false
+            //     state.isError = true
+            //     toast.error(` ${action.error.message || "SignUp failed"}`)
+            //     state.errMsg = action.error.message || 'Error'
+            // })
+
+            .addCase(getCatAndHash.pending, (state) => {
                 state.isLoading = true
                 state.errMsg = ''
             })
 
-            .addCase(getAllPosts.fulfilled, (state, action) => {
+            .addCase(getCatAndHash.fulfilled, (state, action) => {
 
-                console.log(action)
+                // console.log(action)
 
 
                 // console.log(action.payload)
 
                 if (action.payload.success === true) {
 
-                    state.allPost = action.payload.data
+                    // state.allPost = action.payload.data
                     // toast.success(`${action.payload.message}`)
+
+
+                    state.postCategories = action.payload.data.postCategories
+                    state.posthashtags =  action.payload.data.posthashtags
+                    state.allPostsLength =  action.payload.data.allPostsLength
+
                     state.isFullfilled = true
 
                 } else {
@@ -325,16 +387,17 @@ const psotSlice = createSlice({
 
             })
 
-            .addCase(getAllPosts.rejected, (state, action) => {
+            .addCase(getCatAndHash.rejected, (state, action) => {
 
-                console.log(action)
-
+                // console.log(action)
 
                 state.isLoading = false
                 state.isError = true
                 toast.error(` ${action.error.message || "SignUp failed"}`)
                 state.errMsg = action.error.message || 'Error'
             })
+
+
 
 
             // New post

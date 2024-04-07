@@ -1,10 +1,10 @@
 'use client'
 
-import { setModeOnLoad, useThemeData } from "@/redux/slices/ThemeSlice";
+import {  useThemeData } from "@/redux/slices/ThemeSlice";
 import Navbar from "./components/Navbar";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { PostInterFace, getAllPosts, setAllPosts, setErrMsg, setIsLoading, setSinglePostId, usePostData } from "@/redux/slices/PostSlice";
+import { PostInterFace, getCatAndHash, setAllPosts, setErrMsg, setIsLoading, setSinglePostId, usePostData } from "@/redux/slices/PostSlice";
 import { AppDispatch } from "@/redux/store";
 import MainLoader from "./components/MainLoader";
 import MaskerText from "./components/MaskerText";
@@ -97,6 +97,8 @@ const SearchByDiv = () => {
 
   const [expandHash, setExpandHash] = useState(false)
 
+  const { postCategories, posthashtags } = usePostData()
+
   return (
 
     <>
@@ -111,19 +113,17 @@ const SearchByDiv = () => {
 
           <div>
             <p
-              className=" border-b hover:cursor-pointer"
+              className={`border-b hover:cursor-pointer ${expandCat && "text-violet-500 border-violet-500 font-bold"} transition-all`}
               onClick={() => { setExpandCat(!expandCat); setExpandHash(false); }}
             >Category</p>
-
 
           </div>
 
           <div>
             <p
-              className=" border-b hover:cursor-pointer"
+              className={`border-b hover:cursor-pointer ${expandHash && "text-violet-500 border-violet-500 font-bold"} transition-all`}
               onClick={() => { setExpandHash(!expandHash); setExpandCat(false); }}
             >#Hashtags</p>
-
 
           </div>
 
@@ -131,11 +131,15 @@ const SearchByDiv = () => {
 
 
         <div
-          className={` border mt-2 rounded flex gap-2 flex-wrap justify-around px-1 overflow-hidden ${!expandCat ? " border-0 w-1/2 h-0 opacity-100" : " w-full  opacity-100"} transition-all `}
+          className={` border mt-2 rounded flex gap-2 flex-wrap justify-around px-1 overflow-hidden ${!expandCat ? " border-0 w-1/2 h-0 opacity-100" : " w-full  opacity-100"} transition-all  `}
+          style={{ transitionDuration: "1.0s" }}
         >
 
           {
-            ['General', "Tech", "News", "etc", 'General', "Tech", "News", "etc"].map((ele, i) => {
+
+            postCategories.length > 0
+            &&
+            postCategories.map((ele, i) => {
               return <p className=" font-bold text-violet-500 " key={i}>{ele}</p>
             })
           }
@@ -144,11 +148,15 @@ const SearchByDiv = () => {
 
         <div
           className={` border mt-2 rounded flex gap-2 flex-wrap justify-around px-1 overflow-hidden ${!expandHash ? " border-0 w-1/2 h-0 opacity-100" : " w-full opacity-100"} transition-all `}
+          style={{ transitionDuration: "1.0s" }}
         >
 
 
           {
-            ['#GoogleLogin', "#ReactJs", "#Html", '#CSS', "#TechJobs"].map((ele, i) => {
+
+            posthashtags.length
+            &&
+            posthashtags.map((ele, i) => {
               return <p className=" font-bold text-violet-500 " key={i}>{ele}</p>
             })
           }
@@ -210,6 +218,7 @@ function AllPostDiv() {
       // dispatch(getAllPosts())
     }
   }, [])
+
 
   return (
 

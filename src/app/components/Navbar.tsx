@@ -12,6 +12,8 @@ import { useSession, signOut } from "next-auth/react"
 import Image from "next/image"
 import { setUserDataBySession } from "@/redux/slices/UserSlice"
 import ImageReact from "./ImageReact"
+import { getCatAndHash } from "@/redux/slices/PostSlice"
+import { AppDispatch } from "@/redux/store"
 
 
 
@@ -22,7 +24,7 @@ const Navbar = () => {
 
     const themeMode = useThemeData().mode
 
-    const dispatch = useDispatch()
+    const dispatch = useDispatch<AppDispatch>()
 
     const { data: session } = useSession()
 
@@ -79,6 +81,14 @@ const Navbar = () => {
         }
     }, [])
 
+
+
+    // // // Get category and hashtags ------->
+    useEffect(() => {
+
+        dispatch(getCatAndHash())
+
+    }, [])
 
 
 

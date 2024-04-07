@@ -55,7 +55,7 @@ const userSchema = new mongoose.Schema({
 
 // // // Creating models in next js by userSchema --->
 
-const User = mongoose.models.users || mongoose.model("users", userSchema);
+// const User = 
 
-export default User;
+export default mongoose.models.users || mongoose.model("users", userSchema);
 

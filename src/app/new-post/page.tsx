@@ -8,7 +8,7 @@ import { AppDispatch } from '@/redux/store';
 import { createNewPost, setWriteFullFilledVal, usePostData, updatePost } from '@/redux/slices/PostSlice';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import toast from 'react-hot-toast/headless';
+import toast from 'react-hot-toast';
 import MainLoader from '../components/MainLoader';
 import ImageReact from '../components/ImageReact';
 
@@ -56,23 +56,53 @@ const NewPostPage = () => {
     }
 
     const [catAndHash, setCatAndHash] = useState<TypeCatAndHash>({
-        categories: [],
+        categories: ["Self Confidence", "vvv", "update6", "General"],
         hashthasts: ["#ok", "#bk", "#ck"]
-
     })
 
+    const [plusCategory, setPlusCategory] = useState<{ mode: boolean, value: string }>({ mode: false, value: "" })
+
+
+    const { postCategories, posthashtags } = usePostData();
 
     // console.log(router)
 
-    function addNewHash(e: React.KeyboardEvent<HTMLInputElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    function addNewHash({
+        e,
+        text = newHash
+    }: {
+        e: React.KeyboardEvent<HTMLInputElement> | React.MouseEvent<HTMLButtonElement, MouseEvent> | React.MouseEvent<HTMLDivElement, MouseEvent>,
+        text?: string
+    }
 
+    ) {
         e.preventDefault()
         e.stopPropagation()
 
-        if (!newHash) return
+        if (!text) return
+
+        if (newPostData.hashs.length >= 5) {
+
+            // console.log("Yes -----------> ")
+
+            toast.error("You can only give 5 hashtags.");
+
+            return
+        }
 
 
-        let newArr = [...newPostData?.hashs, `#${newHash.toLowerCase()}`]
+        // // // Remove hash if already have ---->
+
+        if (text[0] === "#") {
+
+            // console.log("54564545")
+            text = text.slice(1)
+        }
+
+
+
+
+        let newArr = [...newPostData?.hashs, `#${text.toLowerCase()}`]
         let uniqueArr = new Set(newArr)
 
         // console.log([...uniqueArr])
@@ -136,6 +166,29 @@ const NewPostPage = () => {
 
 
 
+    function selectOnChangeHandler(e: React.ChangeEvent<HTMLSelectElement>) {
+
+
+        if (e.target.value === "plus") {
+
+            setNewPostData({ ...newPostData, category: "" })
+
+            setPlusCategory({ ...plusCategory, mode: true })
+
+        } else {
+
+
+            setPlusCategory({ value: "", mode: false })
+
+            setNewPostData({ ...newPostData, category: e.target.value })
+
+        }
+
+
+    }
+
+
+
 
 
     // // // DO THIS ON REDUX --------->
@@ -144,7 +197,6 @@ const NewPostPage = () => {
     //     // // // when post is updated ------>
     //     // dispatch(setSinglePostdata(post))
     //     // dispatch(setUpdatingPost(true))
-
     // }
 
 
@@ -169,6 +221,24 @@ const NewPostPage = () => {
         }
 
     }, [writePostFullFilled])
+
+    // console.log(catAndHash.hashthasts)
+    // console.log(catAndHash.categories)
+
+
+    useEffect(() => {
+
+        // console.log('from new post page ---> ', posthashtags)
+
+        // if (posthashtags.length > 0) {
+        //     setCatAndHash({ categories: catAndHash.categories, hashthasts : [...posthashtags] })
+        // }
+
+        if (postCategories.length > 0) {
+            setCatAndHash({ hashthasts: posthashtags, categories: postCategories })
+        }
+
+    }, [postCategories, posthashtags])
 
 
 
@@ -279,7 +349,7 @@ const NewPostPage = () => {
                                     </div>
 
 
-                                    <div>
+                                    {/* <div>
                                         <input
                                             className={`${classNamesForInputs}`}
                                             placeholder="Give category of post"
@@ -299,7 +369,153 @@ const NewPostPage = () => {
                                             htmlFor="category"
                                         >Category</label>
 
+                                    </div> */}
+
+
+
+                                    {/* // // // // New category look like -------> */}
+                                    <div className=" w-full px-0.5 flex flex-col ">
+
+                                        <div className=' felx'>
+
+
+                                            <select
+                                                onChange={(e) => {
+                                                    selectOnChangeHandler(e)
+                                                }}
+                                                // {...register("category", { required: "Category is Required" })}
+                                                // className=" text-black font-bold rounded capitalize py-1"
+
+                                                className={`${classNamesForInputs} my-1`}
+                                                name="" id="category_product"
+                                            // value={newProduct.category && newProduct.category}
+                                            >
+
+                                                {
+                                                    catAndHash.categories.length
+                                                    &&
+                                                    catAndHash.categories.map((category, i) => {
+                                                        return (
+                                                            <option
+                                                                // {...register("category", { required: "Category is Required" })}
+
+                                                                // selected={getValues("category") === category ? true : false}
+
+                                                                key={i}
+                                                                className="capitalize"
+                                                                value={`${category}`}
+                                                            >{
+                                                                    category
+                                                                }</option>
+                                                        )
+                                                    })
+                                                }
+
+
+
+                                                {/* Plus option for new category -----> */}
+
+                                                <option
+                                                    value="plus"
+                                                    onClick={() => {
+
+                                                        // setPlusCategory(true) 
+                                                    }}
+                                                // onClick={()=>setPlusCategory(true)}
+                                                // {...register("category", { required: "Category is Required" })}
+                                                >+Plus</option>
+
+
+                                            </select>
+
+                                            <label
+                                                htmlFor="category_product"
+                                                className='pl-2 pr-1 border-b font-semibold'
+                                            >
+                                                Category
+                                            </label>
+
+                                        </div>
+
+
+                                        {/* Add new category All code ----> */}
+
+
+                                        {
+
+                                            plusCategory.mode
+                                            &&
+                                            // // Take new category input here --->
+                                            <div className=" flex flex-col flex-wrap " >
+
+                                                {/*value get this input ---> */}
+
+                                                <div className=' flex items-center'>
+
+                                                    <input
+                                                        id="category_product" type="text"
+                                                        placeholder="Give new category here"
+                                                        // className={`block rounded-md border-0 py-1.5  shadow-sm ring-1 ring-inset ring-gray-300  focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${!themeMode ? " bg-white text-gray-900 " : "bg-gray-900 text-white"}`}
+
+                                                        value={plusCategory.value}
+
+                                                        className={`${classNamesForInputs}`}
+                                                        // value={plusCategoryInput.typing}
+                                                        onChange={(e) => {
+                                                            setPlusCategory({ ...plusCategory, value: e.target.value })
+
+                                                        }}
+                                                    />
+
+                                                    <button
+                                                        className="border h-full px-1 rounded m-0.5"
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            e.stopPropagation();
+                                                            // setPlusCategoryInput({ typing: "", added: plusCategoryInput.typing });
+                                                            // setValue("category", `${plusCategoryInput.typing}`)
+
+                                                            setNewPostData({ ...newPostData, category: plusCategory.value.trim() })
+
+
+
+                                                        }}
+                                                    >+Add</button>
+
+
+                                                </div>
+
+                                                <div className=" flex flex-wrap items-center">
+
+                                                    {
+                                                        // plusCategoryInput.added
+                                                        // &&
+                                                        <p
+                                                            style={{ lineBreak: "anywhere" }}
+                                                            className="mx-2"
+                                                        >
+                                                            New Category added:
+                                                            <span
+                                                                className=" capitalize bg-green-400 font-semibold border px-0.5 rounded "
+                                                            >{newPostData.category}</span></p>
+                                                    }
+
+                                                    {
+                                                        // !plusCategoryInput.added
+                                                        // &&
+
+                                                    }
+
+
+                                                </div>
+
+                                            </div>
+
+                                        }
+
+
                                     </div>
+
 
 
                                     <div>
@@ -396,7 +612,7 @@ const NewPostPage = () => {
                                                         // e.preventDefault();
                                                         // console.log(e.key)
                                                         if (e.key === "Enter") {
-                                                            addNewHash(e)
+                                                            addNewHash({ e })
                                                         }
                                                     }}
 
@@ -406,7 +622,7 @@ const NewPostPage = () => {
                                                     className=' -ml-1 mb-0.5 scale-y-[1.6] scale-x-125'
                                                     onClick={(e) => {
                                                         // e.preventDefault()
-                                                        addNewHash(e)
+                                                        addNewHash({ e })
                                                     }}
                                                 >⬆️</button>
 
@@ -417,31 +633,45 @@ const NewPostPage = () => {
                                                     newHash
                                                     &&
 
-                                                    <div className={`absolute z-[1] top-[110%] rounded w-full p-0.5 min-h-10 ${!themeMode ? "bg-black" : "bg-white"} `}>
+                                                    <div className={`absolute z-[1] top-[110%] rounded w-full px-0.5 ${!themeMode ? "bg-black" : "bg-white"} `}>
 
                                                         {
 
-                                                            catAndHash.hashthasts.map((ele, i) => {
-                                                                return <div
-                                                                    className=' border-b'
-                                                                    key={i}
-                                                                    onClick={() => {
+                                                            catAndHash.hashthasts
+                                                                .filter((ele) => ele.includes(newHash))
 
-                                                                        newPostData.hashs.push(ele)
+                                                                .map((ele, i) => {
+                                                                    return (
+                                                                        <>
 
-                                                                        // console.log(newPostData.hashs)
+                                                                            {
+                                                                                ele
+                                                                                &&
+                                                                                <div
+                                                                                    className=' border-b'
+                                                                                    key={i}
+                                                                                    onClick={() => {
 
-                                                                        setNewPostData({
-                                                                            ...newPostData,
-                                                                            hashs: newPostData.hashs
-                                                                        });
-                                                                        setNewHash("");
-                                                                    }}
-                                                                >{ele}</div>
-                                                            })
+                                                                                        newPostData.hashs.push(ele)
+
+                                                                                        // console.log(newPostData.hashs)
+
+                                                                                        setNewPostData({
+                                                                                            ...newPostData,
+                                                                                            hashs: newPostData.hashs
+                                                                                        });
+                                                                                        setNewHash("");
+                                                                                    }}
+                                                                                >{ele}</div>
+
+                                                                            }
+                                                                        </>
+                                                                    )
+                                                                })
+
+
 
                                                         }
-
 
                                                     </div>
                                                 }
@@ -579,10 +809,10 @@ const NewPostPage = () => {
 
                     </div>
 
-                </div>
+                </div >
 
 
-            </div>
+            </div >
 
         </>
     )
