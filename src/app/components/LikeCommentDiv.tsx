@@ -147,7 +147,8 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
 
 
         // // // Page navigation here  -------->
-        router.push('new-post')
+        router.push('/new-post')
+        // // // Use with "/" (forword slash) to go somewhere --->
         // router.replace('new-post')
     }
 
@@ -293,12 +294,12 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
                             {/* <Link href={`/}`}> */}
 
 
-                                <button
-                                    className=" border px-2 rounded-lg mx-0.5 hover:bg-blue-500"
-                                    onClick={updatePostHandler}
-                                >
-                                    <BiPencil />
-                                </button>
+                            <button
+                                className=" border px-2 rounded-lg mx-0.5 hover:bg-blue-500"
+                                onClick={updatePostHandler}
+                            >
+                                <BiPencil />
+                            </button>
 
                             {/* </Link> */}
 

@@ -61,7 +61,7 @@ export const createNewPost = createAsyncThunk("post/createNewPost", async ({ bod
 
 
 
-export const updatePost = createAsyncThunk("post/updatePost", async ({ body, userId , postId }: { body: NewPostType, userId: string, postId: string }) => {
+export const updatePost = createAsyncThunk("post/updatePost", async ({ body, userId, postId }: { body: NewPostType, userId: string, postId: string }) => {
 
     let makeBody = {
         title: body.title,
@@ -71,7 +71,7 @@ export const updatePost = createAsyncThunk("post/updatePost", async ({ body, use
         aiToolName: body.origin,
         hashthats: body.hashs,
         author: userId,
-        postId : postId
+        postId: postId
     }
 
 
@@ -304,6 +304,9 @@ const psotSlice = createSlice({
 
             .addCase(getAllPosts.fulfilled, (state, action) => {
 
+                console.log(action)
+
+
                 // console.log(action.payload)
 
                 if (action.payload.success === true) {
@@ -323,6 +326,9 @@ const psotSlice = createSlice({
             })
 
             .addCase(getAllPosts.rejected, (state, action) => {
+
+                console.log(action)
+
 
                 state.isLoading = false
                 state.isError = true
@@ -352,7 +358,7 @@ const psotSlice = createSlice({
                     // state.allPost = action.payload.data
                     toast.success(`${action.payload.message}`)
 
-                    console.log(action.payload.data)
+                    // console.log(action.payload.data)
 
                     state.allPost.unshift(action.payload.data)
 
@@ -395,9 +401,7 @@ const psotSlice = createSlice({
                     // state.allPost = action.payload.data
                     toast.success(`${action.payload.message}`)
 
-                    console.log(action.payload.data)
-
-
+                    // console.log(action.payload.data)
 
 
                     state.singlePostdata = action.payload.data

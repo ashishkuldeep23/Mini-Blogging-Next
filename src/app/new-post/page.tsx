@@ -62,6 +62,8 @@ const NewPostPage = () => {
     })
 
 
+    // console.log(router)
+
     function addNewHash(e: React.KeyboardEvent<HTMLInputElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>) {
 
         e.preventDefault()
@@ -139,8 +141,6 @@ const NewPostPage = () => {
     // // // DO THIS ON REDUX --------->
 
     // async function updatePost() {
-
-
     //     // // // when post is updated ------>
     //     // dispatch(setSinglePostdata(post))
     //     // dispatch(setUpdatingPost(true))
@@ -163,7 +163,9 @@ const NewPostPage = () => {
 
         if (writePostFullFilled) {
             dispatch(setWriteFullFilledVal(false))
-            router.push("/")
+            // router.push("/")
+
+            router.back()
         }
 
     }, [writePostFullFilled])
