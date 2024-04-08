@@ -2,7 +2,7 @@
 
 import { PostInterFace, setSinglePostId } from "@/redux/slices/PostSlice"
 import { useThemeData } from "@/redux/slices/ThemeSlice"
-import { useRouter } from "next/router"
+import { useRouter } from "next/navigation"
 import { useDispatch } from "react-redux"
 import ImageReact from "./ImageReact"
 import LikeCommentDiv from "./LikeCommentDiv"

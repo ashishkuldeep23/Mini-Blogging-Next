@@ -155,6 +155,7 @@ const userSlice = createSlice({
             })
 
 
+
             .addCase(logInUser.pending, (state) => {
                 state.isLoading = true
                 state.errMsg = ''
@@ -194,17 +195,14 @@ const userSlice = createSlice({
             })
 
 
+
             .addCase(getUserData.pending, (state) => {
                 state.isLoading = true
                 state.errMsg = ''
             })
-
             .addCase(getUserData.fulfilled, (state, action) => {
 
                 // console.log(action)
-
-
-                // console.log(action.payload)
 
                 if (action.payload.success === true) {
 
@@ -214,10 +212,6 @@ const userSlice = createSlice({
 
                     // // // rest data set ------>
                     state.userData = action.payload.data.user
-
-                    
-
-
 
                     // state.postCategories = action.payload.data.postCategories
                     // state.posthashtags = action.payload.data.posthashtags
@@ -234,7 +228,6 @@ const userSlice = createSlice({
                 state.isLoading = false
 
             })
-
             .addCase(getUserData.rejected, (state, action) => {
 
                 // console.log(action)

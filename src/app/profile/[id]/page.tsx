@@ -2,6 +2,7 @@
 'use client'
 
 import ImageReact from '@/app/components/ImageReact'
+import MainLoader from '@/app/components/MainLoader'
 // import HomeButton from '@/app/components/HomeButton'
 import Navbar from '@/app/components/Navbar'
 import SinglePostCard from '@/app/components/SinglePostCard'
@@ -9,6 +10,7 @@ import { useThemeData } from '@/redux/slices/ThemeSlice'
 import { getUserData, useUserState } from '@/redux/slices/UserSlice'
 import { AppDispatch } from '@/redux/store'
 import { useSession } from 'next-auth/react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React, { useEffect } from 'react'
 import toast from 'react-hot-toast'
@@ -24,7 +26,7 @@ const ProfilePageParams = ({ params }: any) => {
 
     const dispatch = useDispatch<AppDispatch>()
 
-    const { userData, allPostOfUser } = useUserState()
+    const { userData, allPostOfUser, isLoading, errMsg } = useUserState()
 
     // console.log(status)
 
@@ -59,27 +61,21 @@ const ProfilePageParams = ({ params }: any) => {
 
     return (
         <div
-            className={`w-full min-h-screen flex flex-col items-center ${!themeMode ? " bg-black text-white " : " bg-white text-black"} `}
+            className={` relative w-full min-h-screen flex flex-col items-center ${!themeMode ? " bg-black text-white " : " bg-white text-black"} `}
         >
-
-            {/* <HomeButton /> */}
-
 
             <Navbar />
 
-            {/* 
-            <div className='border p-2 rounded my-20 flex flex-col flex-wrap justify-center items-center'>
-                <p>User Profile</p>
-                <p><span className=' rounded px-2 bg-orange-500 text-black mx-2 font-semibold'>{params.id}</span></p>
+            <MainLoader isLoading={isLoading} />
 
-                <p className=' mt-5'>Welcome, {session?.user?.name}</p>
-
-                <ImageReact
-                    className=" w-24 border rounded-full mt-2"
-                    src={session?.user?.image?.toString()!}
-                    alt=""
-                />
-            </div> */}
+            {
+                errMsg
+                &&
+                <p className=' border border-[#f92f60] rounded-lg px-4 py-2 text-xl'>
+                    <span className=' mr-2 border border-[#f92f60] rounded-full size-4 p-0.5'>❌</span>
+                    <span className=' border-b'>{errMsg}</span>
+                </p>
+            }
 
 
 
@@ -100,8 +96,6 @@ const ProfilePageParams = ({ params }: any) => {
             </div>
 
 
-
-
             <div
                 className=" my-10 card_container relative sm:px-[8vh] mt-16 flex gap-10 p-0.5 flex-wrap justify-center items-start "
             >
@@ -116,9 +110,21 @@ const ProfilePageParams = ({ params }: any) => {
                     })
                 }
 
+
+                {
+
+
+                    (session?.user?.id && !isLoading && allPostOfUser.length === 0)
+
+                    &&
+
+                    <div className=' text-center'>
+                        <p className=' text-xl'>No Post found for You. 404</p>
+                        <Link href={"/new-post"} className=' px-2 text-xs border rounded'>Write post</Link>
+                    </div>
+                }
+
             </div>
-
-
 
         </div>
     )
