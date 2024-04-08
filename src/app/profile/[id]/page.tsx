@@ -47,8 +47,9 @@ const ProfilePageParams = ({ params }: any) => {
 
         // console.log(params.id)
 
-        if (params.id) {
+        if (params?.id && params?.id !== "undefined") {
 
+            // console.log(15455454)
             dispatch(getUserData(params.id))
 
         }
