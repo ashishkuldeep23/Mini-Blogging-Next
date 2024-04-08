@@ -93,7 +93,14 @@ const Navbar = () => {
 
 
     return (
-        <section className={` border-b sticky -top-4 z-[2] flex justify-between items-center w-full px-2 sm:px-10 py-4 ${!themeMode ? " bg-black text-white border-zinc-700 " : " bg-white text-black border-zinc-300"}`}>
+        <section
+            style={{
+                backdropFilter: "blur(5px) saturate(1.7)",
+                background: "#efe6f300"
+            }}
+            className={` border-b sticky -top-4 z-[2] flex justify-between items-center w-full px-2 sm:px-10 py-4 ${!themeMode ? " bg-black text-white border-zinc-700 " : " bg-white text-black border-zinc-300"}`}
+
+        >
 
             <div
                 className=" flex gap-1 p-[-10px] text-2xl capitalize font-[cursive] hover:cursor-pointer"
@@ -110,7 +117,7 @@ const Navbar = () => {
                     />
                 }
 
-                <p>Home</p>
+                <p className=" font-bold">Home</p>
 
             </div>
 
@@ -177,7 +184,7 @@ const Navbar = () => {
 
             </div>
 
-        </section>
+        </section >
     )
 }
 
