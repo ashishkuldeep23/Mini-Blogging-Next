@@ -98,7 +98,7 @@ const Navbar = () => {
                 backdropFilter: "blur(5px) saturate(1.7)",
                 background: "#efe6f300"
             }}
-            className={` border-b sticky -top-4 z-[2] flex justify-between items-center w-full px-2 sm:px-10 py-4 ${!themeMode ? " bg-black text-white border-zinc-700 " : " bg-white text-black border-zinc-300"}`}
+            className={` border-b sticky -top-4 z-[2] flex justify-between items-start gap-1.5 w-full px-2 sm:px-10 py-4 ${!themeMode ? " bg-black text-white border-zinc-700 " : " bg-white text-black border-zinc-300"}`}
 
         >
 
@@ -121,7 +121,7 @@ const Navbar = () => {
 
             </div>
 
-            <div className=" flex items-center flex-wrap gap-2 ">
+            <div className=" flex items-center justify-end flex-wrap gap-2 ">
 
 
                 <div>
@@ -131,7 +131,7 @@ const Navbar = () => {
                         !isUserLogined
                             ?
 
-                            <div className=" flex flex-wrap gap-1">
+                            <div className=" flex flex-wrap  justify-end gap-1">
                                 <Link
                                     href={"/signup"}
                                     className={` border rounded-full px-2 py-0.5 text-sm font-bold ${themeMode ? " bg-black border-black text-white " : " border-white bg-white text-black"}`}
@@ -144,7 +144,7 @@ const Navbar = () => {
 
                             :
 
-                            <div className=" flex flex-wrap gap-1">
+                            <div className=" flex flex-wrap  justify-end gap-1">
                                 <button
                                     onClick={() => { router.push("/new-post") }}
 

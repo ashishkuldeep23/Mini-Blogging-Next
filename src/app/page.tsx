@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import LikeCommentDiv from "./components/LikeCommentDiv";
 import ImageReact from "./components/ImageReact";
 import SinglePostCard from "./components/SinglePostCard";
+import ThreeDCardDemo from "./components/ui/card";
 
 
 
@@ -29,7 +30,6 @@ export default function Home() {
 
   return (
     <main className={`flex min-h-screen flex-col items-center gap-10 ${!themeMode ? " bg-black text-white " : " bg-white text-black"}`}>
-
 
       <Navbar />
 
@@ -223,7 +223,7 @@ function AllPostDiv() {
 
   return (
 
-    <div className="card_container relative sm:px-[8vh] mt-16 flex gap-10 p-0.5 flex-wrap justify-center items-start ">
+    <div className="card_container relative sm:px-[8vh] mt-16 flex gap-10 gap-x-64 p-0.5 flex-wrap justify-center items-start ">
 
       <MainLoader isLoading={isLoading} />
 

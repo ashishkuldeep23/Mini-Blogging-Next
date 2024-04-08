@@ -16,7 +16,7 @@ import { AiOutlineRetweet, AiTwotoneDelete } from "react-icons/ai";
 import { BiPencil } from "react-icons/bi";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { UserDataInterface } from '@/redux/slices/UserSlice';
-import Link from 'next/link';
+
 
 
 
@@ -51,7 +51,7 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
     })
 
 
-    const [commentIds, setCommentIds] = useState<string[]>([])
+    const [commentIds, setCommentIds] = useState<any[]>([])
 
 
     const dispatch = useDispatch<AppDispatch>()
@@ -153,7 +153,6 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
     }
 
 
-
     const deletePostHandler = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.stopPropagation()
 
@@ -199,12 +198,21 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
     }
 
 
-
     useEffect(() => {
 
         if (post.comments.length > 0) {
+            let idsOfComments = post.comments.map((ele) => {
 
-            let idsOfComments = post.comments.map((ele) => ele?.userId?._id)
+                // console.log(typeof ele)
+
+                if (typeof ele === "string") {       
+                    return ele
+                } else {
+                    return ele?.userId?._id
+                }
+
+
+            })
 
             // console.log(idsOfComments)
 
@@ -249,12 +257,12 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
 
 
                 {/* Like comments buttons -----> */}
-                <div className='flex gap-5'>
+                <div className='flex flex-row-reverse md:flex-row gap-5'>
 
                     {/* Like btn */}
                     <button
                         className={`  border px-1 rounded-lg flex items-center gap-1 ${post?.likesId?.includes(userID.toString()) && "text-rose-500 border-rose-500 shadow-md shadow-rose-500"} `}
-                        onClick={(e) => { e.preventDefault(); likeClickHandler(e) }}
+                        onClick={(e) => { e.stopPropagation(); likeClickHandler(e) }}
                     >
                         <span>{post.likes}</span>
                         <span > <SlLike /> </span>
@@ -266,7 +274,7 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
                         className={`border px-1 rounded-lg flex items-center gap-1
                             ${commentIds.includes(userID.toString()) && "text-yellow-500 border-yellow-500 shadow-md shadow-yellow-500"}
                         `}
-                        onClick={(e) => { e.preventDefault(); commentBtnClicked(e) }}
+                        onClick={(e) => { e.stopPropagation(); commentBtnClicked(e) }}
                     >
                         <span>{post.comments.length}</span>
                         <span><FaRegCommentDots /> </span>
@@ -291,23 +299,16 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
 
                         <div className=' ml-auto mr-1 flex gap-0'>
 
-                            {/* <Link href={`/}`}> */}
-
-
                             <button
                                 className=" border px-2 rounded-lg mx-0.5 hover:bg-blue-500"
-                                onClick={(e) => { e.preventDefault(); updatePostHandler(e) }}
+                                onClick={(e) => { e.stopPropagation(); updatePostHandler(e) }}
                             >
                                 <BiPencil />
                             </button>
 
-                            {/* </Link> */}
-
-
-
                             <button
                                 className=" border px-2 rounded-lg  mx-0.5 hover:bg-red-500"
-                                onClick={(e) => { e.preventDefault(); deletePostHandler(e) }}
+                                onClick={(e) => { e.stopPropagation(); deletePostHandler(e) }}
                             >
                                 <AiTwotoneDelete />
                             </button>
@@ -500,7 +501,11 @@ function PostCommentForm(
 
     return (
         <>
-            <div className='ml-auto sm:w-[90%] mt-3 flex flex-col relative p-0.5 border border-green-300 my-0.5 px-1 rounded-lg '>
+            <div
+                className='ml-auto sm:w-[90%] mt-3 flex flex-col relative p-0.5 border border-green-300 my-0.5 px-1 rounded-lg '
+                onClick={(e) => { e.stopPropagation(); }}
+            >
+
 
                 <MainLoader isLoading={isLoading} />
 
@@ -518,7 +523,7 @@ function PostCommentForm(
                                     className={`border border-l-2 border-b-2 p-0.5 m-0.5 rounded text-xs ${ele === "X" && "ml-2 border-red-500"} `}
 
                                     onClick={(e) => {
-                                        e.preventDefault();
+                                        e.stopPropagation();
 
                                         if (commentValue.value) {
 
@@ -573,13 +578,13 @@ function PostCommentForm(
                         placeholder="Give your comment here."
                         className={`w-full h-full border rounded px-2 mx-0.5 ${!themeMode ? "bg-black text-white" : "bg-white text-black"} `}
                         value={commentValue.value}
-                        onChange={(e) => {  e.preventDefault();  setCommentValue({ value: e.target.value }) }}
+                        onChange={(e) => { e.stopPropagation(); setCommentValue({ value: e.target.value }) }}
                     ></textarea>
 
                     <button
                         className={`font-bold border rounded px-2 mx-0.5 ${!themeMode ? "bg-green-700 " : "bg-green-300 "} `}
                         onClick={(e) => {
-                            e.preventDefault(); 
+                            e.stopPropagation();
                             if (!updatingComment.mode) {
                                 postCommentBtn(e)
                             } else {
@@ -789,7 +794,7 @@ const SingleCommentUI = ({
                                 <button
                                     className=" border rounded p-1 mx-1 hover:bg-blue-500"
                                     onClick={(e) => {
-                                        e.preventDefault(); 
+                                        e.stopPropagation();
                                         updateSingleComment()
                                     }}
                                 >
@@ -798,7 +803,7 @@ const SingleCommentUI = ({
                                 </button>
 
                                 <button
-                                    onClick={(e)=>{ e.preventDefault(); deleteSingleComment}}
+                                    onClick={(e) => { e.stopPropagation(); deleteSingleComment }}
                                     className=" border rounded p-1 mx-1 hover:bg-red-500"
                                 >
                                     <AiTwotoneDelete />
@@ -821,7 +826,7 @@ const SingleCommentUI = ({
                             className={`flex gap-0.5 items-center justify-center mb-1.5 border p-1 rounded text-xs
                                      ${comment?.likesId?.includes(session?.user?.id || "") && "text-rose-500 border-rose-500 shadow-md shadow-rose-500"}
                             `}
-                            onClick={(e) => { e.preventDefault();  likeComment() }}
+                            onClick={(e) => { e.stopPropagation(); likeComment() }}
                         >
 
                             {/* <span
@@ -835,7 +840,7 @@ const SingleCommentUI = ({
 
                         <button
                             className=" flex gap-0.5 items-center justify-center border p-1 rounded text-xs"
-                            onClick={(e) => { e.preventDefault();  setCommentClicked((last) => !last) }}
+                            onClick={(e) => { e.stopPropagation(); setCommentClicked((last) => !last) }}
                         >
                             <span>{comment.replies.length}</span>
 
@@ -1113,7 +1118,7 @@ function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean
                     <button
                         className={`relative mt-0.5  ml-auto mr-0 flex gap-0.5 items-center justify-center border p-0.5 rounded text-[0.6rem] font-semibold font-serif ${seeMoreBtn && " bg-yellow-400 text-black "} `}
 
-                        onClick={(e) => { e.preventDefault();  setSeeMoreBtn((last) => !last); getCommentData() }}
+                        onClick={(e) => { e.stopPropagation(); setSeeMoreBtn((last) => !last); getCommentData() }}
 
                     >
                         <span>More</span>
@@ -1151,7 +1156,7 @@ function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean
                         <button
                             className={`font-semibold  ml-auto md:ml-1 border py-0 text-sm rounded px-1 ${themeMode ? "bg-green-400" : "bg-green-600"}`}
                             onClick={(e) => {
-                                e.preventDefault(); 
+                                e.stopPropagation();
                                 if (!updatingReply.mode) {
                                     submitReplyHandler()
                                 } else {
@@ -1177,7 +1182,7 @@ function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean
                                             className={` overflow-hidden text-xs mx-0.5 my-[2px] border border-l-2 border-b-2  rounded  ${ele === "X" && "ml-3 border-red-500 rounded-xl "} `}
 
                                             onClick={(e) => {
-                                                e.preventDefault(); 
+                                                e.stopPropagation();
                                                 if (replyText) {
 
                                                     if (ele === "X") {
@@ -1304,7 +1309,7 @@ function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean
                                                         <button
                                                             className=' px-0.5 rounded-full hover:bg-blue-500 '
                                                             onClick={(e) => {
-                                                                e.preventDefault(); 
+                                                                e.stopPropagation();
 
                                                                 setUpdatingReply({
                                                                     mode: true,
@@ -1321,7 +1326,7 @@ function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean
 
                                                         <button
                                                             className=' px-0.5 rounded-full hover:bg-red-500 '
-                                                            onClick={(e) => { e.preventDefault();  commentDeleteHandler(ele._id, i) }}
+                                                            onClick={(e) => { e.stopPropagation(); commentDeleteHandler(ele._id, i) }}
                                                         >
                                                             <AiTwotoneDelete />
                                                         </button>

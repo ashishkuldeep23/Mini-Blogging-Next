@@ -72,7 +72,7 @@ const ProfilePageParams = ({ params }: any) => {
             {
                 errMsg
                 &&
-                <p className=' border border-[#f92f60] rounded-lg px-4 py-2 text-xl'>
+                <p className=' my-5 border border-[#f92f60] rounded-lg px-4 py-2 text-xl'>
                     <span className=' mr-2 border border-[#f92f60] rounded-full size-4 p-0.5'>❌</span>
                     <span className=' border-b'>{errMsg}</span>
                 </p>
@@ -80,7 +80,7 @@ const ProfilePageParams = ({ params }: any) => {
 
 
 
-            <div className='border p-2 rounded my-5 flex flex-wrap justify-center items-center'>
+            <div className=' my-5 border p-2 rounded flex flex-wrap justify-center items-center'>
 
                 <ImageReact
                     className=" mr-4 w-40 border rounded-full mt-2"
@@ -98,7 +98,7 @@ const ProfilePageParams = ({ params }: any) => {
 
 
             <div
-                className=" my-10 card_container relative sm:px-[8vh] mt-16 flex gap-10 p-0.5 flex-wrap justify-center items-start "
+                className=" my-20 card_container relative sm:px-[8vh] mt-16 flex gap-10 gap-x-64 p-0.5 flex-wrap justify-center items-start "
             >
 
                 {

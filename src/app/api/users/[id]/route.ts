@@ -7,11 +7,12 @@ import Comment from "@/models/commentModel";
 import { NextRequest, NextResponse } from "next/server"
 import { isValidObjectId, model, modelNames, models } from "mongoose"
 
+import { getServerSession } from "next-auth/next"
+import { NextApiRequest } from "next";
 
 
 
-export async function GET(req: NextRequest, context: any) {
-
+export async function GET(req: NextApiRequest, context: any) {
 
     connect()
 
@@ -21,6 +22,26 @@ export async function GET(req: NextRequest, context: any) {
 
 
     try {
+
+        // console.log(req)
+
+
+        // // // Experiment here -------->
+
+        // // // Thats how i can get user data from the request. [Note we have to give (any or NextApiRequest) type to req parameter]
+        const session = await getServerSession(req)
+        // console.log(session)
+        let askedUserData;
+
+        if (session?.user?.email) {
+
+            askedUserData = await User.findOne({ email: session?.user?.email })
+                .select("-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password")
+
+        }
+
+
+
 
         let userId = context?.params?.id
 

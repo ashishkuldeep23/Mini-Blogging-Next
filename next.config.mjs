@@ -1,6 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    reactStrictMode: false
+    reactStrictMode: false,
+
+    images: {
+        domains: ['images.unsplash.com'],
+        // remotePatterns: ['images.unsplash.com']
+    }
 };
 
 export default nextConfig;
+
+
+

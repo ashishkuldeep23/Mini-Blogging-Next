@@ -69,7 +69,7 @@ const handler = NextAuth({
 
                 const user = await res.json()
 
-                console.log({ user })
+                // console.log({ user })
 
                 // If no error and we have user data, return it
                 if (user && user.profile) {
@@ -90,13 +90,15 @@ const handler = NextAuth({
 
         async session({ session }: any) {
 
-            // console.log({ token })
+            // console.log({ session })
 
             const sessionUserData = await User.findOne({ email: session.user.email })
 
             // console.log(sessionUserData)
 
             session.user.id = sessionUserData._id.toString();
+
+            session.user._id = sessionUserData._id.toString();
             // session.expires = Date.now() + ( 3600 * 1000 * 24)
 
             session.maxAge = 30 * 24 * 60 * 60 * 1000  // // // For 30 days.
@@ -114,15 +116,17 @@ const handler = NextAuth({
 
                 // console.log({ profile, user })
 
-                let email, name, picture
+                let email, name, picture;
 
                 if (profile) {
+                    // // // For google users ------>
                     email = profile.email
                     name = profile.name
                     picture = profile.picture
                 }
 
                 if (user) {
+                    // // // For Credentials user ------->
                     email = user.email
                     name = user.name
                 }
@@ -132,6 +136,8 @@ const handler = NextAuth({
 
                 // console.log(getUser)
 
+
+                // // // For new users here ------>
                 if (!getUser) {
 
                     let newUserData = {
@@ -139,14 +145,11 @@ const handler = NextAuth({
                         email: email,
                         password: "LOG_IN_BY_GOOGLE",
                         profilePic: picture,
-                        isVerified : true
+                        isVerified: true
                     }
 
-
                     let createUser = new User(newUserData)
-
                     createUser = await createUser.save()
-
                 }
 
 
@@ -164,7 +167,6 @@ const handler = NextAuth({
 
 
 })
-
 
 
 
