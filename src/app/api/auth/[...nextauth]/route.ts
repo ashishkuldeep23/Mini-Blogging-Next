@@ -47,6 +47,7 @@ const handler = NextAuth({
                 email: { label: "email", type: "text", placeholder: "jhoncena@gmail.com" },
                 password: { label: "password", type: "password" }
             },
+
             async authorize(credentials, req) {
 
                 // console.log({ req })
@@ -90,7 +91,9 @@ const handler = NextAuth({
 
         async session({ session }: any) {
 
-            // console.log({ session })
+
+            // // // Jsut want to ready user model befour populating (in below code ) (I wnat just my model should be model ready here) ---------->
+            await User.findById("65ffbc7cf6215d659db3b197")
 
             const sessionUserData = await User.findOne({ email: session.user.email })
 

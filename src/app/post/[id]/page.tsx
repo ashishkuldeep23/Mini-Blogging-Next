@@ -20,7 +20,6 @@ export interface SinglePostType extends Omit<PostInterFace, 'likesId'> {
 }
 
 
-
 const Page = ({ params }: any) => {
 
     const themeMode = useThemeData().mode
@@ -109,26 +108,41 @@ const Page = ({ params }: any) => {
 
     // // // Do this to update single post ---------->
 
-
-    // useEffect(() => {
-    //     if (singlePostdata && singlePost?._id) {
-    //         setSinglePost(singlePostdata)
-    //     }
-    // }, [singlePostdata])
+    // // // Very improtant code for single post data update --------->
+    useEffect(() => {
+        if (singlePostdata && singlePost?._id) {
 
 
+            let bakeDataHere: any = {
+                _id: singlePostdata._id,
+                title: singlePostdata.title,
+                category: singlePostdata.category,
+                promptReturn: singlePostdata.promptReturn,
+                urlOfPrompt: singlePostdata.urlOfPrompt,
+                aiToolName: singlePostdata.aiToolName,
+                hashthats: singlePostdata.hashthats,
+                author: singlePostdata.author,
+                likes: singlePostdata.likes,
+                comments: singlePostdata.comments,
+                isDeleted: singlePostdata.isDeleted,
 
 
-    // useEffect(() => {
+                // likesId: singlePostdata.likesId
+            }
 
 
-    //     if (singlePostdata?._id) {
+            if ((singlePostdata.likesId.length > 0) && (typeof singlePostdata.likesId[0] !== "string")) {
+                bakeDataHere.likesId = singlePostdata.likesId
+            } else {
+                bakeDataHere.likesId = []
+            }
 
-    //         // console.log(singlePostdata)
-    //         // setSinglePost(singlePostdata)
-    //     }
+            setSinglePost(bakeDataHere)
+        }
 
-    // }, [singlePostdata])
+
+    }, [singlePostdata])
+
 
 
     return (

@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     try {
 
 
-        // // // Jsut want to ready user model befour populating (in below code ) ---------->
+        // // // Jsut want to ready user model befour populating (in below code ) (I wnat just my model should be model ready here) ---------->
         await User.findById("65ffbc7cf6215d659db3b197")
 
 

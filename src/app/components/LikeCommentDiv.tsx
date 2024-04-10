@@ -280,7 +280,7 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
             <div className="mt-2">
 
 
-                {/* Like comments buttons -----> */}
+                {/* Like comments buttons (all 3 buttons here) -----> */}
                 <div className='flex flex-row-reverse md:flex-row gap-14 md:gap-x-16'>
 
                     <div className='flex gap-2 flex-wrap justify-between flex-row-reverse md:flex-row'>
@@ -349,93 +349,83 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
 
 
                 {/* Below fragment show only if user on post[id] page --->  */}
-                <>
-                    {
-                        showPostCommentDiv
-                        &&
 
 
-                        <>
+                {/* All Likes div ---> */}
+                {
 
-                            {/* All Likes div ---> */}
+                    // // // By below way we can get user on single page route or in other route
+                    // // // 'post' is fixed name that is, i'm using to show single post page --------> 
+                    // // // By this way ass problems fixed
+                    // // // This technique is also used in all comments see below code -->
+                    params.includes("post")
+                    &&
+
+                    <div className='border rounded my-1 p-0.5 py-2 flex gap-2 items-start flex-wrap '>
+
+                        <p className=' flex gap-1 flex-wrap items-center ml-1 mt-1.5 '>
+                            <span className=' font-semibold'>Likes</span>
+                            <span> <PiPaperPlaneRight /> </span>
+                        </p>
+
+
+                        <div className=' px-1 flex gap-1 flex-wrap items-center'>
+
                             {
+                                (post.likesId.length > 0)
 
-                                // // // By below way we can get user on single page route or in other route
-                                // // // 'post' is fixed name that is, i'm using to show single post page --------> 
-                                // // // By this way ass problems fixed
-                                // // // This technique is also used in all comments see below code -->
-                                params.includes("post")
                                 &&
 
-                                <div className='border rounded my-1 p-0.5 py-2 flex gap-2 items-start flex-wrap '>
+                                (post.likesId[0] !== "string")
+                                &&
 
-                                    <p className=' flex gap-1 flex-wrap items-center ml-1 mt-1.5 '>
-                                        <span className=' font-semibold'>Likes</span>
-                                        <span> <PiPaperPlaneRight /> </span>
-                                    </p>
+                                // post.likesId.map((ele) => ele.)
 
-
-                                    <div className=' px-1 flex gap-1 flex-wrap items-center'>
-
-                                        {
-                                            (post.likesId.length > 0)
-
-                                            &&
-
-                                            (post.likesId[0] !== "string")
-                                            &&
-
-                                            // post.likesId.map((ele) => ele.)
-
-                                            <AnimatedTooltip items={post.likesId.map((ele: any, i) => ({ id: i, name: ele.username, designation: ele.email, image: ele.profilePic }))} />
-
-                                        }
-
-
-                                    </div>
-
-                                </div>
+                                <AnimatedTooltip items={post.likesId.map((ele: any, i) => ({ id: i, name: ele.username, designation: ele.email, image: ele.profilePic }))} />
 
                             }
 
 
+                        </div>
+
+                    </div>
+
+                }
 
 
-                            {
 
 
-                                <PostCommentForm
-                                    textAreaInputRef={textAreaInputRef}
-                                    checkUserStatus={checkUserStatus}
-                                    updatingComment={updatingComment}
-                                    setUpdatingComment={setUpdatingComment}
-
-                                    post={post}
-                                />
-
-                            }
+                {
+                    showPostCommentDiv
+                    &&
 
 
-                            {
-                                // // // In home page this section will show noting jsut a empty tag ----->
-                                (post.comments.length > 0)
-                                &&
-                                params.includes("post")
-                                &&
-                                <AllComments
-                                    post={post}
-                                    updatingComment={updatingComment}
-                                    setUpdatingComment={setUpdatingComment}
-                                />
-                            }
+                    <PostCommentForm
+                        textAreaInputRef={textAreaInputRef}
+                        checkUserStatus={checkUserStatus}
+                        updatingComment={updatingComment}
+                        setUpdatingComment={setUpdatingComment}
+
+                        post={post}
+                    />
+
+                }
 
 
-                        </>
+                {
+                    // // // In home page this section will show noting jsut a empty tag ----->
+                    (post.comments.length > 0)
+                    &&
+                    params.includes("post")
+                    &&
+                    <AllComments
+                        post={post}
+                        updatingComment={updatingComment}
+                        setUpdatingComment={setUpdatingComment}
+                    />
+                }
 
 
-                    }
-
-                </>
             </div>
         </div>
     )
@@ -597,8 +587,11 @@ function PostCommentForm(
 
                 <MainLoader isLoading={isLoading} />
 
-                <p className=" ml-1 ">
-                    Give your <span className=" underline">comment</span> here 👇
+                <p className=" ml-1 flex gap-1 flex-wrap items-center ">
+                    Give your
+                    <span className=" underline">comment</span>
+                    here
+                    <span className=' rotate-[90deg]'> <PiPaperPlaneRight /> </span>
                 </p>
 
 
@@ -717,6 +710,24 @@ function AllComments({
         <div
             className=" my-5 mx-0.5 border border-rose-400 rounded-md"
         >
+
+            <div className=' flex justify-center'>
+                <p
+                    className='border-b border-l-2 rounded-[100%]  my-5 ml-1 pl-5 pb-1 flex gap-1 flex-wrap items-center justify-center hover:cursor-pointer hover:scale-105 sm:hover:scale-125 transition-all '
+
+                    onClick={() => {
+                        window.scroll(0, 300)
+                    }}
+
+                >
+                    <span>
+                        All given comments for this post.
+                        <span className=' relative left-2 top-[5px] inline-flex rotate-[90deg]'> <PiPaperPlaneRight /> </span>
+                    </span>
+                </p>
+            </div>
+
+
             {
                 post.comments.map((comment, i) => <SingleCommentUI
                     post={post}
@@ -840,7 +851,7 @@ const SingleCommentUI = ({
         <>
             <div
                 key={comment._id}
-                className={` ${i % 2 !== 0 && "sm:ml-auto"} border rounded m-1 p-0.5 sm:w-[80%] relative`}
+                className={` ${i % 2 !== 0 && "ml-auto"} border rounded m-1 p-0.5 w-[90%] sm:w-[80%] relative`}
             >
 
 
@@ -955,7 +966,6 @@ const SingleCommentUI = ({
 
     )
 }
-
 
 
 function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean, comment: Comment, }) {

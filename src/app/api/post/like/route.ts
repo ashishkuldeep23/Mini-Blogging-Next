@@ -50,7 +50,7 @@ export async function PUT(req: NextRequest) {
 
         if (!postData.likesId.includes(userId)) {
             postData.likes = postData.likes + 1
-            postData.likesId.push(userId)
+            postData.likesId.unshift(userId)
         } else {
 
             // console.log(postData)

@@ -111,10 +111,9 @@ const Navbar = () => {
                     session?.user?.image
                     &&
                     <ImageReact
-                        className=" w-8 border rounded-full"
+                        className=" w-[10px] border rounded-full"
                         src={session?.user?.image?.toString()}
                         alt=""
-                        width={"10px"}
                     />
                 }
 

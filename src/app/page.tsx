@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import LikeCommentDiv from "./components/LikeCommentDiv";
 import ImageReact from "./components/ImageReact";
 import SinglePostCard from "./components/SinglePostCard";
-import ThreeDCardDemo from "./components/ui/card";
+// import ThreeDCardDemo from "./components/ui/card";
 
 
 

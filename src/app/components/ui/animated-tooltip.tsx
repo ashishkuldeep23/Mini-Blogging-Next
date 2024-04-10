@@ -5,11 +5,11 @@ import React, { useState } from "react";
 import {
     motion,
     useTransform,
-    AnimatePresence,
     useMotionValue,
     useSpring,
 } from "framer-motion";
 import { useThemeData } from "@/redux/slices/ThemeSlice";
+import ImageReact from "../ImageReact";
 
 
 
@@ -48,20 +48,20 @@ export default function AnimatedTooltip({
         <>
             {items.map((item, idx) => (
                 <div
-                    className="-mr-4  relative group hover:cursor-pointer focus:scale-75"
+                    className={`-mr-4 relative group hover:cursor-pointer focus:scale-75    `}
                     key={item.name}
                     onMouseEnter={() => setHoveredIndex(item.id)}
                     onMouseLeave={() => setHoveredIndex(null)}
 
 
-                    onClick={() => { 
+                    onClick={() => {
                         // alert('dsdasasdsasa') 
                     }}
 
                 >
                     {hoveredIndex === item.id && (
                         <motion.div
-                            initial={{ opacity: 0, y: 20, scale: 0.6 }}
+                            initial={{ opacity: 0, y: 20, scale: 0 }}
                             animate={{
                                 opacity: 1,
                                 y: 0,
@@ -72,7 +72,7 @@ export default function AnimatedTooltip({
                                     damping: 10,
                                 },
                             }}
-                            exit={{ opacity: 0, y: 20, scale: 0.6 }}
+                            exit={{ opacity: 0, y: 20, scale: 0 }}
                             style={{
                                 translateX: translateX,
                                 rotate: rotate,
@@ -90,14 +90,36 @@ export default function AnimatedTooltip({
                             <div className=" text-xs font-semibold">{item.designation}</div>
                         </motion.div>
                     )}
-                    <img
-                        onMouseMove={handleMouseMove}
-                        height={100}
-                        width={100}
-                        src={item.image}
-                        alt={item.name}
-                        className="object-cover !m-0 !p-0 object-top rounded-full h-14 w-14 border-2 group-hover:scale-105 group-hover:z-30 border-white  relative transition duration-500"
-                    />
+
+                    <motion.div
+                        className=" inline-flex group-hover:!z-50"
+                        initial={{ opacity: 0, y: 20, scale: 0 }}
+                        animate={{
+                            opacity: 1,
+                            y: 0,
+                            scale: 1,
+                            transition: {
+                                type: "spring",
+                                stiffness: 260,
+                                damping: 10,
+                            },
+                        }}
+                        exit={{ opacity: 0, y: 20, scale: 0 }}
+
+                    >
+
+
+                        <ImageReact
+                            src={item.image}
+                            className="object-cover !m-0 !p-0 object-top rounded-full h-14 w-14 border-2 group-hover:scale-105 group-hover:z-30 border-white  relative transition duration-500"
+                            alt={item.name}
+                            onMouseMove={handleMouseMove}
+                            height={100}
+                            width={100}
+                        />
+
+                    </motion.div>
+
                 </div>
             ))}
         </>
