@@ -6,11 +6,19 @@ import MainLoader from '@/app/components/MainLoader'
 import Navbar from '@/app/components/Navbar'
 import { PostInterFace, setSinglePostdata, usePostData } from '@/redux/slices/PostSlice'
 import { useThemeData } from '@/redux/slices/ThemeSlice'
+import { UserDataInterface } from '@/redux/slices/UserSlice'
 import { AppDispatch } from '@/redux/store'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
+
+
+// // // Baking type for single post -------->
+export interface SinglePostType extends Omit<PostInterFace, 'likesId'> {
+    likesId: UserDataInterface[]
+}
+
 
 
 const Page = ({ params }: any) => {
@@ -23,7 +31,8 @@ const Page = ({ params }: any) => {
 
     const singlePostdata = usePostData().singlePostdata
 
-    const [singlePost, setSinglePost] = useState<PostInterFace>({
+
+    const initialPostData: SinglePostType = {
         _id: "",
         title: "",
         category: "",
@@ -42,14 +51,16 @@ const Page = ({ params }: any) => {
         likesId: [],
         comments: [],
         isDeleted: false
-    })
+    }
+
+    const [singlePost, setSinglePost] = useState<SinglePostType>(initialPostData)
 
     const [responseMsg, setRespoanceMsg] = useState<string>("")
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
 
-    async function fetchPostData() {
+    async function fetchPostData(postId: string) {
 
         setIsLoading(true)
 
@@ -57,7 +68,7 @@ const Page = ({ params }: any) => {
             cache: 'no-store',
         }
 
-        const response = await fetch(`/api/post/${params.id}`, option)
+        const response = await fetch(`/api/post/${postId}`, option)
         let data = await response.json();
 
         if (!data.success) {
@@ -78,15 +89,15 @@ const Page = ({ params }: any) => {
 
         // console.log(params.id)
 
-        if (!params) {
+        if (params && params?.id) {
 
-            toast.error("Please give id of post.")
-            router.push("/")
 
+            fetchPostData(params.id)
         } else {
             // console.log("Now fetch data.")
 
-            fetchPostData()
+            toast.error("Please give id of post.")
+            router.push("/")
 
         }
 
@@ -94,16 +105,30 @@ const Page = ({ params }: any) => {
     }, [])
 
 
-    useEffect(() => {
 
 
-        if (singlePostdata?._id) {
+    // // // Do this to update single post ---------->
 
-            // console.log(singlePostdata)
-            setSinglePost(singlePostdata)
-        }
 
-    }, [singlePostdata])
+    // useEffect(() => {
+    //     if (singlePostdata && singlePost?._id) {
+    //         setSinglePost(singlePostdata)
+    //     }
+    // }, [singlePostdata])
+
+
+
+
+    // useEffect(() => {
+
+
+    //     if (singlePostdata?._id) {
+
+    //         // console.log(singlePostdata)
+    //         // setSinglePost(singlePostdata)
+    //     }
+
+    // }, [singlePostdata])
 
 
     return (
@@ -147,7 +172,7 @@ const Page = ({ params }: any) => {
 
 export default Page
 
-function MainPostUI({ singlePost }: { singlePost: PostInterFace }) {
+function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
 
     const themeMode = useThemeData().mode
 

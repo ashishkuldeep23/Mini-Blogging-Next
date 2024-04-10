@@ -40,27 +40,13 @@ export async function PUT(req: NextRequest) {
         await Comment.findById("660cba65c543855317a68f02")
 
 
-        let postData = await Post.findById(postId)
-            .populate({
-                path: "author",
-                // match: { isDeleted: false },
-                select: "-updatedAt -createdAt -__v -_id -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password",
-            })
-            .populate({
-                path: "comments",
-                select: "-updatedAt -createdAt -__v  -postId ",
-                populate: {
-                    path: "userId",
-                    // match: { isDeleted: false },
-                    select: "-updatedAt -createdAt -__v -_id -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password",
-                }
-            })
-            .select("-updatedAt -createdAt -__v ")
+        let postData = await Post.findById(postId).select("-updatedAt -createdAt -__v ")
 
         if (!postData) return NextResponse.json({ success: false, message: 'Post not found. Please refresh page.' }, { status: 404 })
 
 
-        // // // Now written logic for likes ------>
+        // // // Now written logic for likes and dislike ------>
+        // // // postData.likesId should be string[] (user_ids of arr) for logic 
 
         if (!postData.likesId.includes(userId)) {
             postData.likes = postData.likes + 1
@@ -75,14 +61,34 @@ export async function PUT(req: NextRequest) {
             // console.log(findIndex)
 
             postData.likesId.splice(findIndex, 1)
-
-
             postData.likes = postData.likes - 1
-
         }
 
+        // // // Save post here -------->
+        await postData.save()
 
-        let updatedPostData = await postData.save()
+
+        let updatedPostData = await Post.findById(postId)
+            .populate({
+                path: "author",
+                // match: { isDeleted: false },
+                select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password",
+            })
+            .populate({
+                path: "likesId",
+                // match: { isDeleted: false },
+                select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password",
+            })
+            .populate({
+                path: "comments",
+                select: "-updatedAt -createdAt -__v  -postId ",
+                populate: {
+                    path: "userId",
+                    // match: { isDeleted: false },
+                    select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password",
+                }
+            })
+            .select("-updatedAt -createdAt -__v ")
 
         // console.log(updatedPostData)
 

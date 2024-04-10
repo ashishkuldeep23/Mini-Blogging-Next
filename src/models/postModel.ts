@@ -42,6 +42,7 @@ const PostSchema = new mongoose.Schema({
     likesId: {
         type: [mongoose.Schema.Types.ObjectId],
         default: [],
+        ref: "users"
     },
     author: {
         type: mongoose.Schema.Types.ObjectId,
@@ -54,7 +55,7 @@ const PostSchema = new mongoose.Schema({
     },
 
     // comments : [{ type: mongoose.Schema.Types.ObjectId, ref: 'comments' }] ,
-    
+
     isDeleted: {
         type: Boolean,
         default: false

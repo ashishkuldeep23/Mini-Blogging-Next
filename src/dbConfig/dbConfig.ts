@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { NextResponse } from "next/server";
 
 
 export async function connect() {
@@ -18,9 +19,11 @@ export async function connect() {
             process.exit()
         })
 
-    } catch (error) {
+    } catch (error : any) {
         console.log("Something goes wrong!")
         console.log(error)
+
+        return NextResponse.json({ success: false, message: `${error.message} (Server Error)` }, { status: 500 })
 
     }
 

@@ -14,7 +14,8 @@ import { setUserDataBySession } from "@/redux/slices/UserSlice"
 import ImageReact from "./ImageReact"
 import { getCatAndHash } from "@/redux/slices/PostSlice"
 import { AppDispatch } from "@/redux/store"
-
+import { PiSunDimDuotone } from "react-icons/pi";
+import { PiMoonStarsDuotone } from "react-icons/pi";
 
 
 
@@ -174,11 +175,13 @@ const Navbar = () => {
 
                     }}
 
-                    className={`border rounded-full text-xs h-6 ${themeMode ? " border-black" : " border-white"}`}
+                    className={`rounded-full text-xl h-6 hover:text-yellow-500`}
                 >
                     {
 
-                        themeMode ? "🌛" : "🌞"
+                        themeMode
+                            ? <span> <PiMoonStarsDuotone  /> </span>
+                            : <span> <PiSunDimDuotone /> </span>
                     }
                 </button>
 

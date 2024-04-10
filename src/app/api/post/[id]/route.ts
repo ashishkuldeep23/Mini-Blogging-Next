@@ -45,6 +45,11 @@ export async function GET(req: NextRequest, context: any) {
                 select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password",
             })
             .populate({
+                path: "likesId",
+                // match: { isDeleted: false },
+                select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password",
+            })
+            .populate({
                 path: "comments",
                 select: "-updatedAt -createdAt -__v  -postId ",
                 populate: {

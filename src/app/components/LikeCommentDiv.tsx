@@ -16,7 +16,10 @@ import { AiOutlineRetweet, AiTwotoneDelete } from "react-icons/ai";
 import { BiPencil } from "react-icons/bi";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { UserDataInterface } from '@/redux/slices/UserSlice';
+import AnimatedTooltip from './ui/animated-tooltip';
 
+import { PiPaperPlaneRight } from "react-icons/pi";
+import { SinglePostType } from '../post/[id]/page';
 
 
 
@@ -27,7 +30,7 @@ interface UpdatingComment {
 }
 
 
-const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
+const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
 
     const { data: session, status } = useSession()
 
@@ -37,7 +40,7 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
 
     const router = useRouter()
 
-    const [showComment, setShowComment] = useState(false)
+    const [showPostCommentDiv, setShowPostCommentDiv] = useState(false)
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
@@ -51,7 +54,9 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
     })
 
 
-    const [commentIds, setCommentIds] = useState<any[]>([])
+    const [commentIds, setCommentIds] = useState<string[]>([])
+
+    const [likeIds, setLikeIds] = useState<string[]>([])
 
 
     const dispatch = useDispatch<AppDispatch>()
@@ -120,7 +125,7 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
 
         textAreaInputRef.current?.focus()
 
-        setShowComment(true)
+        setShowPostCommentDiv(true)
 
         // console.log(textDivRef)
     }
@@ -205,7 +210,7 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
 
                 // console.log(typeof ele)
 
-                if (typeof ele === "string") {       
+                if (typeof ele === "string") {
                     return ele
                 } else {
                     return ele?.userId?._id
@@ -217,6 +222,27 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
             // console.log(idsOfComments)
 
             setCommentIds(idsOfComments)
+
+        }
+
+
+        if (post.likesId.length > 0) {
+            let idsOflikes = post.likesId.map((ele: any) => {
+
+                // console.log(ele)
+
+                if (typeof ele === "string") {
+                    return ele
+                } else {
+                    return ele?._id
+                }
+
+
+            })
+
+            // console.log(idsOflikes)
+
+            setLikeIds(idsOflikes)
 
         }
 
@@ -235,15 +261,13 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
 
 
     // // // Below useEffect is very imp. this decide show rest ui or not ---->
-
     useEffect(() => {
 
         // console.log(params)
 
         if (params !== "/") {
-            setShowComment(true)
+            setShowPostCommentDiv(true)
         }
-
 
     }, [])
 
@@ -253,43 +277,46 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
             <MainLoader isLoading={isLoading} />
 
 
-            <div className=" relative  mt-2">
+            <div className="mt-2">
 
 
                 {/* Like comments buttons -----> */}
-                <div className='flex flex-row-reverse md:flex-row gap-5'>
+                <div className='flex flex-row-reverse md:flex-row gap-14 md:gap-x-16'>
 
-                    {/* Like btn */}
-                    <button
-                        className={`  border px-1 rounded-lg flex items-center gap-1 ${post?.likesId?.includes(userID.toString()) && "text-rose-500 border-rose-500 shadow-md shadow-rose-500"} `}
-                        onClick={(e) => { e.stopPropagation(); likeClickHandler(e) }}
-                    >
-                        <span>{post.likes}</span>
-                        <span > <SlLike /> </span>
-                    </button>
+                    <div className='flex gap-2 flex-wrap justify-between flex-row-reverse md:flex-row'>
+
+                        {/* Like btn */}
+                        <button
+                            className={`  border px-1 rounded-lg flex items-center gap-1 ${likeIds.includes(userID.toString()) && "text-rose-500 border-rose-500 shadow-md shadow-rose-500"} `}
+                            onClick={(e) => { e.stopPropagation(); likeClickHandler(e) }}
+                        >
+                            <span>{post.likes}</span>
+                            <span > <SlLike /> </span>
+                        </button>
 
 
-                    {/* comment btn */}
-                    <button
-                        className={`border px-1 rounded-lg flex items-center gap-1
+                        {/* comment btn */}
+                        <button
+                            className={`border px-1 rounded-lg flex items-center gap-1
                             ${commentIds.includes(userID.toString()) && "text-yellow-500 border-yellow-500 shadow-md shadow-yellow-500"}
                         `}
-                        onClick={(e) => { e.stopPropagation(); commentBtnClicked(e) }}
-                    >
-                        <span>{post.comments.length}</span>
-                        <span><FaRegCommentDots /> </span>
-                    </button>
+                            onClick={(e) => { e.stopPropagation(); commentBtnClicked(e) }}
+                        >
+                            <span>{post.comments.length}</span>
+                            <span><FaRegCommentDots /> </span>
+                        </button>
 
 
-                    {/* rewrite btn */}
-                    <button
-                        className=' border px-1 rounded-lg flex items-center gap-1'
-                        onClick={(e) => { e.stopPropagation(); reWriteHandler() }}
-                    >
-                        <span>{post.comments.length}</span>
-                        <span><AiOutlineRetweet /> </span>
-                    </button>
+                        {/* rewrite btn */}
+                        <button
+                            className=' border px-1 rounded-lg flex items-center gap-1'
+                            onClick={(e) => { e.stopPropagation(); reWriteHandler() }}
+                        >
+                            <span>{post.comments.length}</span>
+                            <span><AiOutlineRetweet /> </span>
+                        </button>
 
+                    </div>
 
 
                     {
@@ -320,34 +347,95 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace }) => {
 
                 </div>
 
-                {
-                    showComment
-                    &&
 
-                    <PostCommentForm
-                        textAreaInputRef={textAreaInputRef}
-                        checkUserStatus={checkUserStatus}
-                        updatingComment={updatingComment}
-                        setUpdatingComment={setUpdatingComment}
-
-                        post={post}
-                    />
-
-                }
+                {/* Below fragment show only if user on post[id] page --->  */}
+                <>
+                    {
+                        showPostCommentDiv
+                        &&
 
 
-                {
-                    // // // In home page this section will show noting jsut a empty tag ----->
-                    post.comments.length > 0
-                    &&
-                    <AllComments
-                        post={post}
-                        updatingComment={updatingComment}
-                        setUpdatingComment={setUpdatingComment}
-                    />
-                }
+                        <>
+
+                            {/* All Likes div ---> */}
+                            {
+
+                                // // // By below way we can get user on single page route or in other route
+                                // // // 'post' is fixed name that is, i'm using to show single post page --------> 
+                                // // // By this way ass problems fixed
+                                // // // This technique is also used in all comments see below code -->
+                                params.includes("post")
+                                &&
+
+                                <div className='border rounded my-1 p-0.5 py-2 flex gap-2 items-start flex-wrap '>
+
+                                    <p className=' flex gap-1 flex-wrap items-center ml-1 mt-1.5 '>
+                                        <span className=' font-semibold'>Likes</span>
+                                        <span> <PiPaperPlaneRight /> </span>
+                                    </p>
 
 
+                                    <div className=' px-1 flex gap-1 flex-wrap items-center'>
+
+                                        {
+                                            (post.likesId.length > 0)
+
+                                            &&
+
+                                            (post.likesId[0] !== "string")
+                                            &&
+
+                                            // post.likesId.map((ele) => ele.)
+
+                                            <AnimatedTooltip items={post.likesId.map((ele: any, i) => ({ id: i, name: ele.username, designation: ele.email, image: ele.profilePic }))} />
+
+                                        }
+
+
+                                    </div>
+
+                                </div>
+
+                            }
+
+
+
+
+                            {
+
+
+                                <PostCommentForm
+                                    textAreaInputRef={textAreaInputRef}
+                                    checkUserStatus={checkUserStatus}
+                                    updatingComment={updatingComment}
+                                    setUpdatingComment={setUpdatingComment}
+
+                                    post={post}
+                                />
+
+                            }
+
+
+                            {
+                                // // // In home page this section will show noting jsut a empty tag ----->
+                                (post.comments.length > 0)
+                                &&
+                                params.includes("post")
+                                &&
+                                <AllComments
+                                    post={post}
+                                    updatingComment={updatingComment}
+                                    setUpdatingComment={setUpdatingComment}
+                                />
+                            }
+
+
+                        </>
+
+
+                    }
+
+                </>
             </div>
         </div>
     )
@@ -367,7 +455,7 @@ function PostCommentForm(
     }: {
         textAreaInputRef: RefObject<HTMLTextAreaElement>,
         checkUserStatus: Function,
-        post: PostInterFace,
+        post: PostInterFace | SinglePostType,
         updatingComment: UpdatingComment,
         setUpdatingComment: Function
     }
@@ -611,7 +699,7 @@ function AllComments({
     updatingComment,
     setUpdatingComment,
 }: {
-    post: PostInterFace,
+    post: PostInterFace | SinglePostType,
     updatingComment: UpdatingComment,
     setUpdatingComment: Function,
 }) {
@@ -620,7 +708,7 @@ function AllComments({
     const params = usePathname()
 
 
-    if (params === "/") {
+    if (!params.includes('post')) {
         return <></>
     }
 
@@ -653,7 +741,7 @@ const SingleCommentUI = ({
     updatingComment,
     setUpdatingComment,
 }: {
-    post: PostInterFace,
+    post: PostInterFace | SinglePostType,
     comment: Comment,
     i: number,
     updatingComment: UpdatingComment,
@@ -869,6 +957,7 @@ const SingleCommentUI = ({
 }
 
 
+
 function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean, comment: Comment, }) {
 
     const themeMode = useThemeData().mode
@@ -923,8 +1012,6 @@ function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean
     }
 
     async function submitReplyHandler() {
-
-
 
         if (!replyText) return toast.error("Please give comment for this post.")
 
@@ -1138,7 +1225,7 @@ function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean
 
                 {/* Main UI here -------> */}
                 <div
-                    className={`overflow-hidden relative rounded px-1 py-0.5  flex flex-col ${!seeMoreBtn ? " h-1 border-0 opacity-100 " : " h-auto border opacity-100"}  transition-all `}
+                    className={` overflow-hidden relative rounded px-1 py-0.5  flex flex-col ${!seeMoreBtn ? " h-1 border-0 opacity-100 " : " h-auto border opacity-100"}  transition-all `}
                 >
 
                     {/* Input for reply -------> */}
@@ -1170,7 +1257,7 @@ function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean
                             }</button>
                     </div>
 
-
+                    {/* Suggetion for reply ---------> */}
                     <div className='mb-2 flex justify-between items-center flex-wrap'>
 
                         <div className=" flex flex-wrap items-center">
@@ -1243,29 +1330,40 @@ function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean
                     {
                         likedBy.length > 0
                         &&
-                        <div className='border rounded my-1 p-0.5'>
+                        <div className='border rounded my-1 p-0.5 py-2 flex gap-2 items-start flex-wrap '>
 
-                            <p>Likes 👇</p>
+                            <p className=' flex gap-1 flex-wrap items-center ml-1 mt-1.5 '>
+                                <span className=' font-semibold'>Likes</span>
+                                <span> <PiPaperPlaneRight /> </span>
+                            </p>
 
 
                             <div
-                                className=' flex gap-1 flex-wrap'
+                                className='px-1 flex gap-1 flex-wrap items-center'
                             >
 
                                 {
-                                    likedBy.map((ele, i) => {
-                                        return (
-                                            <Fragment key={i}>
 
-                                                <div className='border rounded-full pr-2 flex items-center gap-1 w-fit'>
+                                    // // // Not using now ------> (uncomment and use it.)
 
-                                                    <ImageReact className='w-7 rounded-full border' src={ele?.profilePic} />
-                                                    <p className='text-xs capitalize'>{ele.username}</p>
-                                                </div>
-                                            </Fragment>
-                                        )
-                                    })
+                                    // likedBy.map((ele, i) => {
+                                    //     return (
+                                    //         <Fragment key={i}>
+
+                                    //             <div className='border rounded-full pr-2 flex items-center gap-1 w-fit'>
+
+                                    //                 <ImageReact className='w-7 rounded-full border' src={ele?.profilePic} />
+                                    //                 <p className='text-xs capitalize'>{ele.username}</p>
+                                    //             </div>
+                                    //         </Fragment>
+                                    //     )
+                                    // })
                                 }
+
+
+
+                                <AnimatedTooltip items={likedBy.map((ele, i) => ({ id: i, name: ele.username, designation: ele.email, image: ele.profilePic }))} />
+
                             </div>
 
 

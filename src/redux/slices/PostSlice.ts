@@ -140,7 +140,8 @@ export interface PostInterFace {
         isAdmin: boolean
     }
     likes: 0,
-    likesId: string[],
+    // likesId: UserDataInterface[]|string[],
+    likesId: Array<string | UserDataInterface>,
     comments: Comment[],
     isDeleted: boolean
 }
@@ -156,7 +157,6 @@ interface PostSliceInterFace {
     singlePostId: string,
     updatingPost: boolean,
     singlePostdata?: PostInterFace
-
     postCategories: string[],
     posthashtags: string[],
     allPostsLength: number
@@ -181,7 +181,7 @@ const innitialSingleState: PostInterFace = {
         isAdmin: false
     },
     likes: 0,
-    likesId: [""],
+    likesId: [],
     comments: [],
     isDeleted: false
 }
@@ -372,8 +372,8 @@ const psotSlice = createSlice({
 
 
                     state.postCategories = action.payload.data.postCategories
-                    state.posthashtags =  action.payload.data.posthashtags
-                    state.allPostsLength =  action.payload.data.allPostsLength
+                    state.posthashtags = action.payload.data.posthashtags
+                    state.allPostsLength = action.payload.data.allPostsLength
 
                     state.isFullfilled = true
 

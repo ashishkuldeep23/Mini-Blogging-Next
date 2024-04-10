@@ -49,9 +49,13 @@ export async function PUT(req: NextRequest) {
 
             }
         )
-
             .populate({
                 path: "author",
+                // match: { isDeleted: false },
+                select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password",
+            })
+            .populate({
+                path: "likesId",
                 // match: { isDeleted: false },
                 select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password",
             })

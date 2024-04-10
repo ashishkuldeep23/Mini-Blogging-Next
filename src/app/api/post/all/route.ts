@@ -1,5 +1,6 @@
 import { connect } from "@/dbConfig/dbConfig";
 import Post from "@/models/postModel";
+import User from "@/models/userModel";
 import { modelNames } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -9,7 +10,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
 
-
     connect()
 
     console.log(modelNames())
@@ -18,6 +18,11 @@ export async function POST(req: NextRequest) {
     // console.log("Called --------------->")
 
     try {
+
+
+        // // // Jsut want to ready user model befour populating (in below code ) ---------->
+        await User.findById("65ffbc7cf6215d659db3b197")
+
 
         // console.log("iktyutryetyr")
 
@@ -32,6 +37,11 @@ export async function POST(req: NextRequest) {
                 // match: { isDeleted: false },
                 select: "-updatedAt -createdAt -__v -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password",
             })
+            // .populate({
+            //     path: "likesId",
+            //     // match: { isDeleted: false },
+            //     select: "-updatedAt -createdAt -__v -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password",
+            // })
             .select("-updatedAt -createdAt -__v ")
 
 

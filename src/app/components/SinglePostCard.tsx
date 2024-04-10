@@ -45,15 +45,15 @@ export default function SinglePostCard({ ele }: { ele: PostInterFace }) {
 
 
       <CardContainer className="inter-var">
-        <CardBody className="bg-gray-50 relative group/card  dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-black dark:border-white/[0.2] border-black/[0.1] w-[20rem] sm:w-[30rem] p-3 sm:p-6 h-auto rounded-xl  border  ">
+        <CardBody className={`bg-gray-50 relative group/card  dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1]  dark:border-white/[0.2] border-black/[0.1] w-[20rem] sm:w-[30rem]  h-auto rounded-xl  border shadow-xl  ${!themeMode ? "dark:bg-black shadow-cyan-950" : "dark:bg-white shadow-cyan-50"} `}>
 
-          <div className={` p-1 ${!themeMode ? " bg-black text-white " : " bg-white text-black"}`}>
+          <div className={`p-3 sm:p-6 ${!themeMode ? " bg-black text-white " : " bg-white text-black"}`}>
 
 
             <CardItem
               translateZ="50"
               translateX={-10}
-              className="text-xl font-bold text-neutral-600 dark:text-white"
+              className="text-xl font-bold text-neutral-600 "
             >
               <div className="rounded-t flex items-start p-0.5 gap-1.5  border-cyan-400">
 
@@ -128,8 +128,8 @@ export default function SinglePostCard({ ele }: { ele: PostInterFace }) {
             <CardItem
               translateZ={20}
               translateX={20}
-              as="button"
-              className="px-4 py-2 rounded-xl text-xs font-normal dark:text-white"
+              as="div"
+              className="px-4 py-2 ml-auto md:ml-2 rounded-xl text-xs font-normal "
             >
 
               <LikeCommentDiv post={ele} />
