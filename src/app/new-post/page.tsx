@@ -286,7 +286,9 @@ const NewPostPage = () => {
 
                     <p className=' my-2 border-b px-4 text-xl font-semibold'>Create a new post here👇</p>
 
-                    <div className={`rounded flex flex-col border w-11/12 xs:w-[80%]  sm:w-3/4 md:w-2/3 ${themeMode ? "bg-green-100" : "bg-green-900"} `}>
+                    <div className={`rounded flex flex-col border w-11/12 xs:w-[80%]  sm:w-3/4 md:w-2/3 
+                    ${themeMode ? ` ${!updatingPost ? "bg-green-100" : "bg-rose-100"}` : ` ${!updatingPost ? "bg-green-950" : "bg-rose-950"}`} 
+                    `}>
 
                         <div className='rounded mt-2 flex p-1 gap-2 flex-col sm:flex-row  '>
 

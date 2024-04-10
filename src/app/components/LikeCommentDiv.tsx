@@ -713,7 +713,7 @@ function AllComments({
 
             <div className=' flex justify-center'>
                 <p
-                    className='border-b border-l-2 rounded-[100%]  my-5 ml-1 pl-5 pb-1 flex gap-1 flex-wrap items-center justify-center hover:cursor-pointer hover:scale-105 sm:hover:scale-125 transition-all '
+                    className='border-b border-l-2 rounded-[100%]  mt-5 ml-1 pl-5 pb-1 flex gap-1 flex-wrap items-center justify-center hover:cursor-pointer hover:scale-105 sm:hover:scale-125 transition-all '
 
                     onClick={() => {
                         window.scroll(0, 300)
@@ -851,7 +851,7 @@ const SingleCommentUI = ({
         <>
             <div
                 key={comment._id}
-                className={` ${i % 2 !== 0 && "ml-auto"} border rounded m-1 p-0.5 w-[90%] sm:w-[80%] relative`}
+                className={` ${i % 2 !== 0 && "ml-auto"} border rounded m-1 my-7 p-0.5 w-[90%] sm:w-[80%] relative`}
             >
 
 
@@ -919,6 +919,9 @@ const SingleCommentUI = ({
 
                     </div>
 
+
+                    {/* Like and comment div here -----> */}
+
                     <div className=" p-0.5 py-1 flex flex-col">
 
                         <button
@@ -941,9 +944,21 @@ const SingleCommentUI = ({
                             className=" flex gap-0.5 items-center justify-center border p-1 rounded text-xs"
                             onClick={(e) => { e.stopPropagation(); setCommentClicked((last) => !last) }}
                         >
-                            <span>{comment.replies.length}</span>
+                            {
+                                (comment.likes === 0) && (comment.replies.length === 0)
+                                    ?
+                                    <>
+                                        <span>Reply</span>
+                                    </>
+                                    :
+                                    <>
+                                        <span>{comment.replies.length}</span>
 
-                            <FaRegCommentDots />
+                                        <FaRegCommentDots />
+                                    </>
+                            }
+
+
                         </button>
 
                     </div>
@@ -955,7 +970,11 @@ const SingleCommentUI = ({
 
                     (comment.likes > 0 || comment.replies.length > 0 || commentClicked)
                     &&
-                    <SeeMoreOfComment commentClicked={commentClicked} comment={comment} />
+                    <SeeMoreOfComment
+                        commentClicked={commentClicked}
+                        comment={comment}
+                        setCommentClicked={setCommentClicked}
+                    />
                 }
 
 
@@ -968,7 +987,17 @@ const SingleCommentUI = ({
 }
 
 
-function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean, comment: Comment, }) {
+function SeeMoreOfComment(
+    {
+        commentClicked,
+        comment,
+        setCommentClicked
+    }: {
+        commentClicked: boolean,
+        comment: Comment,
+        setCommentClicked: Function
+    }
+) {
 
     const themeMode = useThemeData().mode
 
@@ -977,6 +1006,8 @@ function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean
     const dispatch = useDispatch<AppDispatch>()
 
     const [seeMoreBtn, setSeeMoreBtn] = useState(false)
+
+    const replyInputBox = useRef<HTMLInputElement>(null)
 
     const [replyText, setReplyText] = useState<string>("")
 
@@ -1177,12 +1208,18 @@ function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean
 
 
 
-
     useEffect(() => {
 
         if (commentClicked) {
             getCommentData()
             setSeeMoreBtn(true)
+
+            // // // now focus input box ---->
+            if (replyInputBox.current) {
+                replyInputBox.current.focus()
+            }
+
+
         }
     }, [commentClicked])
 
@@ -1215,7 +1252,12 @@ function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean
                     <button
                         className={`relative mt-0.5  ml-auto mr-0 flex gap-0.5 items-center justify-center border p-0.5 rounded text-[0.6rem] font-semibold font-serif ${seeMoreBtn && " bg-yellow-400 text-black "} `}
 
-                        onClick={(e) => { e.stopPropagation(); setSeeMoreBtn((last) => !last); getCommentData() }}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setSeeMoreBtn((last) => !last);
+                            // getCommentData();
+                            setCommentClicked(true)
+                        }}
 
                     >
                         <span>More</span>
@@ -1235,94 +1277,103 @@ function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean
 
                 {/* Main UI here -------> */}
                 <div
-                    className={` overflow-hidden relative rounded px-1 py-0.5  flex flex-col ${!seeMoreBtn ? " h-1 border-0 opacity-100 " : " h-auto border opacity-100"}  transition-all `}
+                    className={` overflow-hidden relative rounded px-1 py-0.5  flex flex-col ${!seeMoreBtn ? " h-1  opacity-100 " : "  h-fit opacity-100"}  transition-all duration-1000 `}
                 >
 
-                    {/* Input for reply -------> */}
-                    <div
-                        className=' flex flex-wrap flex-col sm:flex-row mt-1 w-full'
-                    >
-                        <input
-                            className={` w-[100%] sm:w-[82%] h-full border rounded px-2 mx-0.5 ${!themeMode ? "bg-black text-white" : "bg-white text-black"} `}
-                            type="text"
-                            placeholder='Your reply for this comment.'
-                            value={replyText}
-                            onChange={(e) => { setReplyText(e.target.value) }}
+                    <div className=' py-1  my-3 rounded border-y-2'>
 
-                        />
-                        <button
-                            className={`font-semibold  ml-auto md:ml-1 border py-0 text-sm rounded px-1 ${themeMode ? "bg-green-400" : "bg-green-600"}`}
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                if (!updatingReply.mode) {
-                                    submitReplyHandler()
-                                } else {
-                                    commentEditHandler(updatingReply.id, updatingReply.index)
+                        {/* Suggetion for reply ---------> */}
+                        <div className='mt-1 flex justify-between items-center flex-wrap'>
+
+                            <div className=" flex flex-wrap items-center">
+                                {
+                                    ["👍", "😍", "😀", "👌", "👎", "X"].map((ele, i) => {
+                                        return (
+                                            <button
+                                                key={i}
+                                                className={` overflow-hidden text-xs mx-0.5 my-[2px] border border-l-2 border-b-2  rounded  ${ele === "X" && "ml-3 border-red-500 rounded-xl "} `}
+
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    if (replyText) {
+
+                                                        if (ele === "X") {
+                                                            setReplyText('')
+                                                        }
+                                                        else {
+                                                            setReplyText(`${replyText} ${ele}`)
+                                                        }
+
+                                                    } else {
+
+                                                        if (ele === "X") {
+                                                            setReplyText('')
+                                                        }
+                                                        else {
+                                                            setReplyText(`${ele}`)
+                                                        }
+
+                                                    }
+
+
+                                                }}
+
+                                            >{
+
+                                                    ele === "X"
+                                                        ? <span className='px-1 font-bold bg-red-500 text-white '>{ele}</span>
+                                                        : ele
+
+                                                }</button>
+                                        )
+                                    })
                                 }
-                            }}
-                        >{
+                            </div>
 
-                                !updatingReply.mode ? "Reply" : "Update"
+                            <p
+                                className=' text-xs text-end ml-auto'
+                            >
+                                {comment.likes} likes and {comment.replies.length} replies.
+                            </p>
 
-                            }</button>
-                    </div>
-
-                    {/* Suggetion for reply ---------> */}
-                    <div className='mb-2 flex justify-between items-center flex-wrap'>
-
-                        <div className=" flex flex-wrap items-center">
-                            {
-                                ["👍", "😍", "😀", "👌", "👎", "X"].map((ele, i) => {
-                                    return (
-                                        <button
-                                            key={i}
-                                            className={` overflow-hidden text-xs mx-0.5 my-[2px] border border-l-2 border-b-2  rounded  ${ele === "X" && "ml-3 border-red-500 rounded-xl "} `}
-
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                if (replyText) {
-
-                                                    if (ele === "X") {
-                                                        setReplyText('')
-                                                    }
-                                                    else {
-                                                        setReplyText(`${replyText} ${ele}`)
-                                                    }
-
-                                                } else {
-
-                                                    if (ele === "X") {
-                                                        setReplyText('')
-                                                    }
-                                                    else {
-                                                        setReplyText(`${ele}`)
-                                                    }
-
-                                                }
-
-
-                                            }}
-
-                                        >{
-
-                                                ele === "X"
-                                                    ? <span className='px-1 font-bold bg-red-500 text-white '>{ele}</span>
-                                                    : ele
-
-                                            }</button>
-                                    )
-                                })
-                            }
                         </div>
 
-                        <p
-                            className=' text-xs text-end ml-auto'
+
+                        {/* Input for reply -------> */}
+                        <div
+                            className=' flex flex-wrap flex-col sm:flex-row mt-1 w-full'
                         >
-                            {comment.likes} likes and {comment.replies.length} replies.
-                        </p>
+                            <input
+                                className={` w-[100%] sm:w-[82%] h-full border rounded px-2 mx-0.5 ${!themeMode ? "bg-black text-white" : "bg-white text-black"} `}
+                                type="text"
+                                placeholder='Your reply for this comment.'
+                                value={replyText}
+                                onChange={(e) => { setReplyText(e.target.value) }}
+                                ref={replyInputBox}
+
+                            />
+                            <button
+                                className={`font-semibold  ml-auto md:ml-1 border py-0 text-sm rounded px-1 ${themeMode ? "bg-green-400" : "bg-green-600"}`}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (!updatingReply.mode) {
+                                        submitReplyHandler()
+                                    } else {
+                                        commentEditHandler(updatingReply.id, updatingReply.index)
+                                    }
+                                }}
+                            >
+                                {
+
+                                    !updatingReply.mode
+                                        ? "Reply"
+                                        : "Update"
+
+                                }
+                            </button>
+                        </div>
 
                     </div>
-
 
 
                     {
@@ -1387,10 +1438,13 @@ function SeeMoreOfComment({ commentClicked, comment }: { commentClicked: boolean
                         replies.length > 0
                         &&
 
-                        <div className=' border rounded my-1 p-0.5'>
+                        <div className=' rounded my-1 p-0.5'>
 
 
-                            <p>Replies 👇</p>
+                            <p className=' text-center'>
+                                <span>Replies are</span>
+                                <span className=' relative left-2 top-[5px] inline-flex rotate-[90deg]'> <PiPaperPlaneRight /> </span>
+                            </p>
 
                             {
                                 replies.map((ele, i) => {

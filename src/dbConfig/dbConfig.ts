@@ -2,10 +2,36 @@ import mongoose from "mongoose";
 import { NextResponse } from "next/server";
 
 
+
+
+// // // Technique by hitesh sir ------->
+
+type ConnectionObj = {
+    isConnected?: number
+}
+
+
+const checkConnection: ConnectionObj = {}
+
+
+
 export async function connect() {
+
+
+    if (checkConnection.isConnected) {
+        console.log("DB is already connected to database.")
+        return
+    }
+
     try {
 
-        await mongoose.connect(process.env.MONGO_URL!)
+        let db = await mongoose.connect(process.env.MONGO_URL!)
+
+        // // // Set connection value if connected to db
+
+        checkConnection.isConnected = db.connections[0].readyState
+
+        // console.log(db.connections[0])
 
         const connection = mongoose.connection;
 
@@ -19,11 +45,12 @@ export async function connect() {
             process.exit()
         })
 
-    } catch (error : any) {
+    } catch (error: any) {
         console.log("Something goes wrong!")
         console.log(error)
+        process.exit()
 
-        return NextResponse.json({ success: false, message: `${error.message} (Server Error)` }, { status: 500 })
+        // return NextResponse.json({ success: false, message: `${error.message} (Server Error)` }, { status: 500 })
 
     }
 

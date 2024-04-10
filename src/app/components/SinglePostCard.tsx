@@ -45,15 +45,15 @@ export default function SinglePostCard({ ele }: { ele: PostInterFace }) {
 
 
       <CardContainer className="inter-var">
-        <CardBody className={`bg-gray-50 relative group/card  dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1]  dark:border-white/[0.2] border-black/[0.1] w-[20rem] sm:w-[30rem]  h-auto rounded-xl  border shadow-xl  ${!themeMode ? "dark:bg-black shadow-cyan-950" : "dark:bg-white shadow-cyan-50"} `}>
+        <CardBody className={`bg-gray-50 relative group/card  dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1]  dark:border-white/[0.2] border-black/[0.1] h-auto rounded-xl  border shadow-xl w-[18rem] sm:w-[30rem]  ${!themeMode ? "dark:bg-black shadow-cyan-950" : "dark:bg-white shadow-cyan-50"} `}>
 
-          <div className={`p-3 sm:p-6 ${!themeMode ? " bg-black text-white " : " bg-white text-black"}`}>
+          <div className={`p-3 sm:p-6 rounded-xl border ${!themeMode ? " bg-black text-white border-slate-700 shadow-slate-700 " : " bg-white text-black border-slate-300 shadow-slate-300"}`}>
 
 
             <CardItem
               translateZ="50"
               translateX={-10}
-              className="text-xl font-bold text-neutral-600 "
+              className="text-xl font-bold "
             >
               <div className="rounded-t flex items-start p-0.5 gap-1.5  border-cyan-400">
 
@@ -65,7 +65,7 @@ export default function SinglePostCard({ ele }: { ele: PostInterFace }) {
 
                 <div className=" mt-1">
                   <p className="  capitalize">{ele?.author?.username || "Name Kumar"}</p>
-                  <p className=" text-[0.6rem]">{ele?.author?.email || "xyz100@gmail.com"}</p>
+                  <p className=" text-[0.6rem] -mt-[1.5vh]">{ele?.author?.email || "xyz100@gmail.com"}</p>
                 </div>
 
                 {

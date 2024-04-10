@@ -28,6 +28,8 @@ export default function Home() {
   // console.log(themeMode)
 
 
+  let onFocusFlagForRedirectUser = false
+
   return (
     <main className={`flex min-h-screen flex-col items-center gap-10 ${!themeMode ? " bg-black text-white " : " bg-white text-black"}`}>
 
@@ -62,9 +64,18 @@ export default function Home() {
 
             <input
               type="text"
-              className=" text-black p-0.5 px-2 font-bold mt-5 w-11/12 sm:w-4/6 rounded-full shadow-lg shadow-slate-300  border "
+              className={`p-0.5 px-2 font-bold mt-5 w-11/12 sm:w-4/6 rounded-full shadow-lg  border 
+                  ${!themeMode ? "text-white bg-black shadow-slate-700 border-slate-700 " : "text-black bg-white shadow-slate-300 border-slate-300 "}
+               `}
               placeholder="Search for prompt here."
+              onFocus={() => {
 
+                if (!onFocusFlagForRedirectUser) {
+
+                  alert("Now i can redirect user to search page.")
+                  onFocusFlagForRedirectUser = true
+                }
+              }}
             />
 
           </div>

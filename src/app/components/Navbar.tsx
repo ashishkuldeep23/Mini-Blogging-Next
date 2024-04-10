@@ -111,7 +111,7 @@ const Navbar = () => {
                     session?.user?.image
                     &&
                     <ImageReact
-                        className=" w-[10px] border rounded-full"
+                        className=" w-8 border rounded-full"
                         src={session?.user?.image?.toString()}
                         alt=""
                     />
@@ -179,7 +179,7 @@ const Navbar = () => {
                     {
 
                         themeMode
-                            ? <span> <PiMoonStarsDuotone  /> </span>
+                            ? <span> <PiMoonStarsDuotone /> </span>
                             : <span> <PiSunDimDuotone /> </span>
                     }
                 </button>
