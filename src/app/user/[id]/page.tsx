@@ -3,7 +3,6 @@
 
 import ImageReact from '@/app/components/ImageReact'
 import MainLoader from '@/app/components/MainLoader'
-// import HomeButton from '@/app/components/HomeButton'
 import Navbar from '@/app/components/Navbar'
 import SinglePostCard from '@/app/components/SinglePostCard'
 import { useThemeData } from '@/redux/slices/ThemeSlice'
@@ -16,7 +15,7 @@ import React, { useEffect } from 'react'
 import toast from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 
-const ProfilePageParams = ({ params }: any) => {
+const UserPageParams = ({ params }: any) => {
 
     const themeMode = useThemeData().mode
 
@@ -28,18 +27,16 @@ const ProfilePageParams = ({ params }: any) => {
 
     const { userData, allPostOfUser, isLoading, errMsg } = useUserState()
 
-    // console.log(status)
 
 
-    useEffect(() => {
 
-        if (status === "unauthenticated") {
 
-            toast.error("You are unauthenticated person.")
-            router.back()
-        }
-
-    }, [session])
+    // useEffect(() => {
+    //     if (status === "unauthenticated") {
+    //         toast.error("You are unauthenticated person.")
+    //         router.back()
+    //     }
+    // }, [session])
 
 
 
@@ -89,7 +86,7 @@ const ProfilePageParams = ({ params }: any) => {
                 />
 
                 <div className=' text-center'>
-                    <p>Welcome</p>
+                    {/* <p>User</p> */}
                     <p className=' capitalize text-3xl font-semibold text-cyan-500'>{userData.username}</p>
                     <p className=' font-semibold'>{userData.email}</p>
                 </div>
@@ -131,4 +128,4 @@ const ProfilePageParams = ({ params }: any) => {
     )
 }
 
-export default ProfilePageParams
+export default UserPageParams

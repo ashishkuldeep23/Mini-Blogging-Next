@@ -44,8 +44,6 @@ export async function GET(req: NextRequest, context: any) {
         let user = await User.findById(userId)
             .select("-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password")
 
-
-
         if (!user) {
             return NextResponse.json({ success: false, message: 'User not found with given id.' }, { status: 404 })
         }
@@ -70,10 +68,10 @@ export async function GET(req: NextRequest, context: any) {
             .select("-updatedAt -createdAt -__v ")
         // .exec()
 
-        if (posts.length <= 0) {
-            return NextResponse.json({ success: false, message: 'Seem like you haved created any post.' }, { status: 404 })
-        }
 
+        // if (posts.length <= 0) {
+        //     return NextResponse.json({ success: false, message: 'Seem like you haved created any post.' }, { status: 404 })
+        // }
 
 
 

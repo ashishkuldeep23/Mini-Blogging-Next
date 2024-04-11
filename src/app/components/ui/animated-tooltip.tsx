@@ -14,14 +14,16 @@ import ImageReact from "../ImageReact";
 
 
 export default function AnimatedTooltip({
-    items,
+    items
 }: {
     items: {
         id: number;
         name: string;
         designation: string;
         image: string;
+        onClickFunction?: Function;
     }[];
+
 }) {
 
     const themeMode = useThemeData().mode
@@ -48,14 +50,16 @@ export default function AnimatedTooltip({
         <>
             {items.map((item, idx) => (
                 <div
-                    className={`-mr-4 relative group hover:cursor-pointer focus:scale-75    `}
+                    className={`-mr-4 relative group hover:cursor-pointer focus:scale-75 `}
                     key={item.name}
                     onMouseEnter={() => setHoveredIndex(item.id)}
                     onMouseLeave={() => setHoveredIndex(null)}
 
 
                     onClick={() => {
-                        // alert('dsdasasdsasa') 
+                        if (item?.onClickFunction) {
+                            item.onClickFunction()
+                        }
                     }}
 
                 >
@@ -92,7 +96,7 @@ export default function AnimatedTooltip({
                     )}
 
                     <motion.div
-                        className=" inline-flex group-hover:!z-50"
+                        className=" inline-flex "
                         initial={{ opacity: 0, y: 20, scale: 0 }}
                         animate={{
                             opacity: 1,
@@ -111,7 +115,7 @@ export default function AnimatedTooltip({
 
                         <ImageReact
                             src={item.image}
-                            className="object-cover !m-0 !p-0 object-top rounded-full h-14 w-14 border-2 group-hover:scale-105 group-hover:z-30 border-white  relative transition duration-500"
+                            className="object-cover !m-0 !p-0 object-top rounded-full h-12 w-12 border-2 group-hover:scale-105 group-hover:!z-30 border-white relative transition duration-500"
                             alt={item.name}
                             onMouseMove={handleMouseMove}
                             height={100}

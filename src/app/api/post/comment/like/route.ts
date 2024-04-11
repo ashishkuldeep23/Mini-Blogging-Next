@@ -65,7 +65,7 @@ export async function PUT(req: NextRequest) {
         // // // Now written logic for likes ------>
 
         if (!findComment.likesId.includes(userId)) {
-            findComment.likesId.unshift(userId)
+            findComment.likesId.push(userId)
             findComment.likes = findComment.likes + 1
         } else {
 

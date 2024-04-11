@@ -211,32 +211,41 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
                     }
                 </div>
 
-                <div className=" flex justify-between flex-wrap gap-1">
-                    <p className="capitalize">{singlePost.title}</p>
-                    <p className=" ml-auto text-xs">({singlePost.category})</p>
+
+                <div className=' py-5 min-h-40'>
+
+
+                    <div className=" flex justify-between flex-wrap gap-1">
+                        <p className="capitalize">{singlePost.title}</p>
+                        <p className=" ml-auto text-xs">({singlePost.category})</p>
+                    </div>
+
+                    <div className=" text-sm"
+                    >
+
+                        {
+                            singlePost.promptReturn
+                        }
+                    </div>
+
+                    <div className=" flex flex-wrap gap-0.[2px] text-violet-500 font-semibold ">
+                        {
+
+                            (singlePost.hashthats.length > 0)
+                            &&
+                            singlePost.hashthats.map((hash, i) => {
+                                return <p className="ml-1.5" key={i}>{hash}</p>
+                            })
+
+                        }
+                    </div>
+
                 </div>
 
-                <div className=" text-sm"
-                >
-
-                    {
-                        singlePost.promptReturn
-                    }
+                <div className=' py-5'>
+                    <LikeCommentDiv post={singlePost} />
                 </div>
 
-                <div className=" flex flex-wrap gap-0.[2px] text-violet-500 font-semibold ">
-                    {
-
-                        (singlePost.hashthats.length > 0)
-                        &&
-                        singlePost.hashthats.map((hash, i) => {
-                            return <p className="ml-1.5" key={i}>{hash}</p>
-                        })
-
-                    }
-                </div>
-
-                <LikeCommentDiv post={singlePost} />
 
             </div>
 

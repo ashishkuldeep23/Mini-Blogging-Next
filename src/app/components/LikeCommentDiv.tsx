@@ -281,7 +281,7 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
 
 
                 {/* Like comments buttons (all 3 buttons here) -----> */}
-                <div className='flex flex-row-reverse md:flex-row gap-14 md:gap-x-16'>
+                <div className=' pt-3 flex flex-row-reverse items-start md:flex-row gap-8 md:gap-x-16'>
 
                     <div className='flex gap-2 flex-wrap justify-between flex-row-reverse md:flex-row'>
 
@@ -318,12 +318,9 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
 
                     </div>
 
-
                     {
-
                         post?.author?.email === session?.user?.email
                         &&
-
                         <div className=' ml-auto mr-1 flex gap-0'>
 
                             <button
@@ -340,10 +337,7 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
                                 <AiTwotoneDelete />
                             </button>
                         </div>
-
                     }
-
-
 
                 </div>
 
@@ -361,9 +355,9 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
                     params.includes("post")
                     &&
 
-                    <div className='border rounded my-1 p-0.5 py-2 flex gap-2 items-start flex-wrap '>
+                    <div className='rounded my-1 p-0.5 py-2 flex gap-2 items-center flex-wrap '>
 
-                        <p className=' flex gap-1 flex-wrap items-center ml-1 mt-1.5 '>
+                        <p className=' flex gap-1 flex-wrap items-center ml-1 -mt-3 '>
                             <span className=' font-semibold'>Likes</span>
                             <span> <PiPaperPlaneRight /> </span>
                         </p>
@@ -381,7 +375,24 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
 
                                 // post.likesId.map((ele) => ele.)
 
-                                <AnimatedTooltip items={post.likesId.map((ele: any, i) => ({ id: i, name: ele.username, designation: ele.email, image: ele.profilePic }))} />
+                                <AnimatedTooltip
+                                    items={
+                                        post.likesId
+                                            .map(
+
+
+                                                (ele: any, i) => (
+                                                    {
+                                                        id: i,
+                                                        name: ele.username,
+                                                        designation: ele.email,
+                                                        image: ele.profilePic,
+                                                        onClickFunction: () => { router.push(`/user/${ele._id}`);}
+                                                    }
+                                                )
+                                            )
+                                    }
+                                />
 
                             }
 
@@ -733,6 +744,7 @@ function AllComments({
                     post={post}
                     key={i}
                     i={i}
+                    length={post.comments.length}
                     comment={comment}
                     updatingComment={updatingComment}
                     setUpdatingComment={setUpdatingComment}
@@ -749,12 +761,14 @@ const SingleCommentUI = ({
     post,
     comment,
     i,
+    length,
     updatingComment,
     setUpdatingComment,
 }: {
     post: PostInterFace | SinglePostType,
     comment: Comment,
     i: number,
+    length: number
     updatingComment: UpdatingComment,
     setUpdatingComment: Function,
 }) => {
@@ -851,9 +865,10 @@ const SingleCommentUI = ({
         <>
             <div
                 key={comment._id}
-                className={` ${i % 2 !== 0 && "ml-auto"} border rounded m-1 my-7 p-0.5 w-[90%] sm:w-[80%] relative`}
+                className={` ${i % 2 !== 0 && "ml-auto"} border rounded m-1 my-7 p-0.5 w-[90%] sm:w-[80%] relative z-[1]`}
             >
 
+                {/* <span className=' absolute -top-[2.5vh] right-0 -z-0'>{length - (i)}</span> */}
 
                 <MainLoader isLoading={isLoading} />
 
@@ -979,8 +994,6 @@ const SingleCommentUI = ({
 
 
             </div>
-
-
         </>
 
     )
