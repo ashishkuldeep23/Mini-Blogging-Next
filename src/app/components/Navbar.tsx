@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux"
 
 import { useSession, signOut } from "next-auth/react"
 import Image from "next/image"
-import { setUserDataBySession } from "@/redux/slices/UserSlice"
+import { getUserData, setUserDataBySession } from "@/redux/slices/UserSlice"
 import ImageReact from "./ImageReact"
 import { getCatAndHash } from "@/redux/slices/PostSlice"
 import { AppDispatch } from "@/redux/store"
@@ -66,6 +66,12 @@ const Navbar = () => {
             let user = session.user
 
             dispatch(setUserDataBySession({ ...user }))
+        }
+
+
+        // // // get user data by api (All Data) ----------->
+        if (session) {
+            dispatch(getUserData(session?.user._id))
         }
 
     }, [session])

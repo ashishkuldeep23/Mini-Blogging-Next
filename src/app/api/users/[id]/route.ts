@@ -11,11 +11,16 @@ import { isValidObjectId, model, modelNames, models } from "mongoose"
 // import { NextApiRequest } from "next";
 
 
+// import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import { getServerSession } from "next-auth/next"
 
-export async function GET(req: NextRequest, context: any) {
+
+
+export async function POST(req: NextRequest, context: any) {
 
     connect()
-
+    // const g = getServerSession()
+    // console.log(g)
 
     // // // This is used to print all register models
     console.log(modelNames())
@@ -34,15 +39,46 @@ export async function GET(req: NextRequest, context: any) {
         }
 
 
+        // // // This is how we can get user data in backend. data included like (name , email , profilePhoto).
+        const session = await getServerSession()
+
+        // console.log({session})
+
+
+
+
+        // const reqBody = await req.json()
+        // console.log(reqBody)
+        // const { searchingUserId } = reqBody
+        // console.log({ userId, searchingUserId })
+
+
         // // // Jsut getting for comment data avilable below. 
         await Comment.findById("660cba65c543855317a68f02")
 
         // console.log(allComments)
 
 
-
         let user = await User.findById(userId)
-            .select("-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password")
+            .populate({
+                path: "sendRequest",
+                // match: { isDeleted: false },
+                select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password -reciveRequest -sendRequest -friends -whoSeenProfile -notification",
+            })
+            .populate({
+                path: "reciveRequest",
+                // match: { isDeleted: false },
+                select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password -reciveRequest -sendRequest -friends -whoSeenProfile -notification",
+            })
+            .populate({
+                path: "whoSeenProfile",
+                // match: { isDeleted: false },
+                select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password -reciveRequest -sendRequest -friends -whoSeenProfile -notification",
+            })
+            .select("-updatedAt -createdAt -__v -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password")
+
+
+        // // // D'not populate friends here becoz i want to check include with _id's
 
         if (!user) {
             return NextResponse.json({ success: false, message: 'User not found with given id.' }, { status: 404 })
@@ -69,15 +105,81 @@ export async function GET(req: NextRequest, context: any) {
         // .exec()
 
 
-        // if (posts.length <= 0) {
-        //     return NextResponse.json({ success: false, message: 'Seem like you haved created any post.' }, { status: 404 })
-        // }
+
+        // console.log({ user })
+
+
+        // // // An Experimental logic here --------------------->
+        // // // IF user is not same then remove these data from here --------------->
+        if (session?.user.email && (session?.user.email !== user.email)) {
+            user.sendRequest = null
+            user.whoSeenProfile = null
+        }
 
 
 
-        // console.log(findPost)
 
-        return NextResponse.json({ success: true, data: { user, posts }, message: "New post created." }, { status: 200 })
+        // // // Who is serching your id logic here ---------->
+        // // // Logic for friendship status -------->
+
+        let friendsAllFriend = [];
+
+
+        if (
+            session?.user.email
+            // &&
+            // (session?.user.email !== user.email)
+            &&
+            user.friends
+        ) {
+
+            // // // New logic here ----------->
+
+
+            // // // Getting user id becoz i dont have in server directly ------>
+            let searchingUserId = await User.findOne({ email: session?.user.email })
+
+            // console.log({ searchingUserId })
+
+            if (user.friends.includes(searchingUserId._id.toString())) {
+
+                // console.log(152)
+
+                let getUserFrineds = await User.findById(user._id)
+                    .populate({
+                        path: "friends",
+                        // match: { isDeleted: false },
+                        select: "-updatedAt -createdAt -__v -friendshipRequests -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password -whoSeenProfile -notification",
+                    })
+
+
+                // console.log(getUserFrineds)
+
+                friendsAllFriend = getUserFrineds.friends
+
+            } else {
+
+                // console.log(0)
+
+                friendsAllFriend = []
+            }
+
+
+        }
+
+
+        // console.log({ user, friendsAllFriend })
+
+
+        return NextResponse.json({
+            success: true,
+            data: {
+                user,
+                posts,
+                friendsAllFriend
+            },
+            message: "New post created."
+        }, { status: 200 })
 
         // return res.status(201).json({ success: true, data: [], message: "New post created." })
 

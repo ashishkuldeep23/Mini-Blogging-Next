@@ -6,8 +6,9 @@ import MainLoader from '@/app/components/MainLoader'
 // import HomeButton from '@/app/components/HomeButton'
 import Navbar from '@/app/components/Navbar'
 import SinglePostCard from '@/app/components/SinglePostCard'
+import AnimatedTooltip from '@/app/components/ui/animated-tooltip'
 import { useThemeData } from '@/redux/slices/ThemeSlice'
-import { getUserData, useUserState } from '@/redux/slices/UserSlice'
+import { getUserData, updateUserData, useUserState } from '@/redux/slices/UserSlice'
 import { AppDispatch } from '@/redux/store'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
@@ -26,7 +27,7 @@ const ProfilePageParams = ({ params }: any) => {
 
     const dispatch = useDispatch<AppDispatch>()
 
-    const { userData, allPostOfUser, isLoading, errMsg } = useUserState()
+    const { userData, isLoading, errMsg } = useUserState()
 
     // console.log(status)
 
@@ -47,11 +48,10 @@ const ProfilePageParams = ({ params }: any) => {
 
         // console.log(params.id)
 
-        if (params?.id && params?.id !== "undefined") {
+        if (params?.id && params?.id !== "undefined" && !userData._id) {
 
             // console.log(15455454)
             dispatch(getUserData(params.id))
-
         }
 
 
@@ -79,7 +79,7 @@ const ProfilePageParams = ({ params }: any) => {
             }
 
 
-
+            {/* UserData div */}
             <div className=' my-5 border p-2 rounded flex flex-wrap justify-center items-center'>
 
                 <ImageReact
@@ -97,16 +97,103 @@ const ProfilePageParams = ({ params }: any) => {
             </div>
 
 
+            {/* {
+                JSON.stringify(userData.sendRequest)
+            }
+            {
+                JSON.stringify(userData.whoSeenProfile)
+            } */}
+
+
+            <ReciverRequestDiv />
+
+
+
+
+            <div
+                className=' w-[96%] sm:w-[65%] md:w-[50%] px-1 py-2  rounded '
+            >
+                {
+
+                    (userData.sendRequest && userData.sendRequest.length > 0)
+
+                    &&
+
+                    <div>
+
+                        {
+                            userData.sendRequest.map((ele, i) => {
+                                return (
+                                    <div
+                                        key={ele._id}
+                                        className={`w-full px-0.5 py-1 border-b flex justify-around items-center  ${i === 0 && "border-t"} `}
+                                    >
+
+                                        <div className=' flex gap-2 items-center flex-wrap '>
+
+                                            <div className=' relative flex'>
+                                                <AnimatedTooltip
+                                                    items={
+                                                        [
+                                                            {
+                                                                id: 1,
+                                                                name: ele.username,
+                                                                designation: ele.email,
+                                                                image: ele.profilePic,
+                                                                onClickFunction: (() => { router.push(`/user/${ele._id}`) })
+                                                            }
+
+                                                        ]
+                                                    }
+                                                />
+                                            </div>
+
+                                            <span className=' ml-7'>
+                                                {
+                                                    ele.username
+                                                }
+                                            </span>
+
+                                        </div>
+
+
+
+                                        {/* yaha pr cancle request ki btn honi chahiye  */}
+
+                                        <button>
+                                            <span>cancel</span>
+                                            <span>X</span>
+                                        </button>
+
+
+                                    </div>
+                                )
+                            })
+                        }
+
+                    </div>
+
+                    // JSON.stringify(userData.reciveRequest)
+                }
+
+
+            </div>
+
+
+
+
+
+            {/* All post of user div */}
             <div
                 className=" my-20 card_container relative sm:px-[8vh] mt-16 flex gap-10 gap-x-64 p-0.5 flex-wrap justify-center items-start "
             >
 
                 {
-                    allPostOfUser.length > 0
+                    userData.allPostOfUser.length > 0
 
                     &&
 
-                    allPostOfUser.map((ele) => {
+                    userData.allPostOfUser.map((ele) => {
                         return <SinglePostCard ele={ele} key={ele._id} />
                     })
                 }
@@ -115,7 +202,7 @@ const ProfilePageParams = ({ params }: any) => {
                 {
 
 
-                    (session?.user?.id && !isLoading && allPostOfUser.length === 0)
+                    (session?.user?.id && !isLoading && userData.allPostOfUser.length === 0)
 
                     &&
 
@@ -132,3 +219,125 @@ const ProfilePageParams = ({ params }: any) => {
 }
 
 export default ProfilePageParams
+
+
+
+function ReciverRequestDiv() {
+
+
+    const { data: session, status } = useSession()
+
+    const { userData } = useUserState()
+
+
+    const dispatch = useDispatch<AppDispatch>()
+
+    const router = useRouter()
+
+
+    function acceptFriendRequest(id: string) {
+
+        if (!session?.user._id) return toast.error("You are looking logged out, please login.")
+
+        if (!id) return toast.error("Refresh the page again please.")
+
+        dispatch(updateUserData(
+            {
+                whatUpdate: 'addFriend',
+                sender: session.user._id,
+                reciver: id
+            }
+        ))
+
+    }
+
+
+
+    return (
+        <div
+            className=' w-[96%] sm:w-[65%] md:w-[50%]  px-1 py-2  rounded'
+        >
+            {
+
+                (userData.reciveRequest && userData.reciveRequest.length > 0)
+
+                &&
+
+                <div className=' w-full'>
+
+                    {
+                        userData.reciveRequest.map((ele, i) => {
+                            return (
+                                <div
+                                    key={ele._id}
+                                    className={`w-full px-0.5 py-1 border-b flex justify-around items-center  ${i === 0 && "border-t"} `}
+                                >
+
+                                    <div className=' flex gap-2 items-center flex-wrap '>
+
+                                        <div className=' relative flex'>
+                                            <AnimatedTooltip
+                                                items={
+                                                    [
+                                                        {
+                                                            id: 1,
+                                                            name: ele.username,
+                                                            designation: ele.email,
+                                                            image: ele.profilePic,
+                                                            onClickFunction: (() => { router.push(`/user/${ele._id}`) })
+                                                        }
+
+                                                    ]
+                                                }
+                                            />
+                                        </div>
+
+                                        <span className=' ml-7'>
+                                            {
+                                                ele.username
+                                            }
+                                        </span>
+
+                                    </div>
+
+
+
+                                    {/* yaha pr cancle request ki btn honi chahiye  */}
+
+                                    <button
+
+                                        className='border rounded px-2 text-green-500 font-semibold active:scale-75'
+
+                                        onClick={() => acceptFriendRequest(ele._id)}
+                                    >
+                                        <span>Accept</span>
+                                    </button>
+
+
+                                </div>
+                            )
+                        })
+                    }
+
+                </div>
+
+                // JSON.stringify(userData.reciveRequest)
+            }
+
+
+        </div>
+
+
+    )
+
+}
+
+
+
+
+
+
+
+
+
+

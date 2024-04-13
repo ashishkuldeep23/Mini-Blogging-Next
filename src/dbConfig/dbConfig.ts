@@ -19,7 +19,7 @@ export async function connect() {
 
 
     if (checkConnection.isConnected) {
-        console.log("DB is already connected to database.")
+        console.log("Already connected to database.")
         return
     }
 

@@ -21,10 +21,6 @@ const clientSecretText = process.env.GOOGLE_SECRATE!
 //     }
 // )
 
-// const gitClientId = "2bc666d4920090979952"
-// const gitClientSecrate = "80493608c01f8b211b0c3decf307dd9a8a4e4d1d"
-
-
 
 const handler = NextAuth({
     providers: [
@@ -164,7 +160,8 @@ const handler = NextAuth({
                 return false
 
             }
-        }
+        },
+
 
     }
 

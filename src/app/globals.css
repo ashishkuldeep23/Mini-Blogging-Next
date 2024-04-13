@@ -56,3 +56,9 @@
     z-index: 10;
     box-shadow: none;
 }
+
+.add_button_down_right{
+        
+    filter: drop-shadow(2px 2px 1px #40fcfc);
+
+}

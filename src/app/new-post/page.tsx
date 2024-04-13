@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import MainLoader from '../components/MainLoader';
 import ImageReact from '../components/ImageReact';
+import SinglePostCard from '../components/SinglePostCard';
 
 
 
@@ -706,9 +707,6 @@ const NewPostPage = () => {
                                 className={`rounded p-1 border w-full sm:w-2/5 ${!themeMode ? " bg-black" : " bg-white"}`}
                             >
 
-                                {/* <div>
-                                    User InFo ---
-                                </div> */}
 
                                 <div className="rounded-t flex gap-1.5 items-center border-b border-cyan-400">
 
@@ -782,12 +780,40 @@ const NewPostPage = () => {
                                     }
                                 </div>
 
-                                {/* <div className=" flex gap-5 text-xs">
-                                    <p>2 Likes</p>
-                                    <p>1 Comments</p>
-                                </div> */}
-
                             </div>
+
+
+
+                            {/* Not using now ----> */}
+                            {/* <SinglePostCard
+                                ele={
+                                    {
+
+                                        _id: "",
+                                        title: newPostData.title,
+                                        category: newPostData.category,
+                                        promptReturn: newPostData.content,
+                                        urlOfPrompt: newPostData.url,
+                                        aiToolName: newPostData.origin,
+                                        hashthats: newPostData.hashs,
+                                        author: {
+                                            username: (session?.user.name || "Name"),
+                                            email: (session?.user.email || "Email"),
+                                            profilePic: (session?.user.image || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwV9k8Uxfa2bIUN1C5bybUsLeU2Ik2YDkAZlp3QYoedLj3QyJfkGs6r51MCrtpCEAlR2Y&usqp=CAU"),
+                                            isVerified: false,
+                                            isAdmin: false
+
+                                        },
+                                        likes: 0,
+                                        // likesId: UserDataInterface[]|string[],
+                                        likesId: [],
+                                        comments: [],
+                                        isDeleted: false
+                                    }
+                                }
+                            /> */}
+
+
 
                         </div>
 
@@ -803,11 +829,6 @@ const NewPostPage = () => {
                                 }
                             </button>
                         </div>
-
-
-
-
-                        <div></div>
 
                     </div>
 

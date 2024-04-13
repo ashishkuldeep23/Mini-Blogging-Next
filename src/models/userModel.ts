@@ -20,7 +20,7 @@ const UserSchema = new mongoose.Schema({
     },
     profilePic: {
         type: String,
-        default : "https://res.cloudinary.com/dlvq8n2ca/image/upload/v1701708322/jual47jntd2lpkgx8mfx.png"
+        default: "https://res.cloudinary.com/dlvq8n2ca/image/upload/v1701708322/jual47jntd2lpkgx8mfx.png"
     },
 
     isVerified: {
@@ -47,7 +47,34 @@ const UserSchema = new mongoose.Schema({
     verifyTokenExp: {
         type: Date,
         default: null
-    }
+    },
+    friends: {
+        type: [mongoose.Schema.Types.ObjectId],
+        default: [],
+        ref: "users"
+    },
+    whoSeenProfile: {
+        type: [mongoose.Schema.Types.ObjectId],
+        default: [],
+        ref: "users"
+    },
+    sendRequest: {
+        type: [mongoose.Schema.Types.ObjectId],
+        default: [],
+        ref: "users"
+    },
+    reciveRequest: {
+        type: [mongoose.Schema.Types.ObjectId],
+        default: [],
+        ref: "users"
+    },
+    notification: {
+        type: [mongoose.Schema.Types.ObjectId],
+        default: [],
+        ref: "notifications"
+    },
+
+
 
 }, { timestamps: true })
 

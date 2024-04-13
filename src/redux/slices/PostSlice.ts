@@ -137,7 +137,8 @@ export interface PostInterFace {
         email: string,
         profilePic: string,
         isVerified: boolean,
-        isAdmin: boolean
+        isAdmin: boolean,
+        _id: string
     }
     likes: 0,
     // likesId: UserDataInterface[]|string[],
@@ -178,7 +179,9 @@ const innitialSingleState: PostInterFace = {
         email: "",
         profilePic: "",
         isVerified: false,
-        isAdmin: false
+        isAdmin: false,
+        _id: ""
+
     },
     likes: 0,
     likesId: [],

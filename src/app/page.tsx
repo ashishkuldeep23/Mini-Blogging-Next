@@ -12,15 +12,17 @@ import { useRouter } from "next/navigation";
 import LikeCommentDiv from "./components/LikeCommentDiv";
 import ImageReact from "./components/ImageReact";
 import SinglePostCard from "./components/SinglePostCard";
+import { useSession } from "next-auth/react";
 // import ThreeDCardDemo from "./components/ui/card";
 
-
-import { TbCirclePlus } from "react-icons/tb";
-{/* <TbCirclePlus /> */}
+import { BsFillPatchPlusFill } from "react-icons/bs";
+{/* <BsFillPatchPlusFill /> */ }
 
 
 
 export default function Home() {
+
+  const { data: session } = useSession()
 
   const themeMode = useThemeData().mode
 
@@ -28,15 +30,36 @@ export default function Home() {
 
   const allPostData = usePostData().allPost
 
+  const router = useRouter()
+
   // console.log(themeMode)
 
 
   let onFocusFlagForRedirectUser = false
 
   return (
-    <main className={`flex min-h-screen flex-col items-center gap-10 ${!themeMode ? " bg-black text-white " : " bg-white text-black"}`}>
+    <main className={` relative flex min-h-screen flex-col items-center gap-10 ${!themeMode ? " bg-black text-white " : " bg-white text-black"}`}>
 
       <Navbar />
+
+      {/* Plus ICon to create post  */}
+      {
+        session?.user._id
+
+        &&
+
+        <button
+          className="add_button_down_right fixed bottom-[8%] sm:bottom-[10%] right-5 sm:right-[4%] text-5xl z-[100] fill-neutral-700 hover:scale-125 focus:scale-90 transition-all"
+          onClick={() => { router.push("/new-post") }}
+          // style={{ backdropFilter : "drop-shadow(2px 4px 6px cyan)"}}
+        >
+          <BsFillPatchPlusFill />
+        </button>
+
+
+
+      }
+
 
       <div className=" flex flex-col justify-center items-center py-6 ">
 

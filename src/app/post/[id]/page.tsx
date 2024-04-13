@@ -11,6 +11,7 @@ import { AppDispatch } from '@/redux/store'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
+import { PiSealCheckDuotone } from 'react-icons/pi'
 import { useDispatch } from 'react-redux'
 
 
@@ -44,7 +45,8 @@ const Page = ({ params }: any) => {
             email: "",
             profilePic: "",
             isVerified: false,
-            isAdmin: false
+            isAdmin: false,
+            _id: ""
         },
         likes: 0,
         likesId: [],
@@ -190,24 +192,35 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
 
     const themeMode = useThemeData().mode
 
+    const router = useRouter()
+
     return (
         <>
 
             <div className={` my-[5vh] border border-yellow-500 rounded p-2 w-[95%] sm:w-[80%] md:w-[60%] ${!themeMode ? " bg-black text-white  " : "  bg-white text-black"}`}>
 
-                <div className="rounded-t flex gap-1.5 items-center border-b border-cyan-400">
+                <div
+                    className="rounded-t flex gap-1.5 items-center border-b border-cyan-400 hover:cursor-pointer"
+                    onClick={() => {
+
+                        // console.log(singlePost.author)
+                        router.push(`/user/${singlePost.author._id}`);
+                    }}
+                >
 
                     <ImageReact
                         className=" rounded-full w-8"
                         src={`${singlePost?.author?.profilePic || "https://res.cloudinary.com/dlvq8n2ca/image/upload/v1701708322/jual47jntd2lpkgx8mfx.png"}`}
                         alt=""
                     />
-                    <p>{singlePost?.author?.username || "Name Kumar"}</p>
+                    <p className=' font-semibold'>{singlePost?.author?.username || "Name Kumar"}</p>
 
                     {
                         singlePost?.author?.isVerified
                         &&
-                        <span className="mr-2 text-sm ">✅</span>
+                        <span className="mr-2 text-sm text-green-500 ">
+                            <PiSealCheckDuotone />
+                        </span>
                     }
                 </div>
 

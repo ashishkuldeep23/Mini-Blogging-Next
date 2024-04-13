@@ -93,14 +93,14 @@ const LoginPage = () => {
 
 
 
-    useEffect(() => {
-        if (isFullfilled) {
+    // useEffect(() => {
+    //     if (isFullfilled) {
 
 
 
-            router.push("/")
-        }
-    }, [isFullfilled])
+    //         router.push("/")
+    //     }
+    // }, [isFullfilled])
 
 
 

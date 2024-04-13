@@ -6,10 +6,12 @@ import { useRouter } from "next/navigation"
 import { useDispatch } from "react-redux"
 import ImageReact from "./ImageReact"
 import LikeCommentDiv from "./LikeCommentDiv"
-
-
 import { CardBody, CardContainer, CardItem } from "@/app/components/ui/3d_card";
 import Image from "next/image"
+import { HiCheckBadge } from "react-icons/hi2";
+import { MdOutlineVerified } from "react-icons/md";
+import { PiSealCheckDuotone } from "react-icons/pi";
+
 
 
 
@@ -40,7 +42,7 @@ export default function SinglePostCard({ ele }: { ele: PostInterFace }) {
       onClick={(e) => { e.stopPropagation(); cardClickHadler(ele._id) }}
 
       style={{ padding: "2px" }}
-      className=" bg-gradient-to-tr from-cyan-400  sm:w-80  sm:p-2 rounded-xl hover:cursor-pointer hover:scale-105 sm:hover:scale-110 transition-all"
+      className=" bg-gradient-to-tr from-cyan-400  sm:w-80  sm:p-2 rounded-xl hover:cursor-pointer hover:scale-105 sm:hover:scale-110 active:scale-75 focus:scale-75 transition-all"
     >
 
 
@@ -71,13 +73,13 @@ export default function SinglePostCard({ ele }: { ele: PostInterFace }) {
                 {
                   ele?.author?.isVerified
                   &&
-                  <span className="mr-2 text-sm mt-2.5 ">✅</span>
+                  <span className="mr-2 mt-2.5 text-green-500 ">
+                    <PiSealCheckDuotone />
+                  </span>
                 }
               </div>
 
             </CardItem>
-
-
 
 
             <CardItem
@@ -91,7 +93,7 @@ export default function SinglePostCard({ ele }: { ele: PostInterFace }) {
 
                 <div className=" flex flex-wrap items-center gap-1">
                   <p className="capitalize">{ele.title}</p>
-                  <p className=" ml-[10vh] text-xs">:- {ele.category}</p>
+                  <p className=" ml-[10vh] text-xs">({ele.category})</p>
                 </div>
 
                 <div className=" text-sm"
@@ -122,7 +124,6 @@ export default function SinglePostCard({ ele }: { ele: PostInterFace }) {
               </>
 
             </CardItem>
-
 
 
             <CardItem

@@ -79,7 +79,7 @@ export async function PUT(req: NextRequest) {
         // // return NextResponse.json({ success: true, data: createNewPost, message: "User created." }, { status: 201 })
 
 
-        return NextResponse.json({ success: true, data: updatedPost, message: "New post created." }, { status: 201 })
+        return NextResponse.json({ success: true, data: updatedPost, message: "Post updated successfully." }, { status: 201 })
 
     } catch (error: any) {
 

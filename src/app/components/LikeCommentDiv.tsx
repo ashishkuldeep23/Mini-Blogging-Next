@@ -387,7 +387,7 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
                                                         name: ele.username,
                                                         designation: ele.email,
                                                         image: ele.profilePic,
-                                                        onClickFunction: () => { router.push(`/user/${ele._id}`);}
+                                                        onClickFunction: () => { router.push(`/user/${ele._id}`); }
                                                     }
                                                 )
                                             )
@@ -783,6 +783,7 @@ const SingleCommentUI = ({
 
     // console.log(session?.user.email)
 
+    const router = useRouter()
 
     async function likeComment() {
         // alert("Like Comment")
@@ -878,8 +879,10 @@ const SingleCommentUI = ({
 
                     <div className="w-[90%] flex flex-col gap-1 ">
 
-                        <div className=" flex gap-1">
-
+                        <div
+                            className=" flex gap-1"
+                            onClick={() => { router.push(`/user/${comment?.userId?._id}`); }}
+                        >
 
                             <ImageReact
                                 className=" border-t-2 w-6 mx-1 my-0.5 rounded-full"
@@ -1011,6 +1014,8 @@ function SeeMoreOfComment(
         setCommentClicked: Function
     }
 ) {
+
+    const router = useRouter()
 
     const themeMode = useThemeData().mode
 
@@ -1418,7 +1423,7 @@ function SeeMoreOfComment(
 
                                 {
 
-                                    // // // Not using now ------> (uncomment and use it.)
+                                    // // // Not using now ------> (uncomment and use it. Old UI )
 
                                     // likedBy.map((ele, i) => {
                                     //     return (
@@ -1436,7 +1441,19 @@ function SeeMoreOfComment(
 
 
 
-                                <AnimatedTooltip items={likedBy.map((ele, i) => ({ id: i, name: ele.username, designation: ele.email, image: ele.profilePic }))} />
+                                <AnimatedTooltip
+                                    items={
+                                        likedBy.map((ele, i) => (
+                                            {
+                                                id: i,
+                                                name: ele.username,
+                                                designation: ele.email,
+                                                image: ele.profilePic,
+                                                onClickFunction: (() => { router.push(`/user/${ele._id}`) })
+                                            }
+                                        ))
+                                    }
+                                />
 
                             </div>
 
@@ -1466,7 +1483,6 @@ function SeeMoreOfComment(
                                             key={i}
                                             className=' border rounded-full pl-4 sm:pl-1.5 mt-1 w-full flex items-center justify-between flex-wrap gap-0.5 overflow-hidden'
                                         >
-
 
                                             <div>
 
@@ -1510,7 +1526,11 @@ function SeeMoreOfComment(
 
 
 
-                                                <div className='border rounded-full pr-2 flex items-center gap-1'>
+                                                <div
+                                                    className='border rounded-full pr-2 flex items-center gap-1 hover:cursor-pointer'
+
+                                                    onClick={() => { router.push(`/user/${ele?.userId?._id}`); }}
+                                                >
 
                                                     <ImageReact className='w-7 rounded-full border' src={ele?.userId?.profilePic} />
                                                     <p className=' text-xs capitalize'>{ele?.userId?.username}</p>
