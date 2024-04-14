@@ -69,39 +69,19 @@ export async function PUT(req: NextRequest) {
 
             updatedUser = reciverUser
 
-
-
         }
 
 
         else if (whatUpdate === "addFriend") {
 
 
-
-            // if (!postData.likesId.includes(userId)) {
-            //     postData.likes = postData.likes + 1
-            //     postData.likesId.push(userId)
-            // } else {
-
-            //     // console.log(postData)
-            //     // console.log(userId)
-
-            //     let findIndex = postData.likesId.findIndex((ele: any) => ele.toString() === userId.toString())
-
-            //     // console.log(findIndex)
-
-            //     postData.likesId.splice(findIndex, 1)
-            //     postData.likes = postData.likes - 1
-            // }
-
-
-
+            // // // Samne wala user jo request accept kr raha hai. ========================================>
             let reciverUser = await User.findById(reciver)
 
             let findIndexR = reciverUser.reciveRequest.findIndex((ele: any) => ele.toString() === sender.toString())
 
             // console.log(findIndex)
-            // console.log({ findIndexR })
+            console.log({ findIndexR })
 
             reciverUser.reciveRequest.splice(findIndexR, 1)
 
@@ -114,16 +94,16 @@ export async function PUT(req: NextRequest) {
             await reciverUser.save()
 
 
+            console.log({ reciverUser })
 
 
-            // console.log({ reciverUser })
-
+            
+            // // // Jo user accept request bheja tha wo ==================================================>
 
             let senderUser = await User.findById(sender)
-
             let findIndexS = senderUser.sendRequest.findIndex((ele: any) => ele.toString() === reciver.toString())
 
-            // console.log({ findIndexS })
+            console.log({ findIndexS })
 
             senderUser.sendRequest.splice(findIndexS, 1)
 
@@ -134,10 +114,9 @@ export async function PUT(req: NextRequest) {
             }
 
 
-            // console.log({ senderUser })
+            console.log({ senderUser })
 
             updatedUser = await senderUser.save()
-
 
         }
         // else {
