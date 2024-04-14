@@ -85,6 +85,7 @@ export async function POST(req: NextRequest, context: any) {
         }
 
 
+        // // // Getting all post for this user -------->
 
         let posts = await Post.find({ author: userId, isDeleted: false })
             .populate({
@@ -131,6 +132,8 @@ export async function POST(req: NextRequest, context: any) {
             // (session?.user.email !== user.email)
             &&
             user.friends
+            &&
+            user.friends.length > 0
         ) {
 
             // // // New logic here ----------->
@@ -141,7 +144,7 @@ export async function POST(req: NextRequest, context: any) {
 
             // console.log({ searchingUserId })
 
-            if (user.friends.includes(searchingUserId._id.toString())) {
+            if (user.friends.includes(searchingUserId._id.toString()) || user.email === searchingUserId.email) {
 
                 // console.log(152)
 

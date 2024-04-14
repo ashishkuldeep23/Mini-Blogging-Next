@@ -16,7 +16,7 @@ export async function PUT(req: NextRequest) {
 
     try {
 
-        // console.log("fsdfsdfsdfsdfsfd")
+        // console.log("fsdfsdfsdfsdfsfd ======================> ")
 
         const reqBody = await req.json()
 
@@ -40,8 +40,6 @@ export async function PUT(req: NextRequest) {
 
 
             // // // send request me searchedUser ki latest info bhejni hogi (added in reciveRequest) ------------>
-
-
 
 
             let reciverUser = await User.findByIdAndUpdate(
@@ -71,8 +69,10 @@ export async function PUT(req: NextRequest) {
 
         }
 
-
         else if (whatUpdate === "addFriend") {
+
+
+            // console.log("adding friend here ------------>")
 
 
             // // // Samne wala user jo request accept kr raha hai. ========================================>
@@ -81,12 +81,24 @@ export async function PUT(req: NextRequest) {
             let findIndexR = reciverUser.reciveRequest.findIndex((ele: any) => ele.toString() === sender.toString())
 
             // console.log(findIndex)
-            console.log({ findIndexR })
+            // console.log({ findIndexR })
 
             reciverUser.reciveRequest.splice(findIndexR, 1)
 
+
+
+            // // // now add into friend list ----->
+
             if (reciverUser.friends) {
-                reciverUser.friends.push(sender)
+
+                if (!reciverUser.friends.includes(sender)) {
+                    reciverUser.friends.push(sender)
+                }
+
+                // else {
+                //     console.log("Yes 1")
+                // }
+
             } else {
                 reciverUser.friends = [sender]
             }
@@ -94,34 +106,42 @@ export async function PUT(req: NextRequest) {
             await reciverUser.save()
 
 
-            console.log({ reciverUser })
+            // console.log({ reciverUser })
 
 
-            
+
             // // // Jo user accept request bheja tha wo ==================================================>
 
             let senderUser = await User.findById(sender)
+
             let findIndexS = senderUser.sendRequest.findIndex((ele: any) => ele.toString() === reciver.toString())
 
-            console.log({ findIndexS })
+            // console.log({ findIndexS })
 
             senderUser.sendRequest.splice(findIndexS, 1)
 
             if (senderUser.friends) {
-                senderUser.friends.push(sender)
+                if (!senderUser.friends.includes(reciver)) {
+                    senderUser.friends.push(reciver)
+                }
+
+                // else {
+                //     console.log("Yes 2")
+                // }
+
             } else {
-                senderUser.friends = [sender]
+                senderUser.friends = [reciver]
             }
 
 
-            console.log({ senderUser })
+            // console.log({ senderUser })
 
             updatedUser = await senderUser.save()
 
         }
-        // else {
-        //     return NextResponse.json({ success: false, message: 'whatUpdate is not given.' }, { status: 400 })
-        // }
+        else {
+            return NextResponse.json({ success: false, message: 'whatUpdate is not given.' }, { status: 400 })
+        }
 
 
 

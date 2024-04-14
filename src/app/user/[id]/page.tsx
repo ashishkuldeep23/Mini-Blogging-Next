@@ -133,7 +133,6 @@ const UserPageParams = ({ params }: any) => {
             <FriendsOfFriendsDiv
                 searchedUser={searchedUser}
                 userData={userData}
-
             />
 
             <div

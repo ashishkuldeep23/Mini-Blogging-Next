@@ -76,7 +76,6 @@ type UpdateUser = {
 
 export const updateUserData = createAsyncThunk('user/updateUserData', async ({ whatUpdate, sender, reciver }: UpdateUser) => {
 
-
     const option: RequestInit = {
         cache: 'no-store',
         method: "PUT",
@@ -158,7 +157,7 @@ const userSlice = createSlice({
             state.userData.username = action.payload.name
             state.userData.profilePic = action.payload.image
             state.userData.email = action.payload.email
-        }
+        },
 
     },
     extraReducers: (builder) => {
@@ -331,38 +330,14 @@ const userSlice = createSlice({
 
                 if (action.payload.success === true) {
 
-                    // // console.log("All good ------>")
-                    // const { friendsAllFriend, user, posts } = action.payload.data
 
+                    let whatUpdate = action.payload.whatUpdate as WhatUpdateData
 
-                    // // state.allPostOfUser = posts
-                    // // state.searchedUser = user
-                    // // state.friendsAllFriend = friendsAllFriend
+                    if (whatUpdate) {
 
+                        location.reload()
 
-                    // // // // check getting some extra or not (User personal data) ---------->
-
-                    // const { reciveRequest, sendRequest, whoSeenProfile
-                    // } = user
-
-                    // if (reciveRequest) state.reciveRequest = reciveRequest
-                    // if (sendRequest) state.sendRequest = sendRequest
-                    // if (whoSeenProfile) state.whoSeenProfile = whoSeenProfile
-
-
-                    // if (!reciveRequest && !sendRequest && !whoSeenProfile) {
-
-                    //     state.allPostOfUser = posts
-                    //     state.searchedUser = user
-                    //     state.friendsAllFriend = friendsAllFriend
-                    // }
-
-
-                    // // // rest data set ------>
-                    // state.userData = action.payload.data.user
-                    // state.postCategories = action.payload.data.postCategories
-                    // state.posthashtags = action.payload.data.posthashtags
-                    // state.allPostsLength = action.payload.data.allPostsLength
+                    }
 
                     state.isFullfilled = true
 

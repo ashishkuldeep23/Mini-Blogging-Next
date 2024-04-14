@@ -7,7 +7,7 @@ import { useThemeData } from "@/redux/slices/ThemeSlice"
 
 import { signIn, useSession, getProviders } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { Fragment, useEffect, useState } from "react"
 
 
 const LogInWithGoogle = () => {
@@ -69,14 +69,14 @@ const LogInWithGoogle = () => {
 
 
             {
-                provider && Object.values(provider).map((prov: any) => {
+                provider && Object.values(provider).map((prov: any, i) => {
 
-                    if(prov?.name === "Password") return <></>
+                    if (prov?.name === "Password") return <Fragment key={i}></Fragment>
 
                     return (
                         <button
                             type='button'
-                            key={prov.name}
+                            key={i}
                             onClick={() => {
                                 // console.log(prov)
                                 signIn(prov.id)
