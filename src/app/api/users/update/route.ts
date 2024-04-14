@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 
 
-type WhatUpdateData = "sendFriendRequest" | "addFriend"
+type WhatUpdateData = "sendFriendRequest" | "addFriend" | 'removeFriend' | "cancelFrndRequest"
 
 
 
@@ -78,12 +78,21 @@ export async function PUT(req: NextRequest) {
             // // // Samne wala user jo request accept kr raha hai. ========================================>
             let reciverUser = await User.findById(reciver)
 
-            let findIndexR = reciverUser.reciveRequest.findIndex((ele: any) => ele.toString() === sender.toString())
+            // // From recive req
 
-            // console.log(findIndex)
-            // console.log({ findIndexR })
+            let findIndexR1 = reciverUser.reciveRequest.findIndex((ele: any) => ele.toString() === sender.toString())
 
-            reciverUser.reciveRequest.splice(findIndexR, 1)
+            if (findIndexR1 !== -1) {
+                reciverUser.reciveRequest.splice(findIndexR1, 1)
+            }
+
+            // // From send req
+
+            let findIndexR2 = reciverUser.sendRequest.findIndex((ele: any) => ele.toString() === sender.toString())
+
+            if (findIndexR2 !== -1) {
+                reciverUser.sendRequest.splice(findIndexR2, 1)
+            }
 
 
 
@@ -114,11 +123,20 @@ export async function PUT(req: NextRequest) {
 
             let senderUser = await User.findById(sender)
 
-            let findIndexS = senderUser.sendRequest.findIndex((ele: any) => ele.toString() === reciver.toString())
-
+            let findIndexS1 = senderUser.sendRequest.findIndex((ele: any) => ele.toString() === reciver.toString())
             // console.log({ findIndexS })
+            if (findIndexS1 !== -1) {
+                senderUser.sendRequest.splice(findIndexS1, 1)
+            }
 
-            senderUser.sendRequest.splice(findIndexS, 1)
+
+            let findIndexS2 = senderUser.reciveRequest.findIndex((ele: any) => ele.toString() === reciver.toString())
+            // console.log({ findIndexS })
+            if (findIndexS2 !== -1) {
+                senderUser.reciveRequest.splice(findIndexS2, 1)
+            }
+
+
 
             if (senderUser.friends) {
                 if (!senderUser.friends.includes(reciver)) {
@@ -139,6 +157,81 @@ export async function PUT(req: NextRequest) {
             updatedUser = await senderUser.save()
 
         }
+
+        else if (whatUpdate === 'removeFriend') {
+
+
+            let sendReqUser = await User.findById(sender)
+
+            let findIndexS1 = sendReqUser.friends.findIndex((ele: any) => ele.toString() === reciver.toString())
+
+            if (findIndexS1 !== -1) {
+                sendReqUser.friends.splice(findIndexS1, 1)
+            }
+
+            
+            await sendReqUser.save()
+
+
+            let reciveReqUser = await User.findById(reciver)
+
+            let findIndexR1 = reciveReqUser.friends.findIndex((ele: any) => ele.toString() === sender.toString())
+
+            if (findIndexR1 !== -1) {
+                reciveReqUser.friends.splice(findIndexR1, 1)
+            }
+
+                        
+            await reciveReqUser.save()
+
+
+            updatedUser = sendReqUser
+
+        }
+
+        else if (whatUpdate === "cancelFrndRequest") {
+
+
+            let sendReqUser = await User.findById(sender)
+
+            let findIndexS1 = sendReqUser.reciveRequest.findIndex((ele: any) => ele.toString() === reciver.toString())
+
+            if (findIndexS1 !== -1) {
+                sendReqUser.reciveRequest.splice(findIndexS1, 1)
+            }
+
+
+            let findIndexS2 = sendReqUser.sendRequest.findIndex((ele: any) => ele.toString() === reciver.toString())
+
+            if (findIndexS2 !== -1) {
+                sendReqUser.sendRequest.splice(findIndexS2, 1)
+            }
+
+            await sendReqUser.save()
+
+
+            let reciveReqUser = await User.findById(reciver)
+
+            let findIndexR1 = reciveReqUser.sendRequest.findIndex((ele: any) => ele.toString() === sender.toString())
+
+            if (findIndexR1 !== -1) {
+                reciveReqUser.sendRequest.splice(findIndexR1, 1)
+            }
+
+            let findIndexR2 = reciveReqUser.reciveRequest.findIndex((ele: any) => ele.toString() === sender.toString())
+
+            if (findIndexR2 !== -1) {
+                reciveReqUser.reciveRequest.splice(findIndexR1, 1)
+            }
+
+
+            
+            await reciveReqUser.save()
+
+            updatedUser = sendReqUser
+
+        }
+
         else {
             return NextResponse.json({ success: false, message: 'whatUpdate is not given.' }, { status: 400 })
         }

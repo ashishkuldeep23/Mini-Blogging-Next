@@ -66,7 +66,7 @@ export const getUserData = createAsyncThunk('user/getUserData', async (userId: s
 })
 
 
-type WhatUpdateData = "sendFriendRequest" | "addFriend"
+type WhatUpdateData = "sendFriendRequest" | "addFriend" | 'removeFriend' | "cancelFrndRequest"
 
 type UpdateUser = {
     whatUpdate: WhatUpdateData,
@@ -247,7 +247,7 @@ const userSlice = createSlice({
             })
             .addCase(getUserData.fulfilled, (state, action) => {
 
-                console.log(action.payload.data)
+                // console.log(action.payload.data)
 
                 if (action.payload.success === true) {
 
@@ -326,17 +326,15 @@ const userSlice = createSlice({
             })
             .addCase(updateUserData.fulfilled, (state, action) => {
 
-                console.log(action.payload)
+                // console.log(action.payload)
 
                 if (action.payload.success === true) {
-
 
                     let whatUpdate = action.payload.whatUpdate as WhatUpdateData
 
                     if (whatUpdate) {
 
                         location.reload()
-
                     }
 
                     state.isFullfilled = true

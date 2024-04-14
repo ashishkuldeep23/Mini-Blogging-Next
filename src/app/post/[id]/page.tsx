@@ -213,7 +213,7 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
                         src={`${singlePost?.author?.profilePic || "https://res.cloudinary.com/dlvq8n2ca/image/upload/v1701708322/jual47jntd2lpkgx8mfx.png"}`}
                         alt=""
                     />
-                    <p className=' font-semibold'>{singlePost?.author?.username || "Name Kumar"}</p>
+                    <p className=' font-semibold capitalize'>{singlePost?.author?.username || "Name Kumar"}</p>
 
                     {
                         singlePost?.author?.isVerified

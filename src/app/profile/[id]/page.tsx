@@ -194,6 +194,26 @@ function ReciverRequestDiv() {
 
 
 
+    function cancelRequest(id: string, name: string) {
+
+
+        let ask = confirm(`Do you want Cancel request.`)
+
+        if (!ask) return
+
+        if (session?.user._id) {
+            dispatch(updateUserData({
+                whatUpdate: "cancelFrndRequest",
+                sender: session?.user._id,
+                reciver: id
+            }))
+        }
+
+    }
+
+
+
+
     return (
         <div
             className=' w-[96%] sm:w-[65%] md:w-[50%]  px-1 py-2  rounded'
@@ -245,14 +265,30 @@ function ReciverRequestDiv() {
 
                                     {/* yaha pr cancle request ki btn honi chahiye  */}
 
-                                    <button
 
-                                        className='border rounded px-2 text-green-500 font-semibold active:scale-75'
+                                    <div className=' flex gap-2 items-center flex-wrap'>
 
-                                        onClick={() => acceptFriendRequest(ele._id)}
-                                    >
-                                        <span>Accept</span>
-                                    </button>
+
+                                        <button
+
+                                            className='border rounded px-2 text-green-500 font-semibold active:scale-75'
+
+                                            onClick={() => acceptFriendRequest(ele._id)}
+                                        >
+                                            <span>Accept</span>
+                                        </button>
+
+                                        <button
+
+                                            className='border rounded px-2 text-red-500 font-semibold active:scale-75'
+
+                                            onClick={() => cancelRequest(ele._id, ele.username)}
+                                        >
+                                            <span>Cancel</span>
+                                        </button>
+
+                                    </div>
+
 
 
                                 </div>
@@ -274,12 +310,34 @@ function ReciverRequestDiv() {
 }
 
 
-
 function SenderRequestDiv() {
 
     const { userData } = useUserState()
 
+    const dispatch = useDispatch<AppDispatch>()
+
     const router = useRouter()
+
+    const { data: session, status } = useSession()
+
+
+    function cancelRequest(id: string, name: string) {
+
+
+        let ask = confirm(`Do you want Cancel request.`)
+
+        if (!ask) return
+
+        if (session?.user._id) {
+            dispatch(updateUserData({
+                whatUpdate: "cancelFrndRequest",
+                sender: session?.user._id,
+                reciver: id
+            }))
+        }
+
+    }
+
 
     return (
 
@@ -333,9 +391,13 @@ function SenderRequestDiv() {
 
                                     {/* yaha pr cancle request ki btn honi chahiye  */}
 
-                                    <button>
-                                        <span>cancel</span>
-                                        <span>X</span>
+                                    <button
+                                        className=' text-xm border rounded-md px-2'
+
+                                        onClick={() => { cancelRequest(ele._id, ele.username) }}
+                                    >
+                                        <span>Cancel</span>
+                                        <span>❌</span>
                                     </button>
 
 
@@ -356,7 +418,6 @@ function SenderRequestDiv() {
     )
 
 }
-
 
 
 function FriendsOfFriendsDiv(
@@ -427,7 +488,7 @@ function FriendsOfFriendsDiv(
 
                                     >
 
-                                        <span>See your Friends</span>
+                                        <span>Your Friends</span>
 
                                         <span>
                                             {
@@ -577,18 +638,44 @@ function SingleUserDiv(
 
 ) {
 
+    const dispatch = useDispatch<AppDispatch>()
 
     const router = useRouter()
 
     const { data: session, status } = useSession()
 
+
+    function removeFriend(id: string, name: string) {
+
+
+        let ask = confirm(`Do you really want to remove ${name} as friend??`)
+
+        if (!ask) return
+
+        if (session?.user._id) {
+            dispatch(updateUserData({
+                whatUpdate: "removeFriend",
+                sender: session?.user._id,
+                reciver: id
+            }))
+        }
+
+
+
+    }
+
+
     return (
         <div
             key={friend._id}
-            className={`px-0.5 py-1 border-b flex items-center justify-between gap-1.5 ${i === 0 && "border-t"} `}
+            className={`px-0.5 py-1 border-b flex items-center justify-between flex-wrap gap-1.5 ${i === 0 && "border-t"} `}
         >
 
-            <div className=' flex gap-1 items-center flex-wrap'>
+            <div
+                className=' flex gap-1 items-center flex-wrap hover:cursor-pointer'
+                onClick={() => { router.push(`/user/${friend._id}`) }}
+
+            >
 
 
                 <div className=' relative flex'>
@@ -608,7 +695,7 @@ function SingleUserDiv(
                     />
                 </div>
 
-                <span className=' ml-7'>
+                <span className=' ml-7 capitalize'>
                     {
                         friend.username
                     }
@@ -616,62 +703,82 @@ function SingleUserDiv(
 
             </div>
 
-            {
-
-                (session && !friend.friends.includes(session?.user?._id))
-                    ?
-                    <span
-                        className=' ml-auto mr-2'
-                    >
-                        {
-                            friend._id === session?.user._id
-                                ?
-                                <span className=' text-xs text-violet-500 font-semibold'>You</span>
-                                :
-                                <span>
-                                    <RiUserAddLine />
-                                </span>
-                        }
-                    </span>
 
 
-                    :
-                    // // // //  Agr ab main user is searching user ka dost nhi hai to main user ke send request me chcek kro kya user waha exist krta hai ??
-                    // // 1. request sended
-                    // // 2. you
-                    // // 3. Already frined
-                    <span>
 
-                        {
+            <div
+                className=' flex gap-2 items-center flex-wrap'
+            >
 
-                            (
-                                userData.sendRequest
-                                &&
-                                (userData.sendRequest.length > 0)
-                                &&
-                                userData.sendRequest.map(ele => ele._id).includes(friend._id)
-                            )
-                                ?
-                                <span className=' text-green-500 '>
-                                    <IoCheckmarkDoneOutline />
-                                </span>
 
-                                :
-                                <span>
-                                    {
-                                        friend._id === session?.user._id
-                                            ?
-                                            <span className=' text-xs text-violet-500 font-semibold'>You</span>
-                                            :
-                                            <span className=' text-xs text-green-500'>Friend</span>
-                                    }
-                                </span>
 
-                        }
-                    </span>
+                {
 
-            }
+                    (session && !friend.friends.includes(session?.user?._id))
+                        ?
+                        <span
+                            className=' ml-auto mr-2'
+                        >
+                            {
+                                friend._id === session?.user._id
+                                    ?
+                                    <span className=' text-xs text-violet-500 font-semibold'>You</span>
+                                    :
+                                    <span>
+                                        <RiUserAddLine />
+                                    </span>
+                            }
+                        </span>
 
+
+                        :
+                        // // // //  Agr ab main user is searching user ka dost nhi hai to main user ke send request me chcek kro kya user waha exist krta hai ??
+                        // // 1. request sended
+                        // // 2. you
+                        // // 3. Already frined
+                        <span>
+
+                            {
+
+                                (
+                                    userData.sendRequest
+                                    &&
+                                    (userData.sendRequest.length > 0)
+                                    &&
+                                    userData.sendRequest.map(ele => ele._id).includes(friend._id)
+                                )
+                                    ?
+                                    <span className=' text-green-500 '>
+                                        <IoCheckmarkDoneOutline />
+                                    </span>
+
+                                    :
+                                    <span>
+                                        {
+                                            friend._id === session?.user._id
+                                                ?
+                                                <span className=' text-xs text-violet-500 font-semibold'>You</span>
+                                                :
+                                                <span className=' text-xs text-green-500'>Friend</span>
+                                        }
+                                    </span>
+
+                            }
+                        </span>
+
+                }
+
+
+
+                <button
+                    className=' border rounded-md p-0.5 text-xs'
+                    onClick={() => { removeFriend(friend._id, friend.username) }}
+                >
+                    ❌
+                </button>
+
+
+            </div>
 
 
         </div>
