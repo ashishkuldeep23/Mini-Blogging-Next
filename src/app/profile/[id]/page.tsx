@@ -192,8 +192,6 @@ function ReciverRequestDiv() {
 
     }
 
-
-
     function cancelRequest(id: string, name: string) {
 
 
@@ -210,8 +208,6 @@ function ReciverRequestDiv() {
         }
 
     }
-
-
 
 
     return (
@@ -234,7 +230,7 @@ function ReciverRequestDiv() {
                                     className={`w-full px-0.5 py-1 border-b flex justify-around items-center  ${i === 0 && "border-t"} `}
                                 >
 
-                                    <div className=' flex gap-2 items-center flex-wrap '>
+                                    <div className=' flex gap-2 items-center '>
 
                                         <div className=' relative flex'>
                                             <AnimatedTooltip
@@ -262,12 +258,9 @@ function ReciverRequestDiv() {
                                     </div>
 
 
-
                                     {/* yaha pr cancle request ki btn honi chahiye  */}
 
-
-                                    <div className=' flex gap-2 items-center flex-wrap'>
-
+                                    <div className=' flex gap-2 items-center justify-center flex-wrap'>
 
                                         <button
 
@@ -288,8 +281,6 @@ function ReciverRequestDiv() {
                                         </button>
 
                                     </div>
-
-
 
                                 </div>
                             )

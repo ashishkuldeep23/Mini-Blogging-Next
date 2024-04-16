@@ -126,10 +126,6 @@ const UserPageParams = ({ params }: any) => {
             }
 
 
-            {/* {
-                JSON.stringify(friendsAllFriend)
-            } */}
-
             <FriendsOfFriendsDiv
                 searchedUser={searchedUser}
                 userData={userData}
@@ -194,7 +190,7 @@ function FriendsOfFriendsDiv(
     const [seeFriends, setSeeFriends] = useState(false)
 
 
-    function addFrined() {
+    function addFriend(id: string) {
 
         if (!session?.user._id) return toast.error("You are looking logged out, please login.")
 
@@ -204,7 +200,7 @@ function FriendsOfFriendsDiv(
             {
                 whatUpdate: 'sendFriendRequest',
                 sender: session.user._id,
-                reciver: searchedUser?._id
+                reciver: id
             }
         ))
 
@@ -229,9 +225,9 @@ function FriendsOfFriendsDiv(
                                 ?
                                 // // // if you are a friend of user
 
-                                <div className={`overflow-hidden mt-7 w-11/12 sm:w-3/4 md:w-1/2 px-1 border rounded flex flex-col justify-center items-center 
-                            ${!seeFriends ? " border-0" : ` border`}  transition-all duration-500
-                            `}
+                                <div className={`   overflow-hidden mt-7 w-11/12 sm:w-3/4 md:w-1/2 px-1 border rounded flex flex-col       justify-center items-center 
+                                        ${!seeFriends ? " border-0" : ` border`}  transition-all duration-500
+                                `}
                                 >
                                     {/* {JSON.stringify(friendsAllFriend)} */}
 
@@ -270,6 +266,7 @@ function FriendsOfFriendsDiv(
                                                 i={i}
                                                 friend={friend}
                                                 userData={userData}
+                                                addFriend={addFriend}
                                             />)
                                         }
 
@@ -299,7 +296,7 @@ function FriendsOfFriendsDiv(
                                         className=' text-2xl px-3 py-1 bg-green-600 text-white rounded-md flex gap-1 items-center hover:scale-110 active:scale-90 transition-all'
 
                                         onClick={() => {
-                                            addFrined()
+                                            addFriend(searchedUser._id)
                                         }}
 
                                     >
@@ -351,7 +348,7 @@ function FriendsOfFriendsDiv(
                                             className=' text-2xl px-3 py-1 bg-green-600 text-white rounded-md flex gap-1 items-center hover:scale-110 active:scale-90 transition-all'
 
                                             onClick={() => {
-                                                addFrined()
+                                                addFriend(searchedUser._id)
                                             }}
 
                                         >
@@ -384,11 +381,13 @@ function SingleUserDiv(
     {
         friend,
         i,
-        userData
+        userData,
+        addFriend
     }: {
         friend: FriendsAllFriendData,
         i: number,
-        userData: AddMoreFeilsUserData
+        userData: AddMoreFeilsUserData,
+        addFriend: Function
     }
 
 ) {
@@ -398,33 +397,46 @@ function SingleUserDiv(
 
     const { data: session, status } = useSession()
 
+
+    function goToUserProfile() {
+        router.push(`/user/${friend._id}`)
+    }
+
     return (
         <div
             key={friend._id}
             className={`px-0.5 py-1 border-b flex items-center  ${i === 0 && "border-t"} `}
         >
-            <div className=' relative flex'>
-                <AnimatedTooltip
-                    items={
-                        [
-                            {
-                                id: 1,
-                                name: friend.username,
-                                designation: friend.email,
-                                image: friend.profilePic,
-                                onClickFunction: (() => { router.push(`/user/${friend._id}`) })
-                            }
 
-                        ]
+            <div
+                className=' flex gap-1 flex-wrap items-center '
+                onClick={() => { goToUserProfile() }}
+            >
+                <div className=' relative flex'>
+                    <AnimatedTooltip
+                        items={
+                            [
+                                {
+                                    id: 1,
+                                    name: friend.username,
+                                    designation: friend.email,
+                                    image: friend.profilePic,
+                                    onClickFunction: (() => { goToUserProfile() })
+                                }
+
+                            ]
+                        }
+                    />
+                </div>
+
+                <span className=' ml-7'>
+                    {
+                        friend.username
                     }
-                />
+                </span>
+
             </div>
 
-            <span className=' ml-7'>
-                {
-                    friend.username
-                }
-            </span>
 
 
             {
@@ -439,9 +451,38 @@ function SingleUserDiv(
                                 ?
                                 <span className=' text-xs text-violet-500 font-semibold'>You</span>
                                 :
-                                <span>
-                                    <RiUserAddLine />
-                                </span>
+
+                                <>
+
+                                    {
+
+                                        (
+                                            userData.sendRequest
+                                            &&
+                                            (userData.sendRequest.length > 0)
+                                            &&
+                                            userData.sendRequest.map(ele => ele._id).includes(friend._id)
+                                        )
+                                            ?
+                                            <span className=' text-green-500 '>
+                                                <IoCheckmarkDoneOutline />
+                                            </span>
+
+                                            :
+                                            <span
+                                                className=' flex justify-center items-center border rounded-md p-0.5 active:scale-75 mt-2'
+                                                onClick={() => { addFriend(friend._id) }}
+                                            >
+                                                <RiUserAddLine />
+                                                {/* Add friend logo */}
+                                            </span>
+
+                                    }
+
+                                </>
+
+
+
                         }
                     </span>
 
@@ -451,32 +492,35 @@ function SingleUserDiv(
                     // // 1. request sended
                     // // 2. you
                     // // 3. Already frined
+                    // // // (Above two cases added in above div ) ------------->
                     <span>
 
                         {
 
-                            (
-                                userData.sendRequest
-                                &&
-                                (userData.sendRequest.length > 0)
-                                &&
-                                userData.sendRequest.map(ele => ele._id).includes(friend._id)
-                            )
-                                ?
-                                <span className=' text-green-500 '>
-                                    <IoCheckmarkDoneOutline />
-                                </span>
+                            // (
+                            //     userData.sendRequest
+                            //     &&
+                            //     (userData.sendRequest.length > 0)
+                            //     &&
+                            //     userData.sendRequest.map(ele => ele._id).includes(friend._id)
+                            // )
+                            //     ?
+                            //     <span className=' text-green-500 '>
+                            //         <IoCheckmarkDoneOutline />
+                            //     </span>
 
-                                :
-                                <span>
-                                    {
-                                        friend._id === session?.user._id
-                                            ?
-                                            <span className=' text-xs text-violet-500 font-semibold'>You</span>
-                                            :
-                                            <span className=' text-xs text-green-500'>Friend</span>
-                                    }
-                                </span>
+                            //     :
+
+
+                            <span>
+                                {
+                                    friend._id === session?.user._id
+                                        ?
+                                        <span className=' text-xs text-violet-500 font-semibold'>You</span>
+                                        :
+                                        <span className=' text-xs text-green-500'>Friend</span>
+                                }
+                            </span>
 
                         }
                     </span>

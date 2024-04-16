@@ -265,9 +265,9 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
 
         // console.log(params)
 
-        if (params !== "/") {
-            setShowPostCommentDiv(true)
-        }
+        // if (params !== "/") {
+        //     setShowPostCommentDiv(true)
+        // }
 
     }, [])
 
@@ -359,7 +359,9 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
 
                         <p className=' flex gap-1 flex-wrap items-center ml-1 -mt-3 '>
                             <span className=' font-semibold'>Likes</span>
-                            <span> <PiPaperPlaneRight /> </span>
+                            <span>
+                                <PiPaperPlaneRight />
+                            </span>
                         </p>
 
 
@@ -367,7 +369,6 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
 
                             {
                                 (post.likesId.length > 0)
-
                                 &&
 
                                 (post.likesId[0] !== "string")
@@ -379,15 +380,13 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
                                     items={
                                         post.likesId
                                             .map(
-
-
                                                 (ele: any, i) => (
                                                     {
                                                         id: i,
                                                         name: ele.username,
                                                         designation: ele.email,
                                                         image: ele.profilePic,
-                                                        onClickFunction: () => { router.push(`/user/${ele._id}`); }
+                                                        onClickFunction: (() => { router.push(`/user/${ele._id}`); })
                                                     }
                                                 )
                                             )
@@ -405,18 +404,18 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
 
 
 
-
                 {
-                    showPostCommentDiv
-                    &&
+                    // showPostCommentDiv
 
+                    (params.includes("post") || params.includes("user") || showPostCommentDiv)
+
+                    &&
 
                     <PostCommentForm
                         textAreaInputRef={textAreaInputRef}
                         checkUserStatus={checkUserStatus}
                         updatingComment={updatingComment}
                         setUpdatingComment={setUpdatingComment}
-
                         post={post}
                     />
 
@@ -643,7 +642,6 @@ function PostCommentForm(
 
                                         }
 
-
                                         if (textAreaInputRef?.current) {
                                             textAreaInputRef.current.scrollTop = textAreaInputRef.current?.scrollHeight
                                         }
@@ -651,13 +649,14 @@ function PostCommentForm(
 
                                     }}
 
-                                >{
+                                >
+                                    {
 
                                         ele === "X"
                                             ? <span className='px-1 font-bold bg-red-500 text-white '>{ele}</span>
                                             : ele
-
-                                    }</button>
+                                    }
+                                </button>
                             )
                         })
                     }

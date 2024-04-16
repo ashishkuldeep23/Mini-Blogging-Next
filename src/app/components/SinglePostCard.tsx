@@ -7,13 +7,7 @@ import { useDispatch } from "react-redux"
 import ImageReact from "./ImageReact"
 import LikeCommentDiv from "./LikeCommentDiv"
 import { CardBody, CardContainer, CardItem } from "@/app/components/ui/3d_card";
-import Image from "next/image"
-import { HiCheckBadge } from "react-icons/hi2";
-import { MdOutlineVerified } from "react-icons/md";
 import { PiSealCheckDuotone } from "react-icons/pi";
-
-
-
 
 export default function SinglePostCard({ ele }: { ele: PostInterFace }) {
 
@@ -57,7 +51,10 @@ export default function SinglePostCard({ ele }: { ele: PostInterFace }) {
               translateX={-10}
               className="text-xl font-bold "
             >
-              <div className="rounded-t flex items-start p-0.5 gap-1.5  border-cyan-400">
+              <div
+                className="rounded-t flex items-start p-0.5 gap-1.5  border-cyan-400"
+                onClick={(e) => { e.stopPropagation(); router.push(`/user/${ele.author._id}`) }}
+              >
 
                 <ImageReact
                   className="mt-2 rounded-full w-8"

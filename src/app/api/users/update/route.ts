@@ -38,9 +38,7 @@ export async function PUT(req: NextRequest) {
 
         if (whatUpdate === 'sendFriendRequest') {
 
-
             // // // send request me searchedUser ki latest info bhejni hogi (added in reciveRequest) ------------>
-
 
             let reciverUser = await User.findByIdAndUpdate(
                 reciver,
@@ -103,10 +101,6 @@ export async function PUT(req: NextRequest) {
                 if (!reciverUser.friends.includes(sender)) {
                     reciverUser.friends.push(sender)
                 }
-
-                // else {
-                //     console.log("Yes 1")
-                // }
 
             } else {
                 reciverUser.friends = [sender]
