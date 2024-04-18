@@ -20,6 +20,8 @@ import { IoIosArrowBack } from "react-icons/io";
 import AnimatedTooltip from '@/app/components/ui/animated-tooltip'
 import { IoCheckmarkDoneOutline } from "react-icons/io5";
 import { PiSealCheckDuotone } from 'react-icons/pi'
+import { TbUserCancel } from "react-icons/tb";
+
 
 
 const UserPageParams = ({ params }: any) => {
@@ -203,6 +205,28 @@ function FriendsOfFriendsDiv(
     }
 
 
+    function removeFriend(id: string, name: string) {
+
+
+        let ask = confirm(`Do you really want to remove friendshipe with ${name}?`)
+
+        if (!ask) return
+
+
+
+        if (session?.user?._id) {
+            dispatch(updateUserData({
+                whatUpdate: "removeFriend",
+                sender: session?.user._id,
+                reciver: id
+            }))
+        }
+
+
+
+    }
+
+
     return (
 
         <>
@@ -227,10 +251,25 @@ function FriendsOfFriendsDiv(
                                         ${!seeFriends ? " border-0 overflow-hidden" : ` border`}  transition-all duration-500
                                 `}
                                 >
+
+                                    <button
+                                        className=' border border-red-500 text-red-500 font-semibold px-3 rounded flex items-center gap-1 my-2 '
+                                        onClick={() => { removeFriend(searchedUser._id, searchedUser.username) }}
+                                    >
+
+                                        <span >Cancel</span>
+                                        <span>
+                                            <TbUserCancel />
+                                        </span>
+
+
+                                    </button>
+
+
                                     {/* {JSON.stringify(friendsAllFriend)} */}
 
                                     <button
-                                        className=' border px-3 rounded flex items-center gap-1 my-4 '
+                                        className=' border px-3 rounded flex items-center gap-1 my-2 '
                                         onClick={() => { setSeeFriends(!seeFriends) }}
                                     >
 
@@ -355,16 +394,10 @@ function FriendsOfFriendsDiv(
                                         :
 
                                         <div className=' flex flex-col items-center'>
-                                            <p className=' flex gap-1.5 flex-wrap items-center my-1'>
-                                                <span>Be the First friend of <span className=' font-semibold underline'>{searchedUser.username}</span> </span>
-                                                {/* <IoCheckmarkDoneOutline /> */}
-                                            </p>
 
                                             <button
                                                 className=' text-2xl px-3 py-1 bg-green-600 text-white rounded-md flex gap-1 items-center hover:scale-110 active:scale-90 transition-all'
-                                                onClick={() => {
-                                                    addFriend(searchedUser._id)
-                                                }}
+                                                onClick={() => addFriend(searchedUser._id)}
 
                                             >
                                                 <span>Add Friend</span>
@@ -566,6 +599,4 @@ function SingleUserDiv(
         </div>
     )
 }
-
-
 

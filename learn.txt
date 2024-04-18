@@ -11,8 +11,9 @@ Taliwind CSS new things ------------------>
 SOME UPDATED ==============================================================================================>
 
 Post update ----------------->
-    1. Post type.
+    1. Privacy for post [Public and private] .
     2. Post custumizaton (like :- bg-color, border, Font-Family, may be heading size ).
-    3. Retweet feature.
+    3. Post type Retweet feature.
+
 
 

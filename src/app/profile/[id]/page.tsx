@@ -19,6 +19,7 @@ import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 import { IoCheckmarkDoneOutline } from 'react-icons/io5'
 import { PiSealCheckDuotone } from 'react-icons/pi'
 import { RiUserAddLine } from 'react-icons/ri'
+import { TbUserCancel } from 'react-icons/tb'
 import { useDispatch } from 'react-redux'
 
 const ProfilePageParams = ({ params }: any) => {
@@ -470,8 +471,8 @@ function FriendsOfFriendsDiv(
                                 ?
                                 // // // if you are a friend of user
 
-                                <div className={`overflow-hidden mt-7 w-11/12 sm:w-3/4 md:w-1/2 px-1 border rounded flex flex-col justify-center items-center 
-                                ${!seeFriends ? " border-0 overflow-hidden" : ` border`}  transition-all duration-500
+                                <div className={`mt-7 w-11/12 sm:w-3/4 md:w-1/2 px-1 border rounded flex flex-col justify-center items-center 
+                                     ${!seeFriends ? " border-0 overflow-hidden" : ` border`}  transition-all duration-500
                                     `}
                                 >
                                     {/* {JSON.stringify(friendsAllFriend)} */}
@@ -647,7 +648,7 @@ function SingleUserDiv(
     function removeFriend(id: string, name: string) {
 
 
-        let ask = confirm(`Do you really want to remove ${name} as friend??`)
+        let ask = confirm(`Do you really want to remove friendshipe with ${name}?`)
 
         if (!ask) return
 
@@ -723,7 +724,7 @@ function SingleUserDiv(
 
 
             <div
-                className=' flex gap-2 items-center flex-wrap'
+                className=' flex gap-2 items-end flex-wrap'
             >
 
 
@@ -733,7 +734,7 @@ function SingleUserDiv(
                     (session && !friend.friends.includes(session?.user?._id))
                         ?
                         <span
-                            className=' ml-auto mr-2 '
+                            className=' ml-auto mr-2'
                         >
                             {
                                 friend._id === session?.user._id
@@ -752,7 +753,7 @@ function SingleUserDiv(
                         // // 1. request sended
                         // // 2. you
                         // // 3. Already frined
-                        <span>
+                        <span className=' ml-auto'>
 
                             {
 
@@ -787,10 +788,10 @@ function SingleUserDiv(
 
 
                 <button
-                    className=' border rounded-md p-0.5 text-xs'
+                    className=' border border-red-500 text-red-500  rounded-md p-0.5 text-xs'
                     onClick={() => { removeFriend(friend._id, friend.username) }}
                 >
-                    ❌
+                    <TbUserCancel />
                 </button>
 
 
