@@ -4,11 +4,8 @@ import User from "@/models/userModel";
 import { NextRequest, NextResponse } from "next/server";
 
 
-
-
-
+// // // These are condition that given to update --------->
 type WhatUpdateData = "sendFriendRequest" | "addFriend" | 'removeFriend' | "cancelFrndRequest"
-
 
 
 export async function PUT(req: NextRequest) {
@@ -40,30 +37,63 @@ export async function PUT(req: NextRequest) {
 
             // // // send request me searchedUser ki latest info bhejni hogi (added in reciveRequest) ------------>
 
-            let reciverUser = await User.findByIdAndUpdate(
-                reciver,
-                {
-                    $push: { reciveRequest: sender },
-                },
-                { new: true }
-            )
+            // let reciverUser = await User.findByIdAndUpdate(
+            //     reciver,
+            //     {
+            //         $push: { reciveRequest: sender },
+            //     },
+            //     { new: true }
+            // )
 
             // console.log({ reciverUser })
 
 
-            let senderUser = await User.findByIdAndUpdate(
-                sender,
-                {
-                    $push: { sendRequest: reciver },
-                },
-                { new: true }
-            )
+            // let senderUser = await User.findByIdAndUpdate(
+            //     sender,
+            //     {
+            //         $push: { sendRequest: reciver },
+            //     },
+            //     { new: true }
+            // )
+
+            // // // Upadte logic (Put some logic already sended or not) -------------->
+
+
+            let reciverUser = await User.findById(reciver)
+
+            if (!reciverUser.reciveRequest.includes(sender)) {
+                reciverUser.reciveRequest.unshift(sender)
+            }
+
+            await reciverUser.save()
+
+
+
+            let senderUser = await User.findById(sender)
+
+            if (!senderUser.sendRequest.includes(reciver)) {
+                senderUser.sendRequest.unshift(reciver)
+            }
+
+            await senderUser.save()
+
+
+            // // // Get update data with populated values -------->
+            // // // send updated data of request sender user -------------> 
+
+            let senderUpdatedData = await User.findById(sender)
+                .populate({
+                    path: "sendRequest",
+                    // match: { isDeleted: false },
+                    select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password -reciveRequest -sendRequest -friends -whoSeenProfile -notification",
+                })
 
 
             // console.log({ senderUser })
 
-
-            updatedUser = reciverUser
+            updatedUser = {
+                yourData: senderUpdatedData
+            }
 
         }
 
@@ -112,7 +142,6 @@ export async function PUT(req: NextRequest) {
             // console.log({ reciverUser })
 
 
-
             // // // Jo user accept request bheja tha wo ==================================================>
 
             let senderUser = await User.findById(sender)
@@ -146,40 +175,28 @@ export async function PUT(req: NextRequest) {
             }
 
 
+            await senderUser.save()
+
             // console.log({ senderUser })
-
-            updatedUser = await senderUser.save()
-
-        }
-
-        else if (whatUpdate === 'removeFriend') {
+            //updatedUser =  await senderUser.save()
 
 
-            let sendReqUser = await User.findById(sender)
+            // // // Isme recive wale ko bhejna hai updated data -------->
 
-            let findIndexS1 = sendReqUser.friends.findIndex((ele: any) => ele.toString() === reciver.toString())
+            // // // Recive request and friends list both should updated -------->
 
-            if (findIndexS1 !== -1) {
-                sendReqUser.friends.splice(findIndexS1, 1)
-            }
+            updatedUser = await User.findById(reciver)
+                .populate({
+                    path: "reciveRequest",
+                    // match: { isDeleted: false },
+                    select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password -reciveRequest -sendRequest -friends -whoSeenProfile -notification",
+                })
+                .populate({
+                    path: "friends",
+                    // match: { isDeleted: false },
+                    select: "-updatedAt -createdAt -__v -friendshipRequests -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password -whoSeenProfile -notification",
+                })
 
-            
-            await sendReqUser.save()
-
-
-            let reciveReqUser = await User.findById(reciver)
-
-            let findIndexR1 = reciveReqUser.friends.findIndex((ele: any) => ele.toString() === sender.toString())
-
-            if (findIndexR1 !== -1) {
-                reciveReqUser.friends.splice(findIndexR1, 1)
-            }
-
-                        
-            await reciveReqUser.save()
-
-
-            updatedUser = sendReqUser
 
         }
 
@@ -218,11 +235,78 @@ export async function PUT(req: NextRequest) {
                 reciveReqUser.reciveRequest.splice(findIndexR1, 1)
             }
 
-
-            
             await reciveReqUser.save()
 
-            updatedUser = sendReqUser
+
+            // // // Now get here updated and populated data ------------------->
+
+            let senderUpdatedData = await User.findById(sender)
+                .populate({
+                    path: "sendRequest",
+                    // match: { isDeleted: false },
+                    select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password -reciveRequest -sendRequest -friends -whoSeenProfile -notification",
+                })
+                .populate({
+                    path: "reciveRequest",
+                    // match: { isDeleted: false },
+                    select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password -reciveRequest -sendRequest -friends -whoSeenProfile -notification",
+                })
+
+
+
+            let reciverUpdatedData = await User.findById(reciver)
+                .populate({
+                    path: "sendRequest",
+                    // match: { isDeleted: false },
+                    select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password -reciveRequest -sendRequest -friends -whoSeenProfile -notification",
+                })
+                .populate({
+                    path: "reciveRequest",
+                    // match: { isDeleted: false },
+                    select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password -reciveRequest -sendRequest -friends -whoSeenProfile -notification",
+                })
+
+            // // // Sending updated data to FrontEnd
+
+            updatedUser = {
+                reciveRequest: reciverUpdatedData.reciveRequest,
+                sendRequest: senderUpdatedData.sendRequest
+            }
+
+        }
+
+        else if (whatUpdate === 'removeFriend') {
+
+
+            let sendReqUser = await User.findById(sender)
+
+            let findIndexS1 = sendReqUser.friends.findIndex((ele: any) => ele.toString() === reciver.toString())
+
+            if (findIndexS1 !== -1) {
+                sendReqUser.friends.splice(findIndexS1, 1)
+            }
+
+            await sendReqUser.save()
+
+
+            let reciveReqUser = await User.findById(reciver)
+
+            let findIndexR1 = reciveReqUser.friends.findIndex((ele: any) => ele.toString() === sender.toString())
+
+            if (findIndexR1 !== -1) {
+                reciveReqUser.friends.splice(findIndexR1, 1)
+            }
+
+
+            await reciveReqUser.save()
+
+
+            updatedUser = await User.findById(sender)
+                .populate({
+                    path: "friends",
+                    // match: { isDeleted: false },
+                    select: "-updatedAt -createdAt -__v -friendshipRequests -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password -whoSeenProfile -notification",
+                })
 
         }
 

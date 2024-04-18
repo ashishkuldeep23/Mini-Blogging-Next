@@ -1,6 +1,18 @@
 
 
+LEARN IN THIS PROJECT ======================================================================================>
+
 Taliwind CSS new things ------------------>
     !m-0 :- this way we can give improtant to css property (by using !)
     duration-500 :- by this way we can give transition duration directly 
+
+
+
+SOME UPDATED ==============================================================================================>
+
+Post update ----------------->
+    1. Post type.
+    2. Post custumizaton (like :- bg-color, border, Font-Family, may be heading size ).
+    3. Retweet feature.
+
 

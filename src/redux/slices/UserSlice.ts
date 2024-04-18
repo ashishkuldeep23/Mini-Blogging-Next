@@ -1,12 +1,10 @@
 'use client'
 
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit"
 import { useSelector } from "react-redux"
 import { RootState } from "../store"
 import toast from "react-hot-toast"
 import { PostInterFace } from "./PostSlice"
-
-
 
 
 type BodyData = {
@@ -85,8 +83,6 @@ export const updateUserData = createAsyncThunk('user/updateUserData', async ({ w
     let data = await response.json();
     return data
 })
-
-
 
 
 export interface UserDataInterface {
@@ -200,7 +196,6 @@ const userSlice = createSlice({
             })
 
 
-
             .addCase(logInUser.pending, (state) => {
                 state.isLoading = true
                 state.errMsg = ''
@@ -238,7 +233,6 @@ const userSlice = createSlice({
                 toast.error(` ${action.error.message || "SignUp failed"}`)
                 state.errMsg = action.error.message || 'Error'
             })
-
 
 
             .addCase(getUserData.pending, (state) => {
@@ -332,7 +326,71 @@ const userSlice = createSlice({
 
                     let whatUpdate = action.payload.whatUpdate as WhatUpdateData
 
-                    if (whatUpdate) {
+                    if (whatUpdate === "addFriend") {
+
+                        // // // yaha pr hume krna hai ------->
+
+                        // console.log(action.payload.data)
+
+                        let { reciveRequest, friends } = action.payload.data
+
+                        // console.log({ reciveRequest, friends })
+
+                        state.userData.reciveRequest = reciveRequest
+                        state.userData.friendsAllFriend = friends
+
+                    }
+
+                    else if (whatUpdate === "cancelFrndRequest") {
+
+                        // console.log(action.payload.data)
+
+                        let { reciveRequest, sendRequest } = action.payload.data
+
+                        // console.log({ reciveRequest, sendRequest })
+
+                        state.userData.sendRequest = sendRequest
+                        state.searchedUser.reciveRequest = reciveRequest
+
+                    }
+
+                    else if (whatUpdate === "removeFriend") {
+
+                        // console.log(action.payload.data)
+
+                        let { friends } = action.payload.data
+
+                        // console.log({ reciveRequest, sendRequest })
+
+                        state.userData.friendsAllFriend = friends
+
+                    }
+
+                    else if (whatUpdate === "sendFriendRequest") {
+
+                        // let currentState = current(state)
+
+                        console.log(action.payload.data)
+
+                        let { yourData } = action.payload.data
+
+
+                        // // // sendRequest is the updated data of user ------->
+
+                        // console.log({ yourData })
+
+                        // state.userData.friendsAllFriend = friends
+
+                        // if (currentState.searchedUser._id === sendRequest._id) {
+                        //     console.log("Yes ------>")
+                        //     state.searchedUser = sendRequest
+                        // }
+
+                        state.userData.sendRequest = yourData.sendRequest
+
+                    }
+
+                    else {
 
                         location.reload()
                     }

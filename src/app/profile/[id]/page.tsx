@@ -17,6 +17,7 @@ import React, { Fragment, useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 import { IoCheckmarkDoneOutline } from 'react-icons/io5'
+import { PiSealCheckDuotone } from 'react-icons/pi'
 import { RiUserAddLine } from 'react-icons/ri'
 import { useDispatch } from 'react-redux'
 
@@ -158,7 +159,6 @@ const ProfilePageParams = ({ params }: any) => {
 export default ProfilePageParams
 
 
-
 function ReciverRequestDiv() {
 
 
@@ -174,7 +174,7 @@ function ReciverRequestDiv() {
 
     function acceptFriendRequest(id: string) {
 
-        alert("okay")
+        // alert("okay")
 
         if (!session?.user._id) return toast.error("You are looking logged out, please login.")
 
@@ -195,7 +195,7 @@ function ReciverRequestDiv() {
     function cancelRequest(id: string, name: string) {
 
 
-        let ask = confirm(`Do you want Cancel request.`)
+        let ask = confirm(`Do you want Cancel this request.`)
 
         if (!ask) return
 
@@ -220,14 +220,16 @@ function ReciverRequestDiv() {
 
                 &&
 
-                <div className=' w-full'>
+                <div className=' w-full flex flex-col items-center'>
+
+                    <p className=' text-center mb-3 px-2 border-b rounded'>All friend request recived.</p>
 
                     {
                         userData.reciveRequest.map((ele, i) => {
                             return (
                                 <div
                                     key={ele._id}
-                                    className={`w-full px-0.5 py-1 border-b flex justify-around items-center  ${i === 0 && "border-t"} `}
+                                    className={`w-full py-1 border-b flex justify-between px-2 items-center  ${i === 0 && "border-t"} `}
                                 >
 
                                     <div className=' flex gap-2 items-center '>
@@ -315,7 +317,7 @@ function SenderRequestDiv() {
     function cancelRequest(id: string, name: string) {
 
 
-        let ask = confirm(`Do you want Cancel request.`)
+        let ask = confirm(`Do you want Cancel this request.`)
 
         if (!ask) return
 
@@ -341,14 +343,16 @@ function SenderRequestDiv() {
 
                 &&
 
-                <div>
+                <div className=' w-full flex flex-col items-center'>
+
+                    <p className=' text-center mb-3 px-2 border-b rounded'>All friend request to user sended by you.</p>
 
                     {
                         userData.sendRequest.map((ele, i) => {
                             return (
                                 <div
                                     key={ele._id}
-                                    className={`w-full px-0.5 py-1 border-b flex justify-around items-center  ${i === 0 && "border-t"} `}
+                                    className={`w-full py-1 border-b flex  justify-between px-2  items-center  ${i === 0 && "border-t"} `}
                                 >
 
                                     <div className=' flex gap-2 items-center flex-wrap '>
@@ -449,7 +453,6 @@ function FriendsOfFriendsDiv(
     }
 
 
-
     return (
 
         <>
@@ -468,8 +471,8 @@ function FriendsOfFriendsDiv(
                                 // // // if you are a friend of user
 
                                 <div className={`overflow-hidden mt-7 w-11/12 sm:w-3/4 md:w-1/2 px-1 border rounded flex flex-col justify-center items-center 
-                            ${!seeFriends ? " border-0" : ` border`}  transition-all duration-500
-                            `}
+                                ${!seeFriends ? " border-0 overflow-hidden" : ` border`}  transition-all duration-500
+                                    `}
                                 >
                                     {/* {JSON.stringify(friendsAllFriend)} */}
 
@@ -479,7 +482,7 @@ function FriendsOfFriendsDiv(
 
                                     >
 
-                                        <span>Your Friends</span>
+                                        <span className=' font-bold'>Your Friends</span>
 
                                         <span>
                                             {
@@ -496,10 +499,16 @@ function FriendsOfFriendsDiv(
                                     </button>
 
 
-
+                                    {/* Actual friends will shown here ---------> */}
                                     <div
                                         className={` relative w-full flex flex-col  ${!seeFriends ? "h-0 py-0" : ` py-10`} transition-all duration-700 `}
                                     >
+
+                                        <div
+                                            className={`px-0.5 `}
+                                        >
+                                            <p className=' text-end'>You have <span>{userData.friendsAllFriend?.length} friend<span>{userData.friendsAllFriend && userData.friendsAllFriend?.length > 1 && "s"}</span>.</span></p>
+                                        </div>
 
                                         {
                                             searchedUser.friendsAllFriend.map((friend, i) => <SingleUserDiv
@@ -612,7 +621,6 @@ function FriendsOfFriendsDiv(
 
     )
 
-
 }
 
 
@@ -686,11 +694,28 @@ function SingleUserDiv(
                     />
                 </div>
 
-                <span className=' ml-7 capitalize'>
-                    {
-                        friend.username
-                    }
-                </span>
+                <div className='ml-5 flex flex-col leading-5'>
+                    <p className='  font-semibold capitalize flex gap-1 items-end'>
+                        {
+                            friend.username
+                        }
+
+                        {
+                            friend.isVerified
+                            &&
+                            <span className="mr-2 mt-2.5 text-green-500 ">
+                                <PiSealCheckDuotone />
+                            </span>
+                        }
+
+                    </p>
+
+                    <p className='  text-sm font-extralight'>
+                        {
+                            friend.email
+                        }
+                    </p>
+                </div>
 
             </div>
 
@@ -708,7 +733,7 @@ function SingleUserDiv(
                     (session && !friend.friends.includes(session?.user?._id))
                         ?
                         <span
-                            className=' ml-auto mr-2'
+                            className=' ml-auto mr-2 '
                         >
                             {
                                 friend._id === session?.user._id

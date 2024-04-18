@@ -39,7 +39,6 @@ export default function SinglePostCard({ ele }: { ele: PostInterFace }) {
       className=" bg-gradient-to-tr from-cyan-400  sm:w-80  sm:p-2 rounded-xl hover:cursor-pointer hover:scale-105 sm:hover:scale-110 active:scale-75 focus:scale-75 transition-all"
     >
 
-
       <CardContainer className="inter-var">
         <CardBody className={`bg-gray-50 relative group/card  dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1]  dark:border-white/[0.2] border-black/[0.1] h-auto rounded-xl  border shadow-xl w-[18rem] sm:w-[30rem]  ${!themeMode ? "dark:bg-black shadow-cyan-950" : "dark:bg-white shadow-cyan-50"} `}>
 
@@ -139,9 +138,6 @@ export default function SinglePostCard({ ele }: { ele: PostInterFace }) {
 
         </CardBody>
       </CardContainer>
-
-
-
 
     </div>
   )

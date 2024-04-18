@@ -211,6 +211,7 @@ const SearchByDiv = () => {
   )
 }
 
+
 function AllPostDiv() {
 
   const allPostData = usePostData().allPost
@@ -291,8 +292,6 @@ function AllPostDiv() {
 }
 
 // export default AllPostDiv
-
-
 
 const FooterDiv = () => {
 

@@ -22,9 +22,6 @@ import { IoCheckmarkDoneOutline } from "react-icons/io5";
 import { PiSealCheckDuotone } from 'react-icons/pi'
 
 
-{/* <RiUserAddLine />
-<IoIosArrowBack /> */}
-
 const UserPageParams = ({ params }: any) => {
 
     const themeMode = useThemeData().mode
@@ -81,7 +78,7 @@ const UserPageParams = ({ params }: any) => {
 
             <button
                 onClick={() => { router.back() }}
-                className=' absolute top-[13vh] left-2 sm:left-[10vh] px-2 border rounded hover:scale-95'
+                className=' absolute top-[13vh] mt-[2vh] left-2 sm:left-[10vh] px-2 border rounded hover:scale-95'
             >
                 <IoIosArrowBack />
             </button>
@@ -168,7 +165,6 @@ const UserPageParams = ({ params }: any) => {
 export default UserPageParams
 
 
-
 function FriendsOfFriendsDiv(
 
     {
@@ -207,14 +203,16 @@ function FriendsOfFriendsDiv(
     }
 
 
-
     return (
 
         <>
             {
 
 
-                (searchedUser.friendsAllFriend && searchedUser.friendsAllFriend.length > 0)
+                (searchedUser.friendsAllFriend)
+                    &&
+
+                    searchedUser.friendsAllFriend.length > 0
                     ?
 
                     <Fragment>
@@ -225,8 +223,8 @@ function FriendsOfFriendsDiv(
                                 ?
                                 // // // if you are a friend of user
 
-                                <div className={`   overflow-hidden mt-7 w-11/12 sm:w-3/4 md:w-1/2 px-1 border rounded flex flex-col       justify-center items-center 
-                                        ${!seeFriends ? " border-0" : ` border`}  transition-all duration-500
+                                <div className={` mt-7 w-11/12 sm:w-3/4 md:w-1/2 px-1 border rounded flex flex-col justify-center items-center 
+                                        ${!seeFriends ? " border-0 overflow-hidden" : ` border`}  transition-all duration-500
                                 `}
                                 >
                                     {/* {JSON.stringify(friendsAllFriend)} */}
@@ -234,17 +232,14 @@ function FriendsOfFriendsDiv(
                                     <button
                                         className=' border px-3 rounded flex items-center gap-1 my-4 '
                                         onClick={() => { setSeeFriends(!seeFriends) }}
-
                                     >
 
                                         <span>See Friends</span>
-
                                         <span>
                                             {
                                                 !seeFriends
                                                     ?
                                                     <span><IoIosArrowDown /></span>
-
                                                     :
                                                     <span><IoIosArrowUp /></span>
                                             }
@@ -254,11 +249,18 @@ function FriendsOfFriendsDiv(
                                     </button>
 
 
-
+                                    {/* This is the main ui to show all friends ----------> */}
                                     <div
                                         className={` relative w-full flex flex-col  ${!seeFriends ? "h-0 py-0" : ` py-10`} transition-all duration-700 `}
                                     >
 
+                                        <div
+                                            className={`px-0.5 `}
+                                        >
+                                            <p className=' text-end'>
+                                                {searchedUser.username} have <span>{searchedUser.friendsAllFriend && searchedUser.friendsAllFriend?.length} friend<span>{searchedUser.friendsAllFriend && searchedUser.friendsAllFriend?.length > 1 && "s"}</span>.</span>
+                                            </p>
+                                        </div>
 
                                         {
                                             searchedUser.friendsAllFriend.map((friend, i) => <SingleUserDiv
@@ -288,23 +290,40 @@ function FriendsOfFriendsDiv(
                                 </div>
                                 :
 
-                                // // // if you are not a friend of user
+                                // // // if you are not a friend of this user
+                                // // here we got 2 conditions -------->
+                                // // 1. if you sended the friend request to user (You need to search id in your sendRequest field)
+                                // // 2. else part 
+
                                 <div>
 
+                                    {
+                                        userData.sendRequest && userData?.sendRequest.map(ele => ele._id).includes(searchedUser._id)
+                                            ?
+                                            <p className=' flex gap-1.5 flex-wrap items-center border-b px-2'>
+                                                <span>Friend request sended</span>
+                                                <IoCheckmarkDoneOutline />
+                                            </p>
 
-                                    <button
-                                        className=' text-2xl px-3 py-1 bg-green-600 text-white rounded-md flex gap-1 items-center hover:scale-110 active:scale-90 transition-all'
 
-                                        onClick={() => {
-                                            addFriend(searchedUser._id)
-                                        }}
 
-                                    >
-                                        <span>Add Friend</span>
-                                        <span>
-                                            <RiUserAddLine />
-                                        </span>
-                                    </button>
+                                            :
+                                            <button
+                                                className=' text-2xl px-3 py-1 bg-green-600 text-white rounded-md flex gap-1 items-center hover:scale-110 active:scale-90 transition-all'
+                                                onClick={() => {
+                                                    addFriend(searchedUser._id)
+                                                }}
+
+                                            >
+                                                <span>Add Friend</span>
+                                                <span>
+                                                    <RiUserAddLine />
+                                                </span>
+                                            </button>
+                                    }
+
+
+
 
                                 </div>
                         }
@@ -315,64 +334,62 @@ function FriendsOfFriendsDiv(
 
 
                     </Fragment>
+
                     :
 
-                    // // // yaha pr 2 case banega
-                    // // 1. agr user ke request me tumhari id hai to 
-                    // // else
-
-                    <>
+                    <Fragment>
                         {
+                            searchedUser._id
+                            &&
 
-                            (searchedUser.reciveRequest && searchedUser.reciveRequest.map(ele => ele._id).includes(userData._id))
+                            <Fragment>
 
-                                ?
-                                <div>
+                                {
+                                    userData.sendRequest && userData?.sendRequest.map(ele => ele._id).includes(searchedUser._id)
+                                        ?
+                                        <p className=' flex gap-1.5 flex-wrap items-center border-b px-2'>
+                                            <span>Friend request sended</span>
+                                            <IoCheckmarkDoneOutline />
+                                        </p>
 
-                                    <p className=' flex gap-1.5 flex-wrap items-center'>
-                                        <span>Friend request sended</span>
-                                        <IoCheckmarkDoneOutline />
-                                    </p>
+                                        :
 
-                                </div>
+                                        <div className=' flex flex-col items-center'>
+                                            <p className=' flex gap-1.5 flex-wrap items-center my-1'>
+                                                <span>Be the First friend of <span className=' font-semibold underline'>{searchedUser.username}</span> </span>
+                                                {/* <IoCheckmarkDoneOutline /> */}
+                                            </p>
 
-                                :
+                                            <button
+                                                className=' text-2xl px-3 py-1 bg-green-600 text-white rounded-md flex gap-1 items-center hover:scale-110 active:scale-90 transition-all'
+                                                onClick={() => {
+                                                    addFriend(searchedUser._id)
+                                                }}
 
-                                <div>
+                                            >
+                                                <span>Add Friend</span>
+                                                <span>
+                                                    <RiUserAddLine />
+                                                </span>
+                                            </button>
+                                        </div>
+                                }
 
-                                    {
-                                        searchedUser?._id
-                                        &&
-
-                                        <button
-                                            className=' text-2xl px-3 py-1 bg-green-600 text-white rounded-md flex gap-1 items-center hover:scale-110 active:scale-90 transition-all'
-
-                                            onClick={() => {
-                                                addFriend(searchedUser._id)
-                                            }}
-
-                                        >
-                                            <span>Add Friend</span>
-                                            <span>
-                                                <RiUserAddLine />
-                                            </span>
-                                        </button>
-
-                                    }
-
-                                </div>
+                            </Fragment>
                         }
-
-                    </>
-
+                    </Fragment>
 
 
+
+                // // Ignore now ------->
+                // // // yaha pr 2 case banega
+                // // 1. agr user ke request me tumhari id hai to 
+                // // else
 
             }
         </>
 
     )
-
 
 }
 
@@ -429,11 +446,28 @@ function SingleUserDiv(
                     />
                 </div>
 
-                <span className=' ml-7'>
-                    {
-                        friend.username
-                    }
-                </span>
+                <div className='ml-5 flex flex-col leading-5'>
+                    <p className='  font-semibold capitalize flex gap-1 items-end'>
+                        {
+                            friend.username
+                        }
+
+                        {
+                            friend.isVerified
+                            &&
+                            <span className="mr-2 mt-2.5 text-green-500 ">
+                                <PiSealCheckDuotone />
+                            </span>
+                        }
+
+                    </p>
+
+                    <p className='  text-sm font-extralight'>
+                        {
+                            friend.email
+                        }
+                    </p>
+                </div>
 
             </div>
 
@@ -444,7 +478,7 @@ function SingleUserDiv(
                 (session && !friend.friends.includes(session?.user?._id))
                     ?
                     <span
-                        className=' ml-auto mr-2'
+                        className=' ml-auto mr-2 flex items-center'
                     >
                         {
                             friend._id === session?.user._id

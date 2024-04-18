@@ -144,6 +144,10 @@ export async function POST(req: NextRequest, context: any) {
 
             // console.log({ searchingUserId })
 
+            // // // Here two conditions ------------->
+            // // 1. Searching user should frined of searched user.
+            // // 2. Searching user and searched user both should be.
+            
             if (user.friends.includes(searchingUserId._id.toString()) || user.email === searchingUserId.email) {
 
                 // console.log(152)
