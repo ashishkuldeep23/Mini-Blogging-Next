@@ -208,28 +208,25 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
             >
 
                 <div
-                    className="rounded-t flex gap-1.5 items-center border-b border-cyan-400 hover:cursor-pointer"
+                    className="rounded-t flex items-center gap-1.5 border-b border-cyan-400 hover:cursor-pointer"
                     onClick={() => {
 
                         // console.log(singlePost.author)
                         router.push(`/user/${singlePost.author._id}`);
                     }}
                 >
-
                     <ImageReact
-                        className=" rounded-full w-8"
+                        className={` mt-[3px] rounded-full w-8 border p-[1px] border-[${singlePost?.customize?.color}] `}
                         src={`${singlePost?.author?.profilePic || "https://res.cloudinary.com/dlvq8n2ca/image/upload/v1701708322/jual47jntd2lpkgx8mfx.png"}`}
+                        style={{ borderColor: singlePost?.customize?.color }}
                         alt=""
                     />
-                    <p className=' font-semibold capitalize'>{singlePost?.author?.username || "Name Kumar"}</p>
 
-                    {
-                        singlePost?.author?.isVerified
-                        &&
-                        <span className="mr-2 text-sm text-green-500 ">
-                            <PiSealCheckDuotone />
-                        </span>
-                    }
+                    <div className=" mt-1">
+                        <p className="  capitalize underline font-semibold">{singlePost?.author?.username || "Name Kumar"}</p>
+                        <p className=" text-[0.6rem] -mt-[0.5vh]">{singlePost?.author?.email || "xyz100@gmail.com"}</p>
+                    </div>
+
                 </div>
 
 

@@ -51,7 +51,7 @@ export default function Home() {
         <button
           className="add_button_down_right fixed bottom-[8%] sm:bottom-[10%] right-5 sm:right-[4%] text-5xl z-[100] fill-neutral-700 hover:scale-125 focus:scale-90 transition-all"
           onClick={() => { router.push("/new-post") }}
-          // style={{ backdropFilter : "drop-shadow(2px 4px 6px cyan)"}}
+        // style={{ backdropFilter : "drop-shadow(2px 4px 6px cyan)"}}
         >
           <BsFillPatchPlusFill />
         </button>
@@ -149,17 +149,17 @@ const SearchByDiv = () => {
             <p>Search By 👉</p>
           </div>
 
-          <div>
+          <div className=" filter_container  ">
             <p
-              className={`border-b hover:cursor-pointer ${expandCat && "text-violet-500 border-violet-500 font-bold"} transition-all`}
+              className={`  px-1 hover:cursor-pointer ${expandCat && "text-violet-500 font-bold"} transition-all`}
               onClick={() => { setExpandCat(!expandCat); setExpandHash(false); }}
             >Category</p>
 
           </div>
 
-          <div>
+          <div className=" filter_container  ">
             <p
-              className={`border-b hover:cursor-pointer ${expandHash && "text-violet-500 border-violet-500 font-bold"} transition-all`}
+              className={` px-1 hover:cursor-pointer ${expandHash && "text-violet-500  font-bold"} transition-all`}
               onClick={() => { setExpandHash(!expandHash); setExpandCat(false); }}
             >#Hashtags</p>
 

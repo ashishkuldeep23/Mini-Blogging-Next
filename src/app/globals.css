@@ -68,3 +68,28 @@
     filter: drop-shadow(2px 2px 1px #40fcfc);
 
 }
+
+.filter_container>p {
+    position: relative;
+    transition: all 700ms;
+}
+
+.filter_container>p::after {
+    content: "";
+    width: 0%;
+    height: 2px;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #8b5cf6;
+    transition: all 700ms;
+}
+
+.filter_container:hover>p{
+    color: #8b5cf6;
+}
+
+.filter_container:hover>p::after {
+    width: 100%;
+  
+}

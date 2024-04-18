@@ -998,8 +998,8 @@ const NewPostPage = () => {
 
                                 </div>
 
-                                <p>* Make sure your post should look Awesome and visiable properly.</p>
-                                <p>* Customize your post look and feel.</p>
+                                <p className=' text-xs mt-1'>* Make sure your post should look Awesome and visiable properly.</p>
+                                <p className=' text-xs'>* Make your post design as better as you can and inhance look and feel.</p>
                             </div>
 
 

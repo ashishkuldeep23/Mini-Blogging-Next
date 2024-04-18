@@ -59,16 +59,18 @@ export default function SinglePostCard({ ele }: { ele: PostInterFace }) {
               <div
                 className="rounded-t flex items-start p-0.5 gap-1.5  border-cyan-400"
                 onClick={(e) => { e.stopPropagation(); router.push(`/user/${ele.author._id}`) }}
+               
               >
 
                 <ImageReact
-                  className="mt-2 rounded-full w-8"
+                  className={`mt-2 rounded-full w-8 border p-[1px] border-[${ele?.customize?.color}] `}
                   src={`${ele?.author?.profilePic || "https://res.cloudinary.com/dlvq8n2ca/image/upload/v1701708322/jual47jntd2lpkgx8mfx.png"}`}
+                  style={{ borderColor: ele?.customize?.color }}
                   alt=""
                 />
 
                 <div className=" mt-1">
-                  <p className="  capitalize">{ele?.author?.username || "Name Kumar"}</p>
+                  <p className="  capitalize underline">{ele?.author?.username || "Name Kumar"}</p>
                   <p className=" text-[0.6rem] -mt-[1.5vh]">{ele?.author?.email || "xyz100@gmail.com"}</p>
                 </div>
 
