@@ -115,7 +115,7 @@ const Page = ({ params }: any) => {
         if (singlePostdata && singlePost?._id) {
 
 
-            let bakeDataHere: any = {
+            let backDataHere: any = {
                 _id: singlePostdata._id,
                 title: singlePostdata.title,
                 category: singlePostdata.category,
@@ -127,19 +127,19 @@ const Page = ({ params }: any) => {
                 likes: singlePostdata.likes,
                 comments: singlePostdata.comments,
                 isDeleted: singlePostdata.isDeleted,
-
+                customize: singlePostdata.customize,
 
                 // likesId: singlePostdata.likesId
             }
 
 
             if ((singlePostdata.likesId.length > 0) && (typeof singlePostdata.likesId[0] !== "string")) {
-                bakeDataHere.likesId = singlePostdata.likesId
+                backDataHere.likesId = singlePostdata.likesId
             } else {
-                bakeDataHere.likesId = []
+                backDataHere.likesId = []
             }
 
-            setSinglePost(bakeDataHere)
+            setSinglePost(backDataHere)
         }
 
 
@@ -197,7 +197,15 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
     return (
         <>
 
-            <div className={` my-[5vh] border border-yellow-500 rounded p-2 w-[95%] sm:w-[80%] md:w-[60%] ${!themeMode ? " bg-black text-white  " : "  bg-white text-black"}`}>
+            <div
+                className={` my-[5vh] border border-yellow-500 rounded p-2 w-[95%] sm:w-[80%] md:w-[60%]   `}
+                style={{
+                    backgroundColor: singlePost?.customize?.bgColor,
+                    color: singlePost?.customize?.color,
+                    backgroundImage: singlePost?.customize?.bgImage,
+                    fontFamily: `${singlePost?.customize?.font} , sans-serif`,
+                }}
+            >
 
                 <div
                     className="rounded-t flex gap-1.5 items-center border-b border-cyan-400 hover:cursor-pointer"

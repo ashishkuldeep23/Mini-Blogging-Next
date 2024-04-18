@@ -3,6 +3,12 @@
 @tailwind utilities;
 
 
+
+/* Fonts import here ----------> */
+
+
+
+
 * {
     scroll-behavior: smooth;
     transition: all 20ms;
@@ -57,8 +63,8 @@
     box-shadow: none;
 }
 
-.add_button_down_right{
-        
+.add_button_down_right {
+
     filter: drop-shadow(2px 2px 1px #40fcfc);
 
 }

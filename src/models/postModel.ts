@@ -54,6 +54,25 @@ const PostSchema = new mongoose.Schema({
         ref: "comments"
     },
 
+    customize: {
+        bgColor: {
+            type: String,
+            default: ""
+        },
+        color: {
+            type: String,
+            default: ""
+        },
+        bgImage: {
+            type: String,
+            default: ""
+        },
+        font: {
+            type: String,
+            default: ""
+        },
+    },
+
     // comments : [{ type: mongoose.Schema.Types.ObjectId, ref: 'comments' }] ,
 
     isDeleted: {

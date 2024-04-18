@@ -5,13 +5,14 @@ import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
-import { createNewPost, setWriteFullFilledVal, usePostData, updatePost } from '@/redux/slices/PostSlice';
+import { createNewPost, setWriteFullFilledVal, usePostData, updatePost, PostCustomization, setUpdatingPost } from '@/redux/slices/PostSlice';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import MainLoader from '../components/MainLoader';
 import ImageReact from '../components/ImageReact';
 import SinglePostCard from '../components/SinglePostCard';
+import { color } from 'framer-motion';
 
 
 
@@ -22,7 +23,11 @@ export interface NewPostType {
     url: string,
     origin: string,
     hashs: string[],
+    customize?: PostCustomization,
 }
+
+
+
 
 
 const NewPostPage = () => {
@@ -45,6 +50,12 @@ const NewPostPage = () => {
         url: "",
         origin: "",
         hashs: [],
+        customize: {
+            bgColor: "",
+            color: "",
+            bgImage: "",
+            font: ""
+        }
     }
 
     const [newPostData, setNewPostData] = useState<NewPostType>(initialNewPostData)
@@ -67,6 +78,45 @@ const NewPostPage = () => {
     const { postCategories, posthashtags } = usePostData();
 
     // console.log(router)
+
+
+    // // // Customization added here ------------------>
+
+    const [customize, setCutomize] = useState<PostCustomization>({
+        bgColor: "",
+        color: "",
+        bgImage: "",
+        font: ""
+    })
+
+
+    const [bgImage] = useState<Array<string>>([
+        'url("https://www.transparenttextures.com/patterns/argyle.png")',
+        'url("https://www.transparenttextures.com/patterns/arabesque.png")',
+        'url("https://www.transparenttextures.com/patterns/batthern.png")',
+        'url("https://www.transparenttextures.com/patterns/cartographer.png")',
+        'url("https://www.transparenttextures.com/patterns/checkered-pattern.png")',
+        'url("https://www.transparenttextures.com/patterns/crisp-paper-ruffles.png")',
+        'url("https://www.transparenttextures.com/patterns/crissxcross.png")',
+        'url("https://www.transparenttextures.com/patterns/dark-mosaic.png")',
+        'url("https://www.transparenttextures.com/patterns/diagmonds-light.png")',
+        'url("https://www.transparenttextures.com/patterns/diagmonds.png")',
+        'url("https://www.transparenttextures.com/patterns/food.png")',
+        'url("https://www.transparenttextures.com/patterns/foggy-birds.png")'
+    ])
+
+    const [fontFamily] = useState<Array<string>>([
+        'cursive',
+        "emoji",
+        "fangsong",
+        'fantasy',
+        'math',
+        'monospace',
+        'sans-serif',
+        'system-ui',
+        'serif'
+    ])
+
 
     function addNewHash({
         e,
@@ -166,9 +216,7 @@ const NewPostPage = () => {
     }
 
 
-
     function selectOnChangeHandler(e: React.ChangeEvent<HTMLSelectElement>) {
-
 
         if (e.target.value === "plus") {
 
@@ -185,10 +233,7 @@ const NewPostPage = () => {
 
         }
 
-
     }
-
-
 
 
 
@@ -199,6 +244,17 @@ const NewPostPage = () => {
     //     // dispatch(setSinglePostdata(post))
     //     // dispatch(setUpdatingPost(true))
     // }
+
+    // // // Update customization here ------>
+
+    useEffect(() => {
+
+        // console.log(newPostData)
+
+        setNewPostData({ ...newPostData, customize: customize })
+
+    }, [customize])
+
 
 
 
@@ -215,9 +271,13 @@ const NewPostPage = () => {
     useEffect(() => {
 
         if (writePostFullFilled) {
+
+            // // // back to normal everything -------->
+            setNewPostData(initialNewPostData)
+
+            dispatch(setUpdatingPost(false))
             dispatch(setWriteFullFilledVal(false))
             // router.push("/")
-
             router.back()
         }
 
@@ -258,8 +318,14 @@ const NewPostPage = () => {
                     url: singlePostdata?.urlOfPrompt,
                     origin: singlePostdata?.aiToolName,
                     hashs: [...singlePostdata?.hashthats],
+                    customize: singlePostdata.customize
                 }
             );
+
+            if (singlePostdata.customize) {
+
+                setCutomize(singlePostdata.customize)
+            }
 
 
         }
@@ -291,7 +357,9 @@ const NewPostPage = () => {
                     ${themeMode ? ` ${!updatingPost ? "bg-green-100" : "bg-rose-100"}` : ` ${!updatingPost ? "bg-green-950" : "bg-rose-950"}`} 
                     `}>
 
-                        <div className='rounded mt-2 flex p-1 gap-2 flex-col sm:flex-row  '>
+                        <div
+                            className='rounded mt-2 flex p-1 gap-2 flex-col sm:flex-row'
+                        >
 
                             <div
                                 className={`rounded p-1 border w-full sm:w-3/5 ${!themeMode ? " bg-black" : " bg-white"}`}
@@ -705,6 +773,13 @@ const NewPostPage = () => {
 
                             <div
                                 className={`rounded p-1 border w-full sm:w-2/5 ${!themeMode ? " bg-black" : " bg-white"}`}
+
+                                style={{
+                                    backgroundColor: customize.bgColor,
+                                    color: customize.color,
+                                    backgroundImage: customize.bgImage,
+                                    fontFamily: `${customize.font} , sans-serif`,
+                                }}
                             >
 
 
@@ -715,7 +790,7 @@ const NewPostPage = () => {
                                         src={`${session?.user?.image || "https://res.cloudinary.com/dlvq8n2ca/image/upload/v1701708322/jual47jntd2lpkgx8mfx.png"}`}
                                         alt=""
                                     />
-                                    <p>{session?.user?.name || "Name Kumar"}</p>
+                                    <p className=' font-semibold capitalize'>{session?.user?.name || "Name Kumar"}</p>
                                 </div>
 
                                 <div className=" flex justify-between flex-wrap gap-1">
@@ -817,17 +892,124 @@ const NewPostPage = () => {
 
                         </div>
 
-                        <div className=' flex justify-end '>
-                            <button
-                                className={`px-8 mx-8 my-1 rounded-full font-bold bg-green-400 hover:bg-green-600 transition-all ${themeMode ? "text-green-900" : "text-green-900"}`}
-                                onClick={(e) => { submitFormData(e) }}
-                            >
+                        <div className=' flex flex-col '>
 
-                                {
 
-                                    !updatingPost ? "Create" : "Update"
-                                }
-                            </button>
+                            <div className=' px-2'>
+
+                                <div
+                                    className=' flex gap-1.5 flex-wrap'
+                                >
+
+                                    <p>Customize your Post ☝️:- </p>
+
+
+                                    <div
+                                        className={` flex items-center border rounded pl-1 overflow-hidden ${!themeMode ? "bg-black" : "bg-white"} `}
+                                    >
+                                        <label
+                                            className=' mx-0.5 mr-1.5 font-semibold '
+                                            htmlFor="color"
+                                        >By Color : </label>
+                                        <input
+                                            type="color"
+                                            className={`${!themeMode ? "bg-black" : "bg-white"}`}
+                                            name=""
+                                            id="color"
+                                            onChange={(e) => setCutomize({ ...customize, color: e.target.value })}
+                                            value={customize.color}
+                                        />
+                                    </div>
+
+                                    <div
+                                        className={` flex items-center border rounded pl-1 overflow-hidden ${!themeMode ? "bg-black" : "bg-white"} `}
+                                    >
+                                        <label
+                                            className=' mx-0.5 mr-1.5 font-semibold '
+                                            htmlFor="font"
+                                        >By Fonts : </label>
+
+                                        <select
+                                            className={`${!themeMode ? "bg-black" : "bg-white"}`}
+                                            name=""
+                                            id="font"
+                                            onChange={(e) => { setCutomize({ ...customize, font: e.target.value }) }}
+                                        >
+                                            {
+                                                fontFamily.map((ele, i) => {
+                                                    return <option value={ele} >{ele}</option>
+                                                })
+                                            }
+
+                                            <option value="none" >None</option>
+
+                                        </select>
+                                    </div>
+
+                                    <div
+                                        className={` flex items-center border rounded pl-1 overflow-hidden ${!themeMode ? "bg-black" : "bg-white"} `}
+                                    >
+                                        <label
+                                            className=' mx-0.5 mr-1.5 font-semibold'
+                                            htmlFor="bgColor"
+                                        >By Background Color : </label>
+
+                                        <input
+                                            type="color"
+                                            name=""
+                                            id="bgColor"
+                                            className={`${!themeMode ? "bg-black" : "bg-white"}`}
+                                            onChange={(e) => setCutomize({ ...customize, bgColor: e.target.value })
+                                            }
+
+                                            value={customize.bgColor}
+                                        />
+                                    </div>
+
+                                    <div
+                                        className={` flex items-center border rounded pl-1 overflow-hidden ${!themeMode ? "bg-black" : "bg-white"} `}
+                                    >
+                                        <label
+                                            className=' mx-0.5 mr-1.5 font-semibold '
+                                            htmlFor="bgImage"
+                                        >By Bg Images : </label>
+
+                                        <select
+                                            className={`${!themeMode ? "bg-black" : "bg-white"}`}
+                                            name=""
+                                            id="bgImage"
+                                            onChange={(e) => { setCutomize({ ...customize, bgImage: e.target.value }) }}
+                                        >
+                                            {
+                                                bgImage.map((ele, i) => {
+                                                    return <option value={ele} >Image {i + 1}</option>
+                                                })
+                                            }
+
+                                            <option value="none" >None</option>
+                                        </select>
+                                    </div>
+
+
+                                </div>
+
+                                <p>* Make sure your post should look Awesome and visiable properly.</p>
+                                <p>* Customize your post look and feel.</p>
+                            </div>
+
+
+                            <div className=' flex justify-end'>
+
+                                <button
+                                    className={`px-8 mx-8 my-1 rounded-full font-bold bg-green-400 hover:bg-green-600 transition-all ${themeMode ? "text-green-900" : "text-green-900"}`}
+                                    onClick={(e) => { submitFormData(e) }}
+                                >
+                                    {
+                                        !updatingPost ? "Create" : "Update"
+                                    }
+                                </button>
+                            </div>
+
                         </div>
 
                     </div>

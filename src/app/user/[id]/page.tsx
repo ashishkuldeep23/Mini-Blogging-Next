@@ -23,7 +23,6 @@ import { PiSealCheckDuotone } from 'react-icons/pi'
 import { TbUserCancel } from "react-icons/tb";
 
 
-
 const UserPageParams = ({ params }: any) => {
 
     const themeMode = useThemeData().mode
@@ -165,7 +164,6 @@ const UserPageParams = ({ params }: any) => {
 }
 
 export default UserPageParams
-
 
 function FriendsOfFriendsDiv(
 
@@ -425,7 +423,6 @@ function FriendsOfFriendsDiv(
     )
 
 }
-
 
 function SingleUserDiv(
     {

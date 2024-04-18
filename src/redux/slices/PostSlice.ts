@@ -44,6 +44,7 @@ export const createNewPost = createAsyncThunk("post/createNewPost", async ({ bod
         urlOfPrompt: body.url,
         aiToolName: body.origin,
         hashthats: body.hashs,
+        customize: body.customize,
         author: userId
     }
 
@@ -79,8 +80,9 @@ export const updatePost = createAsyncThunk("post/updatePost", async ({ body, use
         urlOfPrompt: body.url,
         aiToolName: body.origin,
         hashthats: body.hashs,
+        customize: body.customize,
         author: userId,
-        postId: postId
+        postId: postId,
     }
 
 
@@ -123,6 +125,14 @@ export interface Comment {
     whenCreated: string
 }
 
+export interface PostCustomization {
+    bgColor: string,
+    color: string,
+    bgImage: string,
+    font: string,
+}
+
+
 
 export interface PostInterFace {
     _id: string,
@@ -144,7 +154,9 @@ export interface PostInterFace {
     // likesId: UserDataInterface[]|string[],
     likesId: Array<string | UserDataInterface>,
     comments: Comment[],
-    isDeleted: boolean
+    isDeleted: boolean,
+    customize?: PostCustomization
+
 }
 
 
@@ -162,7 +174,6 @@ interface PostSliceInterFace {
     posthashtags: string[],
     allPostsLength: number
 }
-
 
 
 const innitialSingleState: PostInterFace = {
@@ -186,7 +197,13 @@ const innitialSingleState: PostInterFace = {
     likes: 0,
     likesId: [],
     comments: [],
-    isDeleted: false
+    isDeleted: false,
+    customize: {
+        bgColor: "",
+        color: "",
+        bgImage: "",
+        font: ""
+    }
 }
 
 
@@ -203,8 +220,8 @@ const initialState: PostSliceInterFace = {
     postCategories: [],
     posthashtags: [],
     allPostsLength: 0,
-}
 
+}
 
 
 interface UpdateCommentInput {

@@ -177,7 +177,7 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
         const response = await fetch('/api/post/delete', option)
         let json = await response.json();
 
-        console.log(json)
+        // console.log(json)
 
         if (json.success) {
             // dispatch(updateOnePost(json.data))
