@@ -594,7 +594,6 @@ function PostCommentForm(
                 onClick={(e) => { e.stopPropagation(); }}
             >
 
-
                 <MainLoader isLoading={isLoading} />
 
                 <p className=" ml-1 flex gap-1 flex-wrap items-center ">
@@ -667,7 +666,7 @@ function PostCommentForm(
                         ref={textAreaInputRef}
                         style={{ resize: "none" }}
                         placeholder="Give your comment here."
-                        className={`w-full h-full border rounded px-2 mx-0.5 ${!themeMode ? "bg-black text-white" : "bg-white text-black"} `}
+                        className={`w-full h-full border rounded px-2 mx-0.5 bg-transparent placeholder:text-inherit`}
                         value={commentValue.value}
                         onChange={(e) => { e.stopPropagation(); setCommentValue({ value: e.target.value }) }}
                     ></textarea>
@@ -1361,7 +1360,7 @@ function SeeMoreOfComment(
                             className=' flex flex-wrap flex-col sm:flex-row mt-1 w-full'
                         >
                             <input
-                                className={` w-[100%] sm:w-[82%] h-full border rounded px-2 mx-0.5 ${!themeMode ? "bg-black text-white" : "bg-white text-black"} `}
+                                className={` w-[100%] sm:w-[82%] h-full border rounded px-2 mx-0.5 bg-transparent placeholder:text-inherit `}
                                 type="text"
                                 placeholder='Your reply for this comment.'
                                 value={replyText}

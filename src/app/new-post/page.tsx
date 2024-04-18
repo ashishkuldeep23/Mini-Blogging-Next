@@ -11,8 +11,7 @@ import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import MainLoader from '../components/MainLoader';
 import ImageReact from '../components/ImageReact';
-import SinglePostCard from '../components/SinglePostCard';
-import { color } from 'framer-motion';
+
 
 
 
@@ -25,8 +24,6 @@ export interface NewPostType {
     hashs: string[],
     customize?: PostCustomization,
 }
-
-
 
 
 
@@ -82,12 +79,15 @@ const NewPostPage = () => {
 
     // // // Customization added here ------------------>
 
-    const [customize, setCutomize] = useState<PostCustomization>({
+
+    const initailCustomize = {
         bgColor: "",
         color: "",
         bgImage: "",
         font: ""
-    })
+    }
+
+    const [customize, setCutomize] = useState<PostCustomization>(initailCustomize)
 
 
     const [bgImage] = useState<Array<string>>([
@@ -990,6 +990,11 @@ const NewPostPage = () => {
                                         </select>
                                     </div>
 
+
+                                    <button
+                                        onClick={() => setCutomize(initailCustomize)}
+                                        className=' px-2 border rounded text-xs border-red-500 text-red-500 ml-auto mr-2'
+                                    >Default</button>
 
                                 </div>
 
