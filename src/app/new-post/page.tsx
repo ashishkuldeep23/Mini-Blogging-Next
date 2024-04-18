@@ -937,7 +937,7 @@ const NewPostPage = () => {
                                         >
                                             {
                                                 fontFamily.map((ele, i) => {
-                                                    return <option value={ele} >{ele}</option>
+                                                    return <option key={i} value={ele} >{ele}</option>
                                                 })
                                             }
 
@@ -982,7 +982,7 @@ const NewPostPage = () => {
                                         >
                                             {
                                                 bgImage.map((ele, i) => {
-                                                    return <option value={ele} >Image {i + 1}</option>
+                                                    return <option key={i} value={ele} >Image {i + 1}</option>
                                                 })
                                             }
 
