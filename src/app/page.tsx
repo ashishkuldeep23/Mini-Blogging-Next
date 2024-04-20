@@ -4,18 +4,17 @@ import { useThemeData } from "@/redux/slices/ThemeSlice";
 import Navbar from "./components/Navbar";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { PostInterFace, getCatAndHash, setAllPosts, setErrMsg, setIsLoading, setSinglePostId, usePostData } from "@/redux/slices/PostSlice";
+import { getAllPosts, usePostData, setSearchBrandAndCate } from "@/redux/slices/PostSlice";
 import { AppDispatch } from "@/redux/store";
 import MainLoader from "./components/MainLoader";
 import MaskerText from "./components/MaskerText";
 import { useRouter } from "next/navigation";
-import LikeCommentDiv from "./components/LikeCommentDiv";
-import ImageReact from "./components/ImageReact";
 import SinglePostCard from "./components/SinglePostCard";
 import { useSession } from "next-auth/react";
 // import ThreeDCardDemo from "./components/ui/card";
 
 import { BsFillPatchPlusFill } from "react-icons/bs";
+import { debounce } from "@/utils/debounce";
 {/* <BsFillPatchPlusFill /> */ }
 
 
@@ -135,7 +134,24 @@ const SearchByDiv = () => {
 
   const [expandHash, setExpandHash] = useState(false)
 
-  const { postCategories, posthashtags } = usePostData()
+  const { postCategories, posthashtags, searchHashAndCate } = usePostData()
+
+  const dispatch = useDispatch<AppDispatch>()
+
+
+  function getDataByCategory(cat: string) {
+    let searchObj = { ...searchHashAndCate, category: `${cat}` }
+    dispatch(setSearchBrandAndCate(searchObj))
+    dispatch(getAllPosts(searchObj))
+  }
+
+
+  function getDataByHashtag(hash: string) {
+    let searchObj = { ...searchHashAndCate, hash: `${hash}` }
+    dispatch(setSearchBrandAndCate(searchObj))
+    dispatch(getAllPosts(searchObj))
+  }
+
 
   return (
 
@@ -152,7 +168,10 @@ const SearchByDiv = () => {
           <div className=" filter_container  ">
             <p
               className={`  px-1 hover:cursor-pointer ${expandCat && "text-violet-500 font-bold"} transition-all`}
-              onClick={() => { setExpandCat(!expandCat); setExpandHash(false); }}
+              onClick={() => {
+                setExpandCat(!expandCat);
+                // setExpandHash(false); 
+              }}
             >Category</p>
 
           </div>
@@ -160,7 +179,10 @@ const SearchByDiv = () => {
           <div className=" filter_container  ">
             <p
               className={` px-1 hover:cursor-pointer ${expandHash && "text-violet-500  font-bold"} transition-all`}
-              onClick={() => { setExpandHash(!expandHash); setExpandCat(false); }}
+              onClick={() => {
+                setExpandHash(!expandHash);
+                // setExpandCat(false);
+              }}
             >#Hashtags</p>
 
           </div>
@@ -178,7 +200,11 @@ const SearchByDiv = () => {
             postCategories.length > 0
             &&
             postCategories.map((ele, i) => {
-              return <p className=" font-bold text-violet-500 " key={i}>{ele}</p>
+              return <p
+                key={i}
+                className=" font-bold text-violet-500 "
+                onClick={() => { getDataByCategory(ele) }}
+              >{ele}</p>
             })
           }
 
@@ -192,10 +218,14 @@ const SearchByDiv = () => {
 
           {
 
-            posthashtags.length
+            (posthashtags.length > 0)
             &&
             posthashtags.map((ele, i) => {
-              return <p className=" font-bold text-violet-500 " key={i}>{ele}</p>
+              return <p
+                key={i}
+                className=" font-bold text-violet-500 "
+                onClick={() => { getDataByHashtag(ele) }}
+              >{ele}</p>
             })
           }
         </div>
@@ -214,46 +244,55 @@ const SearchByDiv = () => {
 
 function AllPostDiv() {
 
-  const allPostData = usePostData().allPost
-  const isLoading = usePostData().isLoading
+  const { allPost: allPostData, isLoading, searchHashAndCate, allPostsLength } = usePostData()
 
   const dispatch = useDispatch<AppDispatch>()
 
 
-  async function fetchAllPosts() {
+  // async function fetchAllPosts() {
 
-    dispatch(setIsLoading(true))
+  //   dispatch(setIsLoading(true))
 
-    dispatch(setErrMsg(""))
+  //   dispatch(setErrMsg(""))
 
-    const option: RequestInit = {
-      method: "POST",
-      cache: 'no-store',
-      next: {
-        revalidate: 3
-      },
-    }
+  //   const option: RequestInit = {
+  //     method: "POST",
+  //     cache: 'no-store',
+  //     next: {
+  //       revalidate: 3
+  //     },
+  //   }
 
-    const response = await fetch(`/api/post/all?timestamp=${Date.now()}`, option)
-    let json = await response.json();
+  //   const response = await fetch(`/api/post/all?timestamp=${Date.now()}`, option)
+  //   let json = await response.json();
 
-    // console.log(json)
+  //   // console.log(json)
 
-    if (json.success) {
-      dispatch(setAllPosts(json.data))
-    } else {
-      dispatch(setErrMsg(json.message))
-    }
+  //   if (json.success) {
+  //     dispatch(setAllPosts(json.data))
+  //   } else {
+  //     dispatch(setErrMsg(json.message))
+  //   }
 
-    dispatch(setIsLoading(false))
+  //   dispatch(setIsLoading(false))
+  // }
+
+
+
+  function fetchAllPostData() {
+    let searchObj = { hash: "", category: "", page: 1 }
+    dispatch(setSearchBrandAndCate(searchObj))
+    dispatch(getAllPosts(searchObj))
+
   }
 
 
   useEffect(() => {
     if (allPostData.length <= 1) {
 
-      fetchAllPosts()
+      // // // Before calling all posts we need to set queryObject --------->
 
+      fetchAllPostData()
       // dispatch(getAllPosts())
     }
   }, [])
@@ -261,33 +300,51 @@ function AllPostDiv() {
 
   return (
 
-    <div className="card_container relative sm:px-[8vh] mt-16 flex gap-10 gap-x-64 p-0.5 flex-wrap justify-center items-start ">
+    <>
 
-      <MainLoader isLoading={isLoading} />
+      <>
+        {
+          (searchHashAndCate.category || searchHashAndCate.hash)
+          &&
+          <button
+            className=" mt-10  text-xs border rounded-md px-2"
+            onClick={() => {
+              fetchAllPostData()
+            }}
+          >Back to Default</button>
 
-      {
+        }
+      </>
 
-        allPostData.length > 0
-          ?
+      <div className="card_container mt-10 relative sm:px-[8vh] flex gap-10 gap-x-64 p-0.5 flex-wrap justify-center items-start ">
 
-          allPostData.map((ele, i) => {
-            return (
-              <SinglePostCard key={i} ele={ele} />
-            )
-          })
+        <MainLoader isLoading={isLoading} />
 
-          : <></>
+        {
 
-        // : [null, null, null, null, null, null, null, null, null, null].map((ele, i) => {
-        //   return (
+          allPostData.length > 0
+            ?
 
-        //     <Card key={i} ele={ele} />
+            allPostData.map((ele, i) => {
+              return (
+                <SinglePostCard key={i} ele={ele} />
+              )
+            })
 
-        //   )
-        // })
-      }
+            : <></>
 
-    </div>
+          // : [null, null, null, null, null, null, null, null, null, null].map((ele, i) => {
+          //   return (
+
+          //     <Card key={i} ele={ele} />
+
+          //   )
+          // })
+        }
+
+      </div>
+    </>
+
   )
 }
 
@@ -295,9 +352,58 @@ function AllPostDiv() {
 
 const FooterDiv = () => {
 
+  const { isLoading, searchHashAndCate, allPost: allPostData, allPostsLength } = usePostData()
+
+  const dispatch = useDispatch<AppDispatch>()
+
+
+  const handleScroll = () => {
+    const bottom = Math.ceil(window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight;
+    if (bottom && !isLoading) {
+
+      // console.log({ bottom })
+      // console.log("now call here to get more data from backend ------>")
+      // setPage(prevPage => prevPage + 1);
+
+      // console.log(searchHashAndCate)
+      // console.log(searchHashAndCate.page + 1)
+
+      // // // Here fetching data according to page number ---------> 
+      let searchObj = { hash: "", category: "", page: searchHashAndCate.page + 1 }
+      dispatch(setSearchBrandAndCate(searchObj))
+      dispatch(getAllPosts(searchObj))
+
+    }
+  };
+
+  useEffect(() => {
+
+    // console.log(searchHashAndCate)
+
+    const debouncedScrollHandler = debounce(handleScroll, 500);
+    window.addEventListener('scroll', debouncedScrollHandler);
+    return () => window.removeEventListener('scroll', debouncedScrollHandler);
+  }, [searchHashAndCate]);
+
+
+
+
   return (
     <>
-      <div className=" my-7">
+
+      {
+        (isLoading && searchHashAndCate.page > 1)
+        &&
+        (allPostData.length < allPostsLength)
+        &&
+        <div className=" mt-10 flex gap-2 items-center">
+          <span>LOADING</span>
+          <span className=" w-4 h-4   rounded-full animate-spin "></span>
+        </div>
+
+      }
+
+      <div className=" mb-7 mt-2">
         <MaskerText className="font-bold text-3xl" text="I'm Footer dude" />
       </div>
     </>

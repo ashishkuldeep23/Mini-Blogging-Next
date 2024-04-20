@@ -20,14 +20,60 @@ export async function POST(req: NextRequest) {
     try {
 
 
+        let { hash, category, page, limit } = await req.json()
+
+        // console.log({ hash, category, page, limit })
+
+
+        // // // Pages and limits ---------->
+
+
+        let pageNo = 1
+        if (page) {
+            pageNo = Number(page)
+        }
+
+        let limitOfProducts = 4
+        if (limit) {
+            limitOfProducts = Number(limit)
+        }
+
+
+        // // // Now prepare searchObj for db ---->
+
+        let searchObject: any = {
+            isDeleted: false,
+        }
+
+        let searchByQuery = false
+
+        if (hash) {
+            // searchObject.brand = brand.toLowerCase()
+            searchObject.hashthats = { $regex: new RegExp(hash, 'i') }
+            searchByQuery = true
+            limitOfProducts = 100
+        }
+
+        if (category) {
+            // searchObject.category = category.toLowerCase()
+            searchObject.category = category
+            searchByQuery = true
+            limitOfProducts = 100
+            // // // To lower case not used now
+        }
+
+
+
         // // // Jsut want to ready user model befour populating (in below code ) (I wnat just my model should be model ready here) ---------->
         await User.findById("65ffbc7cf6215d659db3b197")
 
 
         // console.log("iktyutryetyr")
 
-        let getAllPosts = await Post.find({ isDeleted: false })
+        let getAllPosts = await Post.find(searchObject)
             .sort({ "createdAt": "desc" })
+            // .skip(limitOfProducts * (pageNo - 1))
+            .limit(limitOfProducts * pageNo)
             // .sort({ 
             //     createdAt: "-1"
             // })
@@ -44,7 +90,6 @@ export async function POST(req: NextRequest) {
             // })
             .select("-updatedAt -createdAt -__v ")
 
-
         // console.log(getAllPosts)
 
 
@@ -54,7 +99,12 @@ export async function POST(req: NextRequest) {
 
 
 
-        let response = NextResponse.json({ success: true, data: getAllPosts, message: "All post fetched." }, { status: 200 })
+        let response = NextResponse.json({
+            success: true,
+            data: getAllPosts,
+            searchByQuery,
+            message: "All post fetched.",
+        }, { status: 200 })
 
         response.headers.set("cache", "no-store")
 
@@ -70,6 +120,5 @@ export async function POST(req: NextRequest) {
     }
 
 }
-
 
 

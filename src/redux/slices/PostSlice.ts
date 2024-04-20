@@ -8,17 +8,57 @@ import { NewPostType } from "@/app/new-post/page"
 import { UserDataInterface } from "./UserSlice"
 
 
+
+
+type SearchObj = {
+    hash?: string,
+    category?: string,
+    page?: number,
+    limit?: string,
+}
+
+
+
 // // // Not using now -------->
-// export const getAllPosts = createAsyncThunk('post/getAllPost', async () => {
-//     const option: RequestInit = {
-//         cache: 'no-store'
-//     }
-//     const response = await fetch('/api/post/all', option)
-//     let data = await response.json();
-//     return data
-//     // const response = await axios.post("/api/users/signup", body)
-//     // return response.data
-// })
+export const getAllPosts = createAsyncThunk('post/getAllPost', async (queryObj?: SearchObj) => {
+
+
+    // console.log("dfsfdsfa")
+    // // // Do here filter code ---------->    
+
+
+    let url = `/api/post/all?timestamp=${Date.now()}`
+
+    // // / Now using body to send filter data ------>
+
+    // if (hash && hash !== '') {
+    //     url = url + `&hash=${queryObj?.hash}`
+    // }
+    // if (category && category !== '') {
+    //     url = url + `&category=${queryObj?.category}`
+    // }
+    // if (!hash && !category) {
+    //     url = url + `&page=${page}&limit=${limit}`
+    // }
+    // console.log(url)
+
+
+    const option: RequestInit = {
+        method: "POST",
+        cache: 'no-store',
+        next: {
+            revalidate: 3
+        },
+        body: JSON.stringify(queryObj || {})
+    }
+
+    const response = await fetch(`${url}`, option)
+    let json = await response.json();
+
+    return json
+    // const response = await axios.post("/api/users/signup", body)
+    // return response.data
+})
 
 
 
@@ -133,6 +173,12 @@ export interface PostCustomization {
 }
 
 
+interface UpdateCommentInput {
+    comment: Comment,
+    whatUpadate: 'update' | 'delete' | 'like'
+}
+
+
 
 export interface PostInterFace {
     _id: string,
@@ -172,7 +218,13 @@ interface PostSliceInterFace {
     singlePostdata?: PostInterFace
     postCategories: string[],
     posthashtags: string[],
-    allPostsLength: number
+    allPostsLength: number,
+    searchHashAndCate: {
+        hash: string,
+        category: string,
+        page: number
+    },
+
 }
 
 
@@ -220,13 +272,12 @@ const initialState: PostSliceInterFace = {
     postCategories: [],
     posthashtags: [],
     allPostsLength: 0,
+    searchHashAndCate: {
+        hash: "",
+        category: "",
+        page: 1
+    },
 
-}
-
-
-interface UpdateCommentInput {
-    comment: Comment,
-    whatUpadate: 'update' | 'delete' | 'like'
 }
 
 
@@ -324,54 +375,67 @@ const psotSlice = createSlice({
         },
 
 
+        setSearchBrandAndCate(state, action: PayloadAction<{ hash?: string, category?: string, page?: number }>) {
+            // console.log(action.payload)
+            // state.searchBrandAndCate = action.payload.brand || ""
+            // state.searchBrandAndCate = action.payload.category || ''
+
+
+            state.searchHashAndCate = { hash: action.payload.hash || "", category: action.payload.category || '', page: action.payload.page || 1 }
+        }
+
+
     },
 
     extraReducers: (builder) => {
 
         builder
 
-            // // Get all posts 
+            // Get all posts 
 
-            // // // Now using here now ----->
+            // // Now using here now ----->
 
-            // .addCase(getAllPosts.pending, (state) => {
-            //     state.isLoading = true
-            //     state.errMsg = ''
-            // })
+            .addCase(getAllPosts.pending, (state) => {
+                state.isLoading = true
+                state.errMsg = ''
+                state.isFullfilled = false
 
-            // .addCase(getAllPosts.fulfilled, (state, action) => {
+            })
 
-            //     console.log(action)
+            .addCase(getAllPosts.fulfilled, (state, action) => {
+
+                // console.log(action)
+
+                // console.log(action.payload)
+
+                if (action.payload.success === true) {
+
+                    state.allPost = action.payload.data
+                    // toast.success(`${action.payload.message}`)
+                    state.isFullfilled = true
+
+                } else {
+                    toast.error(`${action.payload.message || "Fetch failed."}`)
+                    state.isError = true
+                    state.errMsg = action.payload.message
+                }
+
+                state.isLoading = false
+
+            })
+
+            .addCase(getAllPosts.rejected, (state, action) => {
+
+                console.log(action)
 
 
-            //     // console.log(action.payload)
-
-            //     if (action.payload.success === true) {
-
-            //         state.allPost = action.payload.data
-            //         // toast.success(`${action.payload.message}`)
-            //         state.isFullfilled = true
-
-            //     } else {
-            //         toast.error(`${action.payload.message || "Fetch failed."}`)
-            //         state.isError = true
-            //         state.errMsg = action.payload.message
-            //     }
-
-            //     state.isLoading = false
-
-            // })
-
-            // .addCase(getAllPosts.rejected, (state, action) => {
-
-            //     console.log(action)
+                state.isLoading = false
+                state.isError = true
+                toast.error(` ${action.error.message || "SignUp failed"}`)
+                state.errMsg = action.error.message || 'Error'
+            })
 
 
-            //     state.isLoading = false
-            //     state.isError = true
-            //     toast.error(` ${action.error.message || "SignUp failed"}`)
-            //     state.errMsg = action.error.message || 'Error'
-            // })
 
             .addCase(getCatAndHash.pending, (state) => {
                 state.isLoading = true
@@ -416,7 +480,6 @@ const psotSlice = createSlice({
                 toast.error(` ${action.error.message || "SignUp failed"}`)
                 state.errMsg = action.error.message || 'Error'
             })
-
 
 
 
@@ -540,7 +603,8 @@ export const {
     setSinglePostdata,
     setUpdateComment,
     setDeleteSinglePost,
-    setUpdatingPost
+    setUpdatingPost,
+    setSearchBrandAndCate
     // setDeleteComment
 } = psotSlice.actions
 

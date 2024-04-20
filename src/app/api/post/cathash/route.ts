@@ -56,6 +56,7 @@ export async function POST(req: NextRequest) {
             allPostsLength
         }
 
+        // console.log({ data })
 
         let response = NextResponse.json({ success: true, data: data, message: "All post fetched." }, { status: 200 })
 

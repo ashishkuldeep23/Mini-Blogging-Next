@@ -17,7 +17,6 @@ import { BiPencil } from "react-icons/bi";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { UserDataInterface } from '@/redux/slices/UserSlice';
 import AnimatedTooltip from './ui/animated-tooltip';
-
 import { PiPaperPlaneRight } from "react-icons/pi";
 import { SinglePostType } from '../post/[id]/page';
 
@@ -33,6 +32,8 @@ interface UpdatingComment {
 const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
 
     const { data: session, status } = useSession()
+
+    const themeMode = useThemeData().mode
 
     const textAreaInputRef = useRef<HTMLTextAreaElement>(null)
 
@@ -206,9 +207,9 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
     useEffect(() => {
 
         if (post.comments.length > 0) {
-            let idsOfComments = post.comments.map((ele) => {
+            let idsOfComments = post.comments.map((ele: any) => {
 
-                // console.log(typeof ele)
+                // console.log(ele)
 
                 if (typeof ele === "string") {
                     return ele
@@ -283,7 +284,7 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
                 {/* Like comments buttons (all 3 buttons here) -----> */}
                 <div className=' pt-3 flex flex-row-reverse items-start md:flex-row gap-8 md:gap-x-16'>
 
-                    <div className='flex gap-2 flex-wrap justify-between flex-row-reverse md:flex-row'>
+                    <div className='flex gap-2 flex-wrap justify-between flex-row md:flex-row-reverse'>
 
                         {/* Like btn */}
                         <button
@@ -343,9 +344,9 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
 
 
                 {/* Below fragment show only if user on post[id] page --->  */}
-
-
                 {/* All Likes div ---> */}
+
+
                 {
 
                     // // // By below way we can get user on single page route or in other route
@@ -357,8 +358,8 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
 
                     <div className='rounded my-1 p-0.5 py-2 flex gap-2 items-center flex-wrap '>
 
-                        <p className=' flex gap-1 flex-wrap items-center ml-1 -mt-3 '>
-                            <span className=' font-semibold'>Likes</span>
+                        <p className={`flex gap-1 flex-wrap items-center ml-1 -mt-3 ${themeMode ? "text-black" : "text-white"} `}>
+                            <span className={`font-semibold`}>Likes</span>
                             <span>
                                 <PiPaperPlaneRight />
                             </span>
@@ -596,7 +597,7 @@ function PostCommentForm(
 
                 <MainLoader isLoading={isLoading} />
 
-                <p className=" ml-1 flex gap-1 flex-wrap items-center ">
+                <p className={`ml-1 flex gap-1 flex-wrap items-center ${themeMode ? "text-black" : "text-white"} `}>
                     Give your
                     <span className=" underline">comment</span>
                     here
@@ -672,7 +673,7 @@ function PostCommentForm(
                     ></textarea>
 
                     <button
-                        className={`font-bold border rounded px-2 mx-0.5 ${!themeMode ? "bg-green-700 " : "bg-green-300 "} `}
+                        className={`font-bold border rounded px-2 mx-0.5 ${!themeMode ? "bg-green-700 text-white" : "bg-green-300 text-black"} `}
                         onClick={(e) => {
                             e.stopPropagation();
                             if (!updatingComment.mode) {
@@ -706,6 +707,7 @@ function AllComments({
     setUpdatingComment: Function,
 }) {
 
+    const themeMode = useThemeData().mode
 
     const params = usePathname()
 
@@ -729,7 +731,7 @@ function AllComments({
                     }}
 
                 >
-                    <span>
+                    <span className={`${themeMode ? "text-black" : "text-white"}`}>
                         All given comments for this post.
                         <span className=' relative left-2 top-[5px] inline-flex rotate-[90deg]'> <PiPaperPlaneRight /> </span>
                     </span>
@@ -1369,7 +1371,7 @@ function SeeMoreOfComment(
 
                             />
                             <button
-                                className={`font-semibold  ml-auto md:ml-1 border py-0 text-sm rounded px-1 ${themeMode ? "bg-green-400" : "bg-green-600"}`}
+                                className={`font-semibold  ml-auto md:ml-1 border py-0 text-sm rounded px-1 ${themeMode ? "bg-green-400 text-black" : "text-white bg-green-600"}`}
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     if (!updatingReply.mode) {
