@@ -2,7 +2,7 @@
 
 import { useThemeData } from "@/redux/slices/ThemeSlice";
 import Navbar from "./components/Navbar";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { getAllPosts, usePostData, setSearchBrandAndCate } from "@/redux/slices/PostSlice";
 import { AppDispatch } from "@/redux/store";
@@ -15,6 +15,7 @@ import { useSession } from "next-auth/react";
 
 import { BsFillPatchPlusFill } from "react-icons/bs";
 import { debounce } from "@/utils/debounce";
+import InfiniteScroll from "react-infinite-scroll-component";
 {/* <BsFillPatchPlusFill /> */ }
 
 
@@ -153,6 +154,18 @@ const SearchByDiv = () => {
   }
 
 
+  function backToNormalHandler() {
+    let searchObj = { hash: "", category: "", page: 1 }
+    dispatch(setSearchBrandAndCate(searchObj))
+    dispatch(getAllPosts(searchObj))
+
+    setExpandCat(false);
+    setExpandHash(false);
+
+  }
+
+
+
   return (
 
     <>
@@ -202,7 +215,7 @@ const SearchByDiv = () => {
             postCategories.map((ele, i) => {
               return <p
                 key={i}
-                className=" font-bold text-violet-500 "
+                className=" font-bold text-violet-500 hover:cursor-pointer "
                 onClick={() => { getDataByCategory(ele) }}
               >{ele}</p>
             })
@@ -214,8 +227,6 @@ const SearchByDiv = () => {
           className={` border mt-2 rounded flex gap-2 flex-wrap justify-around px-1 overflow-hidden ${!expandHash ? " border-0 w-1/2 h-0 opacity-100" : " w-full opacity-100"} transition-all `}
           style={{ transitionDuration: "1.0s" }}
         >
-
-
           {
 
             (posthashtags.length > 0)
@@ -223,7 +234,7 @@ const SearchByDiv = () => {
             posthashtags.map((ele, i) => {
               return <p
                 key={i}
-                className=" font-bold text-violet-500 "
+                className=" font-bold text-violet-500 hover:cursor-pointer "
                 onClick={() => { getDataByHashtag(ele) }}
               >{ele}</p>
             })
@@ -231,13 +242,35 @@ const SearchByDiv = () => {
         </div>
 
 
+        {
+          (expandCat || expandHash)
+          &&
+          <button
+            className=" text-xs border border-red-500 text-red-500 my-2 px-2 rounded ml-auto mr-2"
+            onClick={() => {
+              setExpandCat(false);
+              setExpandHash(false);
+            }}
+          >Close</button>
+        }
+
+
+
+
+        {
+          (searchHashAndCate.category || searchHashAndCate.hash)
+          &&
+          <button
+            className=" mt-10  text-xs border rounded-md px-2"
+            onClick={() => {
+              backToNormalHandler()
+            }}
+          >Back to Default</button>
+        }
 
 
       </div>
-
-
     </>
-
   )
 }
 
@@ -287,6 +320,14 @@ function AllPostDiv() {
   }
 
 
+  function fetchMorePostData() {
+    let searchObj = { hash: "", category: "", page: searchHashAndCate.page + 1 }
+    dispatch(setSearchBrandAndCate(searchObj))
+    dispatch(getAllPosts(searchObj))
+  }
+
+
+
   useEffect(() => {
     if (allPostData.length <= 1) {
 
@@ -302,47 +343,65 @@ function AllPostDiv() {
 
     <>
 
-      <>
-        {
-          (searchHashAndCate.category || searchHashAndCate.hash)
+      <InfiniteScroll
+        dataLength={allPostData.length} //This is important field to render the next data
+        next={() => {
+
+          if (allPostData.length < allPostsLength) {
+            fetchMorePostData()
+          }
+        }}
+
+        hasMore={true}
+        loader={
+          (allPostData.length < allPostsLength)
           &&
-          <button
-            className=" mt-10  text-xs border rounded-md px-2"
-            onClick={() => {
-              fetchAllPostData()
-            }}
-          >Back to Default</button>
 
-        }
-      </>
-
-      <div className="card_container mt-10 relative sm:px-[8vh] flex gap-10 gap-x-64 p-0.5 flex-wrap justify-center items-start ">
-
-        <MainLoader isLoading={isLoading} />
-
-        {
-
-          allPostData.length > 0
-            ?
-
-            allPostData.map((ele, i) => {
-              return (
-                <SinglePostCard key={i} ele={ele} />
-              )
-            })
-
-            : <></>
-
-          // : [null, null, null, null, null, null, null, null, null, null].map((ele, i) => {
-          //   return (
-
-          //     <Card key={i} ele={ele} />
-
-          //   )
-          // })
+          <div className=" mt-10 flex gap-2 items-center">
+            <span>LOADING...</span>
+            <span className=" w-4 h-4   rounded-full animate-spin "></span>
+          </div>
         }
 
-      </div>
+        className="w-[98vw] min-h-[50vh] !overflow-auto flex flex-col items-center justify-center"
+
+      >
+
+
+        <div className="card_container mt-10 relative sm:px-[8vh] flex gap-10 gap-x-64 p-0.5 flex-wrap justify-center items-start ">
+
+          <MainLoader
+            isLoading={isLoading}
+          // className="top-0" 
+          />
+
+          {
+
+            allPostData.length > 0
+              ?
+
+              allPostData.map((ele, i) => {
+                return (
+                  <SinglePostCard key={i} ele={ele} />
+                )
+              })
+
+              : <></>
+
+            // : [null, null, null, null, null, null, null, null, null, null].map((ele, i) => {
+            //   return (
+
+            //     <Card key={i} ele={ele} />
+
+            //   )
+            // })
+          }
+
+        </div>
+
+      </InfiniteScroll>
+
+
     </>
 
   )
@@ -357,33 +416,45 @@ const FooterDiv = () => {
   const dispatch = useDispatch<AppDispatch>()
 
 
-  const handleScroll = () => {
-    const bottom = Math.ceil(window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight;
-    if (bottom && !isLoading) {
+  const footerDivRef = useRef<HTMLDivElement>(null)
 
-      // console.log({ bottom })
-      // console.log("now call here to get more data from backend ------>")
-      // setPage(prevPage => prevPage + 1);
 
-      // console.log(searchHashAndCate)
-      // console.log(searchHashAndCate.page + 1)
+  // function fetchAllPostData() {
+  //   let searchObj = { hash: "", category: "", page: searchHashAndCate.page + 1 }
+  //   dispatch(setSearchBrandAndCate(searchObj))
+  //   dispatch(getAllPosts(searchObj))
+  // }
 
-      // // // Here fetching data according to page number ---------> 
-      let searchObj = { hash: "", category: "", page: searchHashAndCate.page + 1 }
-      dispatch(setSearchBrandAndCate(searchObj))
-      dispatch(getAllPosts(searchObj))
 
-    }
-  };
+  // const handleScroll = () => {
+  //   const bottom = Math.ceil(window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight;
+  //   if (bottom && !isLoading) {
 
-  useEffect(() => {
+  //     // console.log({ bottom })
+  //     // console.log("now call here to get more data from backend ------>")
+  //     // setPage(prevPage => prevPage + 1);
 
-    // console.log(searchHashAndCate)
+  //     // console.log(searchHashAndCate)
+  //     // console.log(searchHashAndCate.page + 1)
 
-    const debouncedScrollHandler = debounce(handleScroll, 500);
-    window.addEventListener('scroll', debouncedScrollHandler);
-    return () => window.removeEventListener('scroll', debouncedScrollHandler);
-  }, [searchHashAndCate]);
+  //     // // // Here fetching data according to page number ---------> 
+  //     // let searchObj = { hash: "", category: "", page: searchHashAndCate.page + 1 }
+  //     // dispatch(setSearchBrandAndCate(searchObj))
+  //     // dispatch(getAllPosts(searchObj))
+
+  //     fetchAllPostData()
+
+  //   }
+  // };
+
+
+
+  // useEffect(() => {
+  //   // console.log(searchHashAndCate)
+  //   const debouncedScrollHandler = debounce(handleScroll, 500);
+  //   window.addEventListener('scroll', debouncedScrollHandler);
+  //   return () => window.removeEventListener('scroll', debouncedScrollHandler);
+  // }, [searchHashAndCate]);
 
 
 
@@ -391,7 +462,7 @@ const FooterDiv = () => {
   return (
     <>
 
-      {
+      {/* {
         (isLoading && searchHashAndCate.page > 1)
         &&
         (allPostData.length < allPostsLength)
@@ -401,9 +472,12 @@ const FooterDiv = () => {
           <span className=" w-4 h-4   rounded-full animate-spin "></span>
         </div>
 
-      }
+      } */}
 
-      <div className=" mb-7 mt-2">
+      <div
+        className=" mb-7 mt-2"
+        ref={footerDivRef}
+      >
         <MaskerText className="font-bold text-3xl" text="I'm Footer dude" />
       </div>
     </>
