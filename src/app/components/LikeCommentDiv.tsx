@@ -519,8 +519,6 @@ function PostCommentForm(
         setIsLoading(false)
     }
 
-
-
     async function updateComment(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
 
         e.stopPropagation()
@@ -577,8 +575,6 @@ function PostCommentForm(
     }
 
 
-
-
     useEffect(() => {
         if (updatingComment.mode) {
             setCommentValue({ value: updatingComment.value })
@@ -599,7 +595,7 @@ function PostCommentForm(
 
                 <p className={`ml-1 flex gap-1 flex-wrap items-center ${themeMode ? "text-black" : "text-white"} `}>
                     Give your
-                    <span className=" underline">comment</span>
+                    <span className=" font-semibold border-b">comment</span>
                     here
                     <span className=' rotate-[90deg]'> <PiPaperPlaneRight /> </span>
                 </p>
@@ -725,11 +721,7 @@ function AllComments({
             <div className=' flex justify-center'>
                 <p
                     className='border-b border-l-2 rounded-[100%]  mt-5 ml-1 pl-5 pb-1 flex gap-1 flex-wrap items-center justify-center hover:cursor-pointer hover:scale-105 sm:hover:scale-125 transition-all '
-
-                    onClick={() => {
-                        window.scroll(0, 300)
-                    }}
-
+                    onClick={() => window.scroll(0, 500)}
                 >
                     <span className={`${themeMode ? "text-black" : "text-white"}`}>
                         All given comments for this post.
@@ -880,16 +872,19 @@ const SingleCommentUI = ({
                     <div className="w-[90%] flex flex-col gap-1 ">
 
                         <div
-                            className=" flex gap-1"
+                            className=" flex items-center gap-1"
                             onClick={() => { router.push(`/user/${comment?.userId?._id}`); }}
                         >
 
                             <ImageReact
-                                className=" border-t-2 w-6 mx-1 my-0.5 rounded-full"
+                                className=" border-inherit border-t-2 w-8 mx-1 my-0.5 rounded-full "
                                 src={comment?.userId?.profilePic}
                                 alt=""
                             />
-                            <p className=" capitalize">{comment?.userId?.username}</p>
+                            <div className=' leading-[.7rem]'>
+                                <p className=" capitalize underline font-semibold">{comment?.userId?.username}</p>
+                                <p className=" text-xs ">{comment?.userId?.email}</p>
+                            </div>
 
                         </div>
 
@@ -1528,7 +1523,6 @@ function SeeMoreOfComment(
 
                                                 <div
                                                     className='border rounded-full pr-2 flex items-center gap-1 hover:cursor-pointer'
-
                                                     onClick={() => { router.push(`/user/${ele?.userId?._id}`); }}
                                                 >
 

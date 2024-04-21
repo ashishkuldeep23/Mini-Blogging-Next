@@ -148,7 +148,7 @@ const Page = ({ params }: any) => {
 
 
     return (
-        <section className={`flex min-h-screen flex-col items-center gap-10 ${!themeMode ? " bg-black text-white " : " bg-white text-black"}`}>
+        <section className={`flex min-h-screen flex-col items-center sm:gap-5 ${!themeMode ? " bg-black text-white " : " bg-white text-black"}`}>
 
             {/* <p>{params.id}</p> */}
 
@@ -198,12 +198,13 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
         <>
 
             <div
-                className={` my-[5vh] border border-yellow-500 rounded p-2 w-[95%] sm:w-[80%] md:w-[60%]   `}
+                className={` sm:my-[5vh] sm:border rounded p-2 w-[95%] sm:w-[80%] md:w-[60%] border-yellow-500 `}
                 style={{
                     backgroundColor: singlePost?.customize?.bgColor,
                     color: singlePost?.customize?.color,
                     backgroundImage: singlePost?.customize?.bgImage,
                     fontFamily: `${singlePost?.customize?.font} , sans-serif`,
+                    borderColor: singlePost?.customize?.color || "#eab308"     // // // Now border is also following color theme.
                 }}
             >
 
