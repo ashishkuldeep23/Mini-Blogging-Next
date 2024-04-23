@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux"
 
 import { useSession, signOut } from "next-auth/react"
 import Image from "next/image"
-import { getUserData, setUserDataBySession } from "@/redux/slices/UserSlice"
+import { getUserData, setUserDataBySession, useUserState } from "@/redux/slices/UserSlice"
 import ImageReact from "./ImageReact"
 import { getCatAndHash } from "@/redux/slices/PostSlice"
 import { AppDispatch } from "@/redux/store"
@@ -28,6 +28,8 @@ const Navbar = () => {
     const dispatch = useDispatch<AppDispatch>()
 
     const { data: session } = useSession()
+
+    const { userData } = useUserState()
 
     const [isUserLogined, setIsUserLogined] = useState(true)
 
@@ -55,6 +57,7 @@ const Navbar = () => {
 
     // console.log(status)
 
+    // // // Get and set user data from server -------->
     useEffect(() => {
         setIsUserLogined(!!session)
         // console.log(session)
@@ -68,9 +71,8 @@ const Navbar = () => {
             dispatch(setUserDataBySession({ ...user }))
         }
 
-
         // // // get user data by api (All Data) ----------->
-        if (session) {
+        if (session && (!userData.friendsAllFriend || !userData.sendRequest || !userData.reciveRequest)) {
             dispatch(getUserData(session?.user._id))
         }
 

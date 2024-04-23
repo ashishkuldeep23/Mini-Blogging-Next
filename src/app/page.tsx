@@ -26,8 +26,6 @@ export default function Home() {
 
   const themeMode = useThemeData().mode
 
-  const dispatch = useDispatch<AppDispatch>()
-
   const allPostData = usePostData().allPost
 
   const router = useRouter()
@@ -383,7 +381,7 @@ function AllPostDiv() {
 
               allPostData.map((ele, i) => {
                 return (
-                  <SinglePostCard key={i} ele={ele} />
+                  <SinglePostCard key={i} ele={ele} className=" hover:z-10" />
                 )
               })
 

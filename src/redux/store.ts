@@ -4,7 +4,7 @@ import { configureStore } from "@reduxjs/toolkit"
 import themeReducer from "./slices/ThemeSlice"
 import userReducer from "./slices/UserSlice"
 import postReducer from './slices/PostSlice'
-
+import searchReducer from './slices/SearchSlice'
 
 
 
@@ -13,7 +13,8 @@ export const store = configureStore({
     reducer: {
         themeReducer,
         userReducer,
-        postReducer
+        postReducer,
+        searchReducer
         // userRedcer,
         // productReducer,
         // modalReducer,

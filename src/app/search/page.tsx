@@ -1,12 +1,24 @@
 'use client'
+import { searchUserAndPost, setKeyText, useSearchData } from '@/redux/slices/SearchSlice';
 import { useThemeData } from '@/redux/slices/ThemeSlice'
+import { AppDispatch } from '@/redux/store';
 import { useRouter } from 'next/navigation'
+import { handleClientScriptLoad } from 'next/script';
 import React, { useEffect, useRef, useState } from 'react'
 import { MdOutlineArrowBackIosNew } from "react-icons/md";
+import { useDispatch } from 'react-redux';
+import SingleUserDiv from '../components/SingleUserDiv';
+import { getUserData, setUserDataBySession, updateUserData, useUserState } from '@/redux/slices/UserSlice';
+import toast from 'react-hot-toast';
+import { useSession } from 'next-auth/react';
+import SinglePostCard from '../components/SinglePostCard';
+
 
 
 
 const SearchPage = () => {
+
+    const dispatch = useDispatch<AppDispatch>()
 
     const themeMode = useThemeData().mode
 
@@ -14,30 +26,153 @@ const SearchPage = () => {
 
     const searchInputRef = useRef<HTMLInputElement>(null)
 
+    const { data: session } = useSession()
 
-    const [searchText, setSearchText] = useState<string>("")
+    const { userData } = useUserState()
+
+    const { keyText: searchText, isLoading, userSuggetionArr, postSuggetionArr } = useSearchData()
+
+    const setSearchText = (text: string) => dispatch(setKeyText(text))
+
+    const [isUserStopTyping, setIsUserStopTyping] = useState<boolean>(false)
+
+    const [seeAllResult, setseeAllResult] = useState<boolean>(false)
+
+    const [allPostOrUser, setAllPostOrUser] = useState<boolean>(false)
+
+    const [searchHistory, setsearchHistory] = useState<string[]>([])
 
 
+    // // // This type we can use in set timeout -->
+    type Timer = ReturnType<typeof setTimeout>
+
+    let timeOutValue: Timer;
 
     function onChangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
-        setSearchText(e.target.value)
 
+        setseeAllResult(false)
+
+        setSearchText(e.target.value);
+
+        clearTimeout(timeOutValue)
+
+        timeOutValue = setTimeout(() => {
+            setIsUserStopTyping(true)
+            // console.log("osk")
+        }, 700)
     }
 
 
     function hardSearchHandler(e: React.KeyboardEvent<HTMLInputElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>) {
 
+        // // // See all result ----->
+        setseeAllResult(true)
+
+        setsearchHistoryFunc(searchText)
+
+        e.stopPropagation();
+
+        if (isUserStopTyping) {
+            if (!isLoading && searchText) {
+                dispatch(searchUserAndPost({ type: 'hard', key: searchText }))
+                setIsUserStopTyping(false)
+            }
+        }
     }
 
 
 
+    function setsearchHistoryFunc(text: string) {
+        // // // setsearchHistory set history ----->
+
+        let setDataForHistory = new Set([text, ...searchHistory])
+        setsearchHistory([...setDataForHistory])
+
+        setIsUserStopTyping(true)
+    }
+
+
     useEffect(() => {
 
+        // // // Input focus --------->
         if (searchInputRef) {
             searchInputRef.current?.focus()
         }
 
+        // // // Load history ---------->
+
+
     }, [])
+
+
+    // // // Bwlow is user to search posts and users in OnChange Handler ------------>
+    useEffect(() => {
+        // // // This is used to call DB for suggestions ------->
+        if (isUserStopTyping) {
+
+            // // // Here checking two thing 
+            // // 1s is) is loading is false (means not getting data)
+            // // // 2nd is) text having someting 
+            if (!isLoading && searchText) {
+                // alert("Calling Dispatch here --->")
+                // console.log("calling db")
+
+
+                dispatch(searchUserAndPost({ type: "soft", key: searchText }))
+
+
+                setIsUserStopTyping(false)
+            }
+        }
+
+
+        // // // This is used to set false right side ----->
+        if (searchText === "") {
+            setseeAllResult(false)
+        }
+
+    }, [searchText, isUserStopTyping])
+
+
+    // // // Get and set user data from server -------->
+    useEffect(() => {
+
+        if (session) {
+            let user = session.user
+            dispatch(setUserDataBySession({ ...user }))
+        }
+
+        // // // get user data by api (All Data) ----------->
+        if (session && (!userData.friendsAllFriend || !userData.sendRequest || !userData.reciveRequest)) {
+            dispatch(getUserData(session?.user._id))
+        }
+
+    }, [session])
+
+
+    useEffect(() => {
+
+        if (searchText) {
+            localStorage.setItem("searchHistory", JSON.stringify(searchHistory))
+        }
+
+        if (searchHistory.length === 0) {
+
+            let getHistory = localStorage.getItem("searchHistory")
+
+            if (getHistory) {
+
+                getHistory = JSON.parse(getHistory)
+
+                getHistory && setsearchHistory([...getHistory])
+
+            }
+
+        }
+
+
+    }, [searchHistory])
+
 
 
     return (
@@ -57,8 +192,8 @@ const SearchPage = () => {
 
                         <button
                             className={`border rounded-full  py-1 p-0.5 font-bold shadow-lg capitalize
-                            ${!themeMode ? "text-white/50 bg-black shadow-slate-700 border-slate-700 " : "text-black/50 bg-white shadow-slate-300 border-slate-300 "}
-                        `}
+                                         ${!themeMode ? "text-white/50 bg-black shadow-slate-700 border-slate-700 " : "text-black/50 bg-white shadow-slate-300 border-slate-300 "}
+                                         `}
                             onClick={() => router.back()}
                         >
                             <MdOutlineArrowBackIosNew />
@@ -69,8 +204,8 @@ const SearchPage = () => {
                             name="Search Input"
                             type="text"
                             className={`p-0.5 px-2 font-bold w-11/12 sm:w-4/6 rounded-full shadow-lg  border 
-                                  ${!themeMode ? "text-white bg-black shadow-slate-700 border-slate-700 " : "text-black bg-white shadow-slate-300 border-slate-300 "}
-                            `}
+                                          ${!themeMode ? "text-white bg-black shadow-slate-700 border-slate-700 " : "text-black bg-white shadow-slate-300 border-slate-300 "}
+                                        `}
                             placeholder="Search here."
                             ref={searchInputRef}
                             value={searchText}
@@ -87,8 +222,8 @@ const SearchPage = () => {
                     <div className=' w-11/12 sm:w-4/6 mt-1'>
                         <p
                             className={`text-xs text-opacity-50 text-start ml-5
-                            ${!themeMode ? "text-white/50 " : "text-black/50 "}
-                        `}
+                                         ${!themeMode ? "text-white/50 " : "text-black/50 "}
+                                         `}
                         >
                             <span>Search for </span>
                             <span className={`font-semibold ${!themeMode ? "text-white/70 " : "text-black/70 "}`}>Accounts</span>
@@ -99,39 +234,172 @@ const SearchPage = () => {
                     </div>
 
 
+                    {/* Sugetion div started here ------> */}
 
-                    <div
-                        className={`
-                            min-h-[40vh] px-2 py-1 rounded w-[99.8%] sm:w-[70%] absolute top-[9vh] 
-                            ${!themeMode ? "bg-black text-white" : "text-black bg-white"}   
-                        `}
+                    {
 
-                    >
-                        <p className=' border-b my-0.5 '>Seggetion Div</p>
-                        <p>Seggetion Div</p>
-                        <p>Seggetion Div</p>
-                        <p>Seggetion Div</p>
-                        <p>Seggetion Div</p>
-                        <p>Seggetion Div</p>
-                        <p>Seggetion Div</p>
-                        <p>Seggetion Div</p>
+                        // !seeAllResult
+
+                        //     ?
+
+                        <div
+                            className=' relative w-[99.8%] sm:w-[68.5%] bg-red-600'
+
+                        >
+                            {/* Both handled by css depends upon value ------> */}
 
 
+                            {/* Suggetion left ------------> */}
+                            <div
+                                className={`
+                                         px-2 py-1 rounded w-full h-full absolute transition-all duration-200
+                                        ${!themeMode ? "bg-black text-white" : "text-black bg-white"}   
+                                        ${!seeAllResult ? " scale-100 visible right-0" : " scale-0 invisible right-[100%}"}
+                                    `}
+                            >
 
-                        <button
-                            className='w-full mt-5 text-sm text-blue-500 text-center sm:text-start ml-0 sm:ml-40'
-                        >See all results</button>
+                                {
+                                    !searchText
+                                        ?
+                                        <>
 
-                    </div>
+                                            {
+                                                searchHistory.map((ele, i) => {
+                                                    return <p
+                                                        key={i}
+                                                        className={` relative border-b my-1 pl-1 hover:cursor-pointer  ${i == 0 && "border-t"}`}
+                                                        onClick={() => {
+                                                            setSearchText(`${ele}`)
+                                                            setsearchHistoryFunc(ele)
+                                                        }}
+                                                    >
+                                                        {ele}
 
+                                                        <span
+                                                            className=' border px-1  border-red-500 rounded absolute right-3 text-xs my-0.5 text-red-500'
+
+                                                            onClick={(e) => {
+                                                                e.stopPropagation()
+
+
+                                                                // // 1st way ----->
+                                                                // let newHistoryArr = searchHistory.filter((item, index) => i != index)
+                                                                // // console.log(newHistoryArr)
+                                                                // setsearchHistory([...newHistoryArr])
+
+
+                                                                // // 2nd way ------>
+                                                                searchHistory.splice(i, 1)
+                                                                setsearchHistory([...searchHistory])
+
+                                                                // // Update now
+                                                                localStorage.setItem("searchHistory", JSON.stringify(searchHistory))
+
+                                                            }}
+
+                                                        >X</span>
+                                                    </p>
+                                                })
+                                            }
+
+                                        </>
+
+                                        :
+                                        <SuggetionForUsers />
+                                }
+
+
+                                {
+                                    userSuggetionArr.length !== 0 && postSuggetionArr.length !== 0
+                                    &&
+                                    <button
+                                        className='w-full mt-5 text-sm text-blue-500 text-center sm:text-start ml-0 sm:ml-40'
+                                        onClick={(e) => { hardSearchHandler(e) }}
+                                    >See all results</button>
+                                }
+
+
+
+                            </div>
+
+
+                            {/* Suggetion right ------------> */}
+                            <div
+                                className={` h-[85vh] w-full overflow-x-auto overflow-y-visible  px-2 py-1 rounded  absolute transition-all duration-200 
+                                    ${!themeMode ? "bg-black text-white" : "text-black bg-white"} 
+                                    ${!seeAllResult ? " scale-0 invisible right-[100%]" : " scale-100 visible right-0 "}
+                                `}
+                            >
+
+
+                                {
+
+                                    userSuggetionArr.length === 0 && postSuggetionArr.length === 0
+
+                                        ?
+                                        <div>
+                                            <p className=' my-1 text-sm ml-5 text-red-500'>
+                                                No <span className=' font-semibold'>user and post</span> found with <span className=' font-semibold'>{searchText}</span> : 404
+                                            </p>
+                                        </div>
+
+                                        :
+                                        <div className=' flex gap-1 items-center my-2'>
+                                            <div
+                                                className={`w-1/2  border-blue-600 hover:cursor-pointer ${!allPostOrUser && "border-b-2"}`}
+                                                onClick={() => setAllPostOrUser(false)}
+                                            >
+                                                All Users
+                                            </div>
+                                            <div
+                                                className={`w-1/2  border-red-600 hover:cursor-pointer ${allPostOrUser && "border-b-2"}`}
+                                                onClick={() => setAllPostOrUser(true)}
+                                            >
+                                                All Posts
+                                            </div>
+                                        </div>
+
+
+
+                                }
+
+
+
+
+                                {
+
+                                    userSuggetionArr.length !== 0 && postSuggetionArr.length !== 0
+
+                                    &&
+                                    <>
+
+                                        {
+
+                                            !allPostOrUser
+                                                ?
+                                                <div>
+                                                    <SuggetionForUsers />
+                                                </div>
+                                                :
+                                                <div>
+                                                    <SuggetionForPost />
+                                                </div>
+                                        }
+
+                                    </>
+
+                                }
+
+
+                            </div>
+
+                        </div>
+
+
+                    }
 
 
                 </div>
-
-
-
-
-
 
             </div>
 
@@ -140,4 +408,109 @@ const SearchPage = () => {
 }
 
 export default SearchPage
+
+
+
+function SuggetionForUsers() {
+
+
+    const { userSuggetionArr: users } = useSearchData()
+
+    const { keyText, isLoading } = useSearchData()
+
+    const { userData } = useUserState()
+
+    const { data: session } = useSession()
+
+    const dispatch = useDispatch<AppDispatch>()
+
+
+
+    function addFriend(id: string) {
+
+        if (!session?.user._id) return toast.error("You are looking logged out, please login.")
+
+        // if (!searchedUser?._id) return toast.error("Refresh the page again please.")
+
+        dispatch(updateUserData(
+            {
+                whatUpdate: 'sendFriendRequest',
+                sender: session.user._id,
+                reciver: id
+            }
+        ))
+
+    }
+
+
+
+    return (
+        <div
+            className=' relative'
+        >
+
+            {
+
+                users.length === 0 && !isLoading
+                    ?
+                    <p className=' my-1 text-sm ml-5 text-red-500'>
+                        No user found with <span className=' font-semibold'>{keyText}</span> : 404
+                    </p>
+                    :
+
+                    users.map((user, i) => <SingleUserDiv
+                        i={i}
+                        key={user._id}
+                        friend={user}
+                        userData={userData}
+                        addFriend={addFriend}
+                    />)
+
+
+            }
+
+
+        </div>
+    )
+
+}
+
+
+
+function SuggetionForPost() {
+
+
+    const { postSuggetionArr: posts, keyText, isLoading } = useSearchData()
+
+
+    return (
+        <>
+
+            {
+                posts.length === 0 && !isLoading
+                    ?
+                    <p className=' my-1 text-sm ml-5 text-red-500'>
+                        No user found with <span className=' font-semibold'>{keyText}</span> : 404
+                    </p>
+                    :
+
+                    <div className="card_container mt-10 relative sm:px-[8vh] flex gap-10 gap-x-20 p-0.5 flex-wrap justify-center items-start ">
+                        {
+                            posts.map((ele, i) => {
+                                return (
+                                    <SinglePostCard key={i} ele={ele} className=' scale-[0.85] sm:scale-[0.7] hover:z-10' />
+                                )
+                            })
+                        }
+                    </div>
+
+
+
+            }
+
+        </>
+    )
+
+}
+
 

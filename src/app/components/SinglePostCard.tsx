@@ -9,7 +9,7 @@ import LikeCommentDiv from "./LikeCommentDiv"
 import { CardBody, CardContainer, CardItem } from "@/app/components/ui/3d_card";
 import { PiSealCheckDuotone } from "react-icons/pi";
 
-export default function SinglePostCard({ ele }: { ele: PostInterFace }) {
+export default function SinglePostCard({ ele, className }: { ele: PostInterFace, className?: string }) {
 
 
   const themeMode = useThemeData().mode
@@ -34,7 +34,7 @@ export default function SinglePostCard({ ele }: { ele: PostInterFace }) {
   return (
     <div
       onClick={(e) => { e.stopPropagation(); cardClickHadler(ele._id) }}
-      className=" p-[2px] bg-gradient-to-tr from-cyan-400  sm:w-80  sm:p-2 rounded-xl hover:cursor-pointer hover:scale-105 sm:hover:scale-110 active:scale-75 focus:scale-75 transition-all"
+      className={` p-[2px] bg-gradient-to-tr from-cyan-400  sm:w-80  sm:p-2 rounded-xl hover:cursor-pointer hover:scale-105 sm:hover:scale-110 active:scale-75 focus:scale-75 transition-all ${className}`}
     >
 
       <CardContainer className="inter-var">
@@ -59,7 +59,7 @@ export default function SinglePostCard({ ele }: { ele: PostInterFace }) {
               <div
                 className="rounded-t flex items-start p-0.5 gap-1.5  border-cyan-400"
                 onClick={(e) => { e.stopPropagation(); router.push(`/user/${ele.author._id}`) }}
-               
+
               >
 
                 <ImageReact
