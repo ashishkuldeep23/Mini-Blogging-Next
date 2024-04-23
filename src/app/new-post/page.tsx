@@ -14,7 +14,6 @@ import ImageReact from '../components/ImageReact';
 
 
 
-
 export interface NewPostType {
     title: string,
     category: string,
@@ -150,14 +149,10 @@ const NewPostPage = () => {
             text = text.slice(1)
         }
 
-
-
-
         let newArr = [...newPostData?.hashs, `#${text.toLowerCase()}`]
         let uniqueArr = new Set(newArr)
 
         // console.log([...uniqueArr])
-
 
         setNewPostData({
             ...newPostData,
@@ -420,30 +415,6 @@ const NewPostPage = () => {
                                     </div>
 
 
-                                    {/* <div>
-                                        <input
-                                            className={`${classNamesForInputs}`}
-                                            placeholder="Give category of post"
-                                            type={"text"}
-                                            id="category"
-                                            value={newPostData?.category}
-                                            name='category'
-                                            onChange={(e) => {
-                                                e.preventDefault();
-                                                e.stopPropagation();
-                                                setNewPostData((pre) => ({ ...pre, [e.target.name]: e.target.value }))
-                                            }}
-                                        />
-
-                                        <label
-                                            className='pl-2 pr-1 border-b font-semibold'
-                                            htmlFor="category"
-                                        >Category</label>
-
-                                    </div> */}
-
-
-
                                     {/* // // // // New category look like -------> */}
                                     <div className=" w-full px-0.5 flex flex-col ">
 
@@ -670,7 +641,7 @@ const NewPostPage = () => {
                                                     placeholder="Give HasThats of post"
                                                     type={"text"}
                                                     id="HasThats"
-
+                                                    name="HasThats"
                                                     value={newHash}
                                                     onChange={(e) => {
                                                         e.preventDefault();
@@ -806,12 +777,9 @@ const NewPostPage = () => {
 
                                 <div className=" text-sm  max-h-40 overflow-y-scroll"
                                 >
-
                                     {
                                         newPostData.content
                                     }
-
-
                                 </div>
 
 
@@ -827,15 +795,11 @@ const NewPostPage = () => {
                                     }
 
 
-
                                     {
                                         newPostData.origin
                                         &&
                                         <p className=' text-sm text-end'>By : {newPostData.origin}</p>
                                     }
-
-
-
 
                                 </div>
 
@@ -844,13 +808,10 @@ const NewPostPage = () => {
                                     {
 
                                         newPostData.hashs.length > 0
-
                                         &&
-
                                         newPostData.hashs.map((hash, i) => {
                                             return <p key={i}>{hash}</p>
                                         })
-
 
                                     }
                                 </div>
@@ -914,7 +875,7 @@ const NewPostPage = () => {
                                         <input
                                             type="color"
                                             className={`${!themeMode ? "bg-black" : "bg-white"}`}
-                                            name=""
+                                            name="color"
                                             id="color"
                                             onChange={(e) => setCutomize({ ...customize, color: e.target.value })}
                                             value={customize.color}
@@ -931,7 +892,7 @@ const NewPostPage = () => {
 
                                         <select
                                             className={`${!themeMode ? "bg-black" : "bg-white"}`}
-                                            name=""
+                                            name="font"
                                             id="font"
                                             onChange={(e) => { setCutomize({ ...customize, font: e.target.value }) }}
                                         >
@@ -942,7 +903,6 @@ const NewPostPage = () => {
                                             }
 
                                             <option value="none" >None</option>
-
                                         </select>
                                     </div>
 
@@ -956,7 +916,7 @@ const NewPostPage = () => {
 
                                         <input
                                             type="color"
-                                            name=""
+                                            name="bgColor"
                                             id="bgColor"
                                             className={`${!themeMode ? "bg-black" : "bg-white"}`}
                                             onChange={(e) => setCutomize({ ...customize, bgColor: e.target.value })
@@ -976,7 +936,7 @@ const NewPostPage = () => {
 
                                         <select
                                             className={`${!themeMode ? "bg-black" : "bg-white"}`}
-                                            name=""
+                                            name="bgImage"
                                             id="bgImage"
                                             onChange={(e) => { setCutomize({ ...customize, bgImage: e.target.value }) }}
                                         >

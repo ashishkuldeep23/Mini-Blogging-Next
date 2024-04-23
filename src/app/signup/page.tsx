@@ -75,13 +75,9 @@ const SignUpPage = () => {
             setErrMsg("Maindatory field is not given.")
             return
         }
-
-
-
         dispatch(createNewUser(data))
 
         // console.log(userData)
-
     }
 
 

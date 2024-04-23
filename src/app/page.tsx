@@ -94,14 +94,16 @@ export default function Home() {
                   ${!themeMode ? "text-white bg-black shadow-slate-700 border-slate-700 " : "text-black bg-white shadow-slate-300 border-slate-300 "}
                `}
               placeholder="Search for prompt here."
+              name="Search Input"
               onFocus={() => {
-
                 if (!onFocusFlagForRedirectUser) {
-
-                  alert("Now i can redirect user to search page.")
                   onFocusFlagForRedirectUser = true
+                  router.push('/search')
                 }
               }}
+
+              onClick={() => router.push('/search')}
+
             />
 
           </div>

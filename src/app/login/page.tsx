@@ -117,14 +117,11 @@ const LoginPage = () => {
                 <div className=' border px-4 py-4 rounded-md md:w-1/4'>
 
                     <p className=' text-4xl font-bold border-b text-center px-5 py-1 '>LogIn</p>
-
-
                     {
                         errMsg
                         &&
                         <p className=' text-red-500 font-semibold text-sm text-center'>Error:{errMsg}</p>
                     }
-
 
                     <form onSubmit={(e) => onSubmiHander(e)}>
 
@@ -168,7 +165,6 @@ const LoginPage = () => {
                                 >👁️‍🗨️</span>
                             </div>
                         </div>
-
 
                         <div className=' flex'>
 
