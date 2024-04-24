@@ -152,7 +152,7 @@ const SearchPage = () => {
 
     useEffect(() => {
 
-        if (searchText) {
+        if (searchText && searchHistory.length > 0) {
             localStorage.setItem("searchHistory", JSON.stringify(searchHistory))
         }
 
@@ -164,7 +164,11 @@ const SearchPage = () => {
 
                 getHistory = JSON.parse(getHistory)
 
-                getHistory && setsearchHistory([...getHistory])
+                if (getHistory && getHistory?.length > 0) {
+                    setsearchHistory([...getHistory])
+                }
+
+                // getHistory && setsearchHistory([...getHistory])
 
             }
 
@@ -172,6 +176,24 @@ const SearchPage = () => {
 
 
     }, [searchHistory])
+
+
+
+    // Just set true false according to value got in search result ---------->
+
+    useEffect(() => {
+
+        if (userSuggetionArr.length > postSuggetionArr.length) {
+            setAllPostOrUser(false)
+        }
+        else if (postSuggetionArr.length > userSuggetionArr.length) {
+            setAllPostOrUser(true)
+        }
+        else {
+            setAllPostOrUser(false)
+        }
+
+    }, [userSuggetionArr, postSuggetionArr])
 
 
 
@@ -184,7 +206,6 @@ const SearchPage = () => {
                     ${!themeMode ? "bg-black text-white" : "text-black bg-white"}    
                 `}
             >
-
 
                 <div className=' flex flex-col justify-center items-center gap-1  mt-2 relative'>
 
@@ -346,13 +367,13 @@ const SearchPage = () => {
                                         :
                                         <div className=' flex gap-1 items-center my-2'>
                                             <div
-                                                className={`w-1/2  border-blue-600 hover:cursor-pointer ${!allPostOrUser && "border-b-2"}`}
+                                                className={`w-1/2 text-center border-blue-600 hover:cursor-pointer ${!allPostOrUser && " text-blue-600 font-semibold border-b-2"}`}
                                                 onClick={() => setAllPostOrUser(false)}
                                             >
                                                 All Users
                                             </div>
                                             <div
-                                                className={`w-1/2  border-red-600 hover:cursor-pointer ${allPostOrUser && "border-b-2"}`}
+                                                className={`w-1/2 text-center  border-red-600 hover:cursor-pointer ${allPostOrUser && " text-red-600 font-semibold border-b-2"}`}
                                                 onClick={() => setAllPostOrUser(true)}
                                             >
                                                 All Posts
@@ -368,7 +389,7 @@ const SearchPage = () => {
 
                                 {
 
-                                    userSuggetionArr.length !== 0 && postSuggetionArr.length !== 0
+                                    (userSuggetionArr.length !== 0 || postSuggetionArr.length !== 0)
 
                                     &&
                                     <>
@@ -408,7 +429,6 @@ const SearchPage = () => {
 }
 
 export default SearchPage
-
 
 
 function SuggetionForUsers() {
@@ -474,7 +494,6 @@ function SuggetionForUsers() {
     )
 
 }
-
 
 
 function SuggetionForPost() {

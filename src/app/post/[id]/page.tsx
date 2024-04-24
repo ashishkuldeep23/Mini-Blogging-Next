@@ -8,6 +8,7 @@ import { PostInterFace, setSinglePostdata, usePostData } from '@/redux/slices/Po
 import { useThemeData } from '@/redux/slices/ThemeSlice'
 import { UserDataInterface } from '@/redux/slices/UserSlice'
 import { AppDispatch } from '@/redux/store'
+import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
@@ -194,6 +195,8 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
 
     const router = useRouter()
 
+    const { data: session } = useSession()
+
     return (
         <>
 
@@ -204,7 +207,13 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
                     color: singlePost?.customize?.color,
                     backgroundImage: singlePost?.customize?.bgImage,
                     fontFamily: `${singlePost?.customize?.font} , sans-serif`,
-                    borderColor: singlePost?.customize?.color || "#eab308"     // // // Now border is also following color theme.
+                    borderColor: singlePost?.customize?.color || "#eab308",    // // // Now border is also following color theme.
+
+
+                    // // // added more style if user choosed profile pic as bg of post ------>
+                    backgroundRepeat: `url('${session?.user?.image}')` === `${singlePost?.customize?.bgImage}` ? "no-repeat" : "",
+                    backgroundPosition: `url('${session?.user?.image}')` === `${singlePost?.customize?.bgImage}` ? 'center' : "",
+                    backgroundSize: `url('${session?.user?.image}')` === `${singlePost?.customize?.bgImage}` ? "contain" : "",
                 }}
             >
 

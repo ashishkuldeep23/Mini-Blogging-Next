@@ -8,6 +8,7 @@ import ImageReact from "./ImageReact"
 import LikeCommentDiv from "./LikeCommentDiv"
 import { CardBody, CardContainer, CardItem } from "@/app/components/ui/3d_card";
 import { PiSealCheckDuotone } from "react-icons/pi";
+import { useSession } from "next-auth/react"
 
 export default function SinglePostCard({ ele, className }: { ele: PostInterFace, className?: string }) {
 
@@ -17,6 +18,8 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
   const dispatch = useDispatch()
 
   const router = useRouter()
+
+  const { data: session } = useSession()
 
   const promptText = ele.promptReturn
 
@@ -47,6 +50,12 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
               color: ele?.customize?.color || '',
               backgroundImage: ele?.customize?.bgImage,
               fontFamily: `${ele?.customize?.font} , sans-serif`,
+
+
+              // // // added more style if user choosed profile pic as bg of post ------>
+              backgroundRepeat: `url('${session?.user?.image}')` === `${ele?.customize?.bgImage}` ? "no-repeat" : "",
+              backgroundPosition: `url('${session?.user?.image}')` === `${ele?.customize?.bgImage}` ? 'center' : "",
+              backgroundSize: `url('${session?.user?.image}')` === `${ele?.customize?.bgImage}` ? "contain" : "",
             }}
           >
 

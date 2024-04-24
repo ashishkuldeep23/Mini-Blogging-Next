@@ -36,10 +36,16 @@ export async function POST(req: NextRequest) {
         let getPostsFromDB = await Post.find({
             $or: [
                 { title: { $regex: key, $options: option } }, // case-insensitive
-                { category: { $regex: key, $options: option } }
+                { category: { $regex: key, $options: option } },
+                { hashthats: { $regex: `#${key}`, $options: option } }
             ],
             isDeleted: false     // // // Give not deleted products only 
         })
+            .populate({
+                path: "author",
+                // match: { isDeleted: false },
+                select: "-updatedAt -createdAt -__v -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password",
+            })
             .sort({ "updatedAt": "desc" })
             .limit(type === "soft" ? 0 : 100000)
 
@@ -54,7 +60,7 @@ export async function POST(req: NextRequest) {
         })
             .sort({ "updatedAt": "desc" })
             .limit(type === "soft" ? 4 : 100000)
-
+            .select("-updatedAt -createdAt -__v -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password -whoSeenProfile -reciveRequest -sendRequest")
 
 
 

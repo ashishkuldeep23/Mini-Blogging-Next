@@ -89,7 +89,7 @@ const NewPostPage = () => {
     const [customize, setCutomize] = useState<PostCustomization>(initailCustomize)
 
 
-    const [bgImage] = useState<Array<string>>([
+    const [bgImage, setBgImages] = useState<Array<string>>([
         'url("https://www.transparenttextures.com/patterns/argyle.png")',
         'url("https://www.transparenttextures.com/patterns/arabesque.png")',
         'url("https://www.transparenttextures.com/patterns/batthern.png")',
@@ -251,8 +251,7 @@ const NewPostPage = () => {
     }, [customize])
 
 
-
-
+    // // // Check user is loged in or not and also set 
     useEffect(() => {
         // console.log(session?.user?.id)
 
@@ -260,6 +259,11 @@ const NewPostPage = () => {
             toast.error("Plese Login again.")
             router.push("/")
         }
+
+        if (session) {
+            setBgImages([...bgImage, `url('${session?.user?.image}')`])
+        }
+
     }, [session, status])
 
 
@@ -327,7 +331,6 @@ const NewPostPage = () => {
 
 
     }, [singlePostdata])
-
 
 
     const classNamesForInputs = ` w-[68%] border rounded-sm px-1 ${!themeMode ? " bg-slate-900 text-white" : " bg-slate-100 text-black"}`
@@ -743,13 +746,18 @@ const NewPostPage = () => {
                             {/* UI of given data shown here -------> */}
 
                             <div
-                                className={`rounded p-1 border w-full sm:w-2/5 ${!themeMode ? " bg-black" : " bg-white"}`}
+                                className={` relative overflow-hidden rounded p-1 border w-full sm:w-2/5 ${!themeMode ? " bg-black" : " bg-white"}`}
 
                                 style={{
                                     backgroundColor: customize.bgColor,
                                     color: customize.color,
                                     backgroundImage: customize.bgImage,
                                     fontFamily: `${customize.font} , sans-serif`,
+
+                                    // // // added more style if user choosed profile pic as bg of post ------>
+                                    backgroundRepeat: `url('${session?.user?.image}')` === `${customize.bgImage}` ? "no-repeat" : "",
+                                    backgroundPosition: `url('${session?.user?.image}')` === `${customize.bgImage}` ? 'center' : "",
+                                    backgroundSize: `url('${session?.user?.image}')` === `${customize.bgImage}` ? "contain" : "",
                                 }}
                             >
 

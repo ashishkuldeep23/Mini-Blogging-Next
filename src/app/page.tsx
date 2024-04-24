@@ -92,7 +92,7 @@ export default function Home() {
                   ${!themeMode ? "text-white bg-black shadow-slate-700 border-slate-700 " : "text-black bg-white shadow-slate-300 border-slate-300 "}
                `}
               placeholder="Search for prompt here."
-              name="Search Input"
+              name="Search_Input"
               onFocus={() => {
                 if (!onFocusFlagForRedirectUser) {
                   onFocusFlagForRedirectUser = true

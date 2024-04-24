@@ -4,7 +4,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { useSelector } from "react-redux"
 import { RootState } from "../store"
 import { PostInterFace } from "./PostSlice"
-import { AddMoreFeilsUserData, FriendsAllFriendData, UserDataInterface } from "./UserSlice"
+import { FriendsAllFriendData } from "./UserSlice"
 
 
 
@@ -49,10 +49,7 @@ interface SearchInter {
     userSuggetionArr: FriendsAllFriendData[],
 }
 
-
 const initialState: SearchInter = {
-
-
     isLoading: false,
     isFullFilled: false,
     isError: false,
@@ -60,7 +57,6 @@ const initialState: SearchInter = {
     keyText: "",
     postSuggetionArr: [],
     userSuggetionArr: [],
-
 }
 
 const searchSlice = createSlice({
@@ -85,7 +81,7 @@ const searchSlice = createSlice({
             .addCase(searchUserAndPost.fulfilled, (state, action) => {
                 state.isLoading = false
 
-                console.log(action.payload.data)
+                // console.log(action.payload.data)
 
                 if (action.payload.success) {
                     state.isFullFilled = true
@@ -108,7 +104,6 @@ const searchSlice = createSlice({
     }
 
 })
-
 
 export const { setKeyText } = searchSlice.actions
 
