@@ -53,9 +53,9 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
 
 
               // // // added more style if user choosed profile pic as bg of post ------>
-              backgroundRepeat: `url('${session?.user?.image}')` === `${ele?.customize?.bgImage}` ? "no-repeat" : "",
-              backgroundPosition: `url('${session?.user?.image}')` === `${ele?.customize?.bgImage}` ? 'center' : "",
-              backgroundSize: `url('${session?.user?.image}')` === `${ele?.customize?.bgImage}` ? "contain" : "",
+              backgroundRepeat: `url('${ele.author?.profilePic}')` === `${ele?.customize?.bgImage}` ? "no-repeat" : "",
+              backgroundPosition: `url('${ele.author?.profilePic}')` === `${ele?.customize?.bgImage}` ? 'center' : "",
+              backgroundSize: `url('${ele.author?.profilePic}')` === `${ele?.customize?.bgImage}` ? "cover" : "",
             }}
           >
 

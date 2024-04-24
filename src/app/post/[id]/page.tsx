@@ -195,8 +195,6 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
 
     const router = useRouter()
 
-    const { data: session } = useSession()
-
     return (
         <>
 
@@ -211,9 +209,9 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
 
 
                     // // // added more style if user choosed profile pic as bg of post ------>
-                    backgroundRepeat: `url('${session?.user?.image}')` === `${singlePost?.customize?.bgImage}` ? "no-repeat" : "",
-                    backgroundPosition: `url('${session?.user?.image}')` === `${singlePost?.customize?.bgImage}` ? 'center' : "",
-                    backgroundSize: `url('${session?.user?.image}')` === `${singlePost?.customize?.bgImage}` ? "contain" : "",
+                    backgroundRepeat: `url('${singlePost.author?.profilePic}')` === `${singlePost?.customize?.bgImage}` ? "no-repeat" : "",
+                    backgroundPosition: `url('${singlePost.author?.profilePic}')` === `${singlePost?.customize?.bgImage}` ? 'center' : "",
+                    backgroundSize: `url('${singlePost.author?.profilePic}')` === `${singlePost?.customize?.bgImage}` ? "cover" : "",
                 }}
             >
 

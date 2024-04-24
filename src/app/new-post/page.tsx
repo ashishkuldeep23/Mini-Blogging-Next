@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import MainLoader from '../components/MainLoader';
 import ImageReact from '../components/ImageReact';
+import { useUserState } from '@/redux/slices/UserSlice';
 
 
 
@@ -38,6 +39,7 @@ const NewPostPage = () => {
 
     const { data: session, status } = useSession()
 
+    const { userData } = useUserState()
 
     const initialNewPostData: NewPostType = {
         title: "",
@@ -260,11 +262,15 @@ const NewPostPage = () => {
             router.push("/")
         }
 
-        if (session) {
-            setBgImages([...bgImage, `url('${session?.user?.image}')`])
-        }
-
     }, [session, status])
+
+
+    useEffect(() => {
+
+        if (userData._id && userData.profilePic) {
+            setBgImages([...bgImage, `url('${userData?.profilePic.toString()}')`])
+        }
+    }, [userData])
 
 
     useEffect(() => {
@@ -747,7 +753,6 @@ const NewPostPage = () => {
 
                             <div
                                 className={` relative overflow-hidden rounded p-1 border w-full sm:w-2/5 ${!themeMode ? " bg-black" : " bg-white"}`}
-
                                 style={{
                                     backgroundColor: customize.bgColor,
                                     color: customize.color,
@@ -755,9 +760,9 @@ const NewPostPage = () => {
                                     fontFamily: `${customize.font} , sans-serif`,
 
                                     // // // added more style if user choosed profile pic as bg of post ------>
-                                    backgroundRepeat: `url('${session?.user?.image}')` === `${customize.bgImage}` ? "no-repeat" : "",
-                                    backgroundPosition: `url('${session?.user?.image}')` === `${customize.bgImage}` ? 'center' : "",
-                                    backgroundSize: `url('${session?.user?.image}')` === `${customize.bgImage}` ? "contain" : "",
+                                    backgroundRepeat: `url('${userData.profilePic}')` === `${customize.bgImage}` ? "no-repeat" : "",
+                                    backgroundPosition: `url('${userData.profilePic}')` === `${customize.bgImage}` ? 'center' : "",
+                                    backgroundSize: `url('${userData.profilePic}')` === `${customize.bgImage}` ? "cover" : "",
                                 }}
                             >
 
@@ -766,10 +771,10 @@ const NewPostPage = () => {
 
                                     <ImageReact
                                         className=" rounded-full w-8"
-                                        src={`${session?.user?.image || "https://res.cloudinary.com/dlvq8n2ca/image/upload/v1701708322/jual47jntd2lpkgx8mfx.png"}`}
+                                        src={`${userData.profilePic || "https://res.cloudinary.com/dlvq8n2ca/image/upload/v1701708322/jual47jntd2lpkgx8mfx.png"}`}
                                         alt=""
                                     />
-                                    <p className=' font-semibold capitalize'>{session?.user?.name || "Name Kumar"}</p>
+                                    <p className=' font-semibold capitalize'>{userData.username || "Name Kumar"}</p>
                                 </div>
 
                                 <div className=" flex justify-between flex-wrap gap-1">
