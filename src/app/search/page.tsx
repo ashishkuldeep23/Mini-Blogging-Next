@@ -74,7 +74,7 @@ const SearchPage = () => {
 
         if (isUserStopTyping) {
             if (!isLoading && searchText) {
-                dispatch(searchUserAndPost({ type: 'hard', key: searchText }))
+                dispatch(searchUserAndPost({ type: 'hard', key: searchText.trim() }))
                 setIsUserStopTyping(false)
             }
         }
@@ -118,7 +118,7 @@ const SearchPage = () => {
                 // console.log("calling db")
 
 
-                dispatch(searchUserAndPost({ type: "soft", key: searchText }))
+                dispatch(searchUserAndPost({ type: "soft", key: searchText.trim() }))
 
 
                 setIsUserStopTyping(false)
