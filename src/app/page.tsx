@@ -14,7 +14,7 @@ import { useSession } from "next-auth/react";
 // import ThreeDCardDemo from "./components/ui/card";
 
 import { BsFillPatchPlusFill } from "react-icons/bs";
-import { debounce } from "@/utils/debounce";
+// import { debounce } from "@/utils/debounce";
 import InfiniteScroll from "react-infinite-scroll-component";
 {/* <BsFillPatchPlusFill /> */ }
 
@@ -347,14 +347,14 @@ function AllPostDiv() {
         dataLength={allPostData.length} //This is important field to render the next data
         next={() => {
 
-          if (allPostData.length < allPostsLength) {
+          if (allPostData.length < allPostsLength && !searchHashAndCate.category && !searchHashAndCate.hash) {
             fetchMorePostData()
           }
         }}
 
         hasMore={true}
         loader={
-          (allPostData.length < allPostsLength)
+          (allPostData.length < allPostsLength && !searchHashAndCate.category && !searchHashAndCate.hash)
           &&
 
           <div className=" mt-10 flex gap-2 items-center">

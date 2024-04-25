@@ -302,6 +302,8 @@ const NewPostPage = () => {
 
         if (postCategories.length > 0) {
             setCatAndHash({ hashthasts: posthashtags, categories: postCategories })
+
+            setNewPostData({ ...newPostData, category: postCategories[0] })
         }
 
     }, [postCategories, posthashtags])
@@ -323,13 +325,13 @@ const NewPostPage = () => {
                     url: singlePostdata?.urlOfPrompt,
                     origin: singlePostdata?.aiToolName,
                     hashs: [...singlePostdata?.hashthats],
-                    customize: singlePostdata.customize
+                    customize: singlePostdata?.customize
                 }
             );
 
             if (singlePostdata.customize) {
 
-                setCutomize(singlePostdata.customize)
+                setCutomize(singlePostdata?.customize)
             }
 
 
