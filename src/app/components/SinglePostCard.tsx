@@ -48,7 +48,7 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
             style={{
               backgroundColor: ele?.customize?.bgColor || '',
               color: ele?.customize?.color || '',
-              backgroundImage: ele?.customize?.bgImage,
+              backgroundImage: `${(ele?.image && (`url('${ele.author?.profilePic}')` === `${ele?.customize?.bgImage}`)) ? "" : `${ele?.customize?.bgImage}`}`,
               fontFamily: `${ele?.customize?.font} , sans-serif`,
 
 
@@ -121,6 +121,22 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
                   }
 
                 </div>
+
+                {
+                  ele && ele?.image
+                  &&
+                  <div
+                    className=" w-full h-[30vh] my-2 rounded"
+                    style={{
+                      backgroundImage: `url(${ele?.image})`,
+                      backgroundSize: "cover"
+                    }}
+                  >
+
+                  </div>
+                }
+
+
 
                 <div className=" flex flex-wrap gap-0.[2px] text-violet-500 font-semibold ">
                   {

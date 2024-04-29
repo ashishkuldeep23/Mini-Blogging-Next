@@ -41,6 +41,7 @@ const Page = ({ params }: any) => {
         urlOfPrompt: "",
         aiToolName: "",
         hashthats: [""],
+        image: "",
         author: {
             username: "",
             email: "",
@@ -110,11 +111,9 @@ const Page = ({ params }: any) => {
 
 
     // // // Do this to update single post ---------->
-
     // // // Very improtant code for single post data update --------->
     useEffect(() => {
         if (singlePostdata && singlePost?._id) {
-
 
             let backDataHere: any = {
                 _id: singlePostdata._id,
@@ -129,6 +128,7 @@ const Page = ({ params }: any) => {
                 comments: singlePostdata.comments,
                 isDeleted: singlePostdata.isDeleted,
                 customize: singlePostdata.customize,
+                image: singlePostdata.image
 
                 // likesId: singlePostdata.likesId
             }
@@ -137,6 +137,7 @@ const Page = ({ params }: any) => {
             if ((singlePostdata.likesId.length > 0) && (typeof singlePostdata.likesId[0] !== "string")) {
                 backDataHere.likesId = singlePostdata.likesId
             } else {
+                // // // Empty arr for some cases used when post got updated and ------->
                 backDataHere.likesId = []
             }
 
@@ -192,9 +193,9 @@ export default Page
 
 function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
 
-    const themeMode = useThemeData().mode
-
     const router = useRouter()
+
+    console.log(singlePost)
 
     return (
         <>
@@ -204,7 +205,8 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
                 style={{
                     backgroundColor: singlePost?.customize?.bgColor,
                     color: singlePost?.customize?.color,
-                    backgroundImage: singlePost?.customize?.bgImage,
+                    // backgroundImage: singlePost?.customize?.bgImage,
+                    backgroundImage: `${(singlePost?.image && (`url('${singlePost.author?.profilePic}')` === `${singlePost?.customize?.bgImage}`)) ? "" : `${singlePost?.customize?.bgImage}`}`,
                     fontFamily: `${singlePost?.customize?.font} , sans-serif`,
                     borderColor: singlePost?.customize?.color || "#eab308",    // // // Now border is also following color theme.
 
@@ -254,6 +256,29 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
                             singlePost.promptReturn
                         }
                     </div>
+
+
+                    {
+                        singlePost && singlePost?.image
+                        &&
+                        // <div
+                        //     className=" w-full h-[30vh] my-2 rounded"
+                        //     style={{
+                        //         backgroundImage: `url(${singlePost?.image})`,
+                        //         backgroundSize: "cover"
+                        //     }}
+                        // >
+
+                        // </div>
+
+                        <img
+                            style={{ objectFit: "cover" }}
+                            className=' rounded my-2 w-full'
+                            src={singlePost?.image}
+                        />
+
+                    }
+
 
                     <div className=" flex flex-wrap gap-0.[2px] text-violet-500 font-semibold ">
                         {

@@ -188,6 +188,7 @@ export interface PostInterFace {
     urlOfPrompt: string,
     aiToolName: string,
     hashthats: string[],
+    image?: string,
     author: {
         username: string,
         email: string,
