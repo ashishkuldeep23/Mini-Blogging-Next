@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import MainLoader from '../components/MainLoader';
 import ImageReact from '../components/ImageReact';
-import { useUserState } from '@/redux/slices/UserSlice';
+
 
 
 
@@ -33,13 +33,13 @@ const NewPostPage = () => {
 
     const themeMode = useThemeData().mode
 
-    const { singlePostdata, updatingPost, writePostFullFilled, isLoading } = usePostData()
+    const { singlePostdata, updatingPost, writePostFullFilled, isLoading, errMsg } = usePostData()
 
     const router = useRouter()
 
     const { data: session, status } = useSession()
 
-    const { userData } = useUserState()
+    // const { userData } = useUserState()
 
     const initialNewPostData: NewPostType = {
         title: "",
@@ -72,7 +72,6 @@ const NewPostPage = () => {
 
     const [plusCategory, setPlusCategory] = useState<{ mode: boolean, value: string }>({ mode: false, value: "" })
 
-
     const { postCategories, posthashtags } = usePostData();
 
     // console.log(router)
@@ -89,7 +88,6 @@ const NewPostPage = () => {
     }
 
     const [customize, setCutomize] = useState<PostCustomization>(initailCustomize)
-
 
     const [bgImage, setBgImages] = useState<Array<string>>([
         'url("https://www.transparenttextures.com/patterns/argyle.png")',
@@ -117,7 +115,6 @@ const NewPostPage = () => {
         'system-ui',
         'serif'
     ])
-
 
     function addNewHash({
         e,
@@ -164,7 +161,6 @@ const NewPostPage = () => {
         setNewHash("")
     }
 
-
     function cutOneHash(index: number) {
 
         newPostData.hashs.splice(index, 1)
@@ -172,6 +168,26 @@ const NewPostPage = () => {
             ...newPostData,
             hashs: newPostData.hashs
         })
+    }
+
+
+    function selectOnChangeHandler(e: React.ChangeEvent<HTMLSelectElement>) {
+
+        if (e.target.value === "plus") {
+
+            setNewPostData({ ...newPostData, category: "" })
+
+            setPlusCategory({ ...plusCategory, mode: true })
+
+        } else {
+
+
+            setPlusCategory({ value: "", mode: false })
+
+            setNewPostData({ ...newPostData, category: e.target.value })
+
+        }
+
     }
 
 
@@ -213,27 +229,6 @@ const NewPostPage = () => {
     }
 
 
-    function selectOnChangeHandler(e: React.ChangeEvent<HTMLSelectElement>) {
-
-        if (e.target.value === "plus") {
-
-            setNewPostData({ ...newPostData, category: "" })
-
-            setPlusCategory({ ...plusCategory, mode: true })
-
-        } else {
-
-
-            setPlusCategory({ value: "", mode: false })
-
-            setNewPostData({ ...newPostData, category: e.target.value })
-
-        }
-
-    }
-
-
-
     // // // DO THIS ON REDUX --------->
 
     // async function updatePost() {
@@ -262,15 +257,24 @@ const NewPostPage = () => {
             router.push("/")
         }
 
+
+        if (status === 'authenticated' && session.user.image) {
+            setBgImages([...bgImage, `url('${session.user.image.toString()}')`])
+        }
+
+        // console.log(session?.user.image)
+
     }, [session, status])
 
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        if (userData._id && userData.profilePic) {
-            setBgImages([...bgImage, `url('${userData?.profilePic.toString()}')`])
-        }
-    }, [userData])
+    //     if (userData._id && session?.user.image) {
+    //         // setBgImages([...bgImage, `url('${userData?.profilePic.toString()}')`])
+
+    //         // console.log(session?.user.image)
+    //     }
+    // }, [userData])
 
 
     useEffect(() => {
@@ -283,7 +287,18 @@ const NewPostPage = () => {
             dispatch(setUpdatingPost(false))
             dispatch(setWriteFullFilledVal(false))
             // router.push("/")
-            router.back()
+
+
+            // router.back()
+            // // // some logic here -------->
+            // // Checking post got updated or created ---->
+            if (errMsg === 'Post updated successfully.') {
+                router.push(`/post/${singlePostdata?._id}`)
+            } else {
+                router.push("/")
+            }
+
+
         }
 
     }, [writePostFullFilled])
@@ -762,9 +777,9 @@ const NewPostPage = () => {
                                     fontFamily: `${customize.font} , sans-serif`,
 
                                     // // // added more style if user choosed profile pic as bg of post ------>
-                                    backgroundRepeat: `url('${userData.profilePic}')` === `${customize.bgImage}` ? "no-repeat" : "",
-                                    backgroundPosition: `url('${userData.profilePic}')` === `${customize.bgImage}` ? 'center' : "",
-                                    backgroundSize: `url('${userData.profilePic}')` === `${customize.bgImage}` ? "cover" : "",
+                                    backgroundRepeat: `url('${session?.user.image}')` === `${customize.bgImage}` ? "no-repeat" : "",
+                                    backgroundPosition: `url('${session?.user.image}')` === `${customize.bgImage}` ? 'center' : "",
+                                    backgroundSize: `url('${session?.user.image}')` === `${customize.bgImage}` ? "cover" : "",
                                 }}
                             >
 
@@ -773,10 +788,10 @@ const NewPostPage = () => {
 
                                     <ImageReact
                                         className=" rounded-full w-8"
-                                        src={`${userData.profilePic || "https://res.cloudinary.com/dlvq8n2ca/image/upload/v1701708322/jual47jntd2lpkgx8mfx.png"}`}
+                                        src={`${session?.user.image || "https://res.cloudinary.com/dlvq8n2ca/image/upload/v1701708322/jual47jntd2lpkgx8mfx.png"}`}
                                         alt=""
                                     />
-                                    <p className=' font-semibold capitalize'>{userData.username || "Name Kumar"}</p>
+                                    <p className=' font-semibold capitalize'>{session?.user.name || "Name Kumar"}</p>
                                 </div>
 
                                 <div className=" flex justify-between flex-wrap gap-1">
@@ -868,6 +883,7 @@ const NewPostPage = () => {
 
                         </div>
 
+                        {/* Customization and create or update btn here ------> */}
                         <div className=' flex flex-col '>
 
 
@@ -953,7 +969,10 @@ const NewPostPage = () => {
                                             className={`${!themeMode ? "bg-black" : "bg-white"}`}
                                             name="bgImage"
                                             id="bgImage"
-                                            onChange={(e) => { setCutomize({ ...customize, bgImage: e.target.value }) }}
+                                            onChange={(e) => {
+                                                setCutomize({ ...customize, bgImage: e.target.value });
+                                                // console.log(e.target.value)
+                                            }}
                                         >
                                             {
                                                 bgImage.map((ele, i) => {

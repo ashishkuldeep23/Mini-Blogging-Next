@@ -915,7 +915,7 @@ const SingleCommentUI = ({
                                 </button>
 
                                 <button
-                                    onClick={(e) => { e.stopPropagation(); deleteSingleComment }}
+                                    onClick={(e) => { e.stopPropagation(); deleteSingleComment(); }}
                                     className=" border rounded p-1 mx-1 hover:bg-red-500"
                                 >
                                     <AiTwotoneDelete />

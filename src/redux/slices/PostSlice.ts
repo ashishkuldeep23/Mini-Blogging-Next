@@ -547,19 +547,18 @@ const psotSlice = createSlice({
                     // state.allPost = action.payload.data
                     toast.success(`${action.payload.message}`)
 
+                    // // // Storing errMsg (success message in this case) bcoz using in updated post code ------>
+                    state.errMsg = action.payload.message
+
                     // console.log(action.payload.data)
 
-
+                    // // // set post data into single post data 
                     state.singlePostdata = action.payload.data
                     let currentState = current(state)
 
                     let findIndex = [...currentState.allPost].findIndex(ele => ele._id === action.payload.data._id)
 
                     state.allPost.splice(findIndex, 1, action.payload.data)
-
-                    state.singlePostdata = action.payload.data
-
-
 
                     // state.allPost.unshift(action.payload.data)
 

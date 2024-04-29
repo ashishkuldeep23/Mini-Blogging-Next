@@ -29,7 +29,6 @@ export async function POST(req: NextRequest) {
         let findUser = await User.findById(author)
             .select("-updatedAt -createdAt -__v -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password")
 
-
         if (!findUser) return NextResponse.json({ success: false, message: 'No User find with given post id.' }, { status: 404 })
 
 

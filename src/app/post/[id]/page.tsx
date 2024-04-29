@@ -144,6 +144,7 @@ const Page = ({ params }: any) => {
         }
 
 
+        // console.log(singlePostdata)
     }, [singlePostdata])
 
 
@@ -209,9 +210,9 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
 
 
                     // // // added more style if user choosed profile pic as bg of post ------>
-                    backgroundRepeat: `url('${singlePost.author?.profilePic}')` === `${singlePost?.customize?.bgImage}` ? "no-repeat" : "",
-                    backgroundPosition: `url('${singlePost.author?.profilePic}')` === `${singlePost?.customize?.bgImage}` ? 'center' : "",
-                    backgroundSize: `url('${singlePost.author?.profilePic}')` === `${singlePost?.customize?.bgImage}` ? "cover" : "",
+                    backgroundRepeat: `url('${singlePost.author?.profilePic}')` === `${singlePost?.customize?.bgImage}` ? "repeat-y" : "",
+                    backgroundPositionX: `url('${singlePost.author?.profilePic}')` === `${singlePost?.customize?.bgImage}` ? 'center' : "",
+                    backgroundSize: `url('${singlePost.author?.profilePic}')` === `${singlePost?.customize?.bgImage}` ? "contain" : "",
                 }}
             >
 

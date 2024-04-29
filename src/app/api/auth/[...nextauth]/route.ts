@@ -95,6 +95,9 @@ const handler = NextAuth({
 
             // console.log(sessionUserData)
 
+            // // // Store user image url in session ------>
+            session.user.image = sessionUserData.profilePic.toString();
+
             session.user.id = sessionUserData._id.toString();
 
             session.user._id = sessionUserData._id.toString();
