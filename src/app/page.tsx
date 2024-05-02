@@ -367,7 +367,7 @@ function AllPostDiv() {
 
       >
 
-        <div className="card_container mt-10 relative sm:px-[8vh] flex gap-10 gap-x-64 p-0.5 flex-wrap justify-center items-start ">
+        <div className="card_container mt-10 relative sm:px-[8vh] flex gap-10 gap-x-64 p-0.5 flex-wrap justify-center items-center ">
 
           <MainLoader
             isLoading={isLoading}

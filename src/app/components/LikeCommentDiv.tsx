@@ -282,7 +282,7 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
 
 
                 {/* Like comments buttons (all 3 buttons here) -----> */}
-                <div className=' pt-3 flex flex-row-reverse items-start md:flex-row gap-8 md:gap-x-16'>
+                <div className=' pt-3 flex flex-row-reverse  items-center md:flex-row gap-8 md:gap-x-16'>
 
                     <div className='flex gap-2 flex-wrap justify-between flex-row md:flex-row-reverse'>
 

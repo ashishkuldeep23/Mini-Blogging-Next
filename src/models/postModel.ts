@@ -54,6 +54,12 @@ const PostSchema = new mongoose.Schema({
         ref: "comments"
     },
 
+    image: {
+        type: String,
+        trim: true,
+        default: '',
+    },
+
     customize: {
         bgColor: {
             type: String,

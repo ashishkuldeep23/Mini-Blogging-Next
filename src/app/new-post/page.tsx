@@ -5,13 +5,14 @@ import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
-import { createNewPost, setWriteFullFilledVal, usePostData, updatePost, PostCustomization, setUpdatingPost } from '@/redux/slices/PostSlice';
+import { createNewPost, setWriteFullFilledVal, usePostData, updatePost, PostCustomization, setUpdatingPost, setIsLoading } from '@/redux/slices/PostSlice';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import MainLoader from '../components/MainLoader';
 import ImageReact from '../components/ImageReact';
-
+import { FaCamera } from "react-icons/fa";
+import { uploadFileInCloudinary } from '@/lib/cloudinary'
 
 
 
@@ -23,6 +24,7 @@ export interface NewPostType {
     origin: string,
     hashs: string[],
     customize?: PostCustomization,
+    image?: string
 }
 
 
@@ -53,7 +55,8 @@ const NewPostPage = () => {
             color: "",
             bgImage: "",
             font: ""
-        }
+        },
+        image: ""
     }
 
     const [newPostData, setNewPostData] = useState<NewPostType>(initialNewPostData)
@@ -115,6 +118,15 @@ const NewPostPage = () => {
         'system-ui',
         'serif'
     ])
+
+    const [postImageUrl, setPostImageUrl] = useState<string>('')
+
+    // console.log(postImageUrl)
+
+
+    const [imageFile, setImageFile] = useState<File>()
+
+    // console.log(imageFile)
 
     function addNewHash({
         e,
@@ -191,7 +203,42 @@ const NewPostPage = () => {
     }
 
 
-    function submitFormData(even: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    function imgInputOnchangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
+        e.stopPropagation();
+        e.preventDefault();
+
+
+        // // // Check this letter why not getting below val from env
+
+        // const urlForCloudinary = process.env.CLOUDINARY_URL!
+        // const preset_key = process.env.CLOUDINARY_PRESET!
+
+        // console.log({ urlForCloudinary, preset_key })
+
+
+
+        if (e.target.files) {
+
+            const file = e?.target?.files[0]
+
+            // // // Here now set file ---------->
+            // File size should less then 2 mb. 
+            if (file.size > 2097152) {
+                return toast.error("File size should less then 2 mb")
+            }
+
+            setImageFile(file)
+            // // // Show img direct by here --->
+            setPostImageUrl(URL.createObjectURL(file))
+
+
+        }
+
+    }
+
+
+
+    async function submitFormData(even: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>) {
 
         even.preventDefault()
 
@@ -204,18 +251,44 @@ const NewPostPage = () => {
         if (session?.user?.id) {
 
 
+            // // // Do 3 things here --------->
+            // 1. check any file is present.
+            // 2. Upload file into cloudinary.
+            // 3. set file url to newPostData inside image key.
+
+            let imageUrl = "";
+
+            if (imageFile) {
+
+                dispatch(setIsLoading(true))
+
+                // // Now here we can uplaod file 2nd step ------>
+                imageUrl = await uploadFileInCloudinary(imageFile)
+                // console.log({ imageUrl })
+
+                /// // // now set url of image -------->
+                setNewPostData({ ...newPostData, image: imageUrl })
+            }
+
+
+
+
             if (updatingPost && singlePostdata?._id) {
 
                 // alert("now call dispatch for update.")
 
                 dispatch(updatePost({
-                    body: newPostData,
+                    body: { ...newPostData, image: imageUrl },
                     userId: session?.user?.id,
                     postId: singlePostdata?._id
                 }))
             } else {
 
-                dispatch(createNewPost({ body: newPostData, userId: session?.user?.id }))
+
+                dispatch(createNewPost({
+                    body: { ...newPostData, image: imageUrl },
+                    userId: session?.user?.id
+                }))
             }
 
 
@@ -227,6 +300,8 @@ const NewPostPage = () => {
 
 
     }
+
+
 
 
     // // // DO THIS ON REDUX --------->
@@ -326,7 +401,6 @@ const NewPostPage = () => {
 
 
     // // // Update post here =============> 
-
     useEffect(() => {
 
         if (updatingPost && singlePostdata?._id) {
@@ -340,13 +414,17 @@ const NewPostPage = () => {
                     url: singlePostdata?.urlOfPrompt,
                     origin: singlePostdata?.aiToolName,
                     hashs: [...singlePostdata?.hashthats],
-                    customize: singlePostdata?.customize
+                    customize: singlePostdata?.customize,
+                    image: singlePostdata?.image
                 }
             );
 
             if (singlePostdata.customize) {
-
                 setCutomize(singlePostdata?.customize)
+            }
+
+            if (singlePostdata?.image) {
+                setPostImageUrl(singlePostdata?.image)
             }
 
 
@@ -356,6 +434,7 @@ const NewPostPage = () => {
     }, [singlePostdata])
 
 
+    // // // Some common class name that used in input fields ------->  
     const classNamesForInputs = ` w-[68%] border rounded-sm px-1 ${!themeMode ? " bg-slate-900 text-white" : " bg-slate-100 text-black"}`
 
 
@@ -584,6 +663,58 @@ const NewPostPage = () => {
 
                                     </div>
 
+                                    {/* Here going to take an file uplad image ------> */}
+
+
+                                    <div className=" flex justify-start">
+
+                                        <div className=' w-[68%]' >
+
+                                            <input
+                                                className={`${classNamesForInputs} hidden`}
+                                                type="file"
+                                                name=""
+                                                accept="image/png, image/png, image/jpeg"
+                                                id="change_img"
+                                                onChange={(e) => { imgInputOnchangeHandler(e) }}
+                                            />
+
+                                            {/* <i className={`ri-camera-3-line text-6xl sm:text-8xl`}></i> */}
+
+                                            <div
+                                                className={`${classNamesForInputs} w-full  `}
+                                            >
+
+                                                <label
+
+                                                    className=' flex  justify-start pl-1 gap-2 flex-wrap'
+                                                    htmlFor="change_img">
+                                                    <FaCamera className=' mx-auto sm:mx-0 text-2xl' />
+                                                    <p>Choose an image for post.</p>
+                                                </label>
+
+                                            </div>
+
+                                        </div>
+
+
+                                        <label
+                                            className=' pl-2 pr-1 border-b font-semibold'
+                                            htmlFor="change_img"
+                                        >*Image</label>
+
+
+                                        {/* <div >
+                                            <label htmlFor="change_img" className='text-green-500'>After changing click submit </label>
+                                            <button className="bg-green-500 px-1 rounded text-white font-bold" onClick={(e) => {
+                                                e.stopPropagation();
+                                                // submitNewImg(); 
+                                            }}>☝️Upload</button>
+                                        </div> */}
+
+                                    </div>
+
+
 
 
                                     <div>
@@ -811,6 +942,16 @@ const NewPostPage = () => {
                                         newPostData.content
                                     }
                                 </div>
+
+                                {
+                                    (newPostData?.image || postImageUrl)
+                                    &&
+                                    <ImageReact
+                                        style={{ objectFit: "cover" }}
+                                        className=' rounded my-2 w-full'
+                                        src={postImageUrl}
+                                    />
+                                }
 
 
                                 <div

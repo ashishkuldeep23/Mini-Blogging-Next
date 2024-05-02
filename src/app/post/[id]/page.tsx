@@ -195,7 +195,7 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
 
     const router = useRouter()
 
-    console.log(singlePost)
+    // console.log(singlePost)
 
     return (
         <>
@@ -271,7 +271,7 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
 
                         // </div>
 
-                        <img
+                        <ImageReact
                             style={{ objectFit: "cover" }}
                             className=' rounded my-2 w-full'
                             src={singlePost?.image}

@@ -21,7 +21,7 @@ const ImageReact = ({
         <img
             width={width}
             src={src}
-            alt={alt}
+            alt={alt || "Image"}
             className={className}
             style={style}
             onError={({ currentTarget }) => {

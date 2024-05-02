@@ -77,6 +77,8 @@ export const getCatAndHash = createAsyncThunk('post/getCatAndHash', async () => 
 
 export const createNewPost = createAsyncThunk("post/createNewPost", async ({ body, userId }: { body: NewPostType, userId: string }) => {
 
+    // console.log({ body })
+
     let makeBody = {
         title: body.title,
         category: body.category,
@@ -85,6 +87,7 @@ export const createNewPost = createAsyncThunk("post/createNewPost", async ({ bod
         aiToolName: body.origin,
         hashthats: body.hashs,
         customize: body.customize,
+        image: body.image,
         author: userId
     }
 
@@ -113,6 +116,8 @@ export const createNewPost = createAsyncThunk("post/createNewPost", async ({ bod
 
 export const updatePost = createAsyncThunk("post/updatePost", async ({ body, userId, postId }: { body: NewPostType, userId: string, postId: string }) => {
 
+    // console.log({ body })
+
     let makeBody = {
         title: body.title,
         category: body.category,
@@ -122,6 +127,7 @@ export const updatePost = createAsyncThunk("post/updatePost", async ({ body, use
         hashthats: body.hashs,
         customize: body.customize,
         author: userId,
+        image: body.image,
         postId: postId,
     }
 

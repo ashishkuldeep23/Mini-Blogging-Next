@@ -8,7 +8,7 @@ import ImageReact from "./ImageReact"
 import LikeCommentDiv from "./LikeCommentDiv"
 import { CardBody, CardContainer, CardItem } from "@/app/components/ui/3d_card";
 import { PiSealCheckDuotone } from "react-icons/pi";
-import { useSession } from "next-auth/react"
+// import { useSession } from "next-auth/react"
 
 export default function SinglePostCard({ ele, className }: { ele: PostInterFace, className?: string }) {
 
@@ -19,7 +19,7 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
 
   const router = useRouter()
 
-  const { data: session } = useSession()
+  // const { data: session } = useSession()
 
   const promptText = ele.promptReturn
 
@@ -125,15 +125,21 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
                 {
                   ele && ele?.image
                   &&
-                  <div
-                    className=" w-full h-[30vh] my-2 rounded"
-                    style={{
-                      backgroundImage: `url(${ele?.image})`,
-                      backgroundSize: "cover"
-                    }}
-                  >
+                  // <div
+                  //   className=" w-full h-[30vh] my-2 rounded"
+                  //   style={{
+                  //     backgroundImage: `url(${ele?.image})`,
+                  //     backgroundSize: "cover"
+                  //   }}
+                  // >
 
-                  </div>
+                  // </div>
+
+                  <ImageReact
+                    src={ele?.image}
+                    className=" w-full h-[30vh] my-2 rounded"
+                  />
+
                 }
 
 
