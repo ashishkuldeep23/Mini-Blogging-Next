@@ -21,6 +21,10 @@ import { PiMoonStarsDuotone } from "react-icons/pi";
 
 const Navbar = () => {
 
+    const params = usePathname()
+
+    const router = useRouter()
+
     // const themeValue = useThemeData().value
 
     const themeMode = useThemeData().mode
@@ -33,9 +37,8 @@ const Navbar = () => {
 
     const [isUserLogined, setIsUserLogined] = useState(true)
 
-    const params = usePathname()
+    const [isUserOnHaome, setIsUserOnHome] = useState<boolean>(false)
 
-    const router = useRouter()
 
 
     // console.log(session)
@@ -46,13 +49,23 @@ const Navbar = () => {
 
         // console.log(params)
 
-        if (params === '/') {
+        if (isUserOnHaome) {
             router.push(`/profile/${session?.user?.id}`)
         } else {
             router.push("/")
         }
 
     }
+
+
+
+    useEffect(() => {
+
+        if (params === "/") setIsUserOnHome(true);
+        else setIsUserOnHome(false);
+
+
+    }, [params])
 
 
     // console.log(status)
@@ -125,11 +138,18 @@ const Navbar = () => {
                     />
                 }
 
-                <p className=" font-bold">Home</p>
+                <p className=" ml-0.5 mt-[-2px] font-bold">
+                    {
+                        !isUserOnHaome
+                            ? "Home"
+                            // : `Profile(${session?.user?.name?.toString() || "Name"})`
+                            : `Profile`
+                    }
+                </p>
 
             </div>
 
-            <div className=" flex items-center justify-end flex-wrap gap-2 ">
+            <div className=" flex items-center justify-end flex-wrap gap-2 pt-1 ">
 
 
                 <div>
