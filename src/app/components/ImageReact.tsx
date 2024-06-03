@@ -17,11 +17,18 @@ const ImageReact = ({
     onMouseMove?: React.MouseEventHandler<HTMLImageElement> | undefined,
     style?: object
 }) => {
+
+
+    // console.log(style)
+    // console.log(className)
+
+
+
     return (
         <img
             width={width}
             src={src}
-            alt={alt || "Image"}
+            alt={alt || "img"}
             className={className}
             style={style}
             onError={({ currentTarget }) => {

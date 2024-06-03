@@ -34,6 +34,8 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
     router.push(`/post/${postId}`)
   }
 
+  // console.log(ele)
+
   return (
     <div
       onClick={(e) => { e.stopPropagation(); cardClickHadler(ele._id) }}
@@ -59,7 +61,7 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
             }}
           >
 
-
+            {/* User info div */}
             <CardItem
               translateZ="50"
               translateX={-10}
@@ -94,7 +96,7 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
 
             </CardItem>
 
-
+            {/* Post info div here  */}
             <CardItem
               translateZ="120"
               rotateX={10}
@@ -125,24 +127,17 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
                 {
                   ele && ele?.image
                   &&
-                  // <div
-                  //   className=" w-full h-[30vh] my-2 rounded"
-                  //   style={{
-                  //     backgroundImage: `url(${ele?.image})`,
-                  //     backgroundSize: "cover"
-                  //   }}
-                  // >
-
-                  // </div>
-
-                  <ImageReact
-                    src={ele?.image}
-                    className=" w-full h-[30vh] my-2 rounded"
-                  />
-
+                  <>
+                    <ImageReact
+                      src={ele?.image}
+                      className=" w-full h-[35vh] my-2 rounded object-cover object-top"
+                    />
+                    <p className=" text-xs -mt-2 text-end">Click to see full image.</p>
+                  </>
                 }
 
 
+                <p className=" text-[0.6rem] mt-2 text-end">Uploaded on : {ele.whenCreated || "Date"}</p>
 
                 <div className=" flex flex-wrap gap-0.[2px] text-violet-500 font-semibold ">
                   {
@@ -160,7 +155,7 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
 
             </CardItem>
 
-
+            {/* Post like and all here */}
             <CardItem
               translateZ={20}
               translateX={20}

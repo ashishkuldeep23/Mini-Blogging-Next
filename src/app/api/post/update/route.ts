@@ -34,7 +34,7 @@ export async function PUT(req: NextRequest) {
 
         if (findPost.isDeleted) return NextResponse.json({ success: false, message: 'Post is aleady deleted.' }, { status: 404 })
 
-
+        // // // Authorisation here --------->>
         if (findPost.author.toString() !== author) return NextResponse.json({ success: false, message: 'Post is not given by you.' }, { status: 400 })
 
 

@@ -278,7 +278,7 @@ const NewPostPage = () => {
                 // alert("now call dispatch for update.")
 
                 dispatch(updatePost({
-                    body: { ...newPostData, image: imageUrl },
+                    body: { ...newPostData, image: newPostData.image || imageUrl },
                     userId: session?.user?.id,
                     postId: singlePostdata?._id
                 }))

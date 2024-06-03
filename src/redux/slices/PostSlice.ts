@@ -79,6 +79,11 @@ export const createNewPost = createAsyncThunk("post/createNewPost", async ({ bod
 
     // console.log({ body })
 
+
+    let date = new Date()
+    let localDate = date.toLocaleDateString()
+
+
     let makeBody = {
         title: body.title,
         category: body.category,
@@ -88,7 +93,8 @@ export const createNewPost = createAsyncThunk("post/createNewPost", async ({ bod
         hashthats: body.hashs,
         customize: body.customize,
         image: body.image,
-        author: userId
+        author: userId,
+        whenCreated: localDate
     }
 
 
@@ -209,6 +215,7 @@ export interface PostInterFace {
     comments: Comment[],
     isDeleted: boolean,
     customize?: PostCustomization
+    whenCreated?: string
 
 }
 
@@ -262,7 +269,8 @@ const innitialSingleState: PostInterFace = {
         color: "",
         bgImage: "",
         font: ""
-    }
+    },
+    whenCreated: "",
 }
 
 

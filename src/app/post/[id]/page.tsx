@@ -261,16 +261,6 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
                     {
                         singlePost && singlePost?.image
                         &&
-                        // <div
-                        //     className=" w-full h-[30vh] my-2 rounded"
-                        //     style={{
-                        //         backgroundImage: `url(${singlePost?.image})`,
-                        //         backgroundSize: "cover"
-                        //     }}
-                        // >
-
-                        // </div>
-
                         <ImageReact
                             style={{ objectFit: "cover" }}
                             className=' rounded my-2 w-full'
@@ -279,6 +269,7 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
 
                     }
 
+                    <p className=" text-[0.6rem] mt-2 text-end">Uploaded on : {singlePost.whenCreated || "Date"}</p>
 
                     <div className=" flex flex-wrap gap-0.[2px] text-violet-500 font-semibold ">
                         {
