@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 
 // // // These are condition that given to update --------->
-type WhatUpdateData = "sendFriendRequest" | "addFriend" | 'removeFriend' | "cancelFrndRequest"
+type WhatUpdateData = "sendFriendRequest" | "addFriend" | 'removeFriend' | "cancelFrndRequest" | "newProfilePic" | "makeProfilePic"
 
 
 export async function PUT(req: NextRequest) {
@@ -22,6 +22,7 @@ export async function PUT(req: NextRequest) {
         const whatUpdate: WhatUpdateData = reqBody.whatUpdate
         const { sender, reciver } = reqBody
 
+        // // // What update is only data naccessory ---------->
         if (!whatUpdate) {
             return NextResponse.json({ success: false, message: 'Mandatory fields not given.' }, { status: 400 })
         }
@@ -310,6 +311,38 @@ export async function PUT(req: NextRequest) {
 
         }
 
+        else if (whatUpdate === "newProfilePic") {
+
+            // // // Here sender means userId 
+
+            // console.log(reqBody)
+
+            const { newProfilePic, sender } = reqBody
+
+            let findUserData = await User.findById(sender)
+
+            findUserData.profilePic = newProfilePic
+            findUserData.allProfilePic = [newProfilePic, ...findUserData.allProfilePic]
+
+            updatedUser = await findUserData.save()
+
+        }
+        else if (whatUpdate === "makeProfilePic") {
+
+            // // // Here sender means userId 
+
+            // console.log(reqBody)
+
+            const { newProfilePic, sender } = reqBody
+
+            let findUserData = await User.findById(sender)
+
+            findUserData.profilePic = newProfilePic
+            // findUserData.allProfilePic = [newProfilePic, ...findUserData.allProfilePic]
+
+            updatedUser = await findUserData.save()
+
+        }
         else {
             return NextResponse.json({ success: false, message: 'whatUpdate is not given.' }, { status: 400 })
         }

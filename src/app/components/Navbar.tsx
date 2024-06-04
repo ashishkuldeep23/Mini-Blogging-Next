@@ -132,8 +132,8 @@ const Navbar = () => {
                     session?.user?.image
                     &&
                     <ImageReact
-                        className=" w-8 border rounded-full"
-                        src={session?.user?.image?.toString()}
+                        className=" w-8 h-8 object-cover border rounded-full"
+                        src={userData.profilePic}
                         alt=""
                     />
                 }

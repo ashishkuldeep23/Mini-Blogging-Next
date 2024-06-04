@@ -93,3 +93,8 @@
     width: 100%;
   
 }
+
+
+#all_uploaded_pics_holder_div::-webkit-scrollbar{
+    height:  0;
+}

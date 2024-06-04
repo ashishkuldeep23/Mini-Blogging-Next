@@ -21,6 +21,9 @@ import { PiSealCheckDuotone } from 'react-icons/pi'
 import { RiUserAddLine } from 'react-icons/ri'
 import { TbUserCancel } from 'react-icons/tb'
 import { useDispatch } from 'react-redux'
+// import { IoIosCloudUpload } from "react-icons/io";
+import { IoMdCloudUpload } from "react-icons/io";
+import { uploadFileInCloudinary } from '@/lib/cloudinary'
 
 const ProfilePageParams = ({ params }: any) => {
 
@@ -67,7 +70,7 @@ const ProfilePageParams = ({ params }: any) => {
 
     return (
         <div
-            className={` relative w-full min-h-screen flex flex-col items-center ${!themeMode ? " bg-black text-white " : " bg-white text-black"} `}
+            className={` relative w-full min-h-screen flex flex-col items-center overflow-hidden ${!themeMode ? " bg-black text-white " : " bg-white text-black"} `}
         >
 
             <Navbar />
@@ -85,13 +88,11 @@ const ProfilePageParams = ({ params }: any) => {
 
 
             {/* UserData div */}
-            <div className=' my-5 border p-2 rounded flex flex-wrap justify-center items-center'>
+            <div className=' my-5 border p-2 rounded flex flex-wrap justify-center items-center flex-col'>
 
-                <ImageReact
-                    className=" mr-4 w-40 border rounded-full mt-2"
-                    src={userData.profilePic}
-                    alt=""
-                />
+                {/* User profile div here --------> */}
+
+                <UserProfileImage />
 
                 <div className=' text-center'>
                     <p>Welcome</p>
@@ -100,6 +101,10 @@ const ProfilePageParams = ({ params }: any) => {
                 </div>
 
             </div>
+
+
+            <AllUploadedPicturesDiv />
+
 
 
             {/* {
@@ -158,6 +163,255 @@ const ProfilePageParams = ({ params }: any) => {
 }
 
 export default ProfilePageParams
+
+
+
+
+function AllUploadedPicturesDiv() {
+
+
+    const { userData, isLoading, errMsg } = useUserState()
+
+
+    const dispatch = useDispatch<AppDispatch>()
+
+    const { data: session } = useSession()
+
+
+    function makeDpThisImage(image: string) {
+
+        if (!image) return toast.error("Image not getting, please refresh the page.")
+
+        if (image === userData.profilePic) return toast.error("This image is already your profile pic.")
+
+        if (session?.user._id) {
+
+
+            dispatch(updateUserData({
+                whatUpdate: "makeProfilePic",
+                sender: session.user._id,
+                newProfilePic: image,
+                reciver: ""
+            }))
+        }
+
+    }
+
+
+    // console.log(userData.allProfilePic)
+
+
+    return (
+        <>
+
+            <div>
+                {
+                    userData.allProfilePic
+                        &&
+                        userData.allProfilePic.length > 0
+
+                        ?
+                        <div>
+                            <p className=' text-center underline font-semibold my-2'>All {userData?.allProfilePic?.length} uploaded picture by you.</p>
+                            <p className=' text-center text-xs'>Click on image to make profile pic.</p>
+
+                            <div
+                                className='w-full px-5 py-4 flex gap-1 overflow-x-scroll'
+
+                                id='all_uploaded_pics_holder_div'
+                            >
+
+
+                                {
+                                    userData.allProfilePic.map((ele, i) => {
+                                        return (
+                                            <ImageReact
+                                                key={i}
+                                                className={`border  p-1 w-32 h-32 rounded-full object-cover object-top active:scale-75 active:opacity-75 transition-all ${userData.profilePic === ele && " border-2 border-green-500"} `}
+                                                src={ele}
+                                                alt=""
+                                                onClick={() => { makeDpThisImage(ele) }}
+                                            />
+                                        )
+                                    })
+                                }
+                            </div>
+
+                        </div>
+                        : <></>
+                }
+            </div>
+
+        </>
+    )
+
+}
+
+
+
+function UserProfileImage() {
+
+    const dispatch = useDispatch<AppDispatch>()
+    const { data: session } = useSession()
+    // const router = useRouter()
+
+    const { userData, isLoading, errMsg } = useUserState()
+    const themeMode = useThemeData().mode
+
+    const [imageFile, setImageFile] = useState<File>()
+
+    const [postImageUrl, setPostImageUrl] = useState<string>('')
+
+    // const [uploadedImg, setUplodedImg] = useState<string>('')
+
+
+    function imgInputOnchangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
+        e.stopPropagation();
+        e.preventDefault();
+
+
+        // // // Check this letter why not getting below val from env
+
+        // const urlForCloudinary = process.env.CLOUDINARY_URL!
+        // const preset_key = process.env.CLOUDINARY_PRESET!
+
+        // console.log({ urlForCloudinary, preset_key })
+
+
+
+        if (e.target.files) {
+
+            const file = e?.target?.files[0]
+
+            // // // Here now set file ---------->
+            // File size should less then 2 mb. 
+            if (file.size > 2097152) {
+                return toast.error("File size should less then 2 mb")
+            }
+
+            setImageFile(file)
+            // // // Show img direct by here --->
+            setPostImageUrl(URL.createObjectURL(file))
+
+
+        }
+
+    }
+
+
+
+    async function uploadImgaeAndUserDataHandler() {
+
+
+        // // // After doing uplaod stuff here ------>
+
+        let imageUrl = "";
+
+        if (session?.user._id) {
+
+
+
+            if (imageFile) {
+                // // Now here we can uplaod file 2nd step ------>
+                imageUrl = await uploadFileInCloudinary(imageFile)
+                console.log({ imageUrl })
+
+                /// // // now set url of image -------->
+
+            }
+
+
+            dispatch(updateUserData({
+                whatUpdate: "newProfilePic",
+                sender: session.user._id,
+                newProfilePic: imageUrl,
+                reciver: ""
+            }))
+        }
+        else {
+
+            toast.error("Plese Login again.Or Refresh the page")
+            // router.push("/login")
+        }
+
+
+    }
+
+
+    useEffect(() => {
+
+        setPostImageUrl(userData.profilePic)
+
+    }, [userData])
+
+
+    return (
+        <>
+            {
+                userData._id
+                &&
+
+                <div className='border p-0.5 w-40 h-40 rounded-full relative'>
+
+                    {
+                        isLoading
+                        &&
+                        <MainLoader isLoading={isLoading} />
+                    }
+
+
+                    <ImageReact
+                        className=" w-full h-full rounded-full object-cover object-top"
+                        src={postImageUrl}
+                        alt=""
+                    />
+
+                    <input
+                        className={` hidden`}
+                        type="file"
+                        name=""
+                        accept="image/png, image/png, image/jpeg"
+                        id="profile_img"
+                        onChange={(e) => { imgInputOnchangeHandler(e) }}
+                    />
+
+
+                    <label
+                        htmlFor='profile_img'
+                        className={`absolute bottom-2 right-2  border rounded-full p-0.5 ${!themeMode ? "bg-black" : "bg-white"} active:scale-75 active:opacity-75 transition-all`}
+                    >
+
+                        <IoMdCloudUpload
+                            className=' text-4xl'
+                        />
+                    </label>
+
+                </div>
+            }
+
+
+            {
+                userData.profilePic !== postImageUrl
+                &&
+
+                <div className=' w-40 flex gap-2 justify-center my-2 px-2'>
+                    <button
+                        className=' px-1  border rounded-full bg-green-500 font-bold text-xs '
+                        onClick={() => { uploadImgaeAndUserDataHandler() }}
+                    >Upload</button>
+                    <button
+                        className=' px-1  border rounded-full bg-rose-500 font-bold text-xs '
+                        onClick={() => { setPostImageUrl(userData.profilePic) }}
+                    >X</button>
+                </div>
+
+            }
+
+
+        </>
+    )
+}
+
 
 
 function ReciverRequestDiv() {

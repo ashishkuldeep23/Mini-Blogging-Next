@@ -74,7 +74,7 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
               >
 
                 <ImageReact
-                  className={`mt-2 rounded-full w-8 border p-[1px] border-[${ele?.customize?.color}] `}
+                  className={`mt-2 rounded-full  w-8 h-8 object-cover border p-[1px] border-[${ele?.customize?.color}] `}
                   src={`${ele?.author?.profilePic || "https://res.cloudinary.com/dlvq8n2ca/image/upload/v1701708322/jual47jntd2lpkgx8mfx.png"}`}
                   style={{ borderColor: ele?.customize?.color }}
                   alt=""
@@ -108,7 +108,7 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
 
                 <div className=" flex flex-wrap items-center gap-1">
                   <p className="capitalize">{ele.title}</p>
-                  <p className=" ml-[10vh] text-xs">({ele.category})</p>
+                  <p className=" ml-[75%] text-xs">({ele.category})</p>
                 </div>
 
                 <div className=" text-sm"
@@ -130,7 +130,7 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
                   <>
                     <ImageReact
                       src={ele?.image}
-                      className=" w-full h-[35vh] my-2 rounded object-cover object-top"
+                      className=" w-full h-[35vh] my-2 rounded object-contain object-top"
                     />
                     <p className=" text-xs -mt-2 text-end">Click to see full image.</p>
                   </>

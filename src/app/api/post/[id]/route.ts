@@ -11,7 +11,7 @@ import { isValidObjectId, model, modelNames, models } from "mongoose"
 
 export async function GET(req: NextRequest, context: any) {
 
-    
+
     connect()
 
 
@@ -60,6 +60,8 @@ export async function GET(req: NextRequest, context: any) {
             })
             .select("-updatedAt -createdAt -__v ")
         // .exec()
+
+        // console.log(JSON.stringify(findPost, null, 4))
 
         if (!findPost) {
             return NextResponse.json({ success: false, message: 'Post not found with given id.' }, { status: 404 })

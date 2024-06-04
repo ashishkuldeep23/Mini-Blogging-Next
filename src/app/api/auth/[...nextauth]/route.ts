@@ -82,9 +82,9 @@ const handler = NextAuth({
     ],
 
 
-
     callbacks: {
 
+        // // // This fn for logIn creating session.
         async session({ session }: any) {
 
 
@@ -108,6 +108,7 @@ const handler = NextAuth({
             return session;
         },
 
+        // // // This fn when user sing in first time by google.
         async signIn({ profile, user }: any) {
 
             try {
@@ -147,6 +148,7 @@ const handler = NextAuth({
                         email: email,
                         password: "LOG_IN_BY_GOOGLE",
                         profilePic: picture,
+                        allProfilePic: [picture],
                         isVerified: true
                     }
 

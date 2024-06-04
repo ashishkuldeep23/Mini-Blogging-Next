@@ -7,7 +7,8 @@ const ImageReact = ({
     alt,
     width,
     onMouseMove,
-    style
+    style,
+    onClick
 }: {
     src: string,
     className?: string,
@@ -16,6 +17,7 @@ const ImageReact = ({
     height?: number
     onMouseMove?: React.MouseEventHandler<HTMLImageElement> | undefined,
     style?: object
+    onClick?: Function
 }) => {
 
 
@@ -26,6 +28,7 @@ const ImageReact = ({
 
     return (
         <img
+            onClick={() => { onClick && onClick() }}
             width={width}
             src={src}
             alt={alt || "img"}
@@ -33,7 +36,7 @@ const ImageReact = ({
             style={style}
             onError={({ currentTarget }) => {
                 currentTarget.onerror = null; // prevents looping
-                currentTarget.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwV9k8Uxfa2bIUN1C5bybUsLeU2Ik2YDkAZlp3QYoedLj3QyJfkGs6r51MCrtpCEAlR2Y&usqp=CAU";
+                currentTarget.src = "https://res.cloudinary.com/dlvq8n2ca/image/upload/v1717510373/yqrqev3nq8yrbdkct3no.jpg";
             }}
             onMouseMove={onMouseMove}
         />

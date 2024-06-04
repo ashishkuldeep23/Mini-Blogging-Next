@@ -128,7 +128,8 @@ const Page = ({ params }: any) => {
                 comments: singlePostdata.comments,
                 isDeleted: singlePostdata.isDeleted,
                 customize: singlePostdata.customize,
-                image: singlePostdata.image
+                image: singlePostdata.image,
+                whenCreated: singlePostdata.whenCreated
 
                 // likesId: singlePostdata.likesId
             }
@@ -262,8 +263,7 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
                         singlePost && singlePost?.image
                         &&
                         <ImageReact
-                            style={{ objectFit: "cover" }}
-                            className=' rounded my-2 w-full'
+                            className=' rounded my-2 w-full h-[70vh] object-contain'
                             src={singlePost?.image}
                         />
 

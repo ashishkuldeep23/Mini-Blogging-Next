@@ -64,20 +64,22 @@ export const getUserData = createAsyncThunk('user/getUserData', async (userId: s
 })
 
 
-type WhatUpdateData = "sendFriendRequest" | "addFriend" | 'removeFriend' | "cancelFrndRequest"
+type WhatUpdateData = "sendFriendRequest" | "addFriend" | 'removeFriend' | "cancelFrndRequest" | "newProfilePic" | "makeProfilePic"
 
 type UpdateUser = {
     whatUpdate: WhatUpdateData,
     sender: string,
-    reciver: string
+    reciver: string,
+    newProfilePic?: string,
+
 }
 
-export const updateUserData = createAsyncThunk('user/updateUserData', async ({ whatUpdate, sender, reciver }: UpdateUser) => {
+export const updateUserData = createAsyncThunk('user/updateUserData', async (bodyObj: UpdateUser) => {
 
     const option: RequestInit = {
         cache: 'no-store',
         method: "PUT",
-        body: JSON.stringify({ whatUpdate, sender, reciver })
+        body: JSON.stringify({ ...bodyObj })
     }
     const response = await fetch(`/api/users/update`, option)
     let data = await response.json();
@@ -92,6 +94,7 @@ export interface UserDataInterface {
     email: string,
     isVerified: boolean,
     isAdmin: boolean,
+    allProfilePic?: string[]
 }
 
 
@@ -370,7 +373,7 @@ const userSlice = createSlice({
 
                         // let currentState = current(state)
 
-                        console.log(action.payload.data)
+                        // console.log(action.payload.data)
 
                         let { yourData } = action.payload.data
 
@@ -387,6 +390,16 @@ const userSlice = createSlice({
                         // }
 
                         state.userData.sendRequest = yourData.sendRequest
+
+                    }
+                    else if (whatUpdate === "newProfilePic") {
+                        state.userData.profilePic = action.payload.data.profilePic
+                        state.userData.allProfilePic = action.payload.data.allProfilePic
+
+                    }
+                    else if (whatUpdate === "makeProfilePic") {
+                        state.userData.profilePic = action.payload.data.profilePic
+                        // state.userData.allProfilePic = action.payload.data.allProfilePic
 
                     }
 

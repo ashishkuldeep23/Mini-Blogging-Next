@@ -292,7 +292,8 @@ const NewPostPage = () => {
             }
 
 
-        } else {
+        } 
+        else {
 
             toast.error("Plese Login again.")
             router.push("/login")
