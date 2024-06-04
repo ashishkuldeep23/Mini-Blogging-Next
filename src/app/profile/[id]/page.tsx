@@ -202,47 +202,45 @@ function AllUploadedPicturesDiv() {
 
 
     return (
-        <>
+        <div>
+            {
+                userData.allProfilePic
+                    &&
+                    userData.allProfilePic.length > 0
 
-            <div>
-                {
-                    userData.allProfilePic
-                        &&
-                        userData.allProfilePic.length > 0
+                    ?
+                    <div>
+                        <p className=' text-center underline font-semibold my-2'>All {userData?.allProfilePic?.length} uploaded picture by you.</p>
+                        <p className=' text-center text-xs'>Click on image to make profile pic.</p>
 
-                        ?
-                        <div>
-                            <p className=' text-center underline font-semibold my-2'>All {userData?.allProfilePic?.length} uploaded picture by you.</p>
-                            <p className=' text-center text-xs'>Click on image to make profile pic.</p>
+                        <div
+                            className='w-full px-5 py-4 flex gap-1 items-center overflow-x-scroll'
 
-                            <div
-                                className='w-full px-5 py-4 flex gap-1 overflow-x-scroll'
-
-                                id='all_uploaded_pics_holder_div'
-                            >
+                            id='all_uploaded_pics_holder_div'
+                        >
 
 
-                                {
-                                    userData.allProfilePic.map((ele, i) => {
-                                        return (
-                                            <ImageReact
-                                                key={i}
-                                                className={`border  p-1 w-32 h-32 rounded-full object-cover object-top active:scale-75 active:opacity-75 transition-all ${userData.profilePic === ele && " border-2 border-green-500"} `}
-                                                src={ele}
-                                                alt=""
-                                                onClick={() => { makeDpThisImage(ele) }}
-                                            />
-                                        )
-                                    })
-                                }
-                            </div>
-
+                            {
+                                userData.allProfilePic.map((ele, i) => {
+                                    return (
+                                        <ImageReact
+                                            key={i}
+                                            className={` aspect-square p-1 w-[20vh] h-[20vh] border rounded-full object-cover active:scale-75 active:opacity-75 transition-all 
+                                                ${userData.profilePic === ele && " border-2 border-green-500"} 
+                                            `}
+                                            src={ele}
+                                            alt=""
+                                            onClick={() => { makeDpThisImage(ele) }}
+                                        />
+                                    )
+                                })
+                            }
                         </div>
-                        : <></>
-                }
-            </div>
 
-        </>
+                    </div>
+                    : <></>
+            }
+        </div>
     )
 
 }
@@ -361,7 +359,7 @@ function UserProfileImage() {
 
 
                     <ImageReact
-                        className=" w-full h-full rounded-full object-cover object-top"
+                        className=" w-full h-full rounded-full object-cover"
                         src={postImageUrl}
                         alt=""
                     />
@@ -391,16 +389,16 @@ function UserProfileImage() {
 
 
             {
-                userData.profilePic !== postImageUrl
-                &&
+                // userData.profilePic !== postImageUrl
+                // &&
 
-                <div className=' w-40 flex gap-2 justify-center my-2 px-2'>
+                <div className='w-40 flex gap-2 justify-center my-2 px-2'>
                     <button
-                        className=' px-1  border rounded-full bg-green-500 font-bold text-xs '
+                        className={`px-1  border rounded-full bg-green-500 font-bold text-xs  ${userData.profilePic !== postImageUrl ? " scale-100" : "scale-0"} transition-all duration-700 `}
                         onClick={() => { uploadImgaeAndUserDataHandler() }}
                     >Upload</button>
                     <button
-                        className=' px-1  border rounded-full bg-rose-500 font-bold text-xs '
+                        className={`px-1  border rounded-full bg-rose-500 font-bold text-xs  ${userData.profilePic !== postImageUrl ? " scale-100" : "scale-0"} transition-all duration-700  `}
                         onClick={() => { setPostImageUrl(userData.profilePic) }}
                     >X</button>
                 </div>

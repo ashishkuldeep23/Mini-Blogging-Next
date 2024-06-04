@@ -74,7 +74,7 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
               >
 
                 <ImageReact
-                  className={`mt-2 rounded-full  w-8 h-8 object-cover border p-[1px] border-[${ele?.customize?.color}] `}
+                  className={`mt-2 rounded-full  w-8 h-8 aspect-square object-cover border p-[1px] border-[${ele?.customize?.color}] `}
                   src={`${ele?.author?.profilePic || "https://res.cloudinary.com/dlvq8n2ca/image/upload/v1701708322/jual47jntd2lpkgx8mfx.png"}`}
                   style={{ borderColor: ele?.customize?.color }}
                   alt=""

@@ -32,7 +32,7 @@ const ImageReact = ({
             width={width}
             src={src}
             alt={alt || "img"}
-            className={className}
+            className={`${className}`}
             style={style}
             onError={({ currentTarget }) => {
                 currentTarget.onerror = null; // prevents looping

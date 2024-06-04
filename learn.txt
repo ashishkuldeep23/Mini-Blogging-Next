@@ -3,21 +3,26 @@
 LEARN IN THIS PROJECT ======================================================================================>
 
 Taliwind CSS new things ------------------>
-    !m-0 :- this way we can give improtant to css property (by using !)
-    duration-500 :- by this way we can give transition duration directly 
+    1. !m-0 :- this way we can give improtant to css property (by using !)
+
+    2. duration-500 :- by this way we can give transition duration directly 
+
+    3. aspect-square :- This prop will maintain aspect ration of an image.
 
 
 
 SOME UPDATED ==============================================================================================>
 
 Post update ----------------->
-    1. Privacy for post [Public and private] .
+    4. User can post a Image ✅
+    6. User can upload profile pictures.✅
     2. Post custumizaton (like :- bg-color, border, Font-Family, may be heading size ). ✅
+
+    1. Privacy for post [Public and private] .
+    
     3. Post type Retweet feature.
 
-    4. User can post a Image ✅
     5. Socket IO (For messaging and notifications)
-    6. User can upload profile pictures.
 
     6. User can save a post that is posted by other user (Jaha pr edit delete btn hai agr post user ne nhi create kiya hai to user ushe apni profile me save kr sake)
 

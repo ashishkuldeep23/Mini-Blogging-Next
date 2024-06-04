@@ -199,100 +199,98 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
     // console.log(singlePost)
 
     return (
-        <>
+
+        <div
+            className={` sm:my-[5vh] sm:border rounded p-2 w-[95%] sm:w-[80%] md:w-[60%] border-yellow-500 `}
+            style={{
+                backgroundColor: singlePost?.customize?.bgColor,
+                color: singlePost?.customize?.color,
+                // backgroundImage: singlePost?.customize?.bgImage,
+                backgroundImage: `${(singlePost?.image && (`url('${singlePost.author?.profilePic}')` === `${singlePost?.customize?.bgImage}`)) ? "" : `${singlePost?.customize?.bgImage}`}`,
+                fontFamily: `${singlePost?.customize?.font} , sans-serif`,
+                borderColor: singlePost?.customize?.color || "#eab308",    // // // Now border is also following color theme.
+
+
+                // // // added more style if user choosed profile pic as bg of post ------>
+                backgroundRepeat: `url('${singlePost.author?.profilePic}')` === `${singlePost?.customize?.bgImage}` ? "repeat-y" : "",
+                backgroundPositionX: `url('${singlePost.author?.profilePic}')` === `${singlePost?.customize?.bgImage}` ? 'center' : "",
+                backgroundSize: `url('${singlePost.author?.profilePic}')` === `${singlePost?.customize?.bgImage}` ? "contain" : "",
+            }}
+        >
 
             <div
-                className={` sm:my-[5vh] sm:border rounded p-2 w-[95%] sm:w-[80%] md:w-[60%] border-yellow-500 `}
-                style={{
-                    backgroundColor: singlePost?.customize?.bgColor,
-                    color: singlePost?.customize?.color,
-                    // backgroundImage: singlePost?.customize?.bgImage,
-                    backgroundImage: `${(singlePost?.image && (`url('${singlePost.author?.profilePic}')` === `${singlePost?.customize?.bgImage}`)) ? "" : `${singlePost?.customize?.bgImage}`}`,
-                    fontFamily: `${singlePost?.customize?.font} , sans-serif`,
-                    borderColor: singlePost?.customize?.color || "#eab308",    // // // Now border is also following color theme.
+                className="rounded-t flex items-center gap-1.5 border-b border-cyan-400 hover:cursor-pointer"
+                onClick={() => {
 
-
-                    // // // added more style if user choosed profile pic as bg of post ------>
-                    backgroundRepeat: `url('${singlePost.author?.profilePic}')` === `${singlePost?.customize?.bgImage}` ? "repeat-y" : "",
-                    backgroundPositionX: `url('${singlePost.author?.profilePic}')` === `${singlePost?.customize?.bgImage}` ? 'center' : "",
-                    backgroundSize: `url('${singlePost.author?.profilePic}')` === `${singlePost?.customize?.bgImage}` ? "contain" : "",
+                    // console.log(singlePost.author)
+                    router.push(`/user/${singlePost.author._id}`);
                 }}
             >
+                <ImageReact
+                    className={` aspect-square mt-[3px] rounded-full w-8 border p-[1px] border-[${singlePost?.customize?.color}] `}
+                    src={`${singlePost?.author?.profilePic || "https://res.cloudinary.com/dlvq8n2ca/image/upload/v1701708322/jual47jntd2lpkgx8mfx.png"}`}
+                    style={{ borderColor: singlePost?.customize?.color }}
+                    alt=""
+                />
 
-                <div
-                    className="rounded-t flex items-center gap-1.5 border-b border-cyan-400 hover:cursor-pointer"
-                    onClick={() => {
-
-                        // console.log(singlePost.author)
-                        router.push(`/user/${singlePost.author._id}`);
-                    }}
-                >
-                    <ImageReact
-                        className={` mt-[3px] rounded-full w-8 border p-[1px] border-[${singlePost?.customize?.color}] `}
-                        src={`${singlePost?.author?.profilePic || "https://res.cloudinary.com/dlvq8n2ca/image/upload/v1701708322/jual47jntd2lpkgx8mfx.png"}`}
-                        style={{ borderColor: singlePost?.customize?.color }}
-                        alt=""
-                    />
-
-                    <div className=" mt-1">
-                        <p className="  capitalize underline font-semibold">{singlePost?.author?.username || "Name Kumar"}</p>
-                        <p className=" text-[0.6rem] -mt-[0.5vh]">{singlePost?.author?.email || "xyz100@gmail.com"}</p>
-                    </div>
-
+                <div className=" mt-1">
+                    <p className="  capitalize underline font-semibold">{singlePost?.author?.username || "Name Kumar"}</p>
+                    <p className=" text-[0.6rem] -mt-[0.5vh]">{singlePost?.author?.email || "xyz100@gmail.com"}</p>
                 </div>
-
-
-                <div className=' py-5 min-h-40'>
-
-
-                    <div className=" flex justify-between flex-wrap gap-1">
-                        <p className="capitalize">{singlePost.title}</p>
-                        <p className=" ml-auto text-xs">({singlePost.category})</p>
-                    </div>
-
-                    <div className=" text-sm"
-                    >
-
-                        {
-                            singlePost.promptReturn
-                        }
-                    </div>
-
-
-                    {
-                        singlePost && singlePost?.image
-                        &&
-                        <ImageReact
-                            className=' rounded my-2 w-full h-[70vh] object-contain'
-                            src={singlePost?.image}
-                        />
-
-                    }
-
-                    <p className=" text-[0.6rem] mt-2 text-end">Uploaded on : {singlePost.whenCreated || "Date"}</p>
-
-                    <div className=" flex flex-wrap gap-0.[2px] text-violet-500 font-semibold ">
-                        {
-
-                            (singlePost.hashthats.length > 0)
-                            &&
-                            singlePost.hashthats.map((hash, i) => {
-                                return <p className="ml-1.5" key={i}>{hash}</p>
-                            })
-
-                        }
-                    </div>
-
-                </div>
-
-                <div className=' py-5'>
-                    <LikeCommentDiv post={singlePost} />
-                </div>
-
 
             </div>
 
-        </>
+
+            <div className=' py-5 min-h-40'>
+
+
+                <div className=" flex justify-between flex-wrap gap-1">
+                    <p className="capitalize">{singlePost.title}</p>
+                    <p className=" ml-auto text-xs">({singlePost.category})</p>
+                </div>
+
+                <div className=" text-sm"
+                >
+
+                    {
+                        singlePost.promptReturn
+                    }
+                </div>
+
+
+                {
+                    singlePost && singlePost?.image
+                    &&
+                    <ImageReact
+                        className=' rounded my-2 w-full h-[70vh] object-contain'
+                        src={singlePost?.image}
+                    />
+
+                }
+
+                <p className=" text-[0.6rem] mt-2 text-end">Uploaded on : {singlePost.whenCreated || "Date"}</p>
+
+                <div className=" flex flex-wrap gap-0.[2px] text-violet-500 font-semibold ">
+                    {
+
+                        (singlePost.hashthats.length > 0)
+                        &&
+                        singlePost.hashthats.map((hash, i) => {
+                            return <p className="ml-1.5" key={i}>{hash}</p>
+                        })
+
+                    }
+                </div>
+
+            </div>
+
+            <div className=' py-5'>
+                <LikeCommentDiv post={singlePost} />
+            </div>
+
+
+        </div>
+
     )
 }
 

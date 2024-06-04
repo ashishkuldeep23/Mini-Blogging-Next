@@ -16,6 +16,7 @@ import { useSession } from "next-auth/react";
 import { BsFillPatchPlusFill } from "react-icons/bs";
 // import { debounce } from "@/utils/debounce";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { PlaceholdersAndVanishInput } from "./components/ui/placeholders-and-vanish-input";
 {/* <BsFillPatchPlusFill /> */ }
 
 
@@ -33,10 +34,10 @@ export default function Home() {
   // console.log(themeMode)
 
 
-  let onFocusFlagForRedirectUser = false
+  // let onFocusFlagForRedirectUser = false
 
   return (
-    <main className={` relative flex min-h-screen flex-col items-center gap-10 ${!themeMode ? " bg-black text-white " : " bg-white text-black"}`}>
+    <main className={` relative flex min-h-screen flex-col items-center ${!themeMode ? " bg-black text-white " : " bg-white text-black"}`}>
 
       <Navbar />
 
@@ -59,58 +60,16 @@ export default function Home() {
       }
 
 
-      <div className=" flex flex-col justify-center items-center py-6 ">
+      <div className=" flex flex-col justify-center items-center pb-6 ">
 
 
         <div className="flex flex-col items-center ">
 
-          <div className=" px-4 sm:px-10 flex flex-col items-center text-center ">
-
-            <h1 className="text-4xl sm:text-6xl font-bold"
-            >
-              <MaskerText text={"Discover & Share"} />
-            </h1>
-            <h1 className="ai_heading text-4xl sm:text-6xl font-bold pb-2"
-            >
-              <MaskerText text={"AI-Powered Prompts"} />
-            </h1>
-            {/* <p className="ai_heading font-extrabold"><span>(Mini blogging)</span></p> */}
-
-            <h3
-              className=" w-11/12 sm:w-4/6 text-sm sm:text-xl leading-4 sm:leading-6 font-semibold"
-            >
-
-              <MaskerText text={"PromptiPedia is an open-surce AI prompting tool form mordern world to discover, create and share creative prompts"} />
-
-              {/* <MaskerText text={""} /> */}
-
-            </h3>
-
-            <input
-              type="text"
-              className={`p-0.5 px-2 font-bold mt-5 w-11/12 sm:w-4/6 rounded-full shadow-lg  border 
-                  ${!themeMode ? "text-white bg-black shadow-slate-700 border-slate-700 " : "text-black bg-white shadow-slate-300 border-slate-300 "}
-               `}
-              placeholder="Search for prompt here."
-              name="Search_Input"
-              onFocus={() => {
-                if (!onFocusFlagForRedirectUser) {
-                  onFocusFlagForRedirectUser = true
-                  router.push('/search')
-                }
-              }}
-
-              onClick={() => router.push('/search')}
-
-            />
-
-          </div>
-
-
-          <SearchByDiv />
-
+          <FeatureDetailShowHomeFirstTime />
 
         </div>
+
+        <SearchByDiv />
 
 
         <AllPostDiv />
@@ -129,6 +88,85 @@ export default function Home() {
 }
 
 
+
+function FeatureDetailShowHomeFirstTime() {
+
+  const [firstTime, setFirstTime] = useState("")
+
+
+  useEffect(() => {
+
+    localStorage.setItem("alreadyVisited", JSON.stringify("yes"))
+
+
+    let chcekAlreadyVisited = localStorage.getItem("alreadyVisited")
+
+    if (chcekAlreadyVisited) {
+
+      chcekAlreadyVisited = JSON.parse(chcekAlreadyVisited)
+
+      chcekAlreadyVisited && setFirstTime(chcekAlreadyVisited)
+    }
+
+
+  }, [])
+
+
+  return (
+
+    <>
+
+      <div className={`px-4 mb-7 sm:px-10 flex flex-col items-center text-center ${!firstTime ? " scale-100 !h-auto mt-10 " : " scale-0 !h-0 "} transition-all duration-700 `}>
+
+        <h1 className="text-4xl sm:text-6xl font-bold"
+        >
+          <MaskerText text={"Discover & Share"} />
+        </h1>
+        <h1 className="ai_heading text-4xl sm:text-6xl font-bold pb-2"
+        >
+          <MaskerText text={"AI-Powered Prompts"} />
+        </h1>
+        {/* <p className="ai_heading font-extrabold"><span>(Mini blogging)</span></p> */}
+
+        <h3
+          className=" w-11/12 sm:w-4/6 text-sm sm:text-xl leading-4 sm:leading-6 font-semibold"
+        >
+
+          <MaskerText text={"PromptiPedia is an open-surce AI prompting tool form mordern world to discover, create and share creative prompts"} />
+
+          {/* <MaskerText text={""} /> */}
+
+        </h3>
+
+      </div>
+
+      <div
+        className={` flex flex-col items-center mb-2 ${firstTime ? " scale-100 !h-auto " : " scale-0 !h-0 "} transition-all duration-700 `}
+      >
+
+        <p className=" text-2xl font-semibold text-center ">
+          Latest posts are 👇
+        </p>
+        <button
+          className="  text-xs px-4 border rounded-2xl"
+          onClick={() => {
+            // console.log("Clicked ------------>")
+            // console.log(firstTime)
+            setFirstTime("")
+          }}
+
+        >Show web discription</button>
+
+
+      </div>
+
+    </>
+
+  )
+
+}
+
+
 const SearchByDiv = () => {
 
   const [expandCat, setExpandCat] = useState(false)
@@ -138,6 +176,15 @@ const SearchByDiv = () => {
   const { postCategories, posthashtags, searchHashAndCate } = usePostData()
 
   const dispatch = useDispatch<AppDispatch>()
+
+  const router = useRouter()
+
+  // console.log(themeMode)
+  const themeMode = useThemeData().mode
+
+  // // // A var that used in redirect user.
+  let onFocusFlagForRedirectUser = false
+
 
 
   function getDataByCategory(cat: string) {
@@ -169,7 +216,56 @@ const SearchByDiv = () => {
   return (
 
     <>
-      <div className=" w-11/12 sm:w-4/6 flex flex-col items-center px-1 sm:px-5  mt-7">
+
+      {/* Previously using this ---------> */}
+      {/* <input
+        type="text"
+        className={`mb-4 p-0.5 px-2 font-bold mt-5 w-11/12 sm:w-4/6 rounded-full shadow-lg  border 
+          ${!themeMode ? "text-white bg-black shadow-slate-700 border-slate-700 " : "text-black bg-white shadow-slate-300 border-slate-300 "}
+       `}
+        placeholder="Search for prompt here."
+        name="Search_Input"
+        onFocus={() => {
+          if (!onFocusFlagForRedirectUser) {
+            onFocusFlagForRedirectUser = true
+            router.push('/search')
+          }
+        }}
+
+        onClick={() => router.push('/search')}
+
+      /> */}
+
+
+      <PlaceholdersAndVanishInput
+        onChange={() => {
+          // e.preventDefault()
+          if (!onFocusFlagForRedirectUser) {
+            onFocusFlagForRedirectUser = true
+            router.push('/search')
+          }
+        }}
+        onSubmit={() => {
+          // e.preventDefault()
+          if (!onFocusFlagForRedirectUser) {
+            onFocusFlagForRedirectUser = true
+            router.push('/search')
+          }
+        }}
+        onFocus={() => {
+          // e.preventDefault()
+          if (!onFocusFlagForRedirectUser) {
+            onFocusFlagForRedirectUser = true
+            router.push('/search')
+          }
+        }}
+        placeholders={['Search by post title, category and hashtag', 'Search by user name.', 'Search here...', 'Made by Ashish kuldeep.']}
+
+      />
+
+
+
+      <div className=" w-11/12 sm:w-4/6 flex flex-col items-center px-1 sm:px-5 ">
 
         <div className="w-full flex justify-around flex-wrap">
 
@@ -341,67 +437,61 @@ function AllPostDiv() {
 
   return (
 
-    <>
+    <InfiniteScroll
+      dataLength={allPostData.length} //This is important field to render the next data
+      next={() => {
 
-      <InfiniteScroll
-        dataLength={allPostData.length} //This is important field to render the next data
-        next={() => {
+        if (allPostData.length < allPostsLength && !searchHashAndCate.category && !searchHashAndCate.hash) {
+          fetchMorePostData()
+        }
+      }}
 
-          if (allPostData.length < allPostsLength && !searchHashAndCate.category && !searchHashAndCate.hash) {
-            fetchMorePostData()
-          }
-        }}
+      hasMore={true}
+      loader={
+        (allPostData.length < allPostsLength && !searchHashAndCate.category && !searchHashAndCate.hash)
+        &&
 
-        hasMore={true}
-        loader={
-          (allPostData.length < allPostsLength && !searchHashAndCate.category && !searchHashAndCate.hash)
-          &&
+        <div className=" mt-10 flex gap-2 items-center">
+          <span>LOADING...</span>
+          <span className=" w-4 h-4   rounded-full animate-spin "></span>
+        </div>
+      }
 
-          <div className=" mt-10 flex gap-2 items-center">
-            <span>LOADING...</span>
-            <span className=" w-4 h-4   rounded-full animate-spin "></span>
-          </div>
+      className="w-[98vw] min-h-[50vh] pt-[1vh] pb-[7vh] px-[2vh] !overflow-auto flex flex-col items-center justify-center"
+    >
+
+      <div className="card_container mt-10 relative sm:px-[8vh] flex gap-10 gap-x-64 p-0.5 flex-wrap justify-center items-center ">
+
+        <MainLoader
+          isLoading={isLoading}
+        // className="top-0" 
+        />
+
+        {
+
+          allPostData.length > 0
+            ?
+
+            allPostData.map((ele, i) => {
+              return (
+                <SinglePostCard key={i} ele={ele} className=" hover:z-10" />
+              )
+            })
+
+            : <></>
+
+          // : [null, null, null, null, null, null, null, null, null, null].map((ele, i) => {
+          //   return (
+
+          //     <Card key={i} ele={ele} />
+
+          //   )
+          // })
         }
 
-        className="w-[98vw] min-h-[50vh] py-[7vh] px-[2vh] !overflow-auto flex flex-col items-center justify-center"
+      </div>
 
-      >
-
-        <div className="card_container mt-10 relative sm:px-[8vh] flex gap-10 gap-x-64 p-0.5 flex-wrap justify-center items-center ">
-
-          <MainLoader
-            isLoading={isLoading}
-          // className="top-0" 
-          />
-
-          {
-
-            allPostData.length > 0
-              ?
-
-              allPostData.map((ele, i) => {
-                return (
-                  <SinglePostCard key={i} ele={ele} className=" hover:z-10" />
-                )
-              })
-
-              : <></>
-
-            // : [null, null, null, null, null, null, null, null, null, null].map((ele, i) => {
-            //   return (
-
-            //     <Card key={i} ele={ele} />
-
-            //   )
-            // })
-          }
-
-        </div>
-
-      </InfiniteScroll>
-
-
-    </>
+    </InfiniteScroll>
 
   )
 }
