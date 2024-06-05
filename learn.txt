@@ -3,12 +3,13 @@
 LEARN IN THIS PROJECT ======================================================================================>
 
 Taliwind CSS new things ------------------>
-    1. !m-0 :- this way we can give improtant to css property (by using !)
+    1. !m-0 :- this way we can give improtant to css property (by using !).
 
-    2. duration-500 :- by this way we can give transition duration directly 
+    2. duration-500 :- by this way we can give transition duration directly.
 
     3. aspect-square :- This prop will maintain aspect ration of an image.
 
+    4. NODE_ENV=production node server.js :- this is how we can set env during starting our server.
 
 
 SOME UPDATED ==============================================================================================>

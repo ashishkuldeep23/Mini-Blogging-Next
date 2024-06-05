@@ -39,6 +39,8 @@ export default function Home() {
   return (
     <main className={` relative flex min-h-screen flex-col items-center ${!themeMode ? " bg-black text-white " : " bg-white text-black"}`}>
 
+      <SocketConnectionCodeHere />
+
       <Navbar />
 
       {/* Plus ICon to create post  */}
@@ -570,4 +572,66 @@ const FooterDiv = () => {
       </div>
     </>
   )
+}
+
+
+// import { useEffect, useState } from "react";
+import { socket } from "../socket";
+
+function SocketConnectionCodeHere() {
+
+  const [isConnected, setIsConnected] = useState(false);
+  const [transport, setTransport] = useState("N/A");
+
+  useEffect(() => {
+    if (socket.connected) {
+      onConnect();
+    }
+
+    function onConnect() {
+      setIsConnected(true);
+      setTransport(socket.io.engine.transport.name);
+
+      socket.io.engine.on("upgrade", (transport: any) => {
+        setTransport(transport.name);
+      });
+    }
+
+    function onDisconnect() {
+      setIsConnected(false);
+      setTransport("N/A");
+    }
+
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
+
+    return () => {
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
+    };
+  }, []);
+
+
+  useEffect(() => {
+    if (isConnected) {
+
+      socket.emit("connection", "world");
+      socket.emit("hello", "world");
+    }
+
+  }, [isConnected])
+
+
+  return (
+    <div
+      className=" hover:cursor-pointer"
+      onClick={() => {
+        socket.emit("hello", "world");
+      }}
+    >
+      <p>Status: {isConnected ? "connected" : "disconnected"}</p>
+      <p>Transport: {transport}</p>
+    </div>
+  );
+
 }
