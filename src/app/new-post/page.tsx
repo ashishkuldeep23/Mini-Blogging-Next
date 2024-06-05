@@ -292,7 +292,7 @@ const NewPostPage = () => {
             }
 
 
-        } 
+        }
         else {
 
             toast.error("Plese Login again.")
@@ -919,7 +919,7 @@ const NewPostPage = () => {
                                 <div className="rounded-t flex gap-1.5 items-center border-b border-cyan-400">
 
                                     <ImageReact
-                                        className=" rounded-full w-8"
+                                        className=" rounded-full w-8 h-8 aspect-square object-cover"
                                         src={`${session?.user.image || "https://res.cloudinary.com/dlvq8n2ca/image/upload/v1701708322/jual47jntd2lpkgx8mfx.png"}`}
                                         alt=""
                                     />

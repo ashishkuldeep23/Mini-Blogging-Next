@@ -10,13 +10,16 @@ export function PlaceholdersAndVanishInput({
     onChange,
     onSubmit,
     className,
-    onFocus
+    onFocus,
+    inputValue,
+
 }: {
     placeholders: string[];
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
     onFocus?: Function;
     className?: string;
+    inputValue?: string;
 }) {
     const [currentPlaceholder, setCurrentPlaceholder] = useState(0);
 
@@ -34,7 +37,7 @@ export function PlaceholdersAndVanishInput({
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const newDataRef = useRef<any[]>([]);
     const inputRef = useRef<HTMLInputElement>(null);
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState(inputValue || "");
     const [animating, setAnimating] = useState(false);
     const themeMode = useThemeData().mode
 

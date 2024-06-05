@@ -13,6 +13,7 @@ import toast from 'react-hot-toast';
 import { useSession } from 'next-auth/react';
 import SinglePostCard from '../components/SinglePostCard';
 import { PlaceholdersAndVanishInput } from '../components/ui/placeholders-and-vanish-input';
+import { setSearchByText, usePostData } from '@/redux/slices/PostSlice';
 
 
 
@@ -24,6 +25,8 @@ const SearchPage = () => {
     const themeMode = useThemeData().mode
 
     const router = useRouter()
+    
+    const searchByText = usePostData().searchByText
 
     const searchInputRef = useRef<HTMLInputElement>(null)
 
@@ -66,6 +69,10 @@ const SearchPage = () => {
     type EventOfClick = React.KeyboardEvent<HTMLInputElement> | React.MouseEvent<HTMLButtonElement, MouseEvent> | React.FormEvent<HTMLFormElement>
 
     function hardSearchHandler(e: EventOfClick) {
+
+        // // // Make search empty now --------->
+        dispatch(setSearchByText(""))
+
 
         // // // See all result ----->
         setseeAllResult(true)
@@ -244,6 +251,7 @@ const SearchPage = () => {
                         onChange={(e) => (onChangeHandler(e))}
                         onSubmit={(e) => { hardSearchHandler(e) }}
                         placeholders={['Search by post title, category and hashtag', 'Search by user name.', 'Search here...', 'Made by Ashish kuldeep.']}
+                        inputValue={searchByText}
 
                     />
 

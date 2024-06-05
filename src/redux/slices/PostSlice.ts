@@ -238,6 +238,7 @@ interface PostSliceInterFace {
         category: string,
         page: number
     },
+    searchByText?: string
 
 }
 
@@ -292,6 +293,7 @@ const initialState: PostSliceInterFace = {
         category: "",
         page: 1
     },
+    searchByText: "",
 
 }
 
@@ -397,6 +399,10 @@ const psotSlice = createSlice({
 
 
             state.searchHashAndCate = { hash: action.payload.hash || "", category: action.payload.category || '', page: action.payload.page || 1 }
+        },
+
+        setSearchByText(state, action: PayloadAction<string>) {
+            state.searchByText = action.payload
         }
 
 
@@ -618,7 +624,8 @@ export const {
     setUpdateComment,
     setDeleteSinglePost,
     setUpdatingPost,
-    setSearchBrandAndCate
+    setSearchBrandAndCate,
+    setSearchByText
     // setDeleteComment
 } = psotSlice.actions
 

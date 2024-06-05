@@ -225,7 +225,7 @@ function AllUploadedPicturesDiv() {
                                     return (
                                         <ImageReact
                                             key={i}
-                                            className={` aspect-square p-1 w-[20vh] h-[20vh] border rounded-full object-cover active:scale-75 active:opacity-75 transition-all 
+                                            className={` aspect-square p-1 w-[20vh] h-[20vh] border rounded-full object-cover active:scale-75 active:opacity-75 hover:cursor-pointer transition-all 
                                                 ${userData.profilePic === ele && " border-2 border-green-500"} 
                                             `}
                                             src={ele}

@@ -227,7 +227,7 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
                 }}
             >
                 <ImageReact
-                    className={` aspect-square mt-[3px] rounded-full w-8 border p-[1px] border-[${singlePost?.customize?.color}] `}
+                    className={` aspect-square object-cover mt-[3px] rounded-full w-8 border p-[1px] border-[${singlePost?.customize?.color}] `}
                     src={`${singlePost?.author?.profilePic || "https://res.cloudinary.com/dlvq8n2ca/image/upload/v1701708322/jual47jntd2lpkgx8mfx.png"}`}
                     style={{ borderColor: singlePost?.customize?.color }}
                     alt=""

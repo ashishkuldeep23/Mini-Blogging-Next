@@ -4,7 +4,7 @@ import { useThemeData } from "@/redux/slices/ThemeSlice";
 import Navbar from "./components/Navbar";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { getAllPosts, usePostData, setSearchBrandAndCate } from "@/redux/slices/PostSlice";
+import { getAllPosts, usePostData, setSearchBrandAndCate, setSearchByText } from "@/redux/slices/PostSlice";
 import { AppDispatch } from "@/redux/store";
 import MainLoader from "./components/MainLoader";
 import MaskerText from "./components/MaskerText";
@@ -175,7 +175,7 @@ const SearchByDiv = () => {
 
   const [expandHash, setExpandHash] = useState(false)
 
-  const { postCategories, posthashtags, searchHashAndCate } = usePostData()
+  const { postCategories, posthashtags, searchHashAndCate, searchByText } = usePostData()
 
   const dispatch = useDispatch<AppDispatch>()
 
@@ -240,8 +240,11 @@ const SearchByDiv = () => {
 
 
       <PlaceholdersAndVanishInput
-        onChange={() => {
+        onChange={(e) => {
           // e.preventDefault()
+
+          dispatch(setSearchByText(e.target.value))
+
           if (!onFocusFlagForRedirectUser) {
             onFocusFlagForRedirectUser = true
             router.push('/search')
@@ -262,6 +265,7 @@ const SearchByDiv = () => {
           }
         }}
         placeholders={['Search by post title, category and hashtag', 'Search by user name.', 'Search here...', 'Made by Ashish kuldeep.']}
+        inputValue={searchByText }
       />
 
 
