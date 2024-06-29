@@ -2,7 +2,8 @@
 FROM node:14
 
 # Create and change to the app directory.
-WORKDIR /usr/src/app
+# WORKDIR /usr/src/app
+WORKDIR /src/app
 
 # Copy application dependency manifests to the container image.
 # A wildcard is used to ensure both package.json AND package-lock.json are copied.
