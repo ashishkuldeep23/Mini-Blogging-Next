@@ -10,7 +10,11 @@ const handle = app.getRequestHandler();
 app.prepare().then(() => {
     const server = express();
     const httpServer = createServer(server);
-    const io = new Server(httpServer);
+    const io = new Server(httpServer, {
+        cors: {
+            origin: '*',
+        },
+    });
 
     // Store users and their socket IDs
     const users = {};

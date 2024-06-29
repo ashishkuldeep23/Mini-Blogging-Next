@@ -664,10 +664,9 @@ function SocketConnectionCodeHere() {
 
     // // // PUT all socket listernes inisde useEffect -------------->
 
-
     socket.on("word", (msg: any) => {
       console.log({ msg })
-      // alert(msg)
+      alert(msg)
     })
 
 
