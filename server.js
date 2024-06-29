@@ -1,48 +1,70 @@
+const express = require('express');
+const { createServer } = require('http');
+const { Server } = require('socket.io');
+const next = require('next');
 
-
-// import { createServer } from "node:http";
-// import { createServer } from 'node:http';
-// import next from "next";
-// import { Server } from "socket.io";
-
-
-const { createServer } = require("node:http")
-const next = require("next")
-const { Server } = require("socket.io")
-
-
-const dev = process.env.NODE_ENV !== "production";
-const hostname = "localhost";
-const port = 3000;
-// when using middleware `hostname` and `port` must be provided below
-const app = next({ dev, hostname, port });
-const handler = app.getRequestHandler();
+const dev = process.env.NODE_ENV !== 'production';
+const app = next({ dev });
+const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
-    const httpServer = createServer(handler);
-
+    const server = express();
+    const httpServer = createServer(server);
     const io = new Server(httpServer);
 
-    io.on("connection", (socket) => {
-        // ...
+    // Store users and their socket IDs
+    const users = {};
 
-        console.log("User got connected.")
+    io.on('connection', (socket) => {
+        console.log('New client connected');
+
+        // Save user connection
+
+        socket.on('register', (userData) => {
+            // console.log("Register ------------>")
+            // console.log(userData)
+            let userId = userData._id
+            users[userId] = socket.id;
+            console.log(` ${userData.username} registered with socket ID ${socket.id}`);
+        });
+
+        // Handle private messages
+        socket.on('hello', (data) => {
+            console.log(data)
+
+            socket.emit("word", "ok")
+
+        });
 
 
+        // Handle private messages
+        socket.on('privateMessage', ({ senderId, recipientId, message }) => {
+            const recipientSocketId = users[recipientId];
+            if (recipientSocketId) {
+                io.to(recipientSocketId).emit('privateMessage', { senderId, message });
+            }
+        });
+
+
+        socket.on('disconnect', () => {
+            // Remove user from the users object
+            for (const userId in users) {
+                if (users[userId] === socket.id) {
+                    delete users[userId];
+                    break;
+                }
+            }
+            console.log('Client disconnected');
+        });
     });
 
+    server.all('*', (req, res) => {
+        return handle(req, res);
+    });
 
-
-    io.on("hello", (value) => {
-        console.log("Hurray --------------->")
-    })
-
-    httpServer
-        .once("error", (err) => {
-            console.error(err);
-            process.exit(1);
-        })
-        .listen(port, () => {
-            console.log(`> Ready on http://${hostname}:${port}`);
-        });
+    const PORT = process.env.PORT || 3000;
+    httpServer.listen(PORT, (err) => {
+        if (err) throw err;
+        console.log(`> Ready on http://localhost:${PORT}`);
+    });
 });

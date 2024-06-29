@@ -134,9 +134,7 @@ const ProfilePageParams = ({ params }: any) => {
 
                 {
                     userData.allPostOfUser.length > 0
-
                     &&
-
                     userData.allPostOfUser.map((ele) => {
                         return <SinglePostCard ele={ele} key={ele._id} />
                     })
@@ -145,11 +143,8 @@ const ProfilePageParams = ({ params }: any) => {
 
                 {
 
-
                     (session?.user?.id && !isLoading && userData.allPostOfUser.length === 0)
-
                     &&
-
                     <div className=' text-center'>
                         <p className=' text-xl'>No Post found for You. 404</p>
                         <Link href={"/new-post"} className=' px-2 text-xs border rounded'>Write post</Link>
@@ -225,7 +220,8 @@ function AllUploadedPicturesDiv() {
                                     return (
                                         <ImageReact
                                             key={i}
-                                            className={` aspect-square p-1 w-[20vh] h-[20vh] border rounded-full object-cover active:scale-75 active:opacity-75 hover:cursor-pointer transition-all 
+                                            className={` aspect-square p-1 w-[20vh] h-[20vh] border rounded-full object-cover active:scale-75 active:opacity-75 hover:cursor-pointer hover:scale-90 transition-all
+                                                
                                                 ${userData.profilePic === ele && " border-2 border-green-500"} 
                                             `}
                                             src={ele}
@@ -376,7 +372,7 @@ function UserProfileImage() {
 
                     <label
                         htmlFor='profile_img'
-                        className={`absolute bottom-2 right-2  border rounded-full p-0.5 ${!themeMode ? "bg-black" : "bg-white"} active:scale-75 active:opacity-75 transition-all`}
+                        className={`absolute bottom-2 right-2  border rounded-full p-0.5 hover:scale-90 hover:cursor-pointer transition-all ${!themeMode ? "bg-black" : "bg-white"} active:scale-75 active:opacity-75 transition-all`}
                     >
 
                         <IoMdCloudUpload
@@ -404,7 +400,6 @@ function UserProfileImage() {
                 </div>
 
             }
-
 
         </>
     )
