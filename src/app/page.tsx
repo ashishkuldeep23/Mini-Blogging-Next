@@ -702,6 +702,7 @@ function SocketConnectionCodeHere() {
 
 
 import Pusher from 'pusher-js'
+import { pusherClient } from "@/lib/pusher";
 
 
 const username = "ashish"
@@ -737,15 +738,13 @@ function PusherTestDiv({ channelName }: { channelName: string }) {
 
     Pusher.logToConsole = true; // Enable logging
 
-    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
-      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
-      authEndpoint: '/api/pusher/auth', // Correct auth endpoint
-    });
+    // const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
+    //   cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
+    //   authEndpoint: '/api/pusher/auth', // Correct auth endpoint
+    // });
 
 
-    pusher.signin()
-
-    const channel = pusher.subscribe(`${channelName}`);
+    const channel = pusherClient.subscribe(`${channelName}`);
 
     channel.bind('message', (data: any) => {
       console.log('Received message:', data); // Log received data
@@ -767,19 +766,36 @@ function PusherTestDiv({ channelName }: { channelName: string }) {
     });
 
     return () => {
-      pusher.unsubscribe(`${channelName}`);
+      pusherClient.unsubscribe(`${channelName}`);
     };
   }, [room]);
 
 
 
-  const callPusherFn = () => {
-    const sendThisText = "My Msg....."
-    sendMessage(sendThisText)
-  }
+
+  // // // Sending msg to me ---->
+  const { userData } = useUserState()
+  // // // // Sign in by userId ---------->
+  useEffect(() => {
+    if (userData._id) {
+
+      let userChannel = pusherClient.subscribe(`${userData._id}`)
+
+      userChannel.bind('msg-me', (data: any) => {
+        console.log({ data })
+        alert(`Msg me clicked, ${JSON.stringify(data)}`)
+      })
+
+    }
+
+    return () => {
+      pusherClient.unsubscribe(`${userData._id}`)
+    }
+  }, [userData])
 
 
-  const sendMessage = async (msg: string) => {
+
+  const sendMessage = async (msg: string, channelName: string, event: string) => {
     // e.preventDefault();
 
     let req = await fetch('/api/pusher', {
@@ -788,8 +804,8 @@ function PusherTestDiv({ channelName }: { channelName: string }) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        event: 'message',
-        data: { username: 'User', message: msg, room },
+        event: event,
+        data: { username: userData.username || 'User', message: msg, room },
         channel: channelName
       }),
     });
@@ -801,6 +817,26 @@ function PusherTestDiv({ channelName }: { channelName: string }) {
     console.log('Message sent result:', result); // Log result of sending message
 
   };
+
+
+
+  const callPusherFn = () => {
+    const sendThisText = "My Msg....."
+    sendMessage(sendThisText, channelName, "message")
+  }
+
+
+
+  function callPusherFnForMsgMe() {
+
+    // console.log(userData._id)
+    // return
+
+    if (userData?._id) {
+      sendMessage("Check msg me", userData._id, "msg-me")
+    }
+  }
+
 
 
   return (
@@ -817,6 +853,10 @@ function PusherTestDiv({ channelName }: { channelName: string }) {
         onClick={() => callPusherFn()}
         className=" m-1 px-2 rounded-md border border-white active:scale-75 transition-all duration-300"
       >Click</button>
+      <button
+        onClick={() => callPusherFnForMsgMe()}
+        className=" m-1 px-2 rounded-md border border-white active:scale-75 transition-all duration-300"
+      >MSG ME</button>
     </div>
   )
 

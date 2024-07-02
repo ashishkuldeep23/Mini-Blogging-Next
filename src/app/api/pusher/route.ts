@@ -18,6 +18,7 @@ const pusher = new Pusher({
 
 
 import { NextRequest, NextResponse } from "next/server";
+import { pusherServer } from '@/lib/pusher';
 
 
 export async function POST(req: NextRequest) {
@@ -36,7 +37,7 @@ export async function POST(req: NextRequest) {
 
         console.log({ event, data, channel })
 
-        let responce = await pusher.trigger(`${channel}`, event, data);
+        let responce = await pusherServer.trigger(`${channel}`, event, data);
 
         console.log(responce.status)
         // console.log(responce.body)
