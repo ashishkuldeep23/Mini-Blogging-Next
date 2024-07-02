@@ -40,7 +40,12 @@ export default function Home() {
     <main className={` relative flex min-h-screen flex-col items-center ${!themeMode ? " bg-black text-white " : " bg-white text-black"}`}>
 
       {/* Socket IO component here ------------> */}
-      <SocketConnectionCodeHere />
+      {/* <SocketConnectionCodeHere /> */}
+
+      {/* Now i'm going to user pusher ------> */}
+      <PusherTestDiv
+        channelName='ashish'
+      />
 
       <Navbar />
 
@@ -691,5 +696,128 @@ function SocketConnectionCodeHere() {
       >Send Msg</button>
     </div>
   );
+
+}
+
+
+
+import Pusher from 'pusher-js'
+
+
+const username = "ashish"
+const recipient = "kuldeep"
+
+
+function PusherTestDiv({ channelName }: { channelName: string }) {
+
+  const [message, setMessage] = useState('');
+  const [messages, setMessages] = useState<any[]>(["see"]);
+  const [replies, setReplies] = useState<any[]>([]);
+  const [room, setRoom] = useState('general');
+
+  // // // In pesonal messaging will get userId from params --------->
+
+
+  // const channelName = `private-chat-${username}-${recipient}`;
+  // const channelName = `chat`;
+
+
+  // channelName = `private-chat-${channelName}`
+
+  channelName = `p-chat`
+
+
+  useEffect(() => {
+
+    if (!channelName) {
+      console.log("Give channel name please.")
+      return
+    }
+
+
+    Pusher.logToConsole = true; // Enable logging
+
+    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
+      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
+      authEndpoint: '/api/pusher/auth', // Correct auth endpoint
+    });
+
+
+    pusher.signin()
+
+    const channel = pusher.subscribe(`${channelName}`);
+
+    channel.bind('message', (data: any) => {
+      console.log('Received message:', data); // Log received data
+      setMessages((prevMessages) => [...prevMessages, data]);
+    });
+
+    channel.bind('reply', (data: any) => {
+      setReplies((prevReplies) => [...prevReplies, data]);
+    });
+
+
+
+    channel.bind('pusher:subscription_succeeded', () => {
+      console.log('Subscription succeeded'); // Log subscription success
+    });
+
+    channel.bind('pusher:subscription_error', (status: any) => {
+      console.error('Subscription error:', status); // Log subscription error
+    });
+
+    return () => {
+      pusher.unsubscribe(`${channelName}`);
+    };
+  }, [room]);
+
+
+
+  const callPusherFn = () => {
+    const sendThisText = "My Msg....."
+    sendMessage(sendThisText)
+  }
+
+
+  const sendMessage = async (msg: string) => {
+    // e.preventDefault();
+
+    let req = await fetch('/api/pusher', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        event: 'message',
+        data: { username: 'User', message: msg, room },
+        channel: channelName
+      }),
+    });
+
+    setMessage('');
+
+
+    const result = await req.json();
+    console.log('Message sent result:', result); // Log result of sending message
+
+  };
+
+
+  return (
+    <div
+      className=" border-2 border-red-500 flex flex-col items-center justify-center w-full"
+    >
+      <p className=" text-center">
+        {
+          JSON.stringify(messages)
+        }
+      </p>
+      <p>Checking Pusher here </p>
+      <button
+        onClick={() => callPusherFn()}
+        className=" m-1 px-2 rounded-md border border-white active:scale-75 transition-all duration-300"
+      >Click</button>
+    </div>
+  )
 
 }
