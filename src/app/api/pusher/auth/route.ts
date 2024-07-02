@@ -13,7 +13,7 @@ const pusher = new Pusher({
     secret: secret,
     cluster: cluster,
     useTLS: true,
-    encryptionMasterKeyBase64: encryptedKey
+    // encryptionMasterKeyBase64: encryptedKey
 });
 
 
