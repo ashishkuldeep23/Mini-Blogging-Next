@@ -586,118 +586,118 @@ const FooterDiv = () => {
 
 
 // import { useEffect, useState } from "react";
-import { socket } from "../socket";
+// import { socket } from "../socket";
 import { useUserState } from "@/redux/slices/UserSlice";
 
-function SocketConnectionCodeHere() {
+// function SocketConnectionCodeHere() {
 
-  const [isConnected, setIsConnected] = useState(false);
-  const [transport, setTransport] = useState("N/A");
+//   const [isConnected, setIsConnected] = useState(false);
+//   const [transport, setTransport] = useState("N/A");
 
-  const { userData } = useUserState()
+//   const { userData } = useUserState()
 
-  // console.log(socket)
+//   // console.log(socket)
 
-  function onConnect() {
-    setIsConnected(true);
-    setTransport(socket.io.engine.transport.name);
+//   function onConnect() {
+//     setIsConnected(true);
+//     setTransport(socket.io.engine.transport.name);
 
-    socket.io.engine.on("upgrade", (transport: any) => {
-      setTransport(transport.name);
-    });
-  }
-
-
-  function onDisconnect() {
-    setIsConnected(false);
-    setTransport("N/A");
-  }
+//     socket.io.engine.on("upgrade", (transport: any) => {
+//       setTransport(transport.name);
+//     });
+//   }
 
 
-  // // // This is how we can connent with socket ------>
-  useEffect(() => {
-    if (socket.connected) {
-      onConnect();
-    }
-
-    socket.on("connect", onConnect);
-    socket.on("disconnect", onDisconnect);
-
-    return () => {
-      socket.off("connect", onConnect);
-      socket.off("disconnect", onDisconnect);
-    };
-  }, []);
+//   function onDisconnect() {
+//     setIsConnected(false);
+//     setTransport("N/A");
+//   }
 
 
-  // useEffect(() => {
-  //   if (isConnected) {
+//   // // // This is how we can connent with socket ------>
+//   useEffect(() => {
+//     if (socket.connected) {
+//       onConnect();
+//     }
 
-  //     socket.emit("connection", "world");
-  //     socket.emit("hello", "world");
-  //   }
-  // }, [isConnected])
+//     socket.on("connect", onConnect);
+//     socket.on("disconnect", onDisconnect);
 
-
-  // // // Register user with socket IO ------------>
-
-  useEffect(() => {
-    if (userData._id) {
-      socket.emit("register", userData);
-    }
-  }, [userData])
+//     return () => {
+//       socket.off("connect", onConnect);
+//       socket.off("disconnect", onDisconnect);
+//     };
+//   }, []);
 
 
-  // console.log("Render  ------------------>")
+//   // useEffect(() => {
+//   //   if (isConnected) {
+
+//   //     socket.emit("connection", "world");
+//   //     socket.emit("hello", "world");
+//   //   }
+//   // }, [isConnected])
 
 
+//   // // // Register user with socket IO ------------>
 
-  function newMsg() {
+//   useEffect(() => {
+//     if (userData._id) {
+//       socket.emit("register", userData);
+//     }
+//   }, [userData])
 
-    console.log("Trying to send new msg ---------> ")
 
-    socket.emit("hello", "world", (err: any) => {
-      console.log(err)
-    });
-  }
+//   // console.log("Render  ------------------>")
 
 
 
+//   function newMsg() {
 
-  // // // All coming listners here ------------->
-  useEffect(() => {
+//     console.log("Trying to send new msg ---------> ")
 
-    // // // PUT all socket listernes inisde useEffect -------------->
-
-    socket.on("word", (msg: any) => {
-      console.log({ msg })
-      alert(msg)
-    })
+//     socket.emit("hello", "world", (err: any) => {
+//       console.log(err)
+//     });
+//   }
 
 
-    return () => {
-      socket.off()
-      socket.off("disconnect", onDisconnect);
-    }
-
-  }, [])
 
 
-  return (
-    <div
-      className="border-2 border-red-500 w-dvw text-center hover:cursor-pointer"
-    >
-      <p>Status: {isConnected ? "connected" : "disconnected"}</p>
-      <p>Transport: {transport}</p>
+//   // // // All coming listners here ------------->
+//   useEffect(() => {
 
-      <button
-        onClick={newMsg}
-        className="px-2 border rounded-md border-white my-2 mx-3 active:scale-75"
-      >Send Msg</button>
-    </div>
-  );
+//     // // // PUT all socket listernes inisde useEffect -------------->
 
-}
+//     socket.on("word", (msg: any) => {
+//       console.log({ msg })
+//       alert(msg)
+//     })
+
+
+//     return () => {
+//       socket.off()
+//       socket.off("disconnect", onDisconnect);
+//     }
+
+//   }, [])
+
+
+//   return (
+//     <div
+//       className="border-2 border-red-500 w-dvw text-center hover:cursor-pointer"
+//     >
+//       <p>Status: {isConnected ? "connected" : "disconnected"}</p>
+//       <p>Transport: {transport}</p>
+
+//       <button
+//         onClick={newMsg}
+//         className="px-2 border rounded-md border-white my-2 mx-3 active:scale-75"
+//       >Send Msg</button>
+//     </div>
+//   );
+
+// }
 
 
 
