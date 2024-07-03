@@ -22,7 +22,7 @@ const clientSecretText = process.env.GOOGLE_SECRATE!
 // )
 
 
-const handler = NextAuth({
+const authOptions = {
     providers: [
         GoogleProvider({
             clientId: clientIdText,
@@ -168,19 +168,21 @@ const handler = NextAuth({
     },
 
     theme: {
-        colorScheme: "dark",
+        // colorScheme: "dark",
         logo: "https://res.cloudinary.com/dlvq8n2ca/image/upload/v1701708322/jual47jntd2lpkgx8mfx.png"
     },
 
     pages: {
         signIn: "/sign-in"
-    }
+    },
 
+    secret: process.env.NEXTAUTH_SECRET,
 
-})
+}
 
-
+const handler = NextAuth(authOptions)
 
 export { handler as GET, handler as POST }
 
+// export default NextAuth(authOptions)
 
