@@ -25,13 +25,12 @@ const LogInWithGoogle = () => {
 
         const setProviders = async () => {
 
-            const res = await getProviders()
+            const allAuthProviders = await getProviders()
 
-            // console.log(res)
+            console.log(allAuthProviders)
 
-            setProvider(res)
+            setProvider(allAuthProviders)
         }
-
 
         setProviders();
 

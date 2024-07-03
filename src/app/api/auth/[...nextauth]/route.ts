@@ -41,7 +41,7 @@ const handler = NextAuth({
             // You can pass any HTML attribute to the <input> tag through the object.
             credentials: {
                 email: { label: "email", type: "text", placeholder: "jhoncena@gmail.com" },
-                password: { label: "password", type: "password" }
+                password: { label: "password", type: "password", placeholder: "yourPass@5192" }
             },
 
             async authorize(credentials, req) {
@@ -165,6 +165,15 @@ const handler = NextAuth({
         },
 
 
+    },
+
+    theme: {
+        colorScheme: "dark",
+        logo: "https://res.cloudinary.com/dlvq8n2ca/image/upload/v1701708322/jual47jntd2lpkgx8mfx.png"
+    },
+
+    pages: {
+        signIn: "/sign-in"
     }
 
 
