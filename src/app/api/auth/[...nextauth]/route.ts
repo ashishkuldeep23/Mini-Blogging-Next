@@ -1,7 +1,7 @@
 
 import { connect } from "@/dbConfig/dbConfig";
 import User from "@/models/userModel";
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 
 import GoogleProvider from "next-auth/providers/google";
 
@@ -22,7 +22,7 @@ const clientSecretText = process.env.GOOGLE_SECRATE!
 // )
 
 
-const authOptions = {
+const authOptions: NextAuthOptions = {
     providers: [
         GoogleProvider({
             clientId: clientIdText,
@@ -33,8 +33,8 @@ const authOptions = {
 
 
             // The name to display on the sign in form (e.g. 'Sign in with...')
-            id: 'credentials',
-            name: 'Password',
+            // id: 'credentials',
+            name: 'Credentials',
             // The credentials is used to generate a suitable form on the sign in page.
             // You can specify whatever fields you are expecting to be submitted.
             // e.g. domain, username, password, 2FA token, etc.
@@ -164,7 +164,6 @@ const authOptions = {
             }
         },
 
-
     },
 
     theme: {
@@ -172,11 +171,12 @@ const authOptions = {
         logo: "https://res.cloudinary.com/dlvq8n2ca/image/upload/v1701708322/jual47jntd2lpkgx8mfx.png"
     },
 
-    pages: {
-        signIn: "/sign-in"
-    },
+    debug: true,
+    // pages: {
+    //     signIn: "/sign-in"
+    // },
 
-    secret: process.env.NEXTAUTH_SECRET,
+    secret: process.env.NEXTAUTH_SECRET!,
 
 }
 

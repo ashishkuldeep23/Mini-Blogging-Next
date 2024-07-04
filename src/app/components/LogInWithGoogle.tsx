@@ -1,5 +1,3 @@
-// import React from 'react'
-
 'use client'
 
 import { useThemeData } from "@/redux/slices/ThemeSlice"
