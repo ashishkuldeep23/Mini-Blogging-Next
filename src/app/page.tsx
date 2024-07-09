@@ -43,9 +43,12 @@ export default function Home() {
       {/* <SocketConnectionCodeHere /> */}
 
       {/* Now i'm going to user pusher ------> */}
-      <PusherTestDiv
+      {/* Pusher working code -----------> */}
+      {/* <PusherTestDiv
         channelName='ashish'
-      />
+      /> */}
+
+      
 
       <Navbar />
 

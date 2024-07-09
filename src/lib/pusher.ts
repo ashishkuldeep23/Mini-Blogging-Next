@@ -19,10 +19,11 @@ export const pusherServer = new Pusher({
 
 
 
-
+// // Working pusher code ------------>
 export const pusherClient = new PusherJs(
     process.env.NEXT_PUBLIC_PUSHER_KEY!,
     {
         cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!
     }
 )
+

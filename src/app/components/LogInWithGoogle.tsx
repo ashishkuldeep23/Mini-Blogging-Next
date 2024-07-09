@@ -68,7 +68,7 @@ const LogInWithGoogle = () => {
             {
                 provider && Object.values(provider).map((prov: any, i) => {
 
-                    if (prov?.name === "Password") return <Fragment key={i}></Fragment>
+                    if (prov?.name === "Credentials") return <Fragment key={i}></Fragment>
 
                     return (
                         <button
