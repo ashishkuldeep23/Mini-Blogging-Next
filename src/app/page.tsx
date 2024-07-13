@@ -44,9 +44,9 @@ export default function Home() {
 
       {/* Now i'm going to user pusher ------> */}
       {/* Pusher working code -----------> */}
-      {/* <PusherTestDiv
+      <PusherTestDiv
         channelName='ashish'
-      /> */}
+      />
 
       
 
