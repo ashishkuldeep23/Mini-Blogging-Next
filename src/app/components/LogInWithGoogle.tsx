@@ -25,7 +25,7 @@ const LogInWithGoogle = () => {
 
             const allAuthProviders = await getProviders()
 
-            console.log(allAuthProviders)
+            // console.log(allAuthProviders)
 
             setProvider(allAuthProviders)
         }
