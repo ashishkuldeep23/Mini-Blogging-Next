@@ -16,6 +16,7 @@ import { getCatAndHash } from "@/redux/slices/PostSlice"
 import { AppDispatch } from "@/redux/store"
 import { PiSunDimDuotone } from "react-icons/pi";
 import { PiMoonStarsDuotone } from "react-icons/pi";
+import bodyTranstion from "@/lib/routerPushWithTransition"
 
 
 
@@ -43,7 +44,6 @@ const Navbar = () => {
 
     // console.log(session)
 
-
     function goToHome() {
         // alert("dfsdfsdagsd")
 
@@ -54,6 +54,9 @@ const Navbar = () => {
         } else {
             router.push("/")
         }
+
+
+        bodyTranstion()
 
     }
 

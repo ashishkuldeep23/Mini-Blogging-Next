@@ -85,16 +85,34 @@
     transition: all 700ms;
 }
 
-.filter_container:hover>p{
+.filter_container:hover>p {
     color: #8b5cf6;
 }
 
 .filter_container:hover>p::after {
     width: 100%;
-  
+
 }
 
 
-#all_uploaded_pics_holder_div::-webkit-scrollbar{
-    height:  0;
+#all_uploaded_pics_holder_div::-webkit-scrollbar {
+    height: 0;
+}
+
+
+/* page transition code here ----------------> */
+
+body {
+
+    background-color: black;
+
+    transition-property: opacity, transform, filter;
+    transition-timing-function: ease-in-out;
+    transition-duration: 500ms;
+}
+
+.page_transition {
+    opacity: .5;
+    transform: translateY(40px);
+    filter: blur(12px);
 }

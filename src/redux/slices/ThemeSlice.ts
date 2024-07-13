@@ -29,7 +29,7 @@ const themeSlice = createSlice({
         // }
 
 
-        toggleModeValue(state ) {
+        toggleModeValue(state) {
 
 
             // if(!state.mode){
@@ -39,21 +39,34 @@ const themeSlice = createSlice({
                 state.value = "white"
                 state.mode = true
                 localStorage.setItem("authNextDark", JSON.stringify(true))
+
+                const body = document.querySelector("body")
+                if (body) {
+                    body.style.backgroundColor = "white"
+                }
+
             } else {
                 state.value = 'black'
                 state.mode = false
                 localStorage.setItem("authNextDark", JSON.stringify(false))
+
+                const body = document.querySelector("body")
+                if (body) {
+                    body.style.backgroundColor = "black"
+                }
+
+
             }
 
         },
 
         setModeOnLoad(state, action) {
-            
+
             let { mode } = action.payload
             // console.log(mode)
 
             state.mode = mode
-        } ,
+        },
 
 
     }

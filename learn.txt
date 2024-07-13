@@ -12,6 +12,18 @@ Taliwind CSS new things ------------------>
     4. NODE_ENV=production node server.js :- this is how we can set env during starting our server.
 
 
+Recat trick form taking props with rest operator -------------->
+
+1. (Very useful in somecases)
+
+({title , id , ...restProps} : {title : string , id : string , ...restProps})
+
+<p id={id} {...restProps}>{title}</p>
+
+Explain :- look above code this is how we can get n number of props and we can use those props in our code. And best part is that we don't need any extra typeScript code to decide restProps.
+
+
+
 SOME UPDATED ==============================================================================================>
 
 Post update ----------------->
