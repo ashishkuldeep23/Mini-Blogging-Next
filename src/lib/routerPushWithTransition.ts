@@ -26,9 +26,7 @@ export default function bodyTranstion() {
 
     setTimeout(() => {
         body?.classList.remove("page_transition");
-    }, 700)
-
-
+    }, 500)
 }
 
 

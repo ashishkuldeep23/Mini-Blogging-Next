@@ -56,7 +56,7 @@ const ProfilePageParams = ({ params }: any) => {
 
         // console.log(params.id)
 
-        if (params?.id && params?.id !== "undefined" && !userData._id) {
+        if (params?.id !== "undefined" && params?.id && !userData._id) {
 
             // console.log(15455454)
             dispatch(getUserData(params.id))
@@ -160,8 +160,6 @@ const ProfilePageParams = ({ params }: any) => {
 export default ProfilePageParams
 
 
-
-
 function AllUploadedPicturesDiv() {
 
 
@@ -240,7 +238,6 @@ function AllUploadedPicturesDiv() {
     )
 
 }
-
 
 
 function UserProfileImage() {
@@ -404,7 +401,6 @@ function UserProfileImage() {
         </>
     )
 }
-
 
 
 function ReciverRequestDiv() {

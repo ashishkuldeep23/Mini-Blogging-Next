@@ -48,7 +48,7 @@ export default function Home() {
         channelName='ashish'
       />
 
-      
+
 
       <Navbar />
 
@@ -66,26 +66,38 @@ export default function Home() {
           <BsFillPatchPlusFill />
         </button>
 
-
-
       }
 
 
+      {/* Main home div that hold allPosts and all */}
       <div className=" flex flex-col justify-center items-center pb-6 ">
 
+        <div className=" relative flex items-start lg:w-[80%] gap-5">
 
-        <div className="flex flex-col items-center ">
+          <LeftNavDesktop />
 
-          <FeatureDetailShowHomeFirstTime />
+
+          <div className=" w-[100%] lg:w-[75%]">
+
+            <div className="flex flex-col items-center ">
+
+              <FeatureDetailShowHomeFirstTime />
+
+            </div>
+
+            <SearchByDiv />
+
+            <AllPostDiv />
+
+          </div>
 
         </div>
 
-        <SearchByDiv />
-
-
-        <AllPostDiv />
-
       </div>
+
+
+      {/* Navigation for mobile users ------> */}
+      <NavBottomMobile />
 
       {
         allPostData.length > 0
@@ -118,7 +130,6 @@ function FeatureDetailShowHomeFirstTime() {
 
       chcekAlreadyVisited && setFirstTime(chcekAlreadyVisited)
     }
-
 
   }, [])
 
@@ -226,7 +237,7 @@ const SearchByDiv = () => {
 
   return (
 
-    <>
+    <div>
 
       {/* Previously using this ---------> */}
       {/* <input
@@ -279,7 +290,7 @@ const SearchByDiv = () => {
 
 
 
-      <div className=" w-11/12 sm:w-4/6 flex flex-col items-center px-1 sm:px-5 ">
+      <div className=" w-[100%] flex flex-col items-center px-1 sm:px-5 ">
 
         <div className="w-full flex justify-around flex-wrap">
 
@@ -319,7 +330,6 @@ const SearchByDiv = () => {
         >
 
           {
-
             postCategories.length > 0
             &&
             postCategories.map((ele, i) => {
@@ -338,7 +348,6 @@ const SearchByDiv = () => {
           style={{ transitionDuration: "1.0s" }}
         >
           {
-
             (posthashtags.length > 0)
             &&
             posthashtags.map((ele, i) => {
@@ -380,7 +389,7 @@ const SearchByDiv = () => {
 
 
       </div>
-    </>
+    </div>
   )
 }
 
@@ -471,10 +480,10 @@ function AllPostDiv() {
         </div>
       }
 
-      className="w-[98vw] min-h-[50vh] pt-[1vh] pb-[7vh] px-[2vh] !overflow-auto flex flex-col items-center justify-center"
+      className=" w-full min-h-[50vh] pt-[1vh] pb-[7vh] px-[2vh] !overflow-auto flex flex-col items-center justify-center"
     >
 
-      <div className="card_container mt-10 relative sm:px-[8vh] flex gap-10 gap-x-64 p-0.5 flex-wrap justify-center items-center ">
+      <div className="card_container mt-10 p-0.5 relative sm:px-[8vh] flex gap-10 gap-x-64 flex-wrap justify-center items-center ">
 
         <MainLoader
           isLoading={isLoading}
@@ -511,6 +520,45 @@ function AllPostDiv() {
 }
 
 // export default AllPostDiv
+
+
+import { CiHome } from "react-icons/ci";
+import { CgProfile } from "react-icons/cg";
+
+function LeftNavDesktop() {
+  return (
+    <div className=" hidden lg:flex sticky top-12 left-0 p-2 rounded-md m-1 w-[20%]  border-gray-500/90 shadow-md ">
+
+      <ul>
+        {
+          [
+            {
+              icons: <CiHome />,
+              name: "Home",
+              handler: () => { alert("Home") }
+            },
+            {
+              icons: <CgProfile />,
+              name: "Home",
+              handler: () => { alert("Profile") }
+            },
+          ].map((ele, i) => {
+            return <li
+              key={i}
+              onClick={ele.handler}
+              className=" w-[100%] flex gap-1 items-center px-2 py-1 my-2 border border-gray-500/90 rounded-md "
+            >
+              <span>{ele.icons} </span>
+              <span>{ele.name}</span>
+            </li>
+          })
+        }
+      </ul>
+    </div>
+  )
+}
+
+
 
 const FooterDiv = () => {
 
@@ -703,9 +751,9 @@ import { useUserState } from "@/redux/slices/UserSlice";
 // }
 
 
-
 import Pusher from 'pusher-js'
 import { pusherClient } from "@/lib/pusher";
+import NavBottomMobile from "./components/NavBottomMobile";
 
 
 const username = "ashish"
@@ -775,7 +823,6 @@ function PusherTestDiv({ channelName }: { channelName: string }) {
 
 
 
-
   // // // Sending msg to me ---->
   const { userData } = useUserState()
   // // // // Sign in by userId ---------->
@@ -795,7 +842,6 @@ function PusherTestDiv({ channelName }: { channelName: string }) {
       pusherClient.unsubscribe(`${userData._id}`)
     }
   }, [userData])
-
 
 
   const sendMessage = async (msg: string, channelName: string, event: string) => {
@@ -822,12 +868,10 @@ function PusherTestDiv({ channelName }: { channelName: string }) {
   };
 
 
-
   const callPusherFn = () => {
     const sendThisText = "My Msg....."
     sendMessage(sendThisText, channelName, "message")
   }
-
 
 
   function callPusherFnForMsgMe() {
@@ -839,7 +883,6 @@ function PusherTestDiv({ channelName }: { channelName: string }) {
       sendMessage("Check msg me", userData._id, "msg-me")
     }
   }
-
 
 
   return (
@@ -862,5 +905,4 @@ function PusherTestDiv({ channelName }: { channelName: string }) {
       >MSG ME</button>
     </div>
   )
-
 }

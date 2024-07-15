@@ -105,6 +105,7 @@
 body {
 
     background-color: black;
+    color: white;
 
     transition-property: opacity, transform, filter;
     transition-timing-function: ease-in-out;

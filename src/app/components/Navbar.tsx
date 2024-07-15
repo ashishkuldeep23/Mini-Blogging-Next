@@ -123,7 +123,7 @@ const Navbar = () => {
                 backdropFilter: "blur(5px) saturate(1.7)",
                 background: "#efe6f300"
             }}
-            className={`sticky -top-4 z-[2] flex justify-between items-start gap-1.5 w-full px-2 sm:px-10 py-4 ${!themeMode ? " bg-black text-white border-zinc-700 " : " bg-white text-black border-zinc-300"}`}
+            className={`sticky -top-4 z-[2] flex justify-between items-start gap-1.5 w-full lg:w-[80%] px-2 sm:px-0 py-4 ${!themeMode ? " bg-black text-white border-zinc-700 " : " bg-white text-black border-zinc-300"}`}
 
         >
 
