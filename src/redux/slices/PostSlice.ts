@@ -243,6 +243,11 @@ interface PostSliceInterFace {
 }
 
 
+// // // Baking type for single post -------->
+export interface SinglePostType extends Omit<PostInterFace, 'likesId'> {
+    likesId: UserDataInterface[]
+}
+
 const innitialSingleState: PostInterFace = {
 
     _id: "",

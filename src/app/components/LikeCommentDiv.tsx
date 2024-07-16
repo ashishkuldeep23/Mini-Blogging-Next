@@ -1,6 +1,6 @@
 'Use client'
 
-import { Comment, PostInterFace, ReplyInterFace, setDeleteSinglePost, setSinglePostdata, setUpdateComment, setUpdatingPost } from '@/redux/slices/PostSlice';
+import { Comment, PostInterFace, ReplyInterFace, setDeleteSinglePost, setSinglePostdata, setUpdateComment, setUpdatingPost, SinglePostType } from '@/redux/slices/PostSlice';
 import { useSession } from 'next-auth/react'
 import { usePathname, useRouter } from 'next/navigation'
 import React, { Fragment, RefObject, useEffect, useRef, useState } from 'react'
@@ -18,7 +18,9 @@ import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { UserDataInterface } from '@/redux/slices/UserSlice';
 import AnimatedTooltip from './ui/animated-tooltip';
 import { PiPaperPlaneRight } from "react-icons/pi";
-import { SinglePostType } from '../post/[id]/page';
+
+
+
 
 
 

@@ -4,7 +4,7 @@ import ImageReact from '@/app/components/ImageReact'
 import LikeCommentDiv from '@/app/components/LikeCommentDiv'
 import MainLoader from '@/app/components/MainLoader'
 import Navbar from '@/app/components/Navbar'
-import { PostInterFace, setSinglePostdata, usePostData } from '@/redux/slices/PostSlice'
+import { PostInterFace, setSinglePostdata, SinglePostType, usePostData } from '@/redux/slices/PostSlice'
 import { useThemeData } from '@/redux/slices/ThemeSlice'
 import { UserDataInterface } from '@/redux/slices/UserSlice'
 import { AppDispatch } from '@/redux/store'
@@ -16,10 +16,7 @@ import { PiSealCheckDuotone } from 'react-icons/pi'
 import { useDispatch } from 'react-redux'
 
 
-// // // Baking type for single post -------->
-export interface SinglePostType extends Omit<PostInterFace, 'likesId'> {
-    likesId: UserDataInterface[]
-}
+
 
 
 const Page = ({ params }: any) => {
