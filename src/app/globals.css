@@ -95,8 +95,8 @@
 }
 
 
-#all_uploaded_pics_holder_div::-webkit-scrollbar {
-    height: 0;
+.scrooller_bar_hidden::-webkit-scrollbar {
+    height: 0px;
 }
 
 

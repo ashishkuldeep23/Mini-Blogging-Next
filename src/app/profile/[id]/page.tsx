@@ -207,9 +207,7 @@ function AllUploadedPicturesDiv() {
                         <p className=' text-center text-xs'>Click on image to make profile pic.</p>
 
                         <div
-                            className='w-full px-5 py-4 flex gap-1 items-center overflow-x-scroll'
-
-                            id='all_uploaded_pics_holder_div'
+                            className=' scrooller_bar_hidden w-full px-5 py-4 flex gap-1 items-center overflow-x-scroll'
                         >
 
 

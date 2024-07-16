@@ -19,7 +19,7 @@ const LayoutPage = (
 
                     <div
                         id="main_visiable_for_user"
-                        className="w-[100vw] lg:w-[75%] min-h-[90vh] my-5 p-1 rounded-md border-gray-500/90 lg:border "
+                        className=" w-[100%] lg:w-[75%] min-h-[90vh] p-1 mb-5 rounded-md border-gray-500/90 lg:border "
                     >
                         {children}
                     </div>
@@ -42,6 +42,7 @@ export default LayoutPage
 import { CiHome } from "react-icons/ci";
 import { CgProfile } from "react-icons/cg";
 import { usePathname, useRouter } from 'next/navigation';
+import { useThemeData } from '@/redux/slices/ThemeSlice';
 
 
 interface SingleTabData {
@@ -56,8 +57,11 @@ function LeftNavDesktop() {
 
     const router = useRouter()
 
+    const themeMode = useThemeData().mode
+
+
     return (
-        <div className=" border-t lg:border-t-0 w-[100%] lg:w-[20%] flex lg:flex fixed -bottom-0.5 left-0 lg:sticky lg:top-0 lg:left-0 lg:bottom-auto lg:p-2 lg:rounded-md lg:m-1 border-gray-500/90 shadow-md z-10 ">
+        <div className={`border-t lg:border-t-0 w-[100%] lg:w-[20%] flex lg:flex fixed -bottom-0.5 left-0 lg:sticky lg:top-0 lg:left-0 lg:bottom-auto p-1 lg:p-2 lg:rounded-md lg:m-1 border-gray-500/90 shadow-md z-10 ${themeMode ? " bg-white" : " bg-black"}  `}>
 
             <ul className=' flex justify-between  gap-1 lg:block w-full mx-2 sm:mx-8 md:mx-14 lg:mx-0'>
                 {
