@@ -851,7 +851,6 @@ const NewPostPage = () => {
                                         &&
                                         <div
                                           className=' border-b'
-                                          key={i}
                                           onClick={() => {
 
                                             newPostData.hashs.push(ele)
