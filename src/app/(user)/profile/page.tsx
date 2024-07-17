@@ -218,7 +218,10 @@ function AllUploadedPicturesDiv() {
                                 userData.allProfilePic.map((ele, i) => {
                                     return (
 
-                                        <span className=' relative'>
+                                        <span
+                                            key={i}
+                                            className=' relative'
+                                        >
 
                                             {
                                                 clickedPicIndex === i
