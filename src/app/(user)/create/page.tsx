@@ -1,7 +1,7 @@
 'use client'
 
 import { useThemeData } from '@/redux/slices/ThemeSlice';
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 // import Navbar from '../components/Navbar';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
@@ -844,7 +844,7 @@ const NewPostPage = () => {
 
                                 .map((ele, i) => {
                                   return (
-                                    <>
+                                    <Fragment key={i}>
 
                                       {
                                         ele
@@ -867,7 +867,7 @@ const NewPostPage = () => {
                                         >{ele}</div>
 
                                       }
-                                    </>
+                                    </Fragment>
                                   )
                                 })
 
