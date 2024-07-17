@@ -50,21 +50,19 @@ export default function Home() {
 
 
 
-      <Navbar />
-
       {/* Plus ICon to create post  */}
       {
-        session?.user._id
+        // session?.user._id
 
-        &&
+        // &&
 
-        <button
-          className="add_button_down_right fixed bottom-[8%] sm:bottom-[10%] right-5 sm:right-[4%] text-5xl z-[100] fill-neutral-700 hover:scale-125 focus:scale-90 transition-all"
-          onClick={() => { router.push("/new-post") }}
-        // style={{ backdropFilter : "drop-shadow(2px 4px 6px cyan)"}}
-        >
-          <BsFillPatchPlusFill />
-        </button>
+        // <button
+        //   className="add_button_down_right fixed bottom-[8%] sm:bottom-[10%] right-5 sm:right-[4%] text-5xl z-[100] fill-neutral-700 hover:scale-125 focus:scale-90 transition-all"
+        //   onClick={() => { router.push("/new-post") }}
+        // // style={{ backdropFilter : "drop-shadow(2px 4px 6px cyan)"}}
+        // >
+        //   <BsFillPatchPlusFill />
+        // </button>
 
       }
 
@@ -72,22 +70,17 @@ export default function Home() {
       {/* Main home div that hold allPosts and all */}
       <div className=" flex flex-col justify-center items-center pb-6 ">
 
-        <div className=" relative flex items-start lg:w-[80%] gap-5">
+        <Navbar />
 
-          <LeftNavDesktop />
+        <div className=" relative flex items-start  gap-5">
 
-
-          <div className=" w-[100%] lg:w-[75%]">
+          <div className=" w-[100%]">
 
             <div className="flex flex-col items-center ">
 
               <FeatureDetailShowHomeFirstTime />
 
             </div>
-
-            <SearchByDiv />
-
-            <AllPostDiv />
 
           </div>
 
@@ -96,15 +89,18 @@ export default function Home() {
       </div>
 
 
-      {/* Navigation for mobile users ------> */}
-      <NavBottomMobile />
+      <div>
+        <button
+          onClick={() => router.push("/home")}
+        >Home</button>
+      </div>
+
 
       {
         allPostData.length > 0
         &&
         <FooterDiv />
       }
-
 
     </main>
   );
@@ -117,21 +113,23 @@ function FeatureDetailShowHomeFirstTime() {
   const [firstTime, setFirstTime] = useState("")
 
 
-  useEffect(() => {
+  // // // This code was responsiable for show and hide feature section.
 
-    localStorage.setItem("alreadyVisited", JSON.stringify("yes"))
+  // useEffect(() => {
+
+  //   localStorage.setItem("alreadyVisited", JSON.stringify("yes"))
 
 
-    let chcekAlreadyVisited = localStorage.getItem("alreadyVisited")
+  //   let chcekAlreadyVisited = localStorage.getItem("alreadyVisited")
 
-    if (chcekAlreadyVisited) {
+  //   if (chcekAlreadyVisited) {
 
-      chcekAlreadyVisited = JSON.parse(chcekAlreadyVisited)
+  //     chcekAlreadyVisited = JSON.parse(chcekAlreadyVisited)
 
-      chcekAlreadyVisited && setFirstTime(chcekAlreadyVisited)
-    }
+  //     chcekAlreadyVisited && setFirstTime(chcekAlreadyVisited)
+  //   }
 
-  }, [])
+  // }, [])
 
 
   return (
@@ -187,377 +185,6 @@ function FeatureDetailShowHomeFirstTime() {
   )
 
 }
-
-
-const SearchByDiv = () => {
-
-  const [expandCat, setExpandCat] = useState(false)
-
-  const [expandHash, setExpandHash] = useState(false)
-
-  const { postCategories, posthashtags, searchHashAndCate, searchByText } = usePostData()
-
-  const dispatch = useDispatch<AppDispatch>()
-
-  const router = useRouter()
-
-  // console.log(themeMode)
-  const themeMode = useThemeData().mode
-
-  // // // A var that used in redirect user.
-  let onFocusFlagForRedirectUser = false
-
-
-
-  function getDataByCategory(cat: string) {
-    let searchObj = { ...searchHashAndCate, category: `${cat}` }
-    dispatch(setSearchBrandAndCate(searchObj))
-    dispatch(getAllPosts(searchObj))
-  }
-
-
-  function getDataByHashtag(hash: string) {
-    let searchObj = { ...searchHashAndCate, hash: `${hash}` }
-    dispatch(setSearchBrandAndCate(searchObj))
-    dispatch(getAllPosts(searchObj))
-  }
-
-
-  function backToNormalHandler() {
-    let searchObj = { hash: "", category: "", page: 1 }
-    dispatch(setSearchBrandAndCate(searchObj))
-    dispatch(getAllPosts(searchObj))
-
-    setExpandCat(false);
-    setExpandHash(false);
-
-  }
-
-
-
-  return (
-
-    <div>
-
-      {/* Previously using this ---------> */}
-      {/* <input
-        type="text"
-        className={`mb-4 p-0.5 px-2 font-bold mt-5 w-11/12 sm:w-4/6 rounded-full shadow-lg  border 
-          ${!themeMode ? "text-white bg-black shadow-slate-700 border-slate-700 " : "text-black bg-white shadow-slate-300 border-slate-300 "}
-       `}
-        placeholder="Search for prompt here."
-        name="Search_Input"
-        onFocus={() => {
-          if (!onFocusFlagForRedirectUser) {
-            onFocusFlagForRedirectUser = true
-            router.push('/search')
-          }
-        }}
-
-        onClick={() => router.push('/search')}
-
-      /> */}
-
-
-      <PlaceholdersAndVanishInput
-        onChange={(e) => {
-          // e.preventDefault()
-
-          dispatch(setSearchByText(e.target.value))
-
-          if (!onFocusFlagForRedirectUser) {
-            onFocusFlagForRedirectUser = true
-            router.push('/search')
-          }
-        }}
-        onSubmit={() => {
-          // e.preventDefault()
-          if (!onFocusFlagForRedirectUser) {
-            onFocusFlagForRedirectUser = true
-            router.push('/search')
-          }
-        }}
-        onFocus={() => {
-          // e.preventDefault()
-          if (!onFocusFlagForRedirectUser) {
-            onFocusFlagForRedirectUser = true
-            router.push('/search')
-          }
-        }}
-        placeholders={['Search by post title, category and hashtag', 'Search by user name.', 'Search here...', 'Made by Ashish kuldeep.']}
-        inputValue={searchByText}
-      />
-
-
-
-      <div className=" w-[100%] flex flex-col items-center px-1 sm:px-5 ">
-
-        <div className="w-full flex justify-around flex-wrap">
-
-
-          <div>
-            <p>Search By 👉</p>
-          </div>
-
-          <div className=" filter_container  ">
-            <p
-              className={`  px-1 hover:cursor-pointer ${expandCat && "text-violet-500 font-bold"} transition-all`}
-              onClick={() => {
-                setExpandCat(!expandCat);
-                // setExpandHash(false); 
-              }}
-            >Category</p>
-
-          </div>
-
-          <div className=" filter_container  ">
-            <p
-              className={` px-1 hover:cursor-pointer ${expandHash && "text-violet-500  font-bold"} transition-all`}
-              onClick={() => {
-                setExpandHash(!expandHash);
-                // setExpandCat(false);
-              }}
-            >#Hashtags</p>
-
-          </div>
-
-        </div>
-
-
-        <div
-          className={` border mt-2 rounded flex gap-2 flex-wrap justify-around px-1 overflow-hidden ${!expandCat ? " border-0 w-1/2 h-0 opacity-100" : " w-full  opacity-100"} transition-all  `}
-          style={{ transitionDuration: "1.0s" }}
-        >
-
-          {
-            postCategories.length > 0
-            &&
-            postCategories.map((ele, i) => {
-              return <p
-                key={i}
-                className=" font-bold text-violet-500 hover:cursor-pointer "
-                onClick={() => { getDataByCategory(ele) }}
-              >{ele}</p>
-            })
-          }
-
-        </div>
-
-        <div
-          className={` border mt-2 rounded flex gap-2 flex-wrap justify-around px-1 overflow-hidden ${!expandHash ? " border-0 w-1/2 h-0 opacity-100" : " w-full opacity-100"} transition-all `}
-          style={{ transitionDuration: "1.0s" }}
-        >
-          {
-            (posthashtags.length > 0)
-            &&
-            posthashtags.map((ele, i) => {
-              return <p
-                key={i}
-                className=" font-bold text-violet-500 hover:cursor-pointer "
-                onClick={() => { getDataByHashtag(ele) }}
-              >{ele}</p>
-            })
-          }
-        </div>
-
-
-        {
-          (expandCat || expandHash)
-          &&
-          <button
-            className=" text-xs border border-red-500 text-red-500 my-2 px-2 rounded ml-auto mr-2"
-            onClick={() => {
-              setExpandCat(false);
-              setExpandHash(false);
-            }}
-          >Close</button>
-        }
-
-
-
-
-        {
-          (searchHashAndCate.category || searchHashAndCate.hash)
-          &&
-          <button
-            className=" mt-10  text-xs border rounded-md px-2"
-            onClick={() => {
-              backToNormalHandler()
-            }}
-          >Back to Default</button>
-        }
-
-
-      </div>
-    </div>
-  )
-}
-
-
-function AllPostDiv() {
-
-  const { allPost: allPostData, isLoading, searchHashAndCate, allPostsLength } = usePostData()
-
-  const dispatch = useDispatch<AppDispatch>()
-
-
-  // async function fetchAllPosts() {
-
-  //   dispatch(setIsLoading(true))
-
-  //   dispatch(setErrMsg(""))
-
-  //   const option: RequestInit = {
-  //     method: "POST",
-  //     cache: 'no-store',
-  //     next: {
-  //       revalidate: 3
-  //     },
-  //   }
-
-  //   const response = await fetch(`/api/post/all?timestamp=${Date.now()}`, option)
-  //   let json = await response.json();
-
-  //   // console.log(json)
-
-  //   if (json.success) {
-  //     dispatch(setAllPosts(json.data))
-  //   } else {
-  //     dispatch(setErrMsg(json.message))
-  //   }
-
-  //   dispatch(setIsLoading(false))
-  // }
-
-
-
-  function fetchAllPostData() {
-    let searchObj = { hash: "", category: "", page: 1 }
-    dispatch(setSearchBrandAndCate(searchObj))
-    dispatch(getAllPosts(searchObj))
-
-  }
-
-
-  function fetchMorePostData() {
-    let searchObj = { hash: "", category: "", page: searchHashAndCate.page + 1 }
-    dispatch(setSearchBrandAndCate(searchObj))
-    dispatch(getAllPosts(searchObj))
-  }
-
-
-
-  useEffect(() => {
-    if (allPostData.length <= 1) {
-
-      // // // Before calling all posts we need to set queryObject --------->
-
-      fetchAllPostData()
-      // dispatch(getAllPosts())
-    }
-  }, [])
-
-
-  return (
-
-    <InfiniteScroll
-      dataLength={allPostData.length} //This is important field to render the next data
-      next={() => {
-
-        if (allPostData.length < allPostsLength && !searchHashAndCate.category && !searchHashAndCate.hash) {
-          fetchMorePostData()
-        }
-      }}
-
-      hasMore={true}
-      loader={
-        (allPostData.length < allPostsLength && !searchHashAndCate.category && !searchHashAndCate.hash)
-        &&
-
-        <div className=" mt-10 flex gap-2 items-center">
-          <span>LOADING...</span>
-          <span className=" w-4 h-4   rounded-full animate-spin "></span>
-        </div>
-      }
-
-      className=" w-full min-h-[50vh] pt-[1vh] pb-[7vh] px-[2vh] !overflow-auto flex flex-col items-center justify-center"
-    >
-
-      <div className="card_container mt-10 p-0.5 relative sm:px-[8vh] flex gap-10 gap-x-64 flex-wrap justify-center items-center ">
-
-        <MainLoader
-          isLoading={isLoading}
-        // className="top-0" 
-        />
-
-        {
-
-          allPostData.length > 0
-            ?
-
-            allPostData.map((ele, i) => {
-              return (
-                <SinglePostCard key={i} ele={ele} className=" hover:z-10" />
-              )
-            })
-
-            : <></>
-
-          // : [null, null, null, null, null, null, null, null, null, null].map((ele, i) => {
-          //   return (
-
-          //     <Card key={i} ele={ele} />
-
-          //   )
-          // })
-        }
-
-      </div>
-
-    </InfiniteScroll>
-
-  )
-}
-
-// export default AllPostDiv
-
-
-import { CiHome } from "react-icons/ci";
-import { CgProfile } from "react-icons/cg";
-
-function LeftNavDesktop() {
-  return (
-    <div className=" hidden lg:flex sticky top-12 left-0 p-2 rounded-md m-1 w-[20%]  border-gray-500/90 shadow-md ">
-
-      <ul>
-        {
-          [
-            {
-              icons: <CiHome />,
-              name: "Home",
-              handler: () => { alert("Home") }
-            },
-            {
-              icons: <CgProfile />,
-              name: "Home",
-              handler: () => { alert("Profile") }
-            },
-          ].map((ele, i) => {
-            return <li
-              key={i}
-              onClick={ele.handler}
-              className=" w-[100%] flex gap-1 items-center px-2 py-1 my-2 border border-gray-500/90 rounded-md "
-            >
-              <span>{ele.icons} </span>
-              <span>{ele.name}</span>
-            </li>
-          })
-        }
-      </ul>
-    </div>
-  )
-}
-
 
 
 const FooterDiv = () => {

@@ -1,6 +1,5 @@
 'use client'
 import MainLoader from '@/app/components/MainLoader'
-import Navbar from '@/app/components/Navbar'
 import SinglePostCard from '@/app/components/SinglePostCard'
 import { getAllPosts, setSearchBrandAndCate, usePostData } from '@/redux/slices/PostSlice'
 import { AppDispatch } from '@/redux/store'
@@ -10,9 +9,6 @@ import { useDispatch } from 'react-redux'
 const HomePage = () => {
   return (
     <div className=' text-white w-[100%] relative '>
-
-
-      <Navbar />
 
       <StorySection />
 
@@ -159,6 +155,7 @@ function AllPostDiv() {
 function StorySection() {
 
 
+  // // // Move story by btn ------------->
   const moveHolderDiv = (where: string) => {
 
     let holderDiv = document.getElementById("story_holder_div")
@@ -171,12 +168,27 @@ function StorySection() {
   }
 
 
+  function preventSwitchingInTabs(e: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement, MouseEvent>) {
+    e.stopPropagation()
+  }
+
+
+
+
   return (
     <>
 
       <div
         id='story_holder_div'
-        className='scrooller_bar_hidden relative w-[98vw] lg:w-full flex lg:flex-wrap gap-1.5 px-2 items-center justify-start overflow-x-scroll'
+        className='scrooller_bar_hidden relative w-[98vw] lg:w-full flex lg:flex-wrap gap-1.5 px-2 items-center justify-start overflow-x-scroll z-[11]'
+
+        onTouchStart={preventSwitchingInTabs}
+        onTouchMove={preventSwitchingInTabs}
+        onTouchEnd={preventSwitchingInTabs}
+        onMouseDown={preventSwitchingInTabs}
+        onMouseMove={preventSwitchingInTabs}
+        onMouseUp={preventSwitchingInTabs}
+        
       >
 
         <div

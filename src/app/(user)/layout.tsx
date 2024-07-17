@@ -1,6 +1,14 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react';
 
+import { CiCirclePlus } from "react-icons/ci";
+import { FaCirclePlus } from "react-icons/fa6";
+import { RiSearch2Line } from "react-icons/ri";
+import { RiSearch2Fill } from "react-icons/ri";
+import { FaRegBell } from "react-icons/fa";
+import { FaBell } from "react-icons/fa6";
+import { FaRegUser } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
 const LayoutPage = (
     {
         children,
@@ -8,21 +16,173 @@ const LayoutPage = (
         children: React.ReactNode;
     }>
 ) => {
+
+
+    // const handlers = useSwipeable({
+    //     // onSwipedLeft: () => alert("next"),
+    //     onSwipedLeft: () => nextTab(),
+    //     onSwipedRight: () => previousTab(),
+    //     // Add other event handlers as needed
+    // });
+
+    const router = useRouter();
+
+    const pathname = usePathname();
+
+    const themeMode = useThemeData().mode
+
+    const tabArr: SingleTabData[] = [
+        // {
+        //     icons: <CiHome />,
+        //     name: "ashish",
+        // },
+        // {
+        //     icons: <CgProfile />,
+        //     name: "kuldeep",
+        // },
+        {
+            name: "home",
+        },
+        {
+            name: "search",
+            icons: <RiSearch2Line />,
+            activeIcon: <RiSearch2Fill />
+        },
+        {
+            name: "create",
+            icons: <CiCirclePlus />,
+            activeIcon: <FaCirclePlus />,
+        },
+        {
+            name: "notification",
+            icons : <FaRegBell />,
+            activeIcon :<FaBell />
+
+        },
+        {
+            name: "profile",
+            icons : <FaRegUser />,
+            activeIcon :<FaUser />
+
+        },
+    ]
+
+
+    // console.log(pathname);
+
+
+    function nextTab() {
+
+        let path = pathname.slice(1)
+
+        let tabArrWithName = tabArr.map(e => e.name)
+        let index = tabArrWithName.indexOf(path.toLowerCase())
+
+        if (index === -1) {
+            router.back()
+        }
+
+        else if (index === tabArrWithName.length - 1) {
+            osmClickHangler(`/${tabArrWithName[0]}`)
+        }
+        else {
+            osmClickHangler(`/${tabArrWithName[index + 1]}`)
+        }
+
+
+
+    }
+
+    function previousTab() {
+
+        let path = pathname.slice(1)
+        let tabArrWithName = tabArr.map(e => e.name)
+        let index = tabArrWithName.indexOf(path.toLowerCase())
+
+        if (index === -1) {
+            router.back()
+        }
+
+        else if (index === 0) {
+            osmClickHangler(`/${tabArrWithName[tabArrWithName.length - 1]}`)
+        }
+        else {
+            osmClickHangler(`/${tabArrWithName[index - 1]}`)
+        }
+
+
+
+    }
+
+
+    const osmClickHangler = (ele: string) => {
+
+        let body = document.querySelector('#main_visiable_for_user')
+
+        body?.classList.add("page_transition");
+
+        router.push(`${ele}`)
+
+        setTimeout(() => {
+            body?.classList.remove("page_transition");
+        }, 700)
+
+    }
+
+
+    const handlers = useSwipeCustom(previousTab, nextTab)
+
     return (
         <div>
 
-            <div className=" flex flex-col justify-center items-center pb-6 ">
+            <div
+                className=" flex flex-col justify-center items-center pb-6 "
+
+                // {...handlers}
+
+                // // // This will read mouse move events ----------->
+
+                // onTouchStart={onTouchStart}
+                // onTouchMove={onTouchMove}
+                // onTouchEnd={onTouchEnd}
+                // onMouseDown={onMouseDown}
+                // onMouseMove={onMouseMove}
+                // onMouseUp={onMouseUp}
+
+                {...handlers}
+
+            >
+
+
+                {/* <h1 className=' text-5xl text-cyan-400'>Swipe {swipeDirection}</h1> */}
+
+                <Navbar />
 
                 <div className=" relative flex items-start lg:w-[80%] gap-5 flex-col-reverse lg:flex-row">
 
-                    <LeftNavDesktop />
+                    <div className={`border-t lg:border-t-0 w-[100%] lg:w-[20%] flex lg:flex fixed -bottom-0.5 left-0 lg:sticky lg:top-0 lg:left-0 lg:bottom-auto p-1 lg:p-2 lg:rounded-md lg:m-1 border-gray-500/90 shadow-md z-10 ${themeMode ? " bg-white" : " bg-black"}  `}>
+
+                        <ul className=' flex justify-between  gap-1 lg:block w-full mx-3 sm:mx-8 md:mx-14 lg:mx-0'>
+                            {
+                                tabArr.map((ele: SingleTabData, i) => {
+                                    return <LiToJumpBWPage
+                                        key={i}
+                                        ele={ele}
+                                        osmClickHangler={osmClickHangler}
+                                    />
+                                })
+                            }
+                        </ul>
+                    </div>
+
 
                     <div
                         id="main_visiable_for_user"
-                        className=" w-[100%] lg:w-[75%] min-h-[90vh] p-1 mb-5 rounded-md border-gray-500/90 lg:border "
+                        className=" w-[100%] lg:w-[75%] min-h-[90vh] p-1 mb-5 rounded-md border-gray-500/90  "
                     >
                         {children}
                     </div>
+
 
                 </div>
 
@@ -39,61 +199,23 @@ export default LayoutPage
 
 
 
-import { CiHome } from "react-icons/ci";
-import { CgProfile } from "react-icons/cg";
+import { IoHomeSharp } from "react-icons/io5";
+import { IoHomeOutline } from "react-icons/io5";
 import { usePathname, useRouter } from 'next/navigation';
 import { useThemeData } from '@/redux/slices/ThemeSlice';
+import Navbar from '../components/Navbar';
+import useSwipeCustom from '@/lib/useSwipeCustom';
 
 
 interface SingleTabData {
     name: string,
     icons?: React.ReactNode,
+    activeIcon?: React.ReactNode,
 
 };
 
 
-function LeftNavDesktop() {
-
-
-    const router = useRouter()
-
-    const themeMode = useThemeData().mode
-
-
-    return (
-        <div className={`border-t lg:border-t-0 w-[100%] lg:w-[20%] flex lg:flex fixed -bottom-0.5 left-0 lg:sticky lg:top-0 lg:left-0 lg:bottom-auto p-1 lg:p-2 lg:rounded-md lg:m-1 border-gray-500/90 shadow-md z-10 ${themeMode ? " bg-white" : " bg-black"}  `}>
-
-            <ul className=' flex justify-between  gap-1 lg:block w-full mx-2 sm:mx-8 md:mx-14 lg:mx-0'>
-                {
-                    [
-                        {
-                            icons: <CiHome />,
-                            name: "ashish",
-                        },
-                        {
-                            icons: <CgProfile />,
-                            name: "kuldeep",
-                        },
-                        {
-                            name: "home",
-                        },
-                        {
-                            name: "create",
-                        },
-                        {
-                            name: "notification",
-                        },
-                    ].map((ele: SingleTabData, i) => {
-                        return <LiToJumpBWPage key={i} ele={ele} />
-                    })
-                }
-            </ul>
-        </div>
-    )
-}
-
-
-function LiToJumpBWPage({ ele }: { ele: SingleTabData }) {
+function LiToJumpBWPage({ ele, osmClickHangler }: { ele: SingleTabData, osmClickHangler: Function }) {
 
     const router = useRouter()
 
@@ -109,32 +231,22 @@ function LiToJumpBWPage({ ele }: { ele: SingleTabData }) {
     }, [pathname])
 
 
-    const omClickHangler = () => {
-
-        let body = document.querySelector('#main_visiable_for_user')
-
-        body?.classList.add("page_transition");
-
-        router.push(`/${ele.name}`)
-
-        setTimeout(() => {
-            body?.classList.remove("page_transition");
-        }, 700)
-
-    }
-
     // main_visiable_for_user
     return (
         <li
             // onClick={() => router.push(`/${ele.name}`)}
-            onClick={omClickHangler}
+            onClick={() => osmClickHangler(`/${ele.name}`)}
             className={` relative w-7 lg:w-[100%] flex flex-col lg:flex-row lg:gap-1 items-center p-1 lg:px-3 lg:py-2 my-0 lg:my-3 text-xl text-white  lg:border border-gray-500/90 rounded-md hover:cursor-pointer transition-all
-
                 ${selectedPath === ele.name && " font-bold scale-110"}
-                
-                `}
+            `}
         >
-            <span>{ele.icons || <CiHome />} </span>
+            {
+                selectedPath === ele.name
+                    ?
+                    <span>{ele.activeIcon || <IoHomeSharp />} </span>
+                    :
+                    <span>{ele.icons || <IoHomeOutline />} </span>
+            }
             <span className={`inline capitalize text-[0.5rem] lg:text-xl leading-[0.8rem] lg:leading-none 
                  ${selectedPath === ele.name && " font-bold scale-125 text-sky-600 lg:ml-2.5"}
                 

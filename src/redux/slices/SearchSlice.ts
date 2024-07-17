@@ -16,6 +16,8 @@ type BodyOfSearchLook = {
 
 export const searchUserAndPost = createAsyncThunk("search/searchUserAndPost", async (body: BodyOfSearchLook) => {
 
+    // console.log(12345)
+
     let option: RequestInit = {
         credentials: 'include',
         method: "POST",
@@ -82,6 +84,7 @@ const searchSlice = createSlice({
                 state.isLoading = false
 
                 // console.log(action.payload.data)
+                // console.log(12345)
 
                 if (action.payload.success) {
                     state.isFullFilled = true
