@@ -70,20 +70,16 @@ const UserPageParams = ({ params }: any) => {
             className={` relative w-full min-h-screen flex flex-col items-center ${!themeMode ? " bg-black text-white " : " bg-white text-black"} `}
         >
 
-            <Navbar />
-
             <MainLoader isLoading={isLoading} />
-
-
 
             {/* Back but here ------> */}
 
-            <button
+            {/* <button
                 onClick={() => { router.back() }}
                 className=' absolute top-[13vh] mt-[2vh] left-2 sm:left-[10vh] px-2 border rounded hover:scale-95'
             >
                 <IoIosArrowBack />
-            </button>
+            </button> */}
 
 
 

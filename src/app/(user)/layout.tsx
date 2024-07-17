@@ -9,6 +9,9 @@ import { FaRegBell } from "react-icons/fa";
 import { FaBell } from "react-icons/fa6";
 import { FaRegUser } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
+import { HiOutlineBackward } from "react-icons/hi2";
+import { HiBackward } from "react-icons/hi2";
+
 const LayoutPage = (
     {
         children,
@@ -24,6 +27,11 @@ const LayoutPage = (
     //     onSwipedRight: () => previousTab(),
     //     // Add other event handlers as needed
     // });
+
+    // // // custome swipe fn() init here ---------------->
+    const handlers = useSwipeCustom(previousTab, nextTab)
+    // // // Swipe up and down also ----------->
+    // const handlers = useSwipeCustom(previousTab, nextTab, () => alert("down"), () => alert("up"))
 
     const router = useRouter();
 
@@ -55,14 +63,14 @@ const LayoutPage = (
         },
         {
             name: "notification",
-            icons : <FaRegBell />,
-            activeIcon :<FaBell />
+            icons: <FaRegBell />,
+            activeIcon: <FaBell />
 
         },
         {
             name: "profile",
-            icons : <FaRegUser />,
-            activeIcon :<FaUser />
+            icons: <FaRegUser />,
+            activeIcon: <FaUser />
 
         },
     ]
@@ -129,28 +137,12 @@ const LayoutPage = (
 
     }
 
-
-    const handlers = useSwipeCustom(previousTab, nextTab)
-
     return (
         <div>
 
             <div
-                className=" flex flex-col justify-center items-center pb-6 "
-
-                // {...handlers}
-
-                // // // This will read mouse move events ----------->
-
-                // onTouchStart={onTouchStart}
-                // onTouchMove={onTouchMove}
-                // onTouchEnd={onTouchEnd}
-                // onMouseDown={onMouseDown}
-                // onMouseMove={onMouseMove}
-                // onMouseUp={onMouseUp}
-
+                className=" relative flex flex-col justify-center items-center pb-6 "
                 {...handlers}
-
             >
 
 
@@ -158,9 +150,9 @@ const LayoutPage = (
 
                 <Navbar />
 
-                <div className=" relative flex items-start lg:w-[80%] gap-5 flex-col-reverse lg:flex-row">
+                <div className=" relative flex items-start justify-center lg:w-[80%] gap-5 flex-col-reverse lg:flex-row">
 
-                    <div className={`border-t lg:border-t-0 w-[100%] lg:w-[20%] flex lg:flex fixed -bottom-0.5 left-0 lg:sticky lg:top-0 lg:left-0 lg:bottom-auto p-1 lg:p-2 lg:rounded-md lg:m-1 border-gray-500/90 shadow-md z-10 ${themeMode ? " bg-white" : " bg-black"}  `}>
+                    <div className={`border-t lg:border-t-0 w-[100%] lg:w-[20%] flex lg:flex fixed -bottom-0.5 left-0 lg:sticky lg:top-7 lg:left-0 lg:bottom-auto p-1 lg:p-2 lg:rounded-md lg:m-1 border-gray-500/90 shadow-md z-10 ${themeMode ? " bg-white" : " bg-black"}  `}>
 
                         <ul className=' flex justify-between  gap-1 lg:block w-full mx-3 sm:mx-8 md:mx-14 lg:mx-0'>
                             {
@@ -172,19 +164,56 @@ const LayoutPage = (
                                     />
                                 })
                             }
+
+
+                            {
+                                (tabArr.map(ele => ele.name).indexOf(pathname.slice(1)) === -1)
+                                &&
+                                <LiToJumpBWPage
+                                    key={0}
+                                    ele={{
+                                        name: "back",
+                                        icons: <HiOutlineBackward />,
+                                        activeIcon: <HiBackward />
+                                    }}
+                                    osmClickHangler={() => router.back()}
+                                />
+                            }
+
                         </ul>
                     </div>
 
 
                     <div
                         id="main_visiable_for_user"
-                        className=" w-[100%] lg:w-[75%] min-h-[90vh] p-1 mb-5 rounded-md border-gray-500/90  "
+                        className=" relative w-[100%] lg:w-[60%] min-h-[90vh] p-1 mb-5 rounded-md border-gray-500/90  "
                     >
-                        {children}
+                        <div>
+                            {children}
+                        </div>
+
+
+
+                        {/* Message div for Desktop like in LinkedIn, lg: is visiable point. And this will visiable only on home page */}
+
+                        {
+                            pathname === "/home"
+                            &&
+
+                            <div className=' hidden lg:block fixed bottom-2 right-[7vh] min-h-[60vh] min-w-[20vw] bg-rose-800 rounded-md border border-rose-400'>
+
+                            </div>
+                        }
+
+
                     </div>
 
 
+
                 </div>
+
+
+
 
             </div>
 
@@ -204,7 +233,7 @@ import { IoHomeOutline } from "react-icons/io5";
 import { usePathname, useRouter } from 'next/navigation';
 import { useThemeData } from '@/redux/slices/ThemeSlice';
 import Navbar from '../components/Navbar';
-import useSwipeCustom from '@/lib/useSwipeCustom';
+import useSwipeCustom from '@/utils/useSwipeCustom';
 
 
 interface SingleTabData {

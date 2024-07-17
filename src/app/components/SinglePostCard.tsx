@@ -107,8 +107,8 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
 
 
                 <div className=" flex flex-wrap items-center gap-1">
-                  <p className="capitalize">{ele.title}</p>
-                  <p className=" ml-[75%] text-xs">({ele.category})</p>
+                  <p className="capitalize text-xl">{ele.title}</p>
+                  {/* <p className=" ml-[75%] text-xs">({ele.category})</p> */}
                 </div>
 
                 <div className=" text-sm"
@@ -132,12 +132,16 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
                       src={ele?.image}
                       className=" w-full h-[35vh] my-2 rounded object-contain object-top"
                     />
-                    <p className=" text-xs -mt-2 text-end">Click to see full image.</p>
+                    <p className=" text-xs -mt-2 text-end text-[0.55rem]">Click to see full image.</p>
                   </>
                 }
 
 
-                <p className=" text-[0.6rem] mt-2 text-end">Uploaded on : {ele.whenCreated || "Date"}</p>
+                <div className=" w-full flex justify-between items-center px-1">
+                  <p className=" text-xs">({ele.category})</p>
+                  <p className=" text-[0.6rem] mt-0 text-end">Uploaded on : {ele.whenCreated || "Date"}</p>
+                </div>
+
 
                 <div className=" flex flex-wrap gap-0.[2px] text-violet-500 font-semibold ">
                   {

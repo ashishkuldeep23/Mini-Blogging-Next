@@ -153,10 +153,7 @@ const Page = ({ params }: any) => {
 
             {/* <p>{params.id}</p> */}
 
-            <Navbar />
-
             <MainLoader isLoading={isLoading} />
-
 
 
             {

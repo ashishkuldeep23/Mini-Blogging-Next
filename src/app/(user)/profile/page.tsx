@@ -4,7 +4,6 @@
 import ImageReact from '@/app/components/ImageReact'
 import MainLoader from '@/app/components/MainLoader'
 // import HomeButton from '@/app/components/HomeButton'
-import Navbar from '@/app/components/Navbar'
 import SinglePostCard from '@/app/components/SinglePostCard'
 import AnimatedTooltip from '@/app/components/ui/animated-tooltip'
 import { useThemeData } from '@/redux/slices/ThemeSlice'
@@ -48,22 +47,26 @@ const ProfilePageParams = ({ params }: any) => {
             router.back()
         }
 
+        if (session?.user && session?.user._id) {
+            dispatch(getUserData(session?.user._id))
+        }
+
     }, [session])
 
 
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        // console.log(params.id)
+    //     // console.log(params.id)
 
-        if (params?.id !== "undefined" && params?.id && !userData._id) {
+    //     if (params?.id !== "undefined" && params?.id && !userData._id) {
 
-            // console.log(15455454)
-            dispatch(getUserData(params.id))
-        }
+    //         // console.log(15455454)
+    //         dispatch(getUserData(params.id))
+    //     }
 
 
-    }, [])
+    // }, [])
 
 
 
@@ -72,8 +75,6 @@ const ProfilePageParams = ({ params }: any) => {
         <div
             className={` relative w-full min-h-screen flex flex-col items-center overflow-hidden ${!themeMode ? " bg-black text-white " : " bg-white text-black"} `}
         >
-
-            <Navbar />
 
             <MainLoader isLoading={isLoading} />
 
@@ -171,6 +172,8 @@ function AllUploadedPicturesDiv() {
     const { data: session } = useSession()
 
 
+    const [clickedPicIndex, setClickedPicIndex] = useState<number | null>(null)
+
     function makeDpThisImage(image: string) {
 
         if (!image) return toast.error("Image not getting, please refresh the page.")
@@ -195,35 +198,51 @@ function AllUploadedPicturesDiv() {
 
 
     return (
-        <div>
+        <div className=' flex flex-col items-center '>
             {
                 userData.allProfilePic
                     &&
                     userData.allProfilePic.length > 0
 
                     ?
-                    <div>
+                    <div className=' lg:w-[70%] my-10 rounded-md shadow-xl shadow-cyan-950 '>
                         <p className=' text-center underline font-semibold my-2'>All {userData?.allProfilePic?.length} uploaded picture by you.</p>
                         <p className=' text-center text-xs'>Click on image to make profile pic.</p>
 
                         <div
-                            className=' scrooller_bar_hidden w-full px-5 py-4 flex gap-1 items-center overflow-x-scroll'
+                            className=' scrooller_bar_hidden w-full px-5 py-4 flex lg:flex-wrap gap-1 lg:gap-3 items-center justify-center overflow-x-scroll'
                         >
 
 
                             {
                                 userData.allProfilePic.map((ele, i) => {
                                     return (
-                                        <ImageReact
-                                            key={i}
-                                            className={` aspect-square p-1 w-[20vh] h-[20vh] border rounded-full object-cover active:scale-75 active:opacity-75 hover:cursor-pointer hover:scale-90 transition-all
+
+                                        <span className=' relative'>
+
+                                            {
+                                                clickedPicIndex === i
+                                                &&
+                                                <MainLoader isLoading={isLoading} />
+                                            }
+
+
+
+                                            <ImageReact
+                                                key={i}
+                                                className={` aspect-square p-1 w-[20vh] h-[20vh] border rounded-full object-cover active:scale-75 active:opacity-75 hover:cursor-pointer hover:scale-90 transition-all
                                                 
-                                                ${userData.profilePic === ele && " border-2 border-green-500"} 
+                                                ${userData.profilePic === ele && " border-2 border-green-500 blur-sm"} 
                                             `}
-                                            src={ele}
-                                            alt=""
-                                            onClick={() => { makeDpThisImage(ele) }}
-                                        />
+                                                src={ele}
+                                                alt=""
+                                                onClick={() => {
+                                                    setClickedPicIndex(i);
+                                                    makeDpThisImage(ele);
+                                                }}
+                                            />
+                                        </span>
+
                                     )
                                 })
                             }

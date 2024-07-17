@@ -113,7 +113,7 @@ function AllPostDiv() {
       className=" w-full min-h-[50vh] pt-[1vh] pb-[7vh] px-[2vh] !overflow-auto flex flex-col items-center justify-center"
     >
 
-      <div className="card_container mt-10 p-0.5 relative sm:px-[8vh] flex gap-10 gap-x-64 flex-wrap justify-center items-center ">
+      <div className="card_container mt-10 ml-10 p-0.5 relative sm:px-[8vh] flex gap-10 gap-x-64 flex-wrap justify-center lg:justify-start items-center ">
 
         <MainLoader
           isLoading={isLoading}
@@ -180,7 +180,7 @@ function StorySection() {
 
       <div
         id='story_holder_div'
-        className='scrooller_bar_hidden relative w-[98vw] lg:w-full flex lg:flex-wrap gap-1.5 px-2 items-center justify-start overflow-x-scroll z-[11]'
+        className='scrooller_bar_hidden relative w-[98vw] lg:w-full flex lg:flex-wrap gap-1.5 px-2 items-center justify-start overflow-x-scroll z-[5]'
 
         onTouchStart={preventSwitchingInTabs}
         onTouchMove={preventSwitchingInTabs}
