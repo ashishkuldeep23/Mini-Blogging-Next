@@ -44,14 +44,14 @@ const ProfilePageParams = ({ params }: any) => {
         if (status === "unauthenticated") {
 
             toast.error("You are unauthenticated person.")
-            router.back()
+            router.push('/home')
         }
 
         if (session?.user && session?.user._id) {
             dispatch(getUserData(session?.user._id))
         }
 
-    }, [session])
+    }, [session, status])
 
 
 
@@ -161,105 +161,6 @@ const ProfilePageParams = ({ params }: any) => {
 export default ProfilePageParams
 
 
-function AllUploadedPicturesDiv() {
-
-
-    const { userData, isLoading, errMsg } = useUserState()
-
-
-    const dispatch = useDispatch<AppDispatch>()
-
-    const { data: session } = useSession()
-
-
-    const [clickedPicIndex, setClickedPicIndex] = useState<number | null>(null)
-
-    function makeDpThisImage(image: string) {
-
-        if (!image) return toast.error("Image not getting, please refresh the page.")
-
-        if (image === userData.profilePic) return toast.error("This image is already your profile pic.")
-
-        if (session?.user._id) {
-
-
-            dispatch(updateUserData({
-                whatUpdate: "makeProfilePic",
-                sender: session.user._id,
-                newProfilePic: image,
-                reciver: ""
-            }))
-        }
-
-    }
-
-
-    // console.log(userData.allProfilePic)
-
-
-    return (
-        <div className=' flex flex-col items-center '>
-            {
-                userData.allProfilePic
-                    &&
-                    userData.allProfilePic.length > 0
-
-                    ?
-                    <div className=' lg:w-[70%] my-10 rounded-md shadow-xl shadow-cyan-950 '>
-                        <p className=' text-center underline font-semibold my-2'>All {userData?.allProfilePic?.length} uploaded picture by you.</p>
-                        <p className=' text-center text-xs'>Click on image to make profile pic.</p>
-
-                        <div
-                            className=' scrooller_bar_hidden w-full px-5 py-4 flex lg:flex-wrap gap-1 lg:gap-3 items-center justify-center overflow-x-scroll'
-                        >
-
-
-                            {
-                                userData.allProfilePic.map((ele, i) => {
-                                    return (
-
-                                        <span
-                                            key={i}
-                                            className=' relative'
-                                        >
-
-                                            {
-                                                clickedPicIndex === i
-                                                &&
-                                                <MainLoader isLoading={isLoading} />
-                                            }
-
-
-
-                                            <ImageReact
-                                                key={i}
-                                                className={` aspect-square p-1 w-[20vh] h-[20vh] border rounded-full object-cover active:scale-75 active:opacity-75 hover:cursor-pointer hover:scale-90 transition-all
-                                                
-                                                ${userData.profilePic === ele && " border-2 border-green-500 blur-sm"} 
-                                            `}
-                                                src={ele}
-                                                alt=""
-                                                onClick={() => {
-                                                    setClickedPicIndex(i);
-                                                    makeDpThisImage(ele);
-                                                }}
-                                            />
-                                        </span>
-
-                                    )
-                                })
-                            }
-                        </div>
-
-                    </div>
-                    : <></>
-            }
-        </div>
-    )
-
-}
-
-
 function UserProfileImage() {
 
     const dispatch = useDispatch<AppDispatch>()
@@ -308,7 +209,6 @@ function UserProfileImage() {
         }
 
     }
-
 
 
     async function uploadImgaeAndUserDataHandler() {
@@ -422,6 +322,116 @@ function UserProfileImage() {
     )
 }
 
+function AllUploadedPicturesDiv() {
+
+
+    const { userData, isLoading, errMsg } = useUserState()
+
+    const dispatch = useDispatch<AppDispatch>()
+
+    const { data: session } = useSession()
+
+    const [clickedPicIndex, setClickedPicIndex] = useState<number | null>(null)
+
+    function makeDpThisImage(image: string) {
+
+        if (!image) return toast.error("Image not getting, please refresh the page.")
+
+        if (image === userData.profilePic) return toast.error("This image is already your profile pic.")
+
+        if (session?.user._id) {
+
+
+            dispatch(updateUserData({
+                whatUpdate: "makeProfilePic",
+                sender: session.user._id,
+                newProfilePic: image,
+                reciver: ""
+            }))
+        }
+
+    }
+
+
+    // console.log(userData.allProfilePic)
+
+
+
+    function preventSwitchingInTabs(e: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement, MouseEvent>) {
+        e.stopPropagation()
+    }
+
+
+    return (
+        <div className=' flex flex-col items-center '>
+            {
+                userData.allProfilePic
+                    &&
+                    userData.allProfilePic.length > 0
+
+                    ?
+                    <div className=' lg:w-[70%] my-10 rounded-md shadow-xl shadow-cyan-950 '>
+                        <p className=' text-center underline font-semibold my-2'>All {userData?.allProfilePic?.length} uploaded picture by you.</p>
+                        <p className=' text-center text-xs'>Click on image to make profile pic.</p>
+
+                        <div
+                            className=' scrooller_bar_hidden px-5 py-4 relative w-[98vw] lg:w-full flex lg:flex-wrap gap-1 lg:gap-3 items-center justify-start overflow-x-scroll z-[5] lg:max-h-[45vh]'
+
+                            onTouchStart={preventSwitchingInTabs}
+                            onTouchMove={preventSwitchingInTabs}
+                            onTouchEnd={preventSwitchingInTabs}
+                            onMouseDown={preventSwitchingInTabs}
+                            onMouseMove={preventSwitchingInTabs}
+                            onMouseUp={preventSwitchingInTabs}
+
+
+                        >
+
+
+                            {
+                                userData.allProfilePic.map((ele, i) => {
+                                    return (
+
+                                        <span
+                                            key={i}
+                                            className=' aspect-square h-[20vh] relative'
+                                        >
+
+                                            {
+                                                clickedPicIndex === i
+                                                &&
+                                                <MainLoader isLoading={isLoading} />
+                                            }
+
+
+
+                                            <ImageReact
+                                                key={i}
+                                                className={` aspect-square p-1 w-[20vh] h-[20vh] border rounded-full object-cover active:scale-75 active:opacity-75 hover:cursor-pointer hover:scale-90 transition-all
+                                                
+                                                ${userData.profilePic === ele && " border-2 border-green-500 blur-sm"} 
+                                            `}
+                                                src={ele}
+                                                alt=""
+                                                onClick={() => {
+                                                    setClickedPicIndex(i);
+                                                    makeDpThisImage(ele);
+                                                }}
+                                            />
+                                        </span>
+
+                                    )
+                                })
+                            }
+                        </div>
+
+                    </div>
+                    : <></>
+            }
+        </div>
+    )
+
+}
 
 function ReciverRequestDiv() {
 

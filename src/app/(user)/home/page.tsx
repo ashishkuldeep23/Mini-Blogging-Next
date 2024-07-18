@@ -22,8 +22,6 @@ const HomePage = () => {
 export default HomePage
 
 
-
-
 function AllPostDiv() {
 
   const { allPost: allPostData, isLoading, searchHashAndCate, allPostsLength } = usePostData()
@@ -113,7 +111,7 @@ function AllPostDiv() {
       className=" w-full min-h-[50vh] pt-[1vh] pb-[7vh] px-[2vh] !overflow-auto flex flex-col items-center justify-center"
     >
 
-      <div className="card_container mt-10 ml-10 p-0.5 relative sm:px-[8vh] flex gap-10 gap-x-64 flex-wrap justify-center lg:justify-start items-center ">
+      <div className="card_container mt-10 lg:ml-10 p-0.5 relative sm:px-[8vh] flex gap-10 gap-x-64 flex-wrap justify-center lg:justify-start items-center ">
 
         <MainLoader
           isLoading={isLoading}
@@ -150,8 +148,6 @@ function AllPostDiv() {
 }
 
 
-
-
 function StorySection() {
 
 
@@ -179,8 +175,7 @@ function StorySection() {
     <>
 
       <div
-        id='story_holder_div'
-        className='scrooller_bar_hidden relative w-[98vw] lg:w-full flex lg:flex-wrap gap-1.5 px-2 items-center justify-start overflow-x-scroll z-[5]'
+        className='scrooller_bar_hidden relative w-[98vw] lg:w-full flex lg:flex-wrap gap-1.5 px-2 items-center justify-start overflow-x-scroll z-[5] lg:max-h-[20vh]'
 
         onTouchStart={preventSwitchingInTabs}
         onTouchMove={preventSwitchingInTabs}
@@ -188,7 +183,7 @@ function StorySection() {
         onMouseDown={preventSwitchingInTabs}
         onMouseMove={preventSwitchingInTabs}
         onMouseUp={preventSwitchingInTabs}
-        
+
       >
 
         <div
@@ -198,7 +193,7 @@ function StorySection() {
         </div>
 
         {
-          [null, null, null, null, null].map((ele, i) => {
+          [null, null, null, null, null ].map((ele, i) => {
             return (
               <div
                 key={i}

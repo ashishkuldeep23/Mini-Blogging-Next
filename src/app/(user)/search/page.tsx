@@ -20,7 +20,6 @@ import { PlaceholdersAndVanishInput } from '@/app/components/ui/placeholders-and
 
 
 
-
 const SearchPage = () => {
 
     const dispatch = useDispatch<AppDispatch>()
@@ -218,7 +217,7 @@ const SearchPage = () => {
                 `}
         >
 
-            <SearchByDiv setseeAllResult={setseeAllResult} setAllPostOrUser={setAllPostOrUser} />
+            <SearchByDivCatAndHash setseeAllResult={setseeAllResult} setAllPostOrUser={setAllPostOrUser} />
 
             <div className=' flex flex-col justify-center items-center gap-1  mt-2 relative'>
 
@@ -285,7 +284,7 @@ const SearchPage = () => {
                                         searchHistory.map((ele, i) => {
                                             return <p
                                                 key={i}
-                                                className={` relative bg-rose-950 rounded my-1 pl-1 hover:cursor-pointer`}
+                                                className={` relative  rounded my-1 pl-1 hover:cursor-pointer ${themeMode ? "bg-rose-50" : "bg-rose-950"}`}
                                                 onClick={() => {
                                                     setSearchText(`${ele}`)
                                                     setsearchHistoryFunc(ele)
@@ -521,8 +520,7 @@ function SuggetionForPost() {
 }
 
 
-
-const SearchByDiv = ({ setAllPostOrUser, setseeAllResult }: { setAllPostOrUser: Function, setseeAllResult: Function }) => {
+const SearchByDivCatAndHash = ({ setAllPostOrUser, setseeAllResult }: { setAllPostOrUser: Function, setseeAllResult: Function }) => {
 
     const [expandCat, setExpandCat] = useState(false)
 

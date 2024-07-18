@@ -11,6 +11,16 @@ import { FaRegUser } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
 import { HiOutlineBackward } from "react-icons/hi2";
 import { HiBackward } from "react-icons/hi2";
+import { IoHomeSharp } from "react-icons/io5";
+import { IoHomeOutline } from "react-icons/io5";
+import { usePathname, useRouter } from 'next/navigation';
+import { useThemeData } from '@/redux/slices/ThemeSlice';
+import Navbar from '../components/Navbar';
+import useSwipeCustom from '@/utils/useSwipeCustom';
+
+
+
+type PostitionType = { top: string, left: string }
 
 const LayoutPage = (
     {
@@ -137,85 +147,93 @@ const LayoutPage = (
 
     }
 
+
+    const [postionOfFirstLi, setPostionOfFirstLi] = useState<PostitionType>({ top: '0px', left: '0px' })
+
+
     return (
-        <div>
-
-            <div
-                className=" relative flex flex-col justify-center items-center pb-6 "
-                {...handlers}
-            >
+        <div
+            className={`relative flex flex-col justify-center items-center pb-6 ${themeMode ? " bg-white" : " bg-black"}`}
+            {...handlers}
+        >
 
 
-                {/* <h1 className=' text-5xl text-cyan-400'>Swipe {swipeDirection}</h1> */}
+            {/* <h1 className=' text-5xl text-cyan-400'>Swipe {swipeDirection}</h1> */}
 
-                <Navbar />
+            <Navbar />
 
-                <div className=" relative flex items-start justify-center lg:w-[80%] gap-5 flex-col-reverse lg:flex-row">
+            <div className=" relative flex items-start justify-center lg:w-[80%] gap-5 flex-col-reverse lg:flex-row">
 
-                    <div className={`border-t lg:border-t-0 w-[100%] lg:w-[20%] flex lg:flex fixed -bottom-0.5 left-0 lg:sticky lg:top-7 lg:left-0 lg:bottom-auto p-1 lg:p-2 lg:rounded-md lg:m-1 border-gray-500/90 shadow-md z-10 ${themeMode ? " bg-white" : " bg-black"}  `}>
+                <div className={`border-t lg:border-t-0 w-[100%] lg:w-[20%] flex lg:flex fixed -bottom-0.5 left-0 lg:sticky lg:top-7 lg:left-0 lg:bottom-auto p-1 lg:p-2 lg:rounded-md lg:m-1 border-gray-500/90 shadow-md z-20 ${themeMode ? " bg-white" : " bg-black"}  `}>
 
-                        <ul className=' flex justify-between  gap-1 lg:block w-full mx-3 sm:mx-8 md:mx-14 lg:mx-0'>
-                            {
-                                tabArr.map((ele: SingleTabData, i) => {
-                                    return <LiToJumpBWPage
-                                        key={i}
-                                        ele={ele}
-                                        osmClickHangler={osmClickHangler}
-                                    />
-                                })
-                            }
+                    <ul className=' relative flex justify-between  gap-1 lg:block w-full mx-3 sm:mx-8 md:mx-14 lg:mx-0'>
 
-
-                            {
-                                (tabArr.map(ele => ele.name).indexOf(pathname.slice(1)) === -1)
-                                &&
-                                <LiToJumpBWPage
-                                    key={0}
-                                    ele={{
-                                        name: "back",
-                                        icons: <HiOutlineBackward />,
-                                        activeIcon: <HiBackward />
-                                    }}
-                                    osmClickHangler={() => router.back()}
-                                />
-                            }
-
-                        </ul>
-                    </div>
-
-
-                    <div
-                        id="main_visiable_for_user"
-                        className=" relative w-[100%] lg:w-[60%] min-h-[90vh] p-1 mb-5 rounded-md border-gray-500/90  "
-                    >
-                        <div>
-                            {children}
-                        </div>
-
-
-
-                        {/* Message div for Desktop like in LinkedIn, lg: is visiable point. And this will visiable only on home page */}
+                        <li
+                            style={{ top: postionOfFirstLi.top, left: postionOfFirstLi.left }}
+                            className={` absolute w-9 lg:w-[110%] h-1 rounded-full bg-sky-600 transition-all duration-700`}
+                        ></li>
 
                         {
-                            pathname === "/home"
-                            &&
-
-                            <div className=' hidden lg:block fixed bottom-2 right-[7vh] min-h-[60vh] min-w-[20vw] bg-rose-800 rounded-md border border-rose-400'>
-
-                            </div>
+                            tabArr.map((ele: SingleTabData, i) => {
+                                return <SingleTabLi
+                                    key={i}
+                                    ele={ele}
+                                    osmClickHangler={osmClickHangler}
+                                    setPostionOfFirstLi={setPostionOfFirstLi}
+                                />
+                            })
                         }
 
+                        {/* This is back btn  */}
+                        {/* Dont show this for mobile means below then lg: screen size. */}
+                        {
+                            (tabArr.map(ele => ele.name).indexOf(pathname.slice(1)) === -1)
+                            &&
+                            <SingleTabLi
+                                key={0}
+                                osmClickHangler={() => router.back()}
+                                className={" none lg:inline-flex"}
+                                setPostionOfFirstLi={setPostionOfFirstLi}
+                                ele={{
+                                    name: "back",
+                                    icons: <HiOutlineBackward />,
+                                    activeIcon: <HiBackward />
+                                }}
 
+                            />
+                        }
+
+                    </ul>
+                </div>
+
+                {/* Main UI div here ----------> */}
+                <div
+                    id="main_visiable_for_user"
+                    className=" relative w-[100%] lg:w-[60%] min-h-[90vh] p-1 mb-5 rounded-md border-gray-500/90  "
+                >
+                    <div>
+                        {children}
                     </div>
 
+
+                    {/* Message div for Desktop like in LinkedIn, lg: is visiable point. And this will visiable only on home page */}
+
+                    {
+                        pathname === "/home"
+                        &&
+
+                        <div className=' hidden lg:block fixed bottom-2 lg:right-0 xl:right-[7vh] min-h-[60vh] min-w-[20vw] bg-rose-800 rounded-md border border-rose-400'>
+
+                        </div>
+                    }
 
 
                 </div>
 
 
 
-
             </div>
+
 
         </div>
     )
@@ -224,34 +242,31 @@ const LayoutPage = (
 export default LayoutPage
 
 
-
-
-
-
-import { IoHomeSharp } from "react-icons/io5";
-import { IoHomeOutline } from "react-icons/io5";
-import { usePathname, useRouter } from 'next/navigation';
-import { useThemeData } from '@/redux/slices/ThemeSlice';
-import Navbar from '../components/Navbar';
-import useSwipeCustom from '@/utils/useSwipeCustom';
-
-
 interface SingleTabData {
     name: string,
     icons?: React.ReactNode,
     activeIcon?: React.ReactNode,
+    className?: string,
 
 };
 
 
-function LiToJumpBWPage({ ele, osmClickHangler }: { ele: SingleTabData, osmClickHangler: Function }) {
+import { CiLock } from "react-icons/ci";
+import { useUserState } from '@/redux/slices/UserSlice';
+import ImageReact from '../components/ImageReact';
 
-    const router = useRouter()
+function SingleTabLi({ ele, osmClickHangler, setPostionOfFirstLi, className }: { ele: SingleTabData, osmClickHangler: Function, setPostionOfFirstLi: Function, className?: string }) {
+
+    // const router = useRouter()
+
+    const userId = useUserState().userData._id
+    const userImg = useUserState().userData.profilePic
 
     const pathname = usePathname()
 
-
     const [selectedPath, setSelectedPath] = useState<string>('')
+
+    const themeMode = useThemeData().mode
 
     // console.log(selectedPath)
 
@@ -259,27 +274,93 @@ function LiToJumpBWPage({ ele, osmClickHangler }: { ele: SingleTabData, osmClick
         pathname && setSelectedPath(pathname.slice(1))
     }, [pathname])
 
+    let publicPages = ['home', "search"]
+
+
+
+    const liRef = useRef<HTMLLIElement | null>(null)
+
+    useEffect(() => {
+
+        if (ele.name === selectedPath && liRef.current) {
+
+            let top = liRef.current.getBoundingClientRect().top
+            let left = liRef.current.getBoundingClientRect().left
+
+
+            if (window.innerWidth >= 1024) {
+
+                setPostionOfFirstLi({ top: `${top - 36}px`, left: `${-11}px` })
+            } else {
+
+                setPostionOfFirstLi({ top: `${-7}px`, left: `${left - 18.5}px` })
+            }
+
+        }
+
+    }, [ele.name, selectedPath])
+
+
 
     // main_visiable_for_user
     return (
         <li
+            ref={liRef}
             // onClick={() => router.push(`/${ele.name}`)}
             onClick={() => osmClickHangler(`/${ele.name}`)}
-            className={` relative w-7 lg:w-[100%] flex flex-col lg:flex-row lg:gap-1 items-center p-1 lg:px-3 lg:py-2 my-0 lg:my-3 text-xl text-white  lg:border border-gray-500/90 rounded-md hover:cursor-pointer transition-all
+            className={` relative w-7 lg:w-[100%] flex flex-col lg:flex-row lg:gap-1 items-center p-1 lg:px-3 lg:py-2 my-0 lg:my-3 text-xl lg:border border-gray-500/90 rounded-md hover:cursor-pointer transition-all
                 ${selectedPath === ele.name && " font-bold scale-110"}
+                ${!themeMode ? " text-white" : " text-black "}
+                ${className}
             `}
         >
             {
-                selectedPath === ele.name
+
+                ele.name === "profile"
                     ?
-                    <span>{ele.activeIcon || <IoHomeSharp />} </span>
+                    <>
+                        {
+                            userImg
+                                ?
+
+                                <ImageReact src={userImg} className='h-5 w-5 object-cover rounded-full ring-1 p-[1px] ring-sky-600' />
+
+                                :
+                                <span>{ele.icons || <IoHomeOutline />} </span>
+
+                        }
+                    </>
                     :
-                    <span>{ele.icons || <IoHomeOutline />} </span>
+                    <>
+                        {
+
+
+
+                            selectedPath === ele.name
+                                ?
+                                <span className=' text-sky-600'>{ele.activeIcon || <IoHomeSharp />} </span>
+                                :
+                                <span>{ele.icons || <IoHomeOutline />} </span>
+                        }
+                    </>
+
             }
-            <span className={`inline capitalize text-[0.5rem] lg:text-xl leading-[0.8rem] lg:leading-none 
-                 ${selectedPath === ele.name && " font-bold scale-125 text-sky-600 lg:ml-2.5"}
+
+
+            <span className={` mx-0.5 inline-flex gap-1 justify-center items-center capitalize text-[0.5rem] lg:text-xl leading-[0.8rem] lg:leading-none 
+                 ${selectedPath === ele.name && " font-[cursive] font-bold scale-125 text-sky-600 lg:ml-2.5"}
                 
-                `}>{ele.name}</span>
+                `}>
+
+                {ele.name}
+
+                {
+                    (!userId) && (!publicPages.includes(ele.name))
+                    &&
+                    <CiLock className=' text-xs' />
+                }
+
+            </span>
         </li>
     )
 }

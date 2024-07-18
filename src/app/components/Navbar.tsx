@@ -17,8 +17,8 @@ import { PiSunDimDuotone } from "react-icons/pi";
 import { PiMoonStarsDuotone } from "react-icons/pi";
 import bodyTranstion from "@/utils/routerPushWithTransition"
 
-
-
+import { AiTwotoneMessage } from "react-icons/ai";
+import { AiFillMessage } from "react-icons/ai";
 
 /*
     Navbar should consist of these things =============>>
@@ -52,7 +52,7 @@ const Navbar = () => {
 
     const { userData } = useUserState()
 
-    const [isUserLogined, setIsUserLogined] = useState(true)
+    const [isUserLogined, setIsUserLogined] = useState(false)
 
     const [isUserOnHaome, setIsUserOnHome] = useState<boolean>(false)
 
@@ -133,7 +133,7 @@ const Navbar = () => {
 
     // // // Redirect user to home ----------->
     useEffect(() => {
-        if (!firstTimeRedirect && userData?._id && userData?.email) {
+        if (!firstTimeRedirect && userData?._id && userData?.email && params === "/") {
             firstTimeRedirect = true
             router.push("/home")
         }
@@ -146,7 +146,7 @@ const Navbar = () => {
                 backdropFilter: "blur(5px) saturate(1.7)",
                 background: "#efe6f300"
             }}
-            className={`sticky -top-5 z-[12] flex justify-between items-start gap-1.5 w-full lg:w-[98%] px-2 sm:px-0 py-4 ${!themeMode ? " bg-black text-white border-zinc-700 " : " bg-white text-black border-zinc-300"}`}
+            className={`sticky -top-5 z-[12] flex justify-between items-start gap-1.5 w-full lg:w-[98%] px-2 sm:px-0 lg:px-28 py-4 ${!themeMode ? " bg-black text-white border-zinc-700 " : " bg-white text-black border-zinc-300"}`}
 
         >
 
@@ -179,44 +179,6 @@ const Navbar = () => {
 
             <div className=" flex items-center justify-end flex-wrap gap-2 pt-1 ">
 
-
-                <div>
-                    {
-
-
-                        !isUserLogined
-                            ?
-
-                            <div className=" flex flex-wrap  justify-end gap-1">
-                                <Link
-                                    href={"/signup"}
-                                    className={` border rounded-full px-2 py-0.5 text-sm font-bold ${themeMode ? " bg-black border-black text-white " : " border-white bg-white text-black"}`}
-                                >SignUp</Link>
-                                <Link
-                                    href={"/login"}
-                                    className={`border rounded-full px-2 py-0.5 text-sm font-bold ${themeMode ? "border-black " : " border-white "}`}
-                                >LogIn</Link>
-                            </div>
-
-                            :
-
-                            <div className=" flex flex-wrap  justify-end gap-1">
-                                <button
-                                    onClick={() => { router.push("/new-post") }}
-
-                                    className={` border rounded-full px-2 py-0.5 text-sm font-bold ${themeMode ? " bg-black border-black text-white " : " border-white bg-white text-black"}`}
-                                >Create Post</button>
-                                <button
-                                    onClick={() => { signOut() }}
-                                    className={`border rounded-full px-2 py-0.5 text-sm font-bold ${themeMode ? "border-red-900 " : " border-red-100 "}`}
-                                >SignOut</button>
-                            </div>
-
-                    }
-
-
-                </div>
-
                 <button
                     onClick={() => {
 
@@ -239,6 +201,70 @@ const Navbar = () => {
                             : <span> <PiSunDimDuotone /> </span>
                     }
                 </button>
+
+
+                <div>
+                    {
+
+
+                        !isUserLogined
+                            ?
+
+                            <div className=" flex flex-wrap  justify-end gap-1">
+                                <Link
+                                    href={"/signup"}
+                                    className={` border rounded-full px-2 py-0.5 text-sm font-bold ${themeMode ? " bg-black border-black text-white " : " border-white bg-white text-black"}`}
+                                >SignUp</Link>
+                                <Link
+                                    href={"/login"}
+                                    className={`border rounded-full px-2 py-0.5 text-sm font-bold ${themeMode ? "border-black " : " border-white "}`}
+                                >LogIn</Link>
+                            </div>
+
+                            :
+
+                            // // // If user is Logged In.
+                            <div className=" flex flex-wrap  items-center justify-end gap-1.5">
+
+
+                                <button
+                                    onClick={() => {
+                                        router.push("/message")
+                                    }}
+
+                                    className={`rounded-full -mt-1.5 text-3xl h-6 text-sky-600 hover:text-yellow-500`}
+                                >
+                                    {
+
+                                        themeMode
+                                            ?
+                                            <span>
+                                                <AiTwotoneMessage />
+                                            </span>
+                                            :
+                                            <span>
+                                                <AiFillMessage />
+                                            </span>
+                                    }
+                                </button>
+
+                                {
+                                    params === '/profile'
+                                    &&
+
+                                    <button
+                                        onClick={() => { signOut() }}
+                                        className={`border rounded-full px-2 py-0.5 text-sm font-bold ${themeMode ? " text-red-700 border-red-700 " : " border-red-100 "}`}
+                                    >SignOut</button>
+                                }
+                            </div>
+
+                    }
+
+
+                </div>
+
+
 
             </div>
 

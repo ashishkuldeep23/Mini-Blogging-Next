@@ -31,7 +31,7 @@ const ImageReact = ({
             onClick={() => { onClick && onClick() }}
             width={width}
             src={src}
-            alt={alt || "img"}
+            alt={alt || "."}
             className={`${className}`}
             style={style}
             onError={({ currentTarget }) => {
