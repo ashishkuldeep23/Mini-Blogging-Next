@@ -22,6 +22,9 @@ import useSwipeCustom from '@/utils/useSwipeCustom';
 
 type PostitionType = { top: string, left: string }
 
+const LgBreakValue = 1024
+
+
 const LayoutPage = (
     {
         children,
@@ -192,7 +195,11 @@ const LayoutPage = (
                             <SingleTabLi
                                 key={0}
                                 osmClickHangler={() => router.back()}
-                                className={" none lg:inline-flex"}
+
+                                className={" !none lg:!inline-flex"}
+
+                                display={window.innerWidth >= LgBreakValue ? "inline-flex" : "none"}
+
                                 setPostionOfFirstLi={setPostionOfFirstLi}
                                 ele={{
                                     name: "back",
@@ -230,8 +237,6 @@ const LayoutPage = (
 
                 </div>
 
-
-
             </div>
 
 
@@ -255,7 +260,7 @@ import { CiLock } from "react-icons/ci";
 import { useUserState } from '@/redux/slices/UserSlice';
 import ImageReact from '../components/ImageReact';
 
-function SingleTabLi({ ele, osmClickHangler, setPostionOfFirstLi, className }: { ele: SingleTabData, osmClickHangler: Function, setPostionOfFirstLi: Function, className?: string }) {
+function SingleTabLi({ ele, osmClickHangler, setPostionOfFirstLi, className, display }: { ele: SingleTabData, osmClickHangler: Function, setPostionOfFirstLi: Function, className?: string, display?: string }) {
 
     // const router = useRouter()
 
@@ -288,7 +293,7 @@ function SingleTabLi({ ele, osmClickHangler, setPostionOfFirstLi, className }: {
             let left = liRef.current.getBoundingClientRect().left
 
 
-            if (window.innerWidth >= 1024) {
+            if (window.innerWidth >= LgBreakValue) {
 
                 setPostionOfFirstLi({ top: `${top - 36}px`, left: `${-11}px` })
             } else {
@@ -306,12 +311,12 @@ function SingleTabLi({ ele, osmClickHangler, setPostionOfFirstLi, className }: {
     return (
         <li
             ref={liRef}
+            style={{ display: display }}
             // onClick={() => router.push(`/${ele.name}`)}
             onClick={() => osmClickHangler(`/${ele.name}`)}
             className={` relative w-7 lg:w-[100%] flex flex-col lg:flex-row lg:gap-1 items-center p-1 lg:px-3 lg:py-2 my-0 lg:my-3 text-xl lg:border border-gray-500/90 rounded-md hover:cursor-pointer transition-all
                 ${selectedPath === ele.name && " font-bold scale-110"}
                 ${!themeMode ? " text-white" : " text-black "}
-                ${className}
             `}
         >
             {

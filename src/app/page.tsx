@@ -1,29 +1,29 @@
 'use client'
 
 import { useThemeData } from "@/redux/slices/ThemeSlice";
-import Navbar from "./components/Navbar";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { getAllPosts, usePostData, setSearchBrandAndCate, setSearchByText } from "@/redux/slices/PostSlice";
 import { AppDispatch } from "@/redux/store";
-import MainLoader from "./components/MainLoader";
 import MaskerText from "./components/MaskerText";
 import { useRouter } from "next/navigation";
-import SinglePostCard from "./components/SinglePostCard";
 import { useSession } from "next-auth/react";
-// import ThreeDCardDemo from "./components/ui/card";
+import Navbar from "./components/Navbar";
 
-import { BsFillPatchPlusFill } from "react-icons/bs";
-// import { debounce } from "@/utils/debounce";
-import InfiniteScroll from "react-infinite-scroll-component";
-import { PlaceholdersAndVanishInput } from "./components/ui/placeholders-and-vanish-input";
+// import MainLoader from "./components/MainLoader";
+// import SinglePostCard from "./components/SinglePostCard";
+// import ThreeDCardDemo from "./components/ui/card";
+// import { BsFillPatchPlusFill } from "react-icons/bs";
+// // import { debounce } from "@/utils/debounce";
+// import InfiniteScroll from "react-infinite-scroll-component";
+// import { PlaceholdersAndVanishInput } from "./components/ui/placeholders-and-vanish-input";
 {/* <BsFillPatchPlusFill /> */ }
 
 
 
 export default function Home() {
 
-  const { data: session } = useSession()
+  // const { data: session } = useSession()
 
   const themeMode = useThemeData().mode
 
@@ -71,6 +71,7 @@ export default function Home() {
       <div className=" flex flex-col justify-center items-center pb-6 ">
 
         <Navbar />
+
 
         <div className=" relative flex items-start  gap-5">
 

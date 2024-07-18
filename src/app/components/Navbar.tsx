@@ -146,7 +146,11 @@ const Navbar = () => {
                 backdropFilter: "blur(5px) saturate(1.7)",
                 background: "#efe6f300"
             }}
-            className={`sticky -top-5 z-[12] flex justify-between items-start gap-1.5 w-full lg:w-[98%] px-2 sm:px-0 lg:px-28 py-4 ${!themeMode ? " bg-black text-white border-zinc-700 " : " bg-white text-black border-zinc-300"}`}
+            className={`sticky -top-5 z-[12] flex justify-between items-start gap-1.5 w-full lg:w-[98%] px-2 sm:px-0 lg:px-28 py-4 
+                ${!themeMode ? " bg-black text-white border-zinc-700 " : " bg-white text-black border-zinc-300"}
+                ${params === "/" && "!w-[100%]"}
+            `}
+            
 
         >
 
@@ -180,19 +184,9 @@ const Navbar = () => {
             <div className=" flex items-center justify-end flex-wrap gap-2 pt-1 ">
 
                 <button
-                    onClick={() => {
+                    onClick={() => dispatch(toggleModeValue())}
 
-                        // console.log("dasdff")
-
-                        // let newValue = (themeValue === "black") ? true : false
-
-                        dispatch(toggleModeValue())
-
-                        // setIsUserLogined(!isUserLogined)
-
-                    }}
-
-                    className={`rounded-full text-xl h-6 hover:text-yellow-500`}
+                    className={`rounded-full text-xl h-6 hover:text-yellow-500 transition-all hover:scale-125`}
                 >
                     {
 
@@ -232,7 +226,7 @@ const Navbar = () => {
                                         router.push("/message")
                                     }}
 
-                                    className={`rounded-full -mt-1.5 text-3xl h-6 text-sky-600 hover:text-yellow-500`}
+                                    className={`rounded-full -mt-1.5 text-3xl h-6 text-sky-600 transition-all hover:scale-125`}
                                 >
                                     {
 
@@ -254,7 +248,7 @@ const Navbar = () => {
 
                                     <button
                                         onClick={() => { signOut() }}
-                                        className={`border rounded-full px-2 py-0.5 text-sm font-bold ${themeMode ? " text-red-700 border-red-700 " : " border-red-100 "}`}
+                                        className={`border rounded-full px-2 py-0.5 text-sm font-bold transition-all hover:scale-125 ${themeMode ? " text-red-700 border-red-700 " : " border-red-100 "}`}
                                     >SignOut</button>
                                 }
                             </div>
@@ -263,7 +257,6 @@ const Navbar = () => {
 
 
                 </div>
-
 
 
             </div>
