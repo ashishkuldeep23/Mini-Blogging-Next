@@ -1,8 +1,7 @@
 'use client'
-
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import React, { useEffect } from 'react'
+import React, { useEffect } from 'react';
 import toast from 'react-hot-toast';
 
 const NotificationPage = () => {
@@ -29,7 +28,6 @@ const NotificationPage = () => {
     // console.log(session?.user.image)
 
   }, [session, status])
-
 
   return (
     <div className=' text-white'>NotificationPage</div>

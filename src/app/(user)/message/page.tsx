@@ -1,14 +1,14 @@
-'use client'
+'use client';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
+import toast from 'react-hot-toast';
 
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
-import React, { useEffect } from 'react'
-import toast from 'react-hot-toast'
 
 const MessagePage = () => {
-    const { data: session, status } = useSession()
+    const { data: session, status } = useSession();
 
-    const router = useRouter()
+    const router = useRouter();
 
     useEffect(() => {
         // console.log(session?.user?.id)
@@ -29,6 +29,7 @@ const MessagePage = () => {
         // console.log(session?.user.image)
 
     }, [session, status])
+
     return (
         <div className=' text-white'>MessagePage</div>
     )

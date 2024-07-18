@@ -3,7 +3,7 @@
 import React from 'react'
 import MaskerText from "@/app/components/MaskerText"
 
-const page = () => {
+const PostPage = () => {
     return (
         <div className=' h-screen w-full flex flex-col flex-wrap items-center mt-[30vh] text-center'>
             <p>Post not Found.</p>
@@ -13,4 +13,4 @@ const page = () => {
     )
 }
 
-export default page
+export default PostPage;
