@@ -3,27 +3,14 @@
 import { useThemeData } from "@/redux/slices/ThemeSlice";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { getAllPosts, usePostData, setSearchBrandAndCate, setSearchByText } from "@/redux/slices/PostSlice";
+import { usePostData } from "@/redux/slices/PostSlice";
 import { AppDispatch } from "@/redux/store";
 import MaskerText from "./components/MaskerText";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import Navbar from "./components/Navbar";
-
-// import MainLoader from "./components/MainLoader";
-// import SinglePostCard from "./components/SinglePostCard";
-// import ThreeDCardDemo from "./components/ui/card";
-// import { BsFillPatchPlusFill } from "react-icons/bs";
-// // import { debounce } from "@/utils/debounce";
-// import InfiniteScroll from "react-infinite-scroll-component";
-// import { PlaceholdersAndVanishInput } from "./components/ui/placeholders-and-vanish-input";
-{/* <BsFillPatchPlusFill /> */ }
-
 
 
 export default function Home() {
-
-  // const { data: session } = useSession()
 
   const themeMode = useThemeData().mode
 
@@ -31,16 +18,9 @@ export default function Home() {
 
   const router = useRouter()
 
-  // console.log(themeMode)
-
-
-  // let onFocusFlagForRedirectUser = false
-
   return (
     <main className={` relative flex min-h-screen flex-col items-center ${!themeMode ? " bg-black text-white " : " bg-white text-black"}`}>
 
-      {/* Socket IO component here ------------> */}
-      {/* <SocketConnectionCodeHere /> */}
 
       {/* Now i'm going to user pusher ------> */}
       {/* Pusher working code -----------> */}
@@ -50,28 +30,10 @@ export default function Home() {
 
 
 
-      {/* Plus ICon to create post  */}
-      {
-        // session?.user._id
-
-        // &&
-
-        // <button
-        //   className="add_button_down_right fixed bottom-[8%] sm:bottom-[10%] right-5 sm:right-[4%] text-5xl z-[100] fill-neutral-700 hover:scale-125 focus:scale-90 transition-all"
-        //   onClick={() => { router.push("/new-post") }}
-        // // style={{ backdropFilter : "drop-shadow(2px 4px 6px cyan)"}}
-        // >
-        //   <BsFillPatchPlusFill />
-        // </button>
-
-      }
-
-
       {/* Main home div that hold allPosts and all */}
       <div className=" flex flex-col justify-center items-center pb-6 ">
 
         <Navbar />
-
 
         <div className=" relative flex items-start  gap-5">
 
