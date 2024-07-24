@@ -440,7 +440,7 @@ const NewPostPage = () => {
 
 
   // // // Some common class name that used in input fields ------->  
-  const classNamesForInputs = ` w-[68%] border rounded-sm px-1 ${!themeMode ? " bg-slate-900 text-white" : " bg-slate-100 text-black"}`
+  const classNamesForInputs = ` w-[100%] border rounded-sm px-1 ${!themeMode ? " bg-slate-900 text-white" : " bg-slate-100 text-black"}`
 
 
   return (
@@ -472,9 +472,9 @@ const NewPostPage = () => {
               >
 
 
-                <div className=''>
+                <div className=' flex flex-col-reverse my-1'>
                   <input
-                    className={`${classNamesForInputs}`}
+                    className={`${classNamesForInputs} w-full`}
                     placeholder="Give title of post"
                     type={"text"}
                     id="title"
@@ -488,14 +488,16 @@ const NewPostPage = () => {
                   />
 
                   <label
-                    className=' pl-2 pr-1 border-b font-semibold'
+                    className=' pl-2 pr-1 font-semibold'
                     htmlFor="title"
                   >Title</label>
 
                 </div>
 
 
-                <div>
+                <div
+                  className=' flex flex-col-reverse my-1'
+                >
 
                   <textarea
                     style={{ resize: "none" }}
@@ -514,7 +516,7 @@ const NewPostPage = () => {
                   ></textarea>
 
                   <label
-                    className='pl-2 pr-1 border-b font-semibold'
+                    className='pl-2 pr-1  font-semibold'
                     htmlFor="content"
                   >Content</label>
 
@@ -522,68 +524,68 @@ const NewPostPage = () => {
 
 
                 {/* // // // // New category look like -------> */}
-                <div className=" w-full px-0.5 flex flex-col ">
+                <div className=" w-full px-0.5 flex flex-col-reverse my-1 ">
 
-                  <div className=' felx'>
+                  {/* <div className=''> */}
 
 
-                    <select
-                      onChange={(e) => {
-                        selectOnChangeHandler(e)
+                  <select
+                    onChange={(e) => {
+                      selectOnChangeHandler(e)
+                    }}
+                    // {...register("category", { required: "Category is Required" })}
+                    // className=" text-black font-bold rounded capitalize py-1"
+
+                    className={`${classNamesForInputs}`}
+                    name="" id="category_product"
+                    value={newPostData.category ? newPostData.category : ''}
+                  >
+
+                    {
+                      catAndHash.categories.length
+                      &&
+                      catAndHash.categories.map((category, i) => {
+                        return (
+                          <option
+                            // {...register("category", { required: "Category is Required" })}
+
+                            // selected={getValues("category") === category ? true : false}
+
+                            key={i}
+                            className="capitalize"
+                            value={`${category}`}
+                          >{
+                              category
+                            }</option>
+                        )
+                      })
+                    }
+
+
+
+                    {/* Plus option for new category -----> */}
+
+                    <option
+                      value="plus"
+                      onClick={() => {
+
+                        // setPlusCategory(true) 
                       }}
-                      // {...register("category", { required: "Category is Required" })}
-                      // className=" text-black font-bold rounded capitalize py-1"
-
-                      className={`${classNamesForInputs} my-1`}
-                      name="" id="category_product"
-                      value={newPostData.category ? newPostData.category : ''}
-                    >
-
-                      {
-                        catAndHash.categories.length
-                        &&
-                        catAndHash.categories.map((category, i) => {
-                          return (
-                            <option
-                              // {...register("category", { required: "Category is Required" })}
-
-                              // selected={getValues("category") === category ? true : false}
-
-                              key={i}
-                              className="capitalize"
-                              value={`${category}`}
-                            >{
-                                category
-                              }</option>
-                          )
-                        })
-                      }
+                    // onClick={()=>setPlusCategory(true)}
+                    // {...register("category", { required: "Category is Required" })}
+                    >+Plus</option>
 
 
+                  </select>
 
-                      {/* Plus option for new category -----> */}
+                  <label
+                    htmlFor="category_product"
+                    className='pl-2 pr-1  font-semibold'
+                  >
+                    Category
+                  </label>
 
-                      <option
-                        value="plus"
-                        onClick={() => {
-
-                          // setPlusCategory(true) 
-                        }}
-                      // onClick={()=>setPlusCategory(true)}
-                      // {...register("category", { required: "Category is Required" })}
-                      >+Plus</option>
-
-
-                    </select>
-
-                    <label
-                      htmlFor="category_product"
-                      className='pl-2 pr-1 border-b font-semibold'
-                    >
-                      Category
-                    </label>
-
-                  </div>
+                  {/* </div> */}
 
 
                   {/* Add new category All code ----> */}
@@ -667,9 +669,9 @@ const NewPostPage = () => {
 
                 {/* Here going to take an file uplad image ------> */}
 
-                <div className=" flex justify-start">
+                <div className=" flex flex-col-reverse justify-start my-1">
 
-                  <div className=' w-[68%]' >
+                  <div className=' w-[100%]' >
 
                     <input
                       className={`${classNamesForInputs} hidden`}
@@ -688,7 +690,7 @@ const NewPostPage = () => {
 
                       <label
 
-                        className=' flex  justify-start items-center pl-1 gap-2 flex-wrap'
+                        className=' h-10 flex  justify-start items-center pl-1 gap-2 flex-wrap'
                         htmlFor="change_img">
                         <FaCamera className=' mx-auto sm:mx-0 text-2xl' />
                         <p className=' text-sm'>Choose an image for post.</p>
@@ -700,14 +702,14 @@ const NewPostPage = () => {
 
 
                   <label
-                    className=' pl-2 pr-1 border-b font-semibold'
+                    className=' pl-2 pr-1  font-semibold'
                     htmlFor="change_img"
                   >*Image</label>
 
                 </div>
 
 
-                <div>
+                <div className=' flex flex-col-reverse my-1'>
                   <input
                     className={`${classNamesForInputs}`}
                     placeholder="Give url of post"
@@ -723,14 +725,14 @@ const NewPostPage = () => {
                   />
 
                   <label
-                    className=' pl-2 pr-1 border-b font-semibold'
+                    className=' pl-2 pr-1 font-semibold'
                     htmlFor="url"
                   >*Url</label>
 
                 </div>
 
 
-                <div>
+                <div className=' flex flex-col-reverse my-1'>
                   <input
                     className={`${classNamesForInputs}`}
                     placeholder="Give origin of post"
@@ -746,7 +748,7 @@ const NewPostPage = () => {
                   />
 
                   <label
-                    className=' pl-2 pr-1 border-b font-semibold'
+                    className=' pl-2 pr-1  font-semibold'
                     htmlFor="origin"
                   >*Origin</label>
 
@@ -755,7 +757,7 @@ const NewPostPage = () => {
 
                 <div>
 
-                  <div className={` ${!themeMode ? "text-violet-300" : "text-violet-700"} flex flex-wrap items-center gap-1`}>
+                  <div className={` ${!themeMode ? "text-violet-300" : "text-violet-700"} flex flex-wrap  items-center gap-1`}>
 
                     {
                       newPostData.hashs.map((ele, i) => {
@@ -775,45 +777,50 @@ const NewPostPage = () => {
                   </div>
 
 
-                  <div className='my-1 flex'>
+                  <div className='my-1 flex flex-col-reverse'>
 
                     <div
-                      className={` relative flex justify-end w-[68%] border rounded `}
+                      className={` relative flex justify-end w-[100%] border rounded `}
                     // className={`flex  `}
                     >
 
 
-                      <input
-                        className={`${classNamesForInputs} w-full relative z-10 rounded-e-none `}
-                        placeholder="Give HasThats of post"
-                        type={"text"}
-                        id="HasThats"
-                        name="HasThats"
-                        value={newHash}
-                        onChange={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          setNewHash(() => e.target.value)
-                        }
-                        }
+                      <div className=' w-[100%] flex items-center'>
 
-                        onKeyDown={(e) => {
-                          // e.preventDefault();
-                          // console.log(e.key)
-                          if (e.key === "Enter") {
-                            addNewHash({ e })
+                        <input
+                          className={`${classNamesForInputs} !w-full relative z-10 rounded-e-none `}
+                          placeholder="Give HasThats of post"
+                          type={"text"}
+                          id="HasThats"
+                          name="HasThats"
+                          value={newHash}
+                          onChange={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setNewHash(() => e.target.value)
                           }
-                        }}
+                          }
 
-                      />
+                          onKeyDown={(e) => {
+                            // e.preventDefault();
+                            // console.log(e.key)
+                            if (e.key === "Enter") {
+                              addNewHash({ e })
+                            }
+                          }}
 
-                      <button
-                        className=' -ml-1 mb-0.5 scale-y-[1.6] scale-x-125'
-                        onClick={(e) => {
-                          // e.preventDefault()
-                          addNewHash({ e })
-                        }}
-                      >⬆️</button>
+                        />
+
+                        <button
+                          className=' -ml-1 mb-0.5 scale-y-[1.6] scale-x-125'
+                          onClick={(e) => {
+                            // e.preventDefault()
+                            addNewHash({ e })
+                          }}
+                        >⬆️</button>
+
+                      </div>
+
 
 
                       {
@@ -869,7 +876,7 @@ const NewPostPage = () => {
 
 
                     <label
-                      className=' pl-2 pr-1 border-b font-semibold'
+                      className=' pl-2 pr-1 font-semibold'
                       htmlFor="HasThats"
                     >*Hasthats</label>
 
@@ -984,17 +991,18 @@ const NewPostPage = () => {
           <div className=' flex flex-col '>
 
 
-            <div className=' px-2'>
+            <div className=' px-2 my-5 border rounded-xl m-1 py-2'>
+
+              <p className=' my-2 '>Customize your Post ☝️:- </p>
 
               <div
                 className=' flex gap-1.5 flex-wrap'
               >
 
-                <p>Customize your Post ☝️:- </p>
 
 
                 <div
-                  className={` flex items-center border rounded pl-1 overflow-hidden ${!themeMode ? "bg-black" : "bg-white"} `}
+                  className={` flex items-center flex-col-reverse border rounded pl-1 overflow-hidden ${!themeMode ? "bg-black" : "bg-white"} w-[45%] mx-auto `}
                 >
                   <label
                     className=' mx-0.5 mr-1.5 font-semibold '
@@ -1002,7 +1010,7 @@ const NewPostPage = () => {
                   >By Color : </label>
                   <input
                     type="color"
-                    className={`${!themeMode ? "bg-black" : "bg-white"}`}
+                    className={`${!themeMode ? "bg-black" : "bg-white"} w-[100%]`}
                     name="color"
                     id="color"
                     onChange={(e) => setCutomize({ ...customize, color: e.target.value })}
@@ -1011,7 +1019,7 @@ const NewPostPage = () => {
                 </div>
 
                 <div
-                  className={` flex items-center border rounded pl-1 overflow-hidden ${!themeMode ? "bg-black" : "bg-white"} `}
+                  className={` flex items-center flex-col-reverse border rounded pl-1 overflow-hidden ${!themeMode ? "bg-black" : "bg-white"} w-[45%] mx-auto`}
                 >
                   <label
                     className=' mx-0.5 mr-1.5 font-semibold '
@@ -1035,18 +1043,18 @@ const NewPostPage = () => {
                 </div>
 
                 <div
-                  className={` flex items-center border rounded pl-1 overflow-hidden ${!themeMode ? "bg-black" : "bg-white"} `}
+                  className={` flex items-center flex-col-reverse border rounded pl-1 overflow-hidden ${!themeMode ? "bg-black" : "bg-white"} w-[45%] mx-auto `}
                 >
                   <label
                     className=' mx-0.5 mr-1.5 font-semibold'
                     htmlFor="bgColor"
-                  >By Background Color : </label>
+                  >By Bg Color : </label>
 
                   <input
                     type="color"
                     name="bgColor"
                     id="bgColor"
-                    className={`${!themeMode ? "bg-black" : "bg-white"}`}
+                    className={`${!themeMode ? "bg-black" : "bg-white"} w-[100%]`}
                     onChange={(e) => setCutomize({ ...customize, bgColor: e.target.value })
                     }
 
@@ -1055,7 +1063,7 @@ const NewPostPage = () => {
                 </div>
 
                 <div
-                  className={` flex items-center border rounded pl-1 overflow-hidden ${!themeMode ? "bg-black" : "bg-white"} `}
+                  className={` flex items-center flex-col-reverse border rounded pl-1 overflow-hidden ${!themeMode ? "bg-black" : "bg-white"} w-[45%] mx-auto `}
                 >
                   <label
                     className=' mx-0.5 mr-1.5 font-semibold '

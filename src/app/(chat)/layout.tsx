@@ -1,4 +1,5 @@
 import React from 'react'
+import Navbar from '../components/Navbar';
 
 const LayoutPage = (
     {
@@ -9,6 +10,9 @@ const LayoutPage = (
 ) => {
     return (
         <div>
+
+            <Navbar />
+
             <div>LayoutPage</div>
             <div>{children}</div>
 

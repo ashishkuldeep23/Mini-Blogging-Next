@@ -150,7 +150,7 @@ const UserPageParams = ({ params }: any) => {
 
                     <div className=' text-center'>
                         <p className=' text-xl'>No Post found for You. 404</p>
-                        <Link href={"/new-post"} className=' px-2 text-xs border rounded'>Write post</Link>
+                        <Link href={"/create"} className=' px-2 text-xs border rounded'>Write post</Link>
                     </div>
                 }
 

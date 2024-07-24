@@ -4,8 +4,9 @@ import { PayloadAction, createAsyncThunk, createSlice, current } from "@reduxjs/
 import { useSelector } from "react-redux"
 import { RootState } from "../store"
 import toast from "react-hot-toast"
-import { NewPostType } from "@/app/new-post/page"
+// import { NewPostType } from "@/app/new-post/page"
 import { UserDataInterface } from "./UserSlice"
+import { NewPostType } from "@/interfaces"
 
 
 

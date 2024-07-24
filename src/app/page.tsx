@@ -3,7 +3,7 @@
 import { useThemeData } from "@/redux/slices/ThemeSlice";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { usePostData } from "@/redux/slices/PostSlice";
+import { getAllPosts, setSearchBrandAndCate, usePostData } from "@/redux/slices/PostSlice";
 import { AppDispatch } from "@/redux/store";
 import MaskerText from "./components/MaskerText";
 import { useRouter } from "next/navigation";
@@ -15,11 +15,38 @@ export default function Home() {
   const themeMode = useThemeData().mode
 
   const allPostData = usePostData().allPost
+  const isLoading = usePostData().isLoading
 
   const router = useRouter()
 
+
+
+  const dispatch = useDispatch<AppDispatch>()
+
+  function fetchAllPostData() {
+    let searchObj = { hash: "", category: "", page: 1 }
+    dispatch(setSearchBrandAndCate(searchObj))
+    dispatch(getAllPosts(searchObj))
+
+  }
+
+
+  useEffect(() => {
+    if (allPostData.length <= 1) {
+
+      // // // Before calling all posts we need to set queryObject --------->
+      fetchAllPostData()
+      // dispatch(getAllPosts())
+    }
+  }, [])
+
+
   return (
     <main className={` relative flex min-h-screen flex-col items-center ${!themeMode ? " bg-black text-white " : " bg-white text-black"}`}>
+
+
+      {/* Loading animation on landing page. */}
+      <MainLoader isLoading={isLoading} className=" !top-[85vh]" />
 
 
       {/* Now i'm going to user pusher ------> */}
@@ -344,6 +371,7 @@ import { useUserState } from "@/redux/slices/UserSlice";
 import Pusher from 'pusher-js'
 import { pusherClient } from "@/lib/pusher";
 import NavBottomMobile from "./components/NavBottomMobile";
+import MainLoader from "./components/MainLoader";
 
 
 const username = "ashish"

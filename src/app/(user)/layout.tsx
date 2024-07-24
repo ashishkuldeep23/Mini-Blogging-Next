@@ -154,6 +154,12 @@ const LayoutPage = (
     const [postionOfFirstLi, setPostionOfFirstLi] = useState<PostitionType>({ top: '0px', left: '0px' })
 
 
+    let dont_show_nav_for_pages: string[] = ['/search', '/create']
+
+    // console.log({ pathname })
+
+
+
     return (
         <div
             className={`relative flex flex-col justify-center items-center pb-6 ${themeMode ? " bg-white" : " bg-black"}`}
@@ -163,7 +169,13 @@ const LayoutPage = (
 
             {/* <h1 className=' text-5xl text-cyan-400'>Swipe {swipeDirection}</h1> */}
 
-            <Navbar />
+            {
+                // pathname
+
+                <Navbar
+                    className={dont_show_nav_for_pages.includes(pathname) ? " !invisible !-top-10" : ""}
+                />
+            }
 
             <div className=" relative flex items-start justify-center lg:w-[80%] gap-5 flex-col-reverse lg:flex-row">
 
@@ -314,7 +326,7 @@ function SingleTabLi({ ele, osmClickHangler, setPostionOfFirstLi, className, dis
             style={{ display: display }}
             // onClick={() => router.push(`/${ele.name}`)}
             onClick={() => osmClickHangler(`/${ele.name}`)}
-            className={` relative w-7 lg:w-[100%] flex flex-col lg:flex-row lg:gap-1 items-center p-1 lg:px-3 lg:py-2 my-0 lg:my-3 text-xl lg:border border-gray-500/90 rounded-md hover:cursor-pointer transition-all
+            className={` relative w-7 lg:w-[100%] flex flex-col lg:flex-row lg:gap-1 items-center p-1 lg:px-3 lg:py-2 my-0 lg:my-3 text-xl lg:border border-gray-500/90 rounded-md hover:cursor-pointer transition-all hover:scale-y-110 lg:hover:scale-x-110 duration-300
                 ${selectedPath === ele.name && " font-bold scale-110"}
                 ${!themeMode ? " text-white" : " text-black "}
             `}

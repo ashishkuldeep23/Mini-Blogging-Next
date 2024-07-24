@@ -155,7 +155,7 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
 
 
         // // // Page navigation here  -------->
-        router.push('/new-post')
+        router.push('/create')
         // // // Use with "/" (forword slash) to go somewhere --->
         // router.replace('new-post')
     }
