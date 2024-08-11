@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
 
 export default function useSwipeCustom(rightHandler: Function, leftHandler: Function, upHandler?: Function, downHandler?: Function) {
@@ -52,7 +52,15 @@ export default function useSwipeCustom(rightHandler: Function, leftHandler: Func
     };
 
     const handleSwipe = () => {
-        if (touchStartX.current !== null && touchEndX.current !== null && touchStartY.current !== null && touchEndY.current !== null) {
+        if (
+            touchStartX.current !== null
+            &&
+            touchEndX.current !== null
+            &&
+            touchStartY.current !== null
+            &&
+            touchEndY.current !== null
+        ) {
             const distanceX = touchEndX.current - touchStartX.current;
             const distanceY = touchEndY.current - touchStartY.current;
             if (

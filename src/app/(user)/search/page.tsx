@@ -238,6 +238,7 @@ const SearchPage = () => {
                         onSubmit={(e) => { hardSearchHandler(e) }}
                         placeholders={['Search by post title, category and hashtag', 'Search by user name.', 'Search here...', 'Made by Ashish kuldeep.']}
                         inputValue={searchByText}
+                        inputFoucus={true}
                     />
 
                 </div>

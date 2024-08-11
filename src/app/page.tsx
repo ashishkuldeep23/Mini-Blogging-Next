@@ -12,13 +12,11 @@ import Navbar from "./components/Navbar";
 
 export default function Home() {
 
-  const themeMode = useThemeData().mode
-
-  const allPostData = usePostData().allPost
-  const isLoading = usePostData().isLoading
-
   const router = useRouter()
 
+  const themeMode = useThemeData().mode
+  const allPostData = usePostData().allPost
+  const isLoading = usePostData().isLoading
 
 
   const dispatch = useDispatch<AppDispatch>()
@@ -27,7 +25,6 @@ export default function Home() {
     let searchObj = { hash: "", category: "", page: 1 }
     dispatch(setSearchBrandAndCate(searchObj))
     dispatch(getAllPosts(searchObj))
-
   }
 
 
@@ -54,7 +51,6 @@ export default function Home() {
       <PusherTestDiv
         channelName='ashish'
       />
-
 
 
       {/* Main home div that hold allPosts and all */}
@@ -253,130 +249,14 @@ const FooterDiv = () => {
 }
 
 
-// import { useEffect, useState } from "react";
-// import { socket } from "../socket";
-import { useUserState } from "@/redux/slices/UserSlice";
-
-// function SocketConnectionCodeHere() {
-
-//   const [isConnected, setIsConnected] = useState(false);
-//   const [transport, setTransport] = useState("N/A");
-
-//   const { userData } = useUserState()
-
-//   // console.log(socket)
-
-//   function onConnect() {
-//     setIsConnected(true);
-//     setTransport(socket.io.engine.transport.name);
-
-//     socket.io.engine.on("upgrade", (transport: any) => {
-//       setTransport(transport.name);
-//     });
-//   }
-
-
-//   function onDisconnect() {
-//     setIsConnected(false);
-//     setTransport("N/A");
-//   }
-
-
-//   // // // This is how we can connent with socket ------>
-//   useEffect(() => {
-//     if (socket.connected) {
-//       onConnect();
-//     }
-
-//     socket.on("connect", onConnect);
-//     socket.on("disconnect", onDisconnect);
-
-//     return () => {
-//       socket.off("connect", onConnect);
-//       socket.off("disconnect", onDisconnect);
-//     };
-//   }, []);
-
-
-//   // useEffect(() => {
-//   //   if (isConnected) {
-
-//   //     socket.emit("connection", "world");
-//   //     socket.emit("hello", "world");
-//   //   }
-//   // }, [isConnected])
-
-
-//   // // // Register user with socket IO ------------>
-
-//   useEffect(() => {
-//     if (userData._id) {
-//       socket.emit("register", userData);
-//     }
-//   }, [userData])
-
-
-//   // console.log("Render  ------------------>")
-
-
-
-//   function newMsg() {
-
-//     console.log("Trying to send new msg ---------> ")
-
-//     socket.emit("hello", "world", (err: any) => {
-//       console.log(err)
-//     });
-//   }
-
-
-
-
-//   // // // All coming listners here ------------->
-//   useEffect(() => {
-
-//     // // // PUT all socket listernes inisde useEffect -------------->
-
-//     socket.on("word", (msg: any) => {
-//       console.log({ msg })
-//       alert(msg)
-//     })
-
-
-//     return () => {
-//       socket.off()
-//       socket.off("disconnect", onDisconnect);
-//     }
-
-//   }, [])
-
-
-//   return (
-//     <div
-//       className="border-2 border-red-500 w-dvw text-center hover:cursor-pointer"
-//     >
-//       <p>Status: {isConnected ? "connected" : "disconnected"}</p>
-//       <p>Transport: {transport}</p>
-
-//       <button
-//         onClick={newMsg}
-//         className="px-2 border rounded-md border-white my-2 mx-3 active:scale-75"
-//       >Send Msg</button>
-//     </div>
-//   );
-
-// }
-
-
 import Pusher from 'pusher-js'
 import { pusherClient } from "@/lib/pusher";
+import { useUserState } from "@/redux/slices/UserSlice";
 import NavBottomMobile from "./components/NavBottomMobile";
 import MainLoader from "./components/MainLoader";
 
-
 const username = "ashish"
 const recipient = "kuldeep"
-
 
 function PusherTestDiv({ channelName }: { channelName: string }) {
 

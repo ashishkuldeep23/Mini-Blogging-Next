@@ -256,7 +256,7 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
                     singlePost && singlePost?.image
                     &&
                     <ImageReact
-                        className=' rounded my-2 w-full h-[70vh] object-contain'
+                        className=' rounded my-2 w-full max-h-[70vh] object-contain'
                         src={singlePost?.image}
                     />
 

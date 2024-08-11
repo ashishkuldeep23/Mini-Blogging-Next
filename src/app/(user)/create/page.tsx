@@ -227,7 +227,7 @@ const NewPostPage = () => {
 
       // // // Here now set file ---------->
       // File size should less then 2 mb. 
-      if (file.size > 2097152) {
+      if (file.size > 4097152) {
         return toast.error("File size should less then 2 mb")
       }
 
@@ -239,7 +239,6 @@ const NewPostPage = () => {
     }
 
   }
-
 
 
   async function submitFormData(even: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -275,8 +274,6 @@ const NewPostPage = () => {
       }
 
 
-
-
       if (updatingPost && singlePostdata?._id) {
 
         // alert("now call dispatch for update.")
@@ -305,7 +302,6 @@ const NewPostPage = () => {
 
 
   }
-
 
 
 
@@ -347,16 +343,7 @@ const NewPostPage = () => {
   }, [session, status])
 
 
-  // useEffect(() => {
-
-  //     if (userData._id && session?.user.image) {
-  //         // setBgImages([...bgImage, `url('${userData?.profilePic.toString()}')`])
-
-  //         // console.log(session?.user.image)
-  //     }
-  // }, [userData])
-
-
+  // // // Redirect user here -------------------------->
   useEffect(() => {
 
     if (writePostFullFilled) {
@@ -375,7 +362,7 @@ const NewPostPage = () => {
       if (errMsg === 'Post updated successfully.') {
         router.push(`/post/${singlePostdata?._id}`)
       } else {
-        router.push("/")
+        router.push("/home")
       }
 
 
@@ -892,11 +879,9 @@ const NewPostPage = () => {
             </div>
 
 
-
-            {/* UI of given data shown here -------> */}
-
+            {/* Post UI of given data shown here -------> */}
             <div
-              className={` relative overflow-hidden rounded p-1 border w-full sm:w-2/5 ${!themeMode ? " bg-black" : " bg-white"}`}
+              className={` relative overflow-hidden rounded p-1 border w-full transition-all duration-500 sm:w-2/5 ${!themeMode ? " bg-black" : " bg-white"}`}
               style={{
                 backgroundColor: customize.bgColor,
                 color: customize.color,
@@ -909,7 +894,6 @@ const NewPostPage = () => {
                 backgroundSize: `url('${session?.user.image}')` === `${customize.bgImage}` ? "cover" : "",
               }}
             >
-
 
               <div className="rounded-t flex gap-1.5 items-center border-b border-cyan-400">
 

@@ -29,36 +29,6 @@ function AllPostDiv() {
   const dispatch = useDispatch<AppDispatch>()
 
 
-  // async function fetchAllPosts() {
-
-  //   dispatch(setIsLoading(true))
-
-  //   dispatch(setErrMsg(""))
-
-  //   const option: RequestInit = {
-  //     method: "POST",
-  //     cache: 'no-store',
-  //     next: {
-  //       revalidate: 3
-  //     },
-  //   }
-
-  //   const response = await fetch(`/api/post/all?timestamp=${Date.now()}`, option)
-  //   let json = await response.json();
-
-  //   // console.log(json)
-
-  //   if (json.success) {
-  //     dispatch(setAllPosts(json.data))
-  //   } else {
-  //     dispatch(setErrMsg(json.message))
-  //   }
-
-  //   dispatch(setIsLoading(false))
-  // }
-
-
-
   function fetchAllPostData() {
     let searchObj = { hash: "", category: "", page: 1 }
     dispatch(setSearchBrandAndCate(searchObj))
@@ -79,7 +49,6 @@ function AllPostDiv() {
     if (allPostData.length <= 1) {
 
       // // // Before calling all posts we need to set queryObject --------->
-
       fetchAllPostData()
       // dispatch(getAllPosts())
     }
@@ -101,21 +70,21 @@ function AllPostDiv() {
       loader={
         (allPostData.length < allPostsLength && !searchHashAndCate.category && !searchHashAndCate.hash)
         &&
-
-        <div className=" mt-10 flex gap-2 items-center">
+        <div className=" lg:-translate-x-[50%] mt-10 flex gap-2 items-center">
           <span>LOADING...</span>
           <span className=" w-4 h-4   rounded-full animate-spin "></span>
         </div>
       }
 
-      className=" w-full min-h-[50vh] pt-[1vh] pb-[7vh] px-[2vh] !overflow-auto flex flex-col items-center justify-center"
+      className="w-full min-h-[50vh] pt-[1vh] pb-[7vh] px-[2vh] !overflow-auto flex flex-col items-center justify-center"
     >
 
       <div className="card_container mt-10 lg:ml-10 p-0.5 relative sm:px-[8vh] flex gap-10 gap-x-64 flex-wrap justify-center lg:justify-start items-center ">
 
         <MainLoader
           isLoading={isLoading}
-        // className="top-0" 
+          // isLoading={true}
+        className=" lg:-translate-x-[50%]" 
         />
 
         {

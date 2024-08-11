@@ -12,6 +12,7 @@ export function PlaceholdersAndVanishInput({
     className,
     onFocus,
     inputValue,
+    inputFoucus
 
 }: {
     placeholders: string[];
@@ -20,6 +21,7 @@ export function PlaceholdersAndVanishInput({
     onFocus?: Function;
     className?: string;
     inputValue?: string;
+    inputFoucus?: boolean;
 }) {
     const [currentPlaceholder, setCurrentPlaceholder] = useState(0);
 
@@ -167,6 +169,14 @@ export function PlaceholdersAndVanishInput({
         vanishAndSubmit();
         onSubmit && onSubmit(e);
     };
+
+    // // // make focus input onMount of search page ----------->
+    useEffect(() => {
+
+        inputFoucus && inputRef.current?.focus()
+    }, [])
+
+
     return (
         <form
             className={cn(

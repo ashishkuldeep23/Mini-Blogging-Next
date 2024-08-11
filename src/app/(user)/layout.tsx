@@ -135,7 +135,6 @@ const LayoutPage = (
 
     }
 
-
     const osmClickHangler = (ele: string) => {
 
         let body = document.querySelector('#main_visiable_for_user')
@@ -147,17 +146,32 @@ const LayoutPage = (
         setTimeout(() => {
             body?.classList.remove("page_transition");
         }, 700)
-
     }
 
 
     const [postionOfFirstLi, setPostionOfFirstLi] = useState<PostitionType>({ top: '0px', left: '0px' })
 
-
     let dont_show_nav_for_pages: string[] = ['/search', '/create']
 
     // console.log({ pathname })
 
+    const [sliderVisiable, setSliderVisiable] = useState<'hidden' | 'inline'>('inline')
+    // // // remove slider when other page is open 
+    useEffect(() => {
+        if (pathname) {
+            let arr = tabArr.map(ele => ele.name)
+
+            // console.log(pathname)
+            // console.log(arr)
+
+            if (!arr.includes(`${pathname.substring(1)}`)) {
+                setSliderVisiable('hidden')
+            } else {
+                setSliderVisiable('inline')
+            }
+
+        }
+    }, [pathname])
 
 
     return (
@@ -165,7 +179,6 @@ const LayoutPage = (
             className={`relative flex flex-col justify-center items-center pb-6 ${themeMode ? " bg-white" : " bg-black"}`}
             {...handlers}
         >
-
 
             {/* <h1 className=' text-5xl text-cyan-400'>Swipe {swipeDirection}</h1> */}
 
@@ -183,9 +196,10 @@ const LayoutPage = (
 
                     <ul className=' relative flex justify-between  gap-1 lg:block w-full mx-3 sm:mx-8 md:mx-14 lg:mx-0'>
 
+                        {/* this li is used as slider in ui. */}
                         <li
                             style={{ top: postionOfFirstLi.top, left: postionOfFirstLi.left }}
-                            className={` absolute w-9 lg:w-[110%] h-1 rounded-full bg-sky-600 transition-all duration-700`}
+                            className={` absolute w-9 lg:w-[110%] h-1 rounded-full bg-sky-600 transition-all duration-700 ${sliderVisiable}`}
                         ></li>
 
                         {
@@ -294,7 +308,6 @@ function SingleTabLi({ ele, osmClickHangler, setPostionOfFirstLi, className, dis
     let publicPages = ['home', "search"]
 
 
-
     const liRef = useRef<HTMLLIElement | null>(null)
 
     useEffect(() => {
@@ -307,7 +320,7 @@ function SingleTabLi({ ele, osmClickHangler, setPostionOfFirstLi, className, dis
 
             if (window.innerWidth >= LgBreakValue) {
 
-                setPostionOfFirstLi({ top: `${top - 36}px`, left: `${-11}px` })
+                setPostionOfFirstLi({ top: `${top - 33}px`, left: `${-11}px` })
             } else {
 
                 setPostionOfFirstLi({ top: `${-7}px`, left: `${left - 18.5}px` })
@@ -364,6 +377,7 @@ function SingleTabLi({ ele, osmClickHangler, setPostionOfFirstLi, className, dis
             }
 
 
+            {/* Lock icon and Name of tab here -----------------> */}
             <span className={` mx-0.5 inline-flex gap-1 justify-center items-center capitalize text-[0.5rem] lg:text-xl leading-[0.8rem] lg:leading-none 
                  ${selectedPath === ele.name && " font-[cursive] font-bold scale-125 text-sky-600 lg:ml-2.5"}
                 
@@ -377,7 +391,10 @@ function SingleTabLi({ ele, osmClickHangler, setPostionOfFirstLi, className, dis
                     <CiLock className=' text-xs' />
                 }
 
+
             </span>
+
+
         </li>
     )
 }
