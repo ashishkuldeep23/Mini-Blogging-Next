@@ -20,10 +20,6 @@ import AnimatedTooltip from './ui/animated-tooltip';
 import { PiPaperPlaneRight } from "react-icons/pi";
 
 
-
-
-
-
 interface UpdatingComment {
     mode: boolean,
     value: string,
@@ -683,7 +679,7 @@ function PostCommentForm(
                     >
                         {
 
-                            !updatingComment.mode ? "POST" : "Update"
+                            !updatingComment.mode ? "Comment" : "Update"
                         }
                     </button>
 
@@ -717,7 +713,7 @@ function AllComments({
 
     return (
         <div
-            className=" my-5 mx-0.5 border border-rose-400 rounded-md"
+            className=" my-5 mx-0.5 rounded-md"
         >
 
             <div className=' flex justify-center'>
@@ -946,10 +942,6 @@ const SingleCommentUI = ({
                             onClick={(e) => { e.stopPropagation(); likeComment() }}
                         >
 
-                            {/* <span
-                        className=" absolute font-semibold text-xs -top-[35%] -right-[15%] "
-                    >{comment?.likesId?.length}</span> */}
-
                             <span>{comment.likes}</span>
 
                             <SlLike />
@@ -981,16 +973,12 @@ const SingleCommentUI = ({
 
                 </div>
 
-                {
 
-                    (comment.likes > 0 || comment.replies.length > 0 || commentClicked)
-                    &&
-                    <SeeMoreOfComment
-                        commentClicked={commentClicked}
-                        comment={comment}
-                        setCommentClicked={setCommentClicked}
-                    />
-                }
+                <SeeMoreOfComment
+                    commentClicked={commentClicked}
+                    comment={comment}
+                    setCommentClicked={setCommentClicked}
+                />
 
 
             </div>
@@ -1249,7 +1237,7 @@ function SeeMoreOfComment(
                 <div className=' flex items-center '>
 
                     <p
-                        className=' ml-1'
+                        className=' ml-1 text-xs'
                     >
 
                         <span className=' text-xs'>
@@ -1264,29 +1252,35 @@ function SeeMoreOfComment(
 
                     </p>
 
-                    <button
-                        className={`relative mt-0.5  ml-auto mr-0 flex gap-0.5 items-center justify-center border p-0.5 rounded text-[0.6rem] font-semibold font-serif ${seeMoreBtn && " bg-yellow-400 text-black "} `}
 
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            setSeeMoreBtn((last) => !last);
-                            // getCommentData();
-                            setCommentClicked(true)
-                        }}
+                    {
+                        (comment.likes > 0 || comment.replies.length > 0 || commentClicked)
+                        &&
 
-                    >
-                        <span>More</span>
+                        <button
+                            className={`relative mt-0.5  ml-auto mr-0 flex gap-0.5 items-center justify-center border p-0.5 rounded text-[0.6rem] font-semibold font-serif ${seeMoreBtn && " bg-yellow-400 text-black "} `}
 
-                        {
-                            !seeMoreBtn
-                                ?
-                                <span><IoIosArrowDown /></span>
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setSeeMoreBtn((last) => !last);
+                                // getCommentData();
+                                setCommentClicked(true)
+                            }}
 
-                                :
-                                <span><IoIosArrowUp /></span>
-                        }
+                        >
+                            <span>More</span>
 
-                    </button>
+                            {
+                                !seeMoreBtn
+                                    ?
+                                    <span><IoIosArrowDown /></span>
+
+                                    :
+                                    <span><IoIosArrowUp /></span>
+                            }
+
+                        </button>
+                    }
                 </div>
 
 
@@ -1478,7 +1472,7 @@ function SeeMoreOfComment(
                                     return (
                                         <div
                                             key={i}
-                                            className=' border rounded-full pl-4 sm:pl-1.5 mt-1 w-full flex items-center justify-between flex-wrap gap-0.5 overflow-hidden'
+                                            className=' border rounded-xl pl-4 sm:pl-1.5 py-1 mt-1 w-full flex items-center justify-between flex-wrap gap-0.5 overflow-hidden'
                                         >
 
                                             <div>

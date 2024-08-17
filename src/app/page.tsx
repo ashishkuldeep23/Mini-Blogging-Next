@@ -98,31 +98,39 @@ function FeatureDetailShowHomeFirstTime() {
 
   const [firstTime, setFirstTime] = useState("")
 
+  const router = useRouter()
+
 
   // // // This code was responsiable for show and hide feature section.
+  useEffect(() => {
 
-  // useEffect(() => {
+    let chcekAlreadyVisited = localStorage.getItem("alreadyVisited")
 
-  //   localStorage.setItem("alreadyVisited", JSON.stringify("yes"))
+    if (chcekAlreadyVisited) {
 
+      chcekAlreadyVisited = JSON.parse(chcekAlreadyVisited)
 
-  //   let chcekAlreadyVisited = localStorage.getItem("alreadyVisited")
+      if (chcekAlreadyVisited) {
 
-  //   if (chcekAlreadyVisited) {
+        setFirstTime(chcekAlreadyVisited)
+        router.push("/home")
+      }
+    }
 
-  //     chcekAlreadyVisited = JSON.parse(chcekAlreadyVisited)
+    localStorage.setItem("alreadyVisited", JSON.stringify("yes"))
 
-  //     chcekAlreadyVisited && setFirstTime(chcekAlreadyVisited)
-  //   }
-
-  // }, [])
+  }, [])
 
 
   return (
 
     <>
 
-      <div className={`px-4 mb-7 sm:px-10 flex flex-col items-center text-center ${!firstTime ? " scale-100 !h-auto mt-10 " : " scale-0 !h-0 "} transition-all duration-700 `}>
+      <div className={`
+      px-4 mb-7 sm:px-10 flex flex-col items-center text-center 
+      transition-all duration-700 scale-100 !h-auto mt-10
+       
+        `}>
 
         <h1 className="text-4xl sm:text-6xl font-bold"
         >

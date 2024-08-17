@@ -26,16 +26,12 @@ import SingleUserDiv from '@/app/components/SingleUserDiv'
 
 const UserPageParams = ({ params }: any) => {
 
+    const dispatch = useDispatch<AppDispatch>()
+    const router = useRouter()
     const themeMode = useThemeData().mode
-
     const { data: session, status } = useSession()
 
-    const router = useRouter()
-
-    const dispatch = useDispatch<AppDispatch>()
-
     const { searchedUser, isLoading, errMsg, userData } = useUserState()
-
 
 
     useEffect(() => {
@@ -47,7 +43,10 @@ const UserPageParams = ({ params }: any) => {
             if (params?.id === session?.user?._id) {
                 // alert("Same")
 
-                router.push(`/profile/${session?.user?._id}`)
+                // router.push(`/profile/${session?.user?._id}`)
+
+                // // // now sending user to it's '/profile' page not on '/profile/[id]' 
+                router.push(`/profile`)
 
             } else {
                 dispatch(getUserData(params.id))
@@ -57,13 +56,20 @@ const UserPageParams = ({ params }: any) => {
 
         }
 
-
     }, [])
 
 
+
+    useEffect(() => {
+
+        if (status === 'unauthenticated') {
+            toast.error("LogIn Please. You are unauthenticated for this page | 401")
+            router.push("/login")
+        }
+    }, [status])
+
+
     // set All frineds ids.
-
-
 
     return (
         <div
@@ -132,9 +138,7 @@ const UserPageParams = ({ params }: any) => {
 
                 {
                     searchedUser.allPostOfUser.length > 0
-
                     &&
-
                     searchedUser.allPostOfUser.map((ele) => {
                         return <SinglePostCard ele={ele} key={ele._id} />
                     })
@@ -143,14 +147,12 @@ const UserPageParams = ({ params }: any) => {
 
                 {
 
-
                     (session?.user?.id && !isLoading && searchedUser.allPostOfUser.length === 0)
 
                     &&
-
                     <div className=' text-center'>
-                        <p className=' text-xl'>No Post found for You. 404</p>
-                        <Link href={"/create"} className=' px-2 text-xs border rounded'>Write post</Link>
+                        <p className=' text-xl'>Getting post data...</p>
+                        <Link href={"/"} className=' px-2 text-xs border rounded'>Goto Home</Link>
                     </div>
                 }
 
@@ -252,7 +254,7 @@ function FriendsOfFriendsDiv(
                                         onClick={() => { removeFriend(searchedUser._id, searchedUser.username) }}
                                     >
 
-                                        <span >Cancel</span>
+                                        <span >Unfriend</span>
                                         <span>
                                             <TbUserCancel />
                                         </span>

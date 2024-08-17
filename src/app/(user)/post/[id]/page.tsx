@@ -195,7 +195,7 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
     return (
 
         <div
-            className={` sm:my-[5vh] sm:border rounded p-2 w-[95%] sm:w-[80%] md:w-[60%] border-yellow-500 `}
+            className={` sm:my-[5vh] rounded-lg  p-2 sm:p-4 w-[95%] sm:w-[80%] md:w-[60%] sm:border border-yellow-500  `}
             style={{
                 backgroundColor: singlePost?.customize?.bgColor,
                 color: singlePost?.customize?.color,

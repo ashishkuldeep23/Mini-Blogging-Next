@@ -143,7 +143,7 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
                       src={ele?.image}
                       className=" w-full h-[35vh] my-2 rounded object-contain object-top"
                     />
-                    <p className=" text-xs -mt-2 text-end text-[0.55rem]">Click to see full image.</p>
+                    <p className=" text-[0.5rem] -mt-2 text-end">Click to see full image.</p>
                   </>
                 }
 

@@ -224,7 +224,7 @@ const LayoutPage = (
 
                                 className={" !none lg:!inline-flex"}
 
-                                display={window.innerWidth >= LgBreakValue ? "inline-flex" : "none"}
+                                display={(window && window.innerWidth >= LgBreakValue) ? "inline-flex" : "none"}
 
                                 setPostionOfFirstLi={setPostionOfFirstLi}
                                 ele={{
@@ -305,7 +305,7 @@ function SingleTabLi({ ele, osmClickHangler, setPostionOfFirstLi, className, dis
         pathname && setSelectedPath(pathname.slice(1))
     }, [pathname])
 
-    let publicPages = ['home', "search"]
+    let publicPages = ['home', "search", 'back']
 
 
     const liRef = useRef<HTMLLIElement | null>(null)
@@ -318,7 +318,7 @@ function SingleTabLi({ ele, osmClickHangler, setPostionOfFirstLi, className, dis
             let left = liRef.current.getBoundingClientRect().left
 
 
-            if (window.innerWidth >= LgBreakValue) {
+            if (window && window.innerWidth >= LgBreakValue) {
 
                 setPostionOfFirstLi({ top: `${top - 33}px`, left: `${-11}px` })
             } else {
