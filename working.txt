@@ -2,7 +2,10 @@
 
 Currently working on it (TODOS) ---------------------------------------->>
 
-TODO 1 :-
+working 1 :-
+
+    Desinging models for chatting feature.
+
 
 
 

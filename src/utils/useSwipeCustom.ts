@@ -12,7 +12,7 @@ export default function useSwipeCustom(rightHandler: Function, leftHandler: Func
     const isTouching = useRef<boolean>(false);
 
 
-    const minSwipeDistance = 50; // Minimum distance for a swipe
+    const minSwipeDistance = 80; // Minimum distance for a swipe, this value will checked in pixels;
 
 
     // // // Custome mouse move events --------------->
@@ -71,13 +71,68 @@ export default function useSwipeCustom(rightHandler: Function, leftHandler: Func
 
                 // // // here we can call our fn() to get actions -------->
 
+
+                let span = null;
+
+                // console.log({ touchStartY })
+
                 if (distanceX > 0) {
+
+                    span = document.createElement('span')
+
+                    span.innerHTML = "&#8592;"
+                    span.style.textAlign = "start"
+
+
+                    span.style.width = `${Math.abs(touchEndX.current - touchStartX.current)}px`
+                    span.style.height = '4px'
+                    span.style.borderRadius = "50px"
+                    span.style.backgroundColor = "red"
+
+                    span.style.position = "absolute"
+                    // span.style.top = `${touchStartY}px`
+                    // span.style.left =`${touchStartX}px`
+                    span.style.top = `${touchStartY.current}px`
+                    span.style.left = `${touchStartX.current}px`
+
                     rightHandler();
+
+
                     // setSwipeDirection('right')
                 } else {
-                    leftHandler();
                     // setSwipeDirection("left")
+
+                    span = document.createElement('span')
+
+                    span.innerHTML = "&#8594;"
+                    span.style.textAlign = "end"
+
+                    span.style.width = `${Math.abs(touchEndX.current - touchStartX.current)}px`
+                    span.style.height = '4px'
+                    span.style.borderRadius = "50px"
+                    span.style.backgroundColor = "blue"
+
+                    span.style.position = "absolute"
+                    // span.style.top = `${touchStartY}px`
+                    // span.style.left = `${touchStartX}px`
+
+                    span.style.top = `${touchStartY.current}px`
+                    span.style.left = `${touchStartX.current - Math.abs(touchEndX.current - touchStartX.current)}px`
+
+                    leftHandler();
+
                 }
+
+
+                // // // Adding span into body element;
+                document.querySelector("body")?.appendChild(span)
+
+
+                setTimeout(() => {
+                    span?.remove()
+                }, 700)
+
+
             }
 
 
@@ -88,7 +143,7 @@ export default function useSwipeCustom(rightHandler: Function, leftHandler: Func
             ) {
 
 
-                if (distanceX > 0) {
+                if (distanceY > 0) {
                     downHandler && downHandler();
                     // setSwipeDirection('right')
                 } else {

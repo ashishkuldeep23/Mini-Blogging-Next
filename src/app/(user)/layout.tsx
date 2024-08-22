@@ -27,7 +27,8 @@ type PostitionType = {
     height?: string
 }
 
-const LgBreakValue = 1024
+// // // This is screen sizw for lagre display
+const LgBreakValue = 1024;
 
 
 const LayoutPage = (
@@ -270,6 +271,7 @@ const LayoutPage = (
                     id="main_visiable_for_user"
                     className=" relative w-[100%] lg:w-[60%] min-h-[90vh] p-1 mb-5 rounded-md border-gray-500/90  "
                 >
+                    {/* This div will conatain main UI as children */}
                     <div>
                         {children}
                     </div>
