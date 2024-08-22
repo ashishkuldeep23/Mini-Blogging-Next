@@ -36,6 +36,7 @@ Post update ----------------->
     3. Post type Retweet feature.
 
     5. Socket IO (For messaging and notifications)
+        => Not insted of using socket io, i'm usning Pusher js for real time communication.
 
     6. User can save a post that is posted by other user (Jaha pr edit delete btn hai agr post user ne nhi create kiya hai to user ushe apni profile me save kr sake)
 

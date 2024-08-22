@@ -20,7 +20,12 @@ import useSwipeCustom from '@/utils/useSwipeCustom';
 
 
 
-type PostitionType = { top: string, left: string }
+type PostitionType = {
+    top: string,
+    left: string,
+    width?: string,
+    height?: string
+}
 
 const LgBreakValue = 1024
 
@@ -174,6 +179,21 @@ const LayoutPage = (
     }, [pathname])
 
 
+    // // // screen size code -------------------->
+    useEffect(() => {
+
+        if (window && window.innerWidth >= LgBreakValue) {
+            // // // Desktop View ------------>>
+            setPostionOfFirstLi({ ...postionOfFirstLi, width: "100%" })
+
+        } else {
+            // // // Mobile view ---------------->>
+            setPostionOfFirstLi({ ...postionOfFirstLi, width: "2.5rem" })
+        }
+
+    }, [])
+
+
     return (
         <div
             className={`relative flex flex-col justify-center items-center pb-6 ${themeMode ? " bg-white" : " bg-black"}`}
@@ -196,10 +216,16 @@ const LayoutPage = (
 
                     <ul className=' relative flex justify-between  gap-1 lg:block w-full mx-3 sm:mx-8 md:mx-14 lg:mx-0'>
 
-                        {/* this li is used as slider in ui. */}
+                        {/* This li is used as slider in ui. */}
                         <li
-                            style={{ top: postionOfFirstLi.top, left: postionOfFirstLi.left }}
-                            className={` absolute w-9 lg:w-[110%] h-1 rounded-full bg-sky-600 transition-all duration-700 ${sliderVisiable}`}
+                            style={{
+                                top: postionOfFirstLi.top,
+                                left: postionOfFirstLi.left,
+                                width: postionOfFirstLi.width,
+                                height: postionOfFirstLi.height
+
+                            }}
+                            className={` absolute   h-1 rounded-full bg-sky-600 transition-all duration-700 ${sliderVisiable}`}
                         ></li>
 
                         {
@@ -317,13 +343,38 @@ function SingleTabLi({ ele, osmClickHangler, setPostionOfFirstLi, className, dis
             let top = liRef.current.getBoundingClientRect().top
             let left = liRef.current.getBoundingClientRect().left
 
+            // console.log(liRef.current.getBoundingClientRect().width)
+            // console.log()
+
+            const width = liRef.current.getBoundingClientRect().width
+            const hight = liRef.current.getBoundingClientRect().height;
+
+
+            // console.log("ref ----------->>" , liRef.current.children[1].getBoundingClientRect().width)
+
 
             if (window && window.innerWidth >= LgBreakValue) {
+                // // // Desktop View ------------>
 
-                setPostionOfFirstLi({ top: `${top - 33}px`, left: `${-11}px` })
+
+                // // // Old using this ------------->
+                // setPostionOfFirstLi({ top: `${top - 33}px`, left: `${-11}px` })
+
+                let tabNameWidth = liRef.current.children[1].getBoundingClientRect().width
+                let tabNameHeight = liRef.current.children[1].getBoundingClientRect().height
+
+                setPostionOfFirstLi({ top: `${top - 72}px`, left: `${-10}px`, width: '5px', height: `${tabNameHeight * 1.5}px` })
+
             } else {
+                // // // Mobile View here ------------>
 
-                setPostionOfFirstLi({ top: `${-7}px`, left: `${left - 18.5}px` })
+                // // // Old using this ------------->
+                // setPostionOfFirstLi({ top: `${-7}px`, left: `${left - 18.5}px` })
+
+                let tabNameWidth = liRef.current.children[1].getBoundingClientRect().width
+                let tabNameLeft = liRef.current.children[1].getBoundingClientRect().left
+
+                setPostionOfFirstLi({ top: `${-6}px`, left: `${tabNameLeft - 15.5}px`, width: `${tabNameWidth}px` })
             }
 
         }
@@ -393,7 +444,6 @@ function SingleTabLi({ ele, osmClickHangler, setPostionOfFirstLi, className, dis
 
 
             </span>
-
 
         </li>
     )

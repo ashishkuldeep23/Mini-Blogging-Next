@@ -24,7 +24,7 @@ import { useDispatch } from 'react-redux'
 import { IoMdCloudUpload } from "react-icons/io";
 import { uploadFileInCloudinary } from '@/lib/cloudinary'
 
-const ProfilePageParams = ({ params }: any) => {
+const ProfilePageParams = () => {
 
     const themeMode = useThemeData().mode
 
@@ -106,53 +106,19 @@ const ProfilePageParams = ({ params }: any) => {
 
             <AllUploadedPicturesDiv />
 
-
-
-            {/* {
-                JSON.stringify(userData.sendRequest)
-            }
-            {
-                JSON.stringify(userData.whoSeenProfile)
-            } */}
-
-
             <ReciverRequestDiv />
 
             <SenderRequestDiv />
 
 
+            {/* // // // TOPo :- These both props will neccessory, can we use global state directly ?? */}
             <FriendsOfFriendsDiv
                 searchedUser={userData}
                 userData={userData}
             />
 
+            <AllPostByYou />
 
-
-            {/* All post of user div */}
-            <div
-                className=" my-20 card_container relative sm:px-[8vh] mt-16 flex gap-10 gap-x-64 p-0.5 flex-wrap justify-center items-start "
-            >
-
-                {
-                    userData.allPostOfUser.length > 0
-                    &&
-                    userData.allPostOfUser.map((ele) => {
-                        return <SinglePostCard ele={ele} key={ele._id} />
-                    })
-                }
-
-
-                {
-
-                    (session?.user?.id && !isLoading && userData.allPostOfUser.length === 0)
-                    &&
-                    <div className=' text-center'>
-                        <p className=' text-xl'>No Post found for You. 404</p>
-                        <Link href={"/create"} className=' px-2 text-xs border rounded'>Write post</Link>
-                    </div>
-                }
-
-            </div>
 
         </div>
     )
@@ -1075,4 +1041,50 @@ function SingleUserDiv(
     )
 }
 
+
+function AllPostByYou() {
+
+    const { data: session, status } = useSession()
+
+    const { userData, isLoading, errMsg } = useUserState()
+
+
+    return (
+
+
+        <div
+            className=" my-20 card_container relative sm:px-[8vh] mt-16 flex gap-10 gap-x-64 p-0.5 flex-wrap justify-center items-start "
+        >
+
+            {
+                userData.allPostOfUser.length > 0
+                &&
+                <div>
+                    <p className=' text-center text-2xl '>All post by you 👇</p>
+
+                    {
+                        userData.allPostOfUser.map((ele) => {
+                            return <SinglePostCard ele={ele} key={ele._id} />
+                        })
+
+                    }
+                </div>
+            }
+
+
+            {
+
+                (session?.user?.id && !isLoading && userData.allPostOfUser.length === 0)
+                &&
+                <div className=' text-center'>
+                    <p className=' text-xl'>No Post found for You. 404</p>
+                    <Link href={"/create"} className=' px-2 text-xs border rounded'>Write post</Link>
+                </div>
+            }
+
+        </div>
+
+    )
+
+}
 
