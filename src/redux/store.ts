@@ -5,6 +5,7 @@ import themeReducer from "./slices/ThemeSlice"
 import userReducer from "./slices/UserSlice"
 import postReducer from './slices/PostSlice'
 import searchReducer from './slices/SearchSlice'
+import modalReducer from "./slices/ModalSlice"
 
 
 
@@ -14,7 +15,8 @@ export const store = configureStore({
         themeReducer,
         userReducer,
         postReducer,
-        searchReducer
+        searchReducer,
+        modalReducer,
         // userRedcer,
         // productReducer,
         // modalReducer,

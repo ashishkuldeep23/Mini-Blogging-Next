@@ -4,6 +4,9 @@ import "./globals.css";
 import { Providers } from "@/redux/providers";
 import { Toaster } from "react-hot-toast";
 import LogInProvider from "./components/LogInProvider";
+import Modal from "./components/ModalComponent";
+import PusherTestDiv from "./components/PusherJs";
+import MainLoader from "./components/MainLoader";
 
 
 
@@ -31,6 +34,17 @@ export default function RootLayout({
         <Providers>
 
           <LogInProvider>
+
+
+            {/* Modal component */}
+            <Modal />
+
+            {/* Now i'm going to user pusher ------> */}
+            {/* Pusher working code -----------> */}
+            <PusherTestDiv
+              channelName='ashish'
+            />
+
 
 
             {/* Hot toster ---> */}

@@ -22,7 +22,9 @@ import { TbUserCancel } from 'react-icons/tb'
 import { useDispatch } from 'react-redux'
 // import { IoIosCloudUpload } from "react-icons/io";
 import { IoMdCloudUpload } from "react-icons/io";
-import { uploadFileInCloudinary } from '@/lib/cloudinary'
+import { uploadFileInCloudinary } from '@/lib/cloudinary';
+import { MdOutlineZoomOutMap } from "react-icons/md";
+
 
 const ProfilePageParams = () => {
 
@@ -36,7 +38,7 @@ const ProfilePageParams = () => {
 
     const { userData, isLoading, errMsg } = useUserState()
 
-    // console.log(status)
+    // console.log(userData._id, session?.user._id)
 
 
     useEffect(() => {
@@ -47,28 +49,11 @@ const ProfilePageParams = () => {
             router.push('/home')
         }
 
-        if (session?.user && session?.user._id) {
+        if ((session?.user && session?.user._id) && (userData._id !== session?.user._id)) {
             dispatch(getUserData(session?.user._id))
         }
 
-    }, [session, status])
-
-
-
-    // useEffect(() => {
-
-    //     // console.log(params.id)
-
-    //     if (params?.id !== "undefined" && params?.id && !userData._id) {
-
-    //         // console.log(15455454)
-    //         dispatch(getUserData(params.id))
-    //     }
-
-
-    // }, [])
-
-
+    }, [session, status, userData])
 
 
     return (
@@ -129,6 +114,8 @@ export default ProfilePageParams
 
 function UserProfileImage() {
 
+    const router = useRouter()
+
     const dispatch = useDispatch<AppDispatch>()
     const { data: session } = useSession()
     // const router = useRouter()
@@ -145,7 +132,7 @@ function UserProfileImage() {
 
     function imgInputOnchangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
         e.stopPropagation();
-        // e.preventDefault();
+        e.preventDefault();
 
         if (e.target.files) {
 
@@ -163,12 +150,10 @@ function UserProfileImage() {
 
 
         }
-
     }
 
 
     async function uploadImgaeAndUserDataHandler() {
-
 
         // // // After doing uplaod stuff here ------>
 
@@ -176,14 +161,11 @@ function UserProfileImage() {
 
         if (session?.user._id) {
 
-
-
             if (imageFile) {
                 // // Now here we can uplaod file 2nd step ------>
                 imageUrl = await uploadFileInCloudinary(imageFile)
                 // console.log({ imageUrl })
             }
-
 
             dispatch(updateUserData({
                 whatUpdate: "newProfilePic",
@@ -195,16 +177,23 @@ function UserProfileImage() {
         else {
 
             toast.error("Plese Login again.Or Refresh the page")
-            // router.push("/login")
+            router.push("/login")
         }
 
 
     }
 
 
+
+    const seeFullSizeHandler = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.stopPropagation();
+
+    }
+
+
     useEffect(() => {
 
-        setPostImageUrl(userData.profilePic)
+        (!postImageUrl || postImageUrl !== userData.profilePic) && setPostImageUrl(userData.profilePic)
 
     }, [userData])
 
@@ -222,6 +211,15 @@ function UserProfileImage() {
                         &&
                         <MainLoader isLoading={isLoading} />
                     }
+
+                    <button
+                        onClick={seeFullSizeHandler}
+                        className={`absolute top-0 -left-1  border rounded-full p-1 hover:scale-90 hover:cursor-pointer transition-all ${!themeMode ? "bg-black" : "bg-white"} active:scale-75 active:opacity-75 transition-all`}
+                    >
+                        <MdOutlineZoomOutMap
+                            className=' text-3xl'
+                        />
+                    </button>
 
 
                     <ImageReact

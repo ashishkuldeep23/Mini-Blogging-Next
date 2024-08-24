@@ -8,6 +8,9 @@ import { AppDispatch } from "@/redux/store";
 import MaskerText from "./components/MaskerText";
 import { useRouter } from "next/navigation";
 import Navbar from "./components/Navbar";
+import PusherTestDiv from "./components/PusherJs";
+import Modal from "./components/ModalComponent";
+import MainLoader from "./components/MainLoader";
 
 
 export default function Home() {
@@ -46,11 +49,16 @@ export default function Home() {
       <MainLoader isLoading={isLoading} className=" !top-[85vh]" />
 
 
+      {/* Modal component */}
+      {/* <Modal /> */}
+
+
+
       {/* Now i'm going to user pusher ------> */}
       {/* Pusher working code -----------> */}
-      <PusherTestDiv
+      {/* <PusherTestDiv
         channelName='ashish'
-      />
+      /> */}
 
 
       {/* Main home div that hold allPosts and all */}
@@ -258,158 +266,3 @@ const FooterDiv = () => {
 }
 
 
-import Pusher from 'pusher-js'
-import { pusherClient } from "@/lib/pusher";
-import { useUserState } from "@/redux/slices/UserSlice";
-import NavBottomMobile from "./components/NavBottomMobile";
-import MainLoader from "./components/MainLoader";
-
-const username = "ashish"
-const recipient = "kuldeep"
-
-function PusherTestDiv({ channelName }: { channelName: string }) {
-
-  const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState<any[]>(["see"]);
-  const [replies, setReplies] = useState<any[]>([]);
-  const [room, setRoom] = useState('general');
-
-  // // // In pesonal messaging will get userId from params --------->
-
-
-  // const channelName = `private-chat-${username}-${recipient}`;
-  // const channelName = `chat`;
-
-
-  // channelName = `private-chat-${channelName}`
-
-  channelName = `p-chat`
-
-
-  useEffect(() => {
-
-    if (!channelName) {
-      console.log("Give channel name please.")
-      return
-    }
-
-
-    Pusher.logToConsole = true; // Enable logging
-
-    // const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
-    //   cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
-    //   authEndpoint: '/api/pusher/auth', // Correct auth endpoint
-    // });
-
-
-    const channel = pusherClient.subscribe(`${channelName}`);
-
-    channel.bind('message', (data: any) => {
-      console.log('Received message:', data); // Log received data
-      setMessages((prevMessages) => [...prevMessages, data]);
-    });
-
-    channel.bind('reply', (data: any) => {
-      setReplies((prevReplies) => [...prevReplies, data]);
-    });
-
-
-
-    channel.bind('pusher:subscription_succeeded', () => {
-      console.log('Subscription succeeded'); // Log subscription success
-    });
-
-    channel.bind('pusher:subscription_error', (status: any) => {
-      console.error('Subscription error:', status); // Log subscription error
-    });
-
-    return () => {
-      pusherClient.unsubscribe(`${channelName}`);
-    };
-  }, [room]);
-
-
-
-  // // // Sending msg to me ---->
-  const { userData } = useUserState()
-  // // // // Sign in by userId ---------->
-  useEffect(() => {
-    if (userData._id) {
-
-      let userChannel = pusherClient.subscribe(`${userData._id}`)
-
-      userChannel.bind('msg-me', (data: any) => {
-        console.log({ data })
-        alert(`Msg me clicked, ${JSON.stringify(data)}`)
-      })
-
-    }
-
-    return () => {
-      pusherClient.unsubscribe(`${userData._id}`)
-    }
-  }, [userData])
-
-
-  const sendMessage = async (msg: string, channelName: string, event: string) => {
-    // e.preventDefault();
-
-    let req = await fetch('/api/pusher', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        event: event,
-        data: { username: userData.username || 'User', message: msg, room },
-        channel: channelName
-      }),
-    });
-
-    setMessage('');
-
-
-    const result = await req.json();
-    console.log('Message sent result:', result); // Log result of sending message
-
-  };
-
-
-  const callPusherFn = () => {
-    const sendThisText = "My Msg....."
-    sendMessage(sendThisText, channelName, "message")
-  }
-
-
-  function callPusherFnForMsgMe() {
-
-    // console.log(userData._id)
-    // return
-
-    if (userData?._id) {
-      sendMessage("Check msg me", userData._id, "msg-me")
-    }
-  }
-
-
-  return (
-    <div
-      className=" border-2 border-red-500 flex flex-col items-center justify-center w-full"
-    >
-      <p className=" text-center">
-        {
-          JSON.stringify(messages)
-        }
-      </p>
-      <p>Checking Pusher here </p>
-      <button
-        onClick={() => callPusherFn()}
-        className=" m-1 px-2 rounded-md border border-white active:scale-75 transition-all duration-300"
-      >Click</button>
-      <button
-        onClick={() => callPusherFnForMsgMe()}
-        className=" m-1 px-2 rounded-md border border-white active:scale-75 transition-all duration-300"
-      >MSG ME</button>
-    </div>
-  )
-}
