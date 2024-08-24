@@ -140,16 +140,16 @@ body {
 .back_arrow_code span {
 
     color: red;
-    font-size: 3rem;
+    font-size: 1.5rem;
 
     /* margin-left: -5px;
     margin-top: -12px; */
 
     position: absolute;
-    top: -0.4rem;
-    left: -0.5rem;
+    top: -0px;
+    left: -0.2rem;
 
-    height: 4px;
+    height: 3px;
     display: flex;
     align-items: center;
 
@@ -168,15 +168,15 @@ body {
 }
 
 .forword_arrow_code span {
-    font-size: 3rem;
+    font-size: 1.5rem;
     color: blue;
 
     /* margin-top: -12px;
     margin-right: -5px; */
 
     position: absolute;
-    top: -0.4rem;
-    right: -0.5rem;
+    top: -0px;
+    right: -0.2rem;
 
     height: 4px;
     display: flex;

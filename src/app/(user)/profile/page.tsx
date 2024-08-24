@@ -145,17 +145,7 @@ function UserProfileImage() {
 
     function imgInputOnchangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
         e.stopPropagation();
-        e.preventDefault();
-
-
-        // // // Check this letter why not getting below val from env
-
-        // const urlForCloudinary = process.env.CLOUDINARY_URL!
-        // const preset_key = process.env.CLOUDINARY_PRESET!
-
-        // console.log({ urlForCloudinary, preset_key })
-
-
+        // e.preventDefault();
 
         if (e.target.files) {
 
@@ -191,10 +181,7 @@ function UserProfileImage() {
             if (imageFile) {
                 // // Now here we can uplaod file 2nd step ------>
                 imageUrl = await uploadFileInCloudinary(imageFile)
-                console.log({ imageUrl })
-
-                /// // // now set url of image -------->
-
+                // console.log({ imageUrl })
             }
 
 

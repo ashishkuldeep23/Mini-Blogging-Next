@@ -77,7 +77,7 @@ export default function Home() {
 
       <div>
         <button
-        className=" border rounded focus:scale-90"
+          className=" border rounded px-2 focus:scale-90"
           onClick={() => router.push("/home")}
         >Home</button>
       </div>

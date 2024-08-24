@@ -80,7 +80,8 @@ export default function useSwipeCustom(rightHandler: Function, leftHandler: Func
 
                     span = document.createElement('span')
 
-                    span.innerHTML = "<span>&#8592;</span>"
+                    // span.innerHTML = "<span>&#8592;</span>"
+                    span.innerHTML = "<span>&#10094;</span>"
 
                     span.style.width = `${Math.abs(touchEndX.current - touchStartX.current)}px`
 
@@ -111,7 +112,8 @@ export default function useSwipeCustom(rightHandler: Function, leftHandler: Func
 
                     span = document.createElement('span')
 
-                    span.innerHTML = "<span>&#8594;</span>"
+                    // span.innerHTML = "<span>&#8594;</span>"
+                    span.innerHTML = "<span>&#10095;</span>"
 
                     span.style.width = `${Math.abs(touchEndX.current - touchStartX.current)}px`
 

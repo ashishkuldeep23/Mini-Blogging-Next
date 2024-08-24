@@ -42,3 +42,11 @@ Post update ----------------->
 
 
 
+
+
+
+
+====================================================================================================>>
+
+    If you want to share a web that is present n ur local (Both devices should connected with same wifi)
+        IP_OF_LEPTOP:PORT <<============= Search this into mobile phone.
