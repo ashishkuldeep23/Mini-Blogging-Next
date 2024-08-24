@@ -1062,12 +1062,17 @@ function AllPostByYou() {
                 <div>
                     <p className=' text-center text-2xl '>All post by you 👇</p>
 
-                    {
-                        userData.allPostOfUser.map((ele) => {
-                            return <SinglePostCard ele={ele} key={ele._id} />
-                        })
+                    <div
+                        className=" my-10 card_container relative sm:px-[8vh] mt-16 flex gap-10 gap-x-64 p-0.5 flex-wrap justify-center items-start "
+                    >
 
-                    }
+                        {
+                            userData.allPostOfUser.map((ele) => {
+                                return <SinglePostCard ele={ele} key={ele._id} />
+                            })
+
+                        }
+                    </div>
                 </div>
             }
 

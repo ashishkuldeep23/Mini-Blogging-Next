@@ -138,10 +138,21 @@ body {
 
 
 .back_arrow_code span {
-    margin-top: -12px;
-    margin-left: -5px;
+
     color: red;
     font-size: 3rem;
+
+    /* margin-left: -5px;
+    margin-top: -12px; */
+
+    position: absolute;
+    top: -0.4rem;
+    left: -0.5rem;
+
+    height: 4px;
+    display: flex;
+    align-items: center;
+
 }
 
 
@@ -158,7 +169,16 @@ body {
 
 .forword_arrow_code span {
     font-size: 3rem;
-    margin-top: -12px;
     color: blue;
-    margin-right: -5px;
+
+    /* margin-top: -12px;
+    margin-right: -5px; */
+
+    position: absolute;
+    top: -0.4rem;
+    right: -0.5rem;
+
+    height: 4px;
+    display: flex;
+    align-items: center
 }
