@@ -117,3 +117,48 @@ body {
     transform: translateY(40px);
     filter: blur(12px);
 }
+
+
+
+/* Back and forword arrow  onSwap --------------->> */
+
+/* :root{
+    --font_Size : "10rem"
+} */
+
+.back_arrow_code {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    text-align: start;
+    height: 4px;
+    border-radius: 50px;
+    background-color: red;
+}
+
+
+.back_arrow_code span {
+    margin-top: -12px;
+    margin-left: -5px;
+    color: red;
+    font-size: 3rem;
+}
+
+
+
+.forword_arrow_code {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    text-align: end;
+    height: 4px;
+    border-radius: 50px;
+    background-color: blue;
+}
+
+.forword_arrow_code span {
+    font-size: 3rem;
+    margin-top: -12px;
+    color: blue;
+    margin-right: -5px;
+}

@@ -80,14 +80,21 @@ export default function useSwipeCustom(rightHandler: Function, leftHandler: Func
 
                     span = document.createElement('span')
 
-                    span.innerHTML = "&#8592;"
-                    span.style.textAlign = "start"
-
+                    span.innerHTML = "<span>&#8592;</span>"
 
                     span.style.width = `${Math.abs(touchEndX.current - touchStartX.current)}px`
-                    span.style.height = '4px'
-                    span.style.borderRadius = "50px"
-                    span.style.backgroundColor = "red"
+
+
+                    span.classList.add("back_arrow_code")
+
+                    // span.style.textAlign = "start"
+                    // span.style.display = "flex"
+                    // span.style.height = '4px'
+                    // span.style.borderRadius = "50px"
+                    // span.style.alignItems = "center"
+                    // span.style.backgroundColor = "red"
+
+
 
                     span.style.position = "absolute"
                     // span.style.top = `${touchStartY}px`
@@ -104,13 +111,20 @@ export default function useSwipeCustom(rightHandler: Function, leftHandler: Func
 
                     span = document.createElement('span')
 
-                    span.innerHTML = "&#8594;"
-                    span.style.textAlign = "end"
+                    span.innerHTML = "<span>&#8594;</span>"
 
                     span.style.width = `${Math.abs(touchEndX.current - touchStartX.current)}px`
-                    span.style.height = '4px'
-                    span.style.borderRadius = "50px"
-                    span.style.backgroundColor = "blue"
+
+                    span.classList.add("forword_arrow_code")
+
+                    // span.style.textAlign = "end"
+                    // span.style.height = '4px'
+                    // span.style.borderRadius = "50px"
+                    // span.style.backgroundColor = "blue"
+                    // span.style.display = "flex"
+                    // span.style.alignItems = "center"
+
+
 
                     span.style.position = "absolute"
                     // span.style.top = `${touchStartY}px`
