@@ -40,23 +40,22 @@ const UserPageParams = ({ params }: any) => {
 
         if (params?.id && params?.id !== "undefined") {
 
-            if (params?.id === session?.user?._id) {
-                // alert("Same")
-
-                // router.push(`/profile/${session?.user?._id}`)
-
-                // // // now sending user to it's '/profile' page not on '/profile/[id]' 
-                router.push(`/profile`)
-
-            } else {
+            if (searchedUser?._id !== params?.id) {
                 dispatch(getUserData(params.id))
             }
-
-            // console.log(session?.user._id)
-
         }
 
     }, [])
+
+
+
+    useEffect(() => {
+
+        if (userData._id && searchedUser._id) {
+            if (userData?._id === searchedUser?._id) router.push(`/profile`)
+        }
+
+    }, [userData, searchedUser])
 
 
 
@@ -75,19 +74,7 @@ const UserPageParams = ({ params }: any) => {
         <div
             className={` relative w-full min-h-screen flex flex-col items-center ${!themeMode ? " bg-black text-white " : " bg-white text-black"} `}
         >
-
             <MainLoader isLoading={isLoading} />
-
-            {/* Back but here ------> */}
-
-            {/* <button
-                onClick={() => { router.back() }}
-                className=' absolute top-[13vh] mt-[2vh] left-2 sm:left-[10vh] px-2 border rounded hover:scale-95'
-            >
-                <IoIosArrowBack />
-            </button> */}
-
-
 
             {
                 errMsg
@@ -103,7 +90,13 @@ const UserPageParams = ({ params }: any) => {
                 searchedUser?.username
                 &&
 
-                <div className=' my-5 border p-2 rounded flex flex-wrap justify-center items-center'>
+                <div className=' my-5 border p-2 rounded flex flex-wrap justify-center items-center relative'>
+
+                    {
+                        isLoading
+                        &&
+                        <MainLoader isLoading={isLoading} />
+                    }
 
                     {
                         searchedUser?.profilePic
@@ -147,11 +140,15 @@ const UserPageParams = ({ params }: any) => {
 
                 {
 
-                    (session?.user?.id && !isLoading && searchedUser.allPostOfUser.length === 0)
+                    (
+                        session?.user?.id
+                        && !isLoading
+                        // && searchedUser.allPostOfUser.length === 0
+                    )
 
                     &&
                     <div className=' text-center'>
-                        <p className=' text-xl'>Getting post data...</p>
+                        <p className=' text-red-600 font-semibold'>Fail to laod user data.❌</p>
                         <Link href={"/"} className=' px-2 text-xs border rounded'>Goto Home</Link>
                     </div>
                 }

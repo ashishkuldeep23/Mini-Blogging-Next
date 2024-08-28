@@ -6,7 +6,7 @@ import { Dialog, Transition } from '@headlessui/react';
 // import { modalStore, setOpenMoadl } from '../../Slices/ModalSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { useThemeData } from '@/redux/slices/ThemeSlice'
-import { setOpenMoadl, useModalStore } from '@/redux/slices/ModalSlice'
+import { setOpenMoadl, useModalState } from '@/redux/slices/ModalSlice'
 // import { RootState } from '../../store'
 
 
@@ -19,8 +19,8 @@ export default function Modal() {
     const themeMode = useThemeData()
 
 
-    const open = useModalStore().open;
-    const children = useModalStore().children;
+    const open = useModalState().open;
+    const children = useModalState().children;
 
     function setOpen(data: boolean) {
 

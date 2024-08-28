@@ -63,6 +63,18 @@ export const getUserData = createAsyncThunk('user/getUserData', async (userId: s
     return data
 })
 
+export const getProfileData = createAsyncThunk('user/getProfileData', async (userId: string) => {
+
+
+    const option: RequestInit = {
+        cache: 'no-store',
+        method: "POST",
+    }
+    const response = await fetch(`/api/profile/${userId}`, option)
+    let data = await response.json();
+    return data
+})
+
 
 type WhatUpdateData = "sendFriendRequest" | "addFriend" | 'removeFriend' | "cancelFrndRequest" | "newProfilePic" | "makeProfilePic"
 
@@ -251,29 +263,62 @@ const userSlice = createSlice({
                     // console.log("All good ------>")
                     const { friendsAllFriend, user, posts } = action.payload.data
 
-
-                    // state.allPostOfUser = posts
-                    // state.searchedUser = user
-                    // state.friendsAllFriend = friendsAllFriend
-
-
                     // // // check getting some extra or not (User personal data) ---------->
 
                     const { reciveRequest, sendRequest, whoSeenProfile
                     } = user
 
-                    // if (reciveRequest) state.reciveRequest = reciveRequest
-                    // if (sendRequest) state.sendRequest = sendRequest
-                    // if (whoSeenProfile) state.whoSeenProfile = whoSeenProfile
-
                     // // Searcher User data
                     // // Means searching for different user ----->
-                    if (!sendRequest && !whoSeenProfile) {
-                        state.searchedUser = user
-                        state.searchedUser.allPostOfUser = posts
-                        state.searchedUser.friendsAllFriend = friendsAllFriend
-                        state.searchedUser.reciveRequest = reciveRequest
-                    }
+                    // if (sendRequest && !whoSeenProfile) {
+
+                    state.searchedUser = user
+                    state.searchedUser.allPostOfUser = posts
+                    state.searchedUser.friendsAllFriend = friendsAllFriend
+                    state.searchedUser.reciveRequest = reciveRequest
+
+                    // }
+
+                    state.isFullfilled = true
+
+                } else {
+                    toast.error(`${action.payload.message || "Fetch failed."}`)
+                    state.isError = true
+                    state.errMsg = action.payload.message
+                }
+
+                state.isLoading = false
+
+            })
+            .addCase(getUserData.rejected, (state, action) => {
+
+                // console.log(action)
+
+                state.isLoading = false
+                state.isError = true
+                toast.error(` ${action.error.message || "SignUp failed"}`)
+                state.errMsg = action.error.message || 'Error'
+            })
+
+
+
+            .addCase(getProfileData.pending, (state) => {
+                state.isLoading = true
+                state.errMsg = ''
+            })
+            .addCase(getProfileData.fulfilled, (state, action) => {
+
+                // console.log(action.payload.data)
+
+                if (action.payload.success === true) {
+
+                    // console.log("All good ------>")
+                    const { friendsAllFriend, user, posts } = action.payload.data
+
+                    // // // check getting some extra or not (User personal data) ---------->
+
+                    const { reciveRequest, sendRequest, whoSeenProfile
+                    } = user
 
 
                     // // User data
@@ -289,12 +334,6 @@ const userSlice = createSlice({
                     }
 
 
-                    // // // rest data set ------>
-                    // state.userData = action.payload.data.user
-                    // state.postCategories = action.payload.data.postCategories
-                    // state.posthashtags = action.payload.data.posthashtags
-                    // state.allPostsLength = action.payload.data.allPostsLength
-
                     state.isFullfilled = true
 
                 } else {
@@ -306,7 +345,7 @@ const userSlice = createSlice({
                 state.isLoading = false
 
             })
-            .addCase(getUserData.rejected, (state, action) => {
+            .addCase(getProfileData.rejected, (state, action) => {
 
                 // console.log(action)
 

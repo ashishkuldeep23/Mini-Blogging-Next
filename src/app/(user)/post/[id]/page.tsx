@@ -8,6 +8,7 @@ import { PostInterFace, setSinglePostdata, SinglePostType, usePostData } from '@
 import { useThemeData } from '@/redux/slices/ThemeSlice'
 import { UserDataInterface } from '@/redux/slices/UserSlice'
 import { AppDispatch } from '@/redux/store'
+import useOpenModalWithHTML from '@/utils/OpenModalWithHtml'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
@@ -192,6 +193,34 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
 
     // console.log(singlePost)
 
+
+
+    const callModalFn = useOpenModalWithHTML()
+
+
+    const seeFullSizeHandler = (e: any, ele: PostInterFace) => {
+        e?.stopPropagation();
+
+        const innerHtml = <div className=' flex flex-col items-center justify-center '>
+            <ImageReact
+                src={ele?.author?.profilePic}
+                className=' rounded '
+            />
+            <button
+                className=' capitalize text-xs px-4 py-2 rounded-md bg-green-500 my-2'
+                onClick={() => {
+                    router.push(`/user/${ele.author._id}`);
+                }}
+            >See, {ele?.author?.username || "Name Kumar"}'s profile</button>
+        </div>
+
+        callModalFn({ innerHtml })
+
+        // dispatch(setInnerHTMLOfModal(innerHtml))
+    }
+
+
+
     return (
 
         <div
@@ -214,10 +243,9 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
 
             <div
                 className="rounded-t flex items-center gap-1.5 border-b border-cyan-400 hover:cursor-pointer"
-                onClick={() => {
-
+                onClick={(e) => {
+                    seeFullSizeHandler(e, singlePost);
                     // console.log(singlePost.author)
-                    router.push(`/user/${singlePost.author._id}`);
                 }}
             >
                 <ImageReact

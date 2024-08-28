@@ -18,6 +18,7 @@ import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { UserDataInterface } from '@/redux/slices/UserSlice';
 import AnimatedTooltip from './ui/animated-tooltip';
 import { PiPaperPlaneRight } from "react-icons/pi";
+import useOpenModalWithHTML from '@/utils/OpenModalWithHtml';
 
 
 interface UpdatingComment {
@@ -851,6 +852,36 @@ const SingleCommentUI = ({
 
 
 
+
+
+    const callModalFn = useOpenModalWithHTML()
+
+
+    const seeFullSizeHandler = (e: any, ele: { profilePic: string, _id: string, username: string }) => {
+        e?.stopPropagation();
+
+        const innerHtml = <div className=' flex flex-col items-center justify-center '>
+            <ImageReact
+                src={ele?.profilePic}
+                className=' rounded '
+            />
+            <button
+                className=' capitalize text-xs px-4 py-2 rounded-md bg-green-500 my-2'
+                onClick={() => {
+                    router.push(`/user/${ele._id}`);
+                }}
+            >See, {ele?.username || "Name Kumar"}'s profile</button>
+        </div>
+
+        callModalFn({ innerHtml })
+
+        // dispatch(setInnerHTMLOfModal(innerHtml))
+    }
+
+
+
+
+
     return (
 
         <>
@@ -871,7 +902,15 @@ const SingleCommentUI = ({
 
                         <div
                             className=" flex items-center gap-1"
-                            onClick={() => { router.push(`/user/${comment?.userId?._id}`); }}
+                            onClick={(e) => {
+
+                                seeFullSizeHandler(e, {
+                                    username: comment?.userId?.username,
+                                    _id: comment?.userId?._id,
+                                    profilePic: comment?.userId?.profilePic
+                                })
+
+                            }}
                         >
 
                             <ImageReact

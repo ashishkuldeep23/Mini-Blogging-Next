@@ -26,9 +26,9 @@ export const store = configureStore({
     },
 
     // // // This will solve err in modal code (Sending JSX in action and use that jsx as value of state)
-    // middleware: (getDefaultMiddleware) => getDefaultMiddleware({
-    //     serializableCheck: false,
-    // }),
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+        serializableCheck: false,
+    }),
 
 })
 

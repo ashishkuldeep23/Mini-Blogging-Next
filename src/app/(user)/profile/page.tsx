@@ -7,7 +7,7 @@ import MainLoader from '@/app/components/MainLoader'
 import SinglePostCard from '@/app/components/SinglePostCard'
 import AnimatedTooltip from '@/app/components/ui/animated-tooltip'
 import { useThemeData } from '@/redux/slices/ThemeSlice'
-import { AddMoreFeilsUserData, FriendsAllFriendData, getUserData, updateUserData, useUserState } from '@/redux/slices/UserSlice'
+import { AddMoreFeilsUserData, FriendsAllFriendData, getProfileData, updateUserData, useUserState } from '@/redux/slices/UserSlice'
 import { AppDispatch } from '@/redux/store'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
@@ -24,6 +24,8 @@ import { useDispatch } from 'react-redux'
 import { IoMdCloudUpload } from "react-icons/io";
 import { uploadFileInCloudinary } from '@/lib/cloudinary';
 import { MdOutlineZoomOutMap } from "react-icons/md";
+import { setInnerHTMLOfModal, setOpenMoadl, useModalState } from '@/redux/slices/ModalSlice'
+import useOpenModalWithHTML from '@/utils/OpenModalWithHtml'
 
 
 const ProfilePageParams = () => {
@@ -50,7 +52,7 @@ const ProfilePageParams = () => {
         }
 
         if ((session?.user && session?.user._id) && (userData._id !== session?.user._id)) {
-            dispatch(getUserData(session?.user._id))
+            dispatch(getProfileData(session?.user._id))
         }
 
     }, [session, status, userData])
@@ -127,6 +129,8 @@ function UserProfileImage() {
 
     const [postImageUrl, setPostImageUrl] = useState<string>('')
 
+    const { open } = useModalState()
+
     // const [uploadedImg, setUplodedImg] = useState<string>('')
 
 
@@ -155,8 +159,10 @@ function UserProfileImage() {
 
     async function uploadImgaeAndUserDataHandler() {
 
-        // // // After doing uplaod stuff here ------>
+        // // // If isLoading is pending then return the fn() call.
+        if (!isLoading) return;
 
+        // // // After doing uplaod stuff here ------>
         let imageUrl = "";
 
         if (session?.user._id) {
@@ -184,10 +190,16 @@ function UserProfileImage() {
     }
 
 
-
-    const seeFullSizeHandler = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const seeFullSizeHandler = (e: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         e.stopPropagation();
+        dispatch(setOpenMoadl(!open))
 
+        const innerHtml = <ImageReact
+            src={userData.profilePic}
+            className=' rounded '
+        />
+
+        dispatch(setInnerHTMLOfModal(innerHtml))
     }
 
 
@@ -204,7 +216,11 @@ function UserProfileImage() {
                 userData._id
                 &&
 
-                <div className='border p-0.5 w-40 h-40 rounded-full relative'>
+                <div
+                    className='border p-0.5 w-40 h-40 rounded-full relative'
+                    onClick={(e) => seeFullSizeHandler(e)}
+
+                >
 
                     {
                         isLoading
@@ -213,7 +229,6 @@ function UserProfileImage() {
                     }
 
                     <button
-                        onClick={seeFullSizeHandler}
                         className={`absolute top-0 -left-1  border rounded-full p-1 hover:scale-90 hover:cursor-pointer transition-all ${!themeMode ? "bg-black" : "bg-white"} active:scale-75 active:opacity-75 transition-all`}
                     >
                         <MdOutlineZoomOutMap
@@ -237,12 +252,10 @@ function UserProfileImage() {
                         onChange={(e) => { imgInputOnchangeHandler(e) }}
                     />
 
-
                     <label
                         htmlFor='profile_img'
                         className={`absolute bottom-2 right-2  border rounded-full p-0.5 hover:scale-90 hover:cursor-pointer transition-all ${!themeMode ? "bg-black" : "bg-white"} active:scale-75 active:opacity-75 transition-all`}
                     >
-
                         <IoMdCloudUpload
                             className=' text-4xl'
                         />
@@ -284,6 +297,8 @@ function AllUploadedPicturesDiv() {
 
     const [clickedPicIndex, setClickedPicIndex] = useState<number | null>(null)
 
+    const open = useModalState().open
+
     function makeDpThisImage(image: string) {
 
         if (!image) return toast.error("Image not getting, please refresh the page.")
@@ -304,12 +319,33 @@ function AllUploadedPicturesDiv() {
     }
 
 
-    // console.log(userData.allProfilePic)
-
-
-
+    // // // This fn() is very imp. when swap next and previous. Don't remove this line.
     function preventSwitchingInTabs(e: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement, MouseEvent>) {
         e.stopPropagation()
+    }
+
+
+
+    const callModalFn = useOpenModalWithHTML()
+
+    const seeFullSizeHandler = (e: any, i: number, ele: string) => {
+        e?.stopPropagation();
+        
+        const innerHtml = <div className=' flex flex-col items-center justify-center '>
+            <ImageReact
+                src={ele}
+                className=' rounded '
+            />
+            <button
+                className=' px-4 py-2 rounded-md bg-green-500 my-2'
+                onClick={() => {
+                    setClickedPicIndex(i);
+                    makeDpThisImage(ele);
+                }}
+            >Make Profile Pic</button>
+        </div>
+
+        callModalFn({ innerHtml })
     }
 
 
@@ -334,8 +370,6 @@ function AllUploadedPicturesDiv() {
                             onMouseDown={preventSwitchingInTabs}
                             onMouseMove={preventSwitchingInTabs}
                             onMouseUp={preventSwitchingInTabs}
-
-
                         >
 
 
@@ -345,16 +379,13 @@ function AllUploadedPicturesDiv() {
 
                                         <span
                                             key={i}
-                                            className=' aspect-square h-[20vh] relative'
+                                            className='aspect-square h-[20vh] relative '
                                         >
-
                                             {
                                                 clickedPicIndex === i
                                                 &&
                                                 <MainLoader isLoading={isLoading} />
                                             }
-
-
 
                                             <ImageReact
                                                 key={i}
@@ -364,9 +395,10 @@ function AllUploadedPicturesDiv() {
                                             `}
                                                 src={ele}
                                                 alt=""
-                                                onClick={() => {
-                                                    setClickedPicIndex(i);
-                                                    makeDpThisImage(ele);
+                                                onClick={(e: any) => {
+
+                                                    seeFullSizeHandler(e, i, ele);
+
                                                 }}
                                             />
                                         </span>

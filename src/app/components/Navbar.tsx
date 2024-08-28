@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux"
 
 import { useSession, signOut } from "next-auth/react"
 import Image from "next/image"
-import { getUserData, setUserDataBySession, useUserState } from "@/redux/slices/UserSlice"
+import { getProfileData,  setUserDataBySession, useUserState } from "@/redux/slices/UserSlice"
 import ImageReact from "./ImageReact"
 import { getCatAndHash } from "@/redux/slices/PostSlice"
 import { AppDispatch } from "@/redux/store"
@@ -103,7 +103,7 @@ const Navbar = ({ className }: { className?: string }) => {
 
         // // // get user data by api (All Data) ----------->
         if (session && (!userData.friendsAllFriend || !userData.sendRequest || !userData.reciveRequest)) {
-            dispatch(getUserData(session?.user._id))
+            dispatch(getProfileData(session?.user._id))
         }
 
     }, [session])

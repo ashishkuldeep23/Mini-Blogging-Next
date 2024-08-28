@@ -1,5 +1,5 @@
 
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 // import { RootState } from "../store";
@@ -16,7 +16,10 @@ interface ModalInter {
 
 
 
-const initialState: ModalInter = { open: false, children: "" }
+const initialState: ModalInter = {
+    open: false,
+    children: ""
+}
 
 
 
@@ -25,11 +28,11 @@ const modalSlice = createSlice({
     initialState,
     reducers: {
 
-        setOpenMoadl(state, action) {
+        setOpenMoadl(state, action: PayloadAction<boolean>) {
             state.open = action.payload
         },
 
-        setChildrenModal(state, action) {
+        setInnerHTMLOfModal(state, action: PayloadAction<React.ReactNode>) {
             state.children = action.payload
         }
 
@@ -39,9 +42,9 @@ const modalSlice = createSlice({
 
 
 
-export const { setOpenMoadl, setChildrenModal } = modalSlice.actions
+export const { setOpenMoadl, setInnerHTMLOfModal } = modalSlice.actions
 
-export const useModalStore = () => useSelector((state: RootState) => state.modalReducer)
+export const useModalState = () => useSelector((state: RootState) => state.modalReducer)
 
 export default modalSlice.reducer
 

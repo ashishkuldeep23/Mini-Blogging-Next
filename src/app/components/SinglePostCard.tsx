@@ -9,6 +9,8 @@ import LikeCommentDiv from "./LikeCommentDiv"
 import { CardBody, CardContainer, CardItem } from "@/app/components/ui/3d_card";
 import { PiSealCheckDuotone } from "react-icons/pi";
 import { motion } from "framer-motion";
+import { setInnerHTMLOfModal, setOpenMoadl, useModalState } from "@/redux/slices/ModalSlice"
+import useOpenModalWithHTML from "@/utils/OpenModalWithHtml"
 // import { useSession } from "next-auth/react"
 
 export default function SinglePostCard({ ele, className }: { ele: PostInterFace, className?: string }) {
@@ -36,6 +38,35 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
   }
 
   // console.log(ele)
+
+
+
+
+  const callModalFn = useOpenModalWithHTML()
+
+
+  const seeFullSizeHandler = (e: any, ele: PostInterFace) => {
+    e?.stopPropagation();
+
+    const innerHtml = <div className=' flex flex-col items-center justify-center '>
+      <ImageReact
+        src={ele?.author?.profilePic}
+        className=' rounded '
+      />
+      <button
+        className=' capitalize text-xs px-4 py-2 rounded-md bg-green-500 my-2'
+        onClick={() => {
+          router.push(`/user/${ele.author._id}`)
+        }}
+      >See, {ele?.author?.username || "Name Kumar"}'s profile</button>
+    </div>
+
+    callModalFn({ innerHtml })
+
+    // dispatch(setInnerHTMLOfModal(innerHtml))
+  }
+
+
 
 
   return (
@@ -80,7 +111,7 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
             >
               <div
                 className="rounded-t flex items-start p-0.5 gap-1.5  border-cyan-400"
-                onClick={(e) => { e.stopPropagation(); router.push(`/user/${ele.author._id}`) }}
+                onClick={(e) => { seeFullSizeHandler(e, ele); e.stopPropagation(); }}
 
               >
 
