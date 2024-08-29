@@ -7,11 +7,16 @@ import { useUserState } from "@/redux/slices/UserSlice";
 // import MainLoader from "./components/MainLoader";
 // import Modal from "./components/ModalComponent";
 import { useEffect, useState } from 'react';
+import { useThemeData } from '@/redux/slices/ThemeSlice';
 
 const username = "ashish"
 const recipient = "kuldeep"
 
 export default function PusherTestDiv({ channelName }: { channelName: string }) {
+
+
+    const themeMode = useThemeData().mode
+
 
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState<any[]>(["see"]);
@@ -138,7 +143,9 @@ export default function PusherTestDiv({ channelName }: { channelName: string }) 
 
     return (
         <div
-            className=" border-2 border-red-500 flex flex-col items-center justify-center w-full"
+            className={`border-2 border-red-500 flex flex-col items-center justify-center w-full rounded-lg  
+                 ${!themeMode ? "  text-white bg-black " : "  text-black bg-white"}
+            `}
         >
             <p className=" text-center">
                 {

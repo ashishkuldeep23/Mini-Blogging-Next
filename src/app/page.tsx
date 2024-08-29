@@ -8,8 +8,6 @@ import { AppDispatch } from "@/redux/store";
 import MaskerText from "./components/MaskerText";
 import { useRouter } from "next/navigation";
 import Navbar from "./components/Navbar";
-import PusherTestDiv from "./components/PusherJs";
-import Modal from "./components/ModalComponent";
 import MainLoader from "./components/MainLoader";
 
 
@@ -49,17 +47,11 @@ export default function Home() {
       <MainLoader isLoading={isLoading} className=" !top-[85vh]" />
 
 
-      {/* Modal component */}
-      {/* <Modal /> */}
-
-
-
       {/* Now i'm going to user pusher ------> */}
       {/* Pusher working code -----------> */}
       {/* <PusherTestDiv
         channelName='ashish'
       /> */}
-
 
       {/* Main home div that hold allPosts and all */}
       <div className=" flex flex-col justify-center items-center pb-6 ">
@@ -100,7 +92,6 @@ export default function Home() {
     </main>
   );
 }
-
 
 
 function FeatureDetailShowHomeFirstTime() {
@@ -264,5 +255,4 @@ const FooterDiv = () => {
     </>
   )
 }
-
 

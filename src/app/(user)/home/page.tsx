@@ -2,6 +2,7 @@
 import MainLoader from '@/app/components/MainLoader'
 import SinglePostCard from '@/app/components/SinglePostCard'
 import { getAllPosts, setSearchBrandAndCate, usePostData } from '@/redux/slices/PostSlice'
+import { useThemeData } from '@/redux/slices/ThemeSlice'
 import { AppDispatch } from '@/redux/store'
 import React, { useEffect } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
@@ -28,6 +29,9 @@ function AllPostDiv() {
 
   const dispatch = useDispatch<AppDispatch>()
 
+  const themeMode = useThemeData().mode
+
+
 
   function fetchAllPostData() {
     let searchObj = { hash: "", category: "", page: 1 }
@@ -42,7 +46,6 @@ function AllPostDiv() {
     dispatch(setSearchBrandAndCate(searchObj))
     dispatch(getAllPosts(searchObj))
   }
-
 
 
   useEffect(() => {
@@ -70,8 +73,12 @@ function AllPostDiv() {
       loader={
         (allPostData.length < allPostsLength && !searchHashAndCate.category && !searchHashAndCate.hash)
         &&
-        <div className=" lg:-translate-x-[50%] mt-10 flex gap-2 items-center">
-          <span>LOADING...</span>
+        <div
+          className={`lg:-translate-x-[50%] mt-10 flex gap-2 items-center
+            ${!themeMode ? "  text-white " : "  text-black"}
+          `}
+        >
+          <span>Getting...</span>
           <span className=" w-4 h-4   rounded-full animate-spin "></span>
         </div>
       }
@@ -84,7 +91,7 @@ function AllPostDiv() {
         <MainLoader
           isLoading={isLoading}
           // isLoading={true}
-        className=" lg:-translate-x-[50%]" 
+          className=" lg:-translate-x-[50%]"
         />
 
         {
@@ -162,7 +169,7 @@ function StorySection() {
         </div>
 
         {
-          [null, null, null, null, null ].map((ele, i) => {
+          [null, null, null, null, null].map((ele, i) => {
             return (
               <div
                 key={i}

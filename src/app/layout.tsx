@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Providers } from "@/redux/providers";
+import { StateProviders } from "@/redux/providers";
 import { Toaster } from "react-hot-toast";
 import LogInProvider from "./components/LogInProvider";
 import Modal from "./components/ModalComponent";
-import PusherTestDiv from "./components/PusherJs";
+import PusherTestDiv from "../helper/PusherJs";
 import MainLoader from "./components/MainLoader";
 
 
@@ -31,10 +31,9 @@ export default function RootLayout({
         className={inter.className}
         suppressHydrationWarning={true}
       >
-        <Providers>
+        <StateProviders>
 
           <LogInProvider>
-
 
             {/* Modal component */}
             <Modal />
@@ -45,8 +44,6 @@ export default function RootLayout({
               channelName='ashish'
             />
 
-
-
             {/* Hot toster ---> */}
             <div><Toaster /></div>
 
@@ -54,7 +51,7 @@ export default function RootLayout({
 
           </LogInProvider>
 
-        </Providers>
+        </StateProviders>
       </body>
     </html>
   );
