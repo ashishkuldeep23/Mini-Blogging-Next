@@ -195,7 +195,7 @@ function UserProfileImage() {
         dispatch(setOpenMoadl(!open))
 
         const innerHtml = <ImageReact
-            src={userData.profilePic}
+            src={postImageUrl}
             className=' rounded '
         />
 
