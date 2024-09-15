@@ -160,7 +160,7 @@ function UserProfileImage() {
     async function uploadImgaeAndUserDataHandler() {
 
         // // // If isLoading is pending then return the fn() call.
-        if (!isLoading) return;
+        if (isLoading) return;
 
         // // // After doing uplaod stuff here ------>
         let imageUrl = "";
