@@ -84,25 +84,32 @@ const authOptions: NextAuthOptions = {
         // // // This fn for logIn creating session.
         async session({ session }: any) {
 
+            try {
 
-            // // // Jsut want to ready user model befour populating (in below code ) (I wnat just my model should be model ready here) ---------->
-            await User.findById("65ffbc7cf6215d659db3b197")
+                // // // Jsut want to ready user model befour populating (in below code ) (I wnat just my model should be model ready here) ---------->
+                await User.findById("65ffbc7cf6215d659db3b197")
 
-            const sessionUserData = await User.findOne({ email: session.user.email })
+                const sessionUserData = await User.findOne({ email: session.user.email })
 
-            // console.log(sessionUserData)
+                // console.log(sessionUserData)
 
-            // // // Store user image url in session ------>
-            session.user.image = sessionUserData.profilePic.toString();
+                // // // Store user image url in session ------>
+                session.user.image = sessionUserData.profilePic.toString();
 
-            session.user.id = sessionUserData._id.toString();
+                session.user.id = sessionUserData._id.toString();
 
-            session.user._id = sessionUserData._id.toString();
-            // session.expires = Date.now() + ( 3600 * 1000 * 24)
+                session.user._id = sessionUserData._id.toString();
+                // session.expires = Date.now() + ( 3600 * 1000 * 24)
 
-            session.maxAge = 30 * 24 * 60 * 60 * 1000  // // // For 30 days.
+                session.maxAge = 30 * 24 * 60 * 60 * 1000  // // // For 30 days.
 
-            return session;
+                return session;
+            } catch (err: any) {
+
+                console.log(err)
+                return false
+
+            }
         },
 
         // // // This fn when user sing in first time by google.
