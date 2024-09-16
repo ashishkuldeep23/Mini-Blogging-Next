@@ -123,10 +123,12 @@ export default function PusherTestDiv({ channelName }: { channelName: string }) 
 
     };
 
+    const [msg, setMsg] = useState<string>("")
 
     const callPusherFn = () => {
-        const sendThisText = "My Msg....."
-        sendMessage(sendThisText, channelName, "message")
+        const sendThisText = msg || "My Msg.....";
+        sendMessage(sendThisText, channelName, "message");
+        setMsg("");
     }
 
 
@@ -153,14 +155,24 @@ export default function PusherTestDiv({ channelName }: { channelName: string }) 
                 }
             </p>
             <p>Checking Pusher here </p>
+
+            <input
+                type="text"
+                value={msg}
+                onChange={(e) => setMsg(e.target.value)}
+                placeholder='Write your message.'
+                className={`m-1 px-2 rounded-md border border-white  ${!themeMode ? "  text-white bg-black " : "  text-black bg-white"} `}
+                id=""
+            />
+
             <button
                 onClick={() => callPusherFn()}
                 className=" m-1 px-2 rounded-md border border-white active:scale-75 transition-all duration-300"
-            >Click</button>
+            >Send to others</button>
             <button
                 onClick={() => callPusherFnForMsgMe()}
                 className=" m-1 px-2 rounded-md border border-white active:scale-75 transition-all duration-300"
-            >MSG ME</button>
+            >MSG to Self</button>
         </div>
     )
 }
