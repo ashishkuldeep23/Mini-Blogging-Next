@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
 
     connect()
 
-    console.log(modelNames())
+    // console.log(modelNames())
 
 
     // console.log("Called --------------->")

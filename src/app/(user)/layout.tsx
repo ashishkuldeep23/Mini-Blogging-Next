@@ -115,9 +115,6 @@ const LayoutPage = (
         else {
             osmClickHangler(`/${tabArrWithName[index + 1]}`)
         }
-
-
-
     }
 
     function previousTab() {
@@ -136,9 +133,6 @@ const LayoutPage = (
         else {
             osmClickHangler(`/${tabArrWithName[index - 1]}`)
         }
-
-
-
     }
 
     const osmClickHangler = (ele: string) => {
@@ -272,7 +266,7 @@ const LayoutPage = (
                     className=" relative w-[100%] lg:w-[60%] min-h-[90vh] p-1 mb-5 rounded-md border-gray-500/90  "
                 >
                     {/* This div will conatain main UI as children */}
-                    <div>
+                    <div className=' mb-5 '>
                         {children}
                     </div>
 

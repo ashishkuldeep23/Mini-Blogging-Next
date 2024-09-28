@@ -468,9 +468,6 @@ const userSlice = createSlice({
                 state.errMsg = action.error.message || 'Error'
             })
 
-
-
-
     }
 })
 

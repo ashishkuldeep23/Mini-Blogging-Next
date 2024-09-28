@@ -4,10 +4,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 
 
-connect()
-
-
 export async function PUT(req: NextRequest) {
+
+    connect()
 
     try {
 

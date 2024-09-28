@@ -3,10 +3,11 @@ import Post from "@/models/postModel";
 import { NextRequest, NextResponse } from "next/server";
 
 
-connect()
 
 
 export async function POST(req: NextRequest) {
+
+    connect()
 
     // console.log("Called --------------->")
 

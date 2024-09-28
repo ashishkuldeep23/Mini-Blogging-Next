@@ -14,7 +14,6 @@ import MainLoader from "./components/MainLoader";
 export default function Home() {
 
   const router = useRouter()
-
   const themeMode = useThemeData().mode
   const allPostData = usePostData().allPost
   const isLoading = usePostData().isLoading
