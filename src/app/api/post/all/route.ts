@@ -5,12 +5,11 @@ import { modelNames } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
 
-// connect()
 
 
 export async function POST(req: NextRequest) {
 
-    connect()
+    await connect()
 
     // console.log(modelNames())
 

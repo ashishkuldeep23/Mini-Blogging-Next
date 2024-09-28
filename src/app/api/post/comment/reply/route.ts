@@ -10,7 +10,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
 
-    connect()
+    await  connect()
 
     try {
 

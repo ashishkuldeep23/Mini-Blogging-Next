@@ -9,7 +9,8 @@ type WhatUpdateData = "sendFriendRequest" | "addFriend" | 'removeFriend' | "canc
 
 
 export async function PUT(req: NextRequest) {
-    connect()
+
+    await connect()
 
     try {
 

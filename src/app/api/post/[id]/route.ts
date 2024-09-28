@@ -11,7 +11,7 @@ import { isValidObjectId, model, modelNames, models } from "mongoose"
 
 export async function GET(req: NextRequest, context: any) {
 
-    connect()
+    await connect()
 
     // // // This is used to print all register models
     console.log(modelNames())

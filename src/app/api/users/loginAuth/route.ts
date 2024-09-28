@@ -9,10 +9,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 
 
-connect()
 
 
 export async function POST(req: NextRequest) {
+
+    await  connect()
+
     try {
 
         console.log("Called ----------->")

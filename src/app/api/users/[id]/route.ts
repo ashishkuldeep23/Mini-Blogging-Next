@@ -18,7 +18,7 @@ import { getServerSession } from "next-auth/next"
 
 export async function POST(req: NextRequest, context: any) {
 
-    connect()
+    await connect()
     // const g = getServerSession()
     // console.log(g)
 

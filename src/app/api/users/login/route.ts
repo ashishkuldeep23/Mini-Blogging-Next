@@ -8,10 +8,13 @@ import jwt from "jsonwebtoken"
 
 
 
-connect()
 
 
 export async function POST(req: NextRequest) {
+
+
+    await  connect()
+
     try {
 
         // console.log("Called ----------->")
@@ -27,7 +30,7 @@ export async function POST(req: NextRequest) {
         // // validation here --->
 
         const getUser = await User.findOne({ email })
-  
+
         // console.log(getUser)
 
         if (!getUser) {
