@@ -11,6 +11,9 @@ export async function POST(req: NextRequest) {
 
     // console.log("Called --------------->")
 
+    await User.findById("65ffbc7cf6215d659db3b197")
+    
+
     try {
 
         // console.log("iktyutryetyr")
