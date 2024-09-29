@@ -19,6 +19,7 @@ import { UserDataInterface } from '@/redux/slices/UserSlice';
 import AnimatedTooltip from './ui/animated-tooltip';
 import { PiPaperPlaneRight } from "react-icons/pi";
 import useOpenModalWithHTML from '@/utils/OpenModalWithHtml';
+import { useCheckUserStatus } from '@/Hooks/useCheckUserStatus';
 
 
 interface UpdatingComment {
@@ -46,43 +47,24 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
 
     const [userID, setUserID] = useState<string>("")
 
-
     const [updatingComment, setUpdatingComment] = useState<UpdatingComment>({
         mode: false,
         value: "",
         commentId: ""
     })
 
-
     const [commentIds, setCommentIds] = useState<string[]>([])
 
     const [likeIds, setLikeIds] = useState<string[]>([])
 
-
     const dispatch = useDispatch<AppDispatch>()
 
-
-    // const router = useRouter()
-    // console.log(status)
-    // useEffect(() => {
-    //     if ( status === "unauthenticated") {
-    //         router.push("/")
-    //     }
-    // }, [session])
-
-
-    function checkUserStatus(msg: string) {
-
-        if (!session) {
-            toast.error(msg)
-            return false
-        }
-        return true
-    }
+    const checkUserStatus = useCheckUserStatus()
 
 
     const likeClickHandler = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.stopPropagation()
+
         if (!checkUserStatus("Plese login to Like post.")) return
 
         // console.log("user id", session?.user?.id)
@@ -413,7 +395,6 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
 
                     <PostCommentForm
                         textAreaInputRef={textAreaInputRef}
-                        checkUserStatus={checkUserStatus}
                         updatingComment={updatingComment}
                         setUpdatingComment={setUpdatingComment}
                         post={post}
@@ -447,14 +428,12 @@ export default LikeCommentDiv
 function PostCommentForm(
     {
         textAreaInputRef,
-        checkUserStatus,
         post,
         updatingComment,
         setUpdatingComment
 
     }: {
         textAreaInputRef: RefObject<HTMLTextAreaElement>,
-        checkUserStatus: Function,
         post: PostInterFace | SinglePostType,
         updatingComment: UpdatingComment,
         setUpdatingComment: Function
@@ -473,6 +452,8 @@ function PostCommentForm(
 
     const { data: session, status } = useSession()
 
+
+    const checkUserStatus = useCheckUserStatus()
 
     async function postCommentBtn(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
 
@@ -764,6 +745,10 @@ const SingleCommentUI = ({
     setUpdatingComment: Function,
 }) => {
 
+    const callModalFn = useOpenModalWithHTML()
+
+    const checkUserStatus = useCheckUserStatus()
+
     const dispatch = useDispatch()
 
     const { data: session, status } = useSession()
@@ -777,6 +762,9 @@ const SingleCommentUI = ({
     const router = useRouter()
 
     async function likeComment() {
+
+        if (!checkUserStatus("Plese login to Like comment.")) return
+
         // alert("Like Comment")
 
         setIsLoading(true)
@@ -816,11 +804,16 @@ const SingleCommentUI = ({
 
 
     function updateSingleComment() {
+
+        if (!checkUserStatus("Plese login to update comment.")) return
+
         setUpdatingComment({ mode: true, value: comment.comment, commentId: comment._id })
     }
 
 
     async function deleteSingleComment() {
+
+        if (!checkUserStatus("Plese login to delete comment.")) return
 
         setIsLoading(true)
 
@@ -849,12 +842,6 @@ const SingleCommentUI = ({
 
         setIsLoading(false)
     }
-
-
-
-
-
-    const callModalFn = useOpenModalWithHTML()
 
 
     const seeFullSizeHandler = (e: any, ele: { profilePic: string, _id: string, username: string }) => {
@@ -901,7 +888,7 @@ const SingleCommentUI = ({
                     <div className="w-[90%] flex flex-col gap-1 ">
 
                         <div
-                            className=" flex items-center gap-1"
+                            className=" flex items-start gap-1"
                             onClick={(e) => {
 
                                 seeFullSizeHandler(e, {
@@ -914,7 +901,7 @@ const SingleCommentUI = ({
                         >
 
                             <ImageReact
-                                className=" border-inherit border-t-2 w-8 mx-1 my-0.5 rounded-full "
+                                className="  border-t-2 w-[2rem] !h-[1.5rem] overflow-hidden mx-1 -mt-[0.15rem] rounded-full "
                                 src={comment?.userId?.profilePic}
                                 alt=""
                             />
@@ -933,9 +920,7 @@ const SingleCommentUI = ({
 
                         {
                             // // // Edit and delete btns here --------->
-
                             comment?.userId?.email === session?.user?.email
-
                             &&
 
                             <div>
@@ -960,18 +945,11 @@ const SingleCommentUI = ({
                                 </button>
 
                             </div>
-
                         }
-
-
-
-
 
                     </div>
 
-
                     {/* Like and comment div here -----> */}
-
                     <div className=" p-0.5 py-1 flex flex-col">
 
                         <button
@@ -1009,16 +987,13 @@ const SingleCommentUI = ({
 
                     </div>
 
-
                 </div>
-
 
                 <SeeMoreOfComment
                     commentClicked={commentClicked}
                     comment={comment}
                     setCommentClicked={setCommentClicked}
                 />
-
 
             </div>
         </>
@@ -1064,7 +1039,6 @@ function SeeMoreOfComment(
     const [replies, setReplies] = useState<ReplyInterFace[]>([])
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
-
 
     async function getCommentData() {
 
@@ -1249,7 +1223,6 @@ function SeeMoreOfComment(
     }
 
 
-
     useEffect(() => {
 
         if (commentClicked) {
@@ -1264,7 +1237,6 @@ function SeeMoreOfComment(
 
         }
     }, [commentClicked])
-
 
     return (
         <>
@@ -1583,7 +1555,6 @@ function SeeMoreOfComment(
             </div>
         </>
     )
-
 }
 
 

@@ -1,39 +1,23 @@
 'use client'
-import React from 'react'
-import { MessageInterface, FriendInterface } from '@/interfaces'
-import MessageDisplay from '@/app/components/MessageDisplay';
-import { useThemeData } from '@/redux/slices/ThemeSlice';
+
+import { useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
+import { useEffect } from "react"
 
 
 
+export default function MessagePage() {
 
-const dummyMessages: MessageInterface[] = [
-  { id: 1, text: 'Hello!', timestamp: Date.now(), senderId: 1 },
-  { id: 2, text: 'How are you?', timestamp: Date.now(), senderId: 2 },
-  { id: 3, text: 'How are you?', timestamp: Date.now(), senderId: 2 },
-  { id: 4, text: 'How are you?', timestamp: Date.now(), senderId: 2 },
-  { id: 5, text: 'How are you?', timestamp: Date.now(), senderId: 2 },
-  { id: 6 , text: 'How are you?', timestamp: Date.now(), senderId: 2 },
-  // Add more dummy messages as needed
-];
-
-const dummyFriends: FriendInterface[] = [
-  { id: 1, name: 'Alice', online: true },
-  { id: 2, name: 'Bob', online: false },
-  // Add more dummy friends as needed
-];
-
-const Home: React.FC = () => {
-
-
-  const themeMode = useThemeData().mode
 
   return (
-    <div className="p-4">
-      <h1 className={`text-2xl font-bold mb-4 ${!themeMode ? "text-white" : "text-black"}`}>Chat Application</h1>
-      <MessageDisplay messages={dummyMessages} friends={dummyFriends} />
-    </div>
-  );
-};
+    <>
 
-export default Home;
+      <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit, a. Autem quam mollitia pariatur quo perferendis optio dolorum recusandae debitis, sint, cum saepe? Consequatur, quaerat repellendus. Molestiae quidem tenetur dolore fugiat ratione deserunt repellat quis tempore, adipisci hic voluptate, aliquid quisquam quo atque sed dolorum eius minima ex harum! Architecto perferendis incidunt assumenda corporis ea iste eaque excepturi, blanditiis quia voluptate iusto similique quo suscipit deleniti officiis dignissimos molestias amet pariatur possimus? Dolorum culpa libero consectetur, omnis quis cum repellat hic nesciunt deleniti, vel sequi, rerum suscipit laudantium quaerat blanditiis consequatur ratione modi necessitatibus facilis autem adipisci. Tempora, quibusdam repellendus perferendis fuga beatae veniam error praesentium quas asperiores aut architecto suscipit, aperiam quaerat! Et, quidem eveniet delectus similique voluptas dolore aliquam. Fuga neque delectus rerum tempora accusamus amet, consectetur excepturi dolore esse animi. Eligendi corrupti numquam voluptatum cum alias tempore, porro doloribus vero maxime exercitationem explicabo nihil possimus, laudantium similique. Rem quod exercitationem natus fugiat corporis, deleniti accusantium a labore enim blanditiis esse debitis. Possimus ipsam repellat porro. Aliquam fugit ipsum assumenda ab porro! In ducimus, sunt enim vero delectus suscipit aliquid distinctio ipsum cum veritatis animi obcaecati magnam officiis eum omnis expedita saepe voluptates doloremque excepturi, quae et eaque!
+      </p>
+
+    </>
+  )
+}
+
+

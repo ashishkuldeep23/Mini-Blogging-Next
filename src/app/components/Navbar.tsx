@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux"
 
 import { useSession, signOut } from "next-auth/react"
 import Image from "next/image"
-import { getProfileData,  setUserDataBySession, useUserState } from "@/redux/slices/UserSlice"
+import { getProfileData, setUserDataBySession, useUserState } from "@/redux/slices/UserSlice"
 import ImageReact from "./ImageReact"
 import { getCatAndHash } from "@/redux/slices/PostSlice"
 import { AppDispatch } from "@/redux/store"
@@ -68,7 +68,7 @@ const Navbar = ({ className }: { className?: string }) => {
         if (isUserOnHaome) {
             router.push(`/profile/${session?.user?.id}`)
         } else {
-            router.push("/")
+            router.push("/home")
         }
 
         bodyTranstion()
@@ -80,7 +80,6 @@ const Navbar = ({ className }: { className?: string }) => {
 
         if (params === "/") setIsUserOnHome(true);
         else setIsUserOnHome(false);
-
 
     }, [params])
 
@@ -223,9 +222,7 @@ const Navbar = ({ className }: { className?: string }) => {
 
 
                                 <button
-                                    onClick={() => {
-                                        router.push("/message")
-                                    }}
+                                    onClick={() => router.push("/message")}
 
                                     className={`rounded-full -mt-1.5 text-3xl h-6 text-sky-600 transition-all hover:scale-125`}
                                 >

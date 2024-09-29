@@ -6,7 +6,7 @@ import { RootState } from "../store"
 import toast from "react-hot-toast"
 // import { NewPostType } from "@/app/new-post/page"
 import { UserDataInterface } from "./UserSlice"
-import { NewPostType } from "@/interfaces"
+import { NewPostType } from "@/Types"
 
 
 

@@ -16,7 +16,7 @@ import { IoHomeOutline } from "react-icons/io5";
 import { usePathname, useRouter } from 'next/navigation';
 import { useThemeData } from '@/redux/slices/ThemeSlice';
 import Navbar from '../components/Navbar';
-import useSwipeCustom from '@/utils/useSwipeCustom';
+import useSwipeCustom from '@/Hooks/useSwipeCustom';
 
 
 
@@ -207,7 +207,7 @@ const LayoutPage = (
 
             <div className=" relative flex items-start justify-center lg:w-[80%] gap-5 flex-col-reverse lg:flex-row">
 
-                <div className={`border-t lg:border-t-0 w-[100%] lg:w-[20%] flex lg:flex fixed -bottom-0.5 left-0 lg:sticky lg:top-7 lg:left-0 lg:bottom-auto p-1 lg:p-2 lg:rounded-md lg:m-1 border-gray-500/90 shadow-md z-20 ${themeMode ? " bg-white" : " bg-black"}  `}>
+                <div className={`border-t lg:border-t-0 w-[100%] lg:w-[20%] flex lg:flex fixed -bottom-0.5 left-0 lg:sticky lg:top-7 lg:left-0 lg:bottom-auto p-1 lg:p-2 lg:rounded-md lg:m-1 border-gray-500/90 shadow-md z-30 ${themeMode ? " bg-white" : " bg-black"}  `}>
 
                     <ul className=' relative flex justify-between  gap-1 lg:block w-full mx-3 sm:mx-8 md:mx-14 lg:mx-0'>
 
