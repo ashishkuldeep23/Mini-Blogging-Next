@@ -1,7 +1,7 @@
 import { connect } from "@/dbConfig/dbConfig";
 import Post from "@/models/postModel";
 import { NextRequest, NextResponse } from "next/server";
-
+import User from "@/models/userModel";
 
 
 
