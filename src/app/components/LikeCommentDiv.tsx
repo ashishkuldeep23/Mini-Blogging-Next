@@ -901,7 +901,7 @@ const SingleCommentUI = ({
                         >
 
                             <ImageReact
-                                className="  border-t-2 w-[2rem] !h-[1.5rem] overflow-hidden mx-1 -mt-[0.15rem] rounded-full "
+                                className="  border-t-2 w-[2rem] !h-[1.5rem] overflow-hidden mx-1 -mt-[0.15rem] rounded-full object-cover "
                                 src={comment?.userId?.profilePic}
                                 alt=""
                             />
