@@ -36,7 +36,9 @@ const LayoutPage = (
 
             <Navbar />
 
-            <div className=' text-5xl text-red-500'>LayoutPage</div>
+            <div className='  w-full h-16 flex justify-center items-center border-2 text-rose-500 border-rose-500 rounded'>
+                <p className=' '>Go to general Chat BTN here</p>
+            </div>
             <div className='p-1 '>{children}</div>
 
         </div>

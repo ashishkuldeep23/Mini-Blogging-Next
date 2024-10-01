@@ -222,7 +222,7 @@ const Navbar = ({ className }: { className?: string }) => {
 
 
                                 <button
-                                    onClick={() => router.push("/message")}
+                                    onClick={() => router.push("/messages")}
 
                                     className={`rounded-full -mt-1.5 text-3xl h-6 text-sky-600 transition-all hover:scale-125`}
                                 >
