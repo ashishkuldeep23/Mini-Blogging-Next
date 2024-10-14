@@ -7,7 +7,7 @@ import MainLoader from '@/app/components/MainLoader'
 import SinglePostCard from '@/app/components/SinglePostCard'
 import AnimatedTooltip from '@/app/components/ui/animated-tooltip'
 import { useThemeData } from '@/redux/slices/ThemeSlice'
-import { AddMoreFeilsUserData, FriendsAllFriendData, getProfileData, updateUserData, useUserState } from '@/redux/slices/UserSlice'
+import { AddMoreFeilsUserData, FriendsAllFriendData, getProfileData, setIsLoading, updateUserData, useUserState } from '@/redux/slices/UserSlice'
 import { AppDispatch } from '@/redux/store'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
@@ -26,6 +26,7 @@ import { uploadFileInCloudinary } from '@/lib/cloudinary';
 import { MdOutlineZoomOutMap } from "react-icons/md";
 import { setInnerHTMLOfModal, setOpenMoadl, useModalState } from '@/redux/slices/ModalSlice'
 import useOpenModalWithHTML from '@/utils/OpenModalWithHtml'
+import { usePreventSwipe } from '@/Hooks/useSwipeCustom'
 
 
 const ProfilePageParams = () => {
@@ -121,9 +122,9 @@ function UserProfileImage() {
     const dispatch = useDispatch<AppDispatch>()
     const { data: session } = useSession()
     // const router = useRouter()
+    const themeMode = useThemeData().mode
 
     const { userData, isLoading, errMsg } = useUserState()
-    const themeMode = useThemeData().mode
 
     const [imageFile, setImageFile] = useState<File>()
 
@@ -133,6 +134,7 @@ function UserProfileImage() {
 
     // const [uploadedImg, setUplodedImg] = useState<string>('')
 
+    const setLoading = (state: boolean) => dispatch(setIsLoading(state))
 
     function imgInputOnchangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
         e.stopPropagation();
@@ -156,39 +158,56 @@ function UserProfileImage() {
         }
     }
 
-
     async function uploadImgaeAndUserDataHandler() {
 
-        // // // If isLoading is pending then return the fn() call.
-        if (isLoading) return;
+        try {
 
-        // // // After doing uplaod stuff here ------>
-        let imageUrl = "";
+            // // // If isLoading is pending then return the fn() call.
+            if (isLoading) {
+                toast("Uplaoding...", {
+                    icon: '⚠️',
+                });
+                return;
+            };
 
-        if (session?.user._id) {
+            // // setLoadingTrue -------->
+            setLoading(true);
 
-            if (imageFile) {
-                // // Now here we can uplaod file 2nd step ------>
-                imageUrl = await uploadFileInCloudinary(imageFile)
-                // console.log({ imageUrl })
+
+            // // // After doing uplaod stuff here ------>
+            let imageUrl = "";
+
+            if (session?.user._id) {
+
+                if (imageFile) {
+                    // // Now here we can uplaod file 2nd step ------>
+                    imageUrl = await uploadFileInCloudinary(imageFile)
+                    // console.log({ imageUrl })
+                }
+
+                dispatch(updateUserData({
+                    whatUpdate: "newProfilePic",
+                    sender: session.user._id,
+                    newProfilePic: imageUrl,
+                    reciver: ""
+                }))
+            }
+            else {
+
+                toast.error("Plese Login again.Or Refresh the page")
+                router.push("/login")
             }
 
-            dispatch(updateUserData({
-                whatUpdate: "newProfilePic",
-                sender: session.user._id,
-                newProfilePic: imageUrl,
-                reciver: ""
-            }))
+        } catch (error: any) {
+            console.log(error);
+            toast.error(`${error.message}`)
         }
-        else {
-
-            toast.error("Plese Login again.Or Refresh the page")
-            router.push("/login")
+        finally {
+            setLoading(false);
         }
 
 
     }
-
 
     const seeFullSizeHandler = (e: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         e.stopPropagation();
@@ -202,13 +221,11 @@ function UserProfileImage() {
         dispatch(setInnerHTMLOfModal(innerHtml))
     }
 
-
     useEffect(() => {
 
         (!postImageUrl || postImageUrl !== userData.profilePic) && setPostImageUrl(userData.profilePic)
 
     }, [userData])
-
 
     return (
         <>
@@ -320,17 +337,16 @@ function AllUploadedPicturesDiv() {
 
 
     // // // This fn() is very imp. when swap next and previous. Don't remove this line.
-    function preventSwitchingInTabs(e: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement, MouseEvent>) {
-        e.stopPropagation()
-    }
-
+    // function preventSwitchingInTabs(e: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement, MouseEvent>) {
+    //     e.stopPropagation()
+    // }
 
 
     const callModalFn = useOpenModalWithHTML()
 
     const seeFullSizeHandler = (e: any, i: number, ele: string) => {
         e?.stopPropagation();
-        
+
         const innerHtml = <div className=' flex flex-col items-center justify-center '>
             <ImageReact
                 src={ele}
@@ -349,6 +365,9 @@ function AllUploadedPicturesDiv() {
     }
 
 
+
+    const preventSwipe = usePreventSwipe()
+
     return (
         <div className=' flex flex-col items-center '>
             {
@@ -363,13 +382,7 @@ function AllUploadedPicturesDiv() {
 
                         <div
                             className=' scrooller_bar_hidden px-5 py-4 relative w-[98vw] lg:w-full flex lg:flex-wrap gap-1 lg:gap-3 items-center justify-start overflow-x-scroll z-[5] lg:max-h-[45vh]'
-
-                            onTouchStart={preventSwitchingInTabs}
-                            onTouchMove={preventSwitchingInTabs}
-                            onTouchEnd={preventSwitchingInTabs}
-                            onMouseDown={preventSwitchingInTabs}
-                            onMouseMove={preventSwitchingInTabs}
-                            onMouseUp={preventSwitchingInTabs}
+                            {...preventSwipe}
                         >
 
 
@@ -558,6 +571,7 @@ function ReciverRequestDiv() {
     )
 
 }
+
 
 
 function SenderRequestDiv() {

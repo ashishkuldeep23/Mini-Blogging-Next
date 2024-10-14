@@ -181,3 +181,23 @@ export default function useSwipeCustom(rightHandler: Function, leftHandler: Func
     return { onTouchStart, onTouchMove, onTouchEnd, onMouseDown, onMouseMove, onMouseUp }
 }
 
+
+
+
+export function usePreventSwipe() {
+
+
+    function preventSwitchingInTabs(e: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement, MouseEvent>) {
+        e.stopPropagation()
+    }
+
+    const onTouchStart = (e : any) => { preventSwitchingInTabs(e) }
+    const onTouchMove = (e : any) => { preventSwitchingInTabs(e) }
+    const onTouchEnd = (e : any) => { preventSwitchingInTabs(e) }
+    const onMouseDown = (e : any) => { preventSwitchingInTabs(e)}
+    const onMouseMove = (e : any) => { preventSwitchingInTabs(e) }
+    const onMouseUp = (e : any) => { preventSwitchingInTabs(e) }
+
+    return { onTouchEnd, onTouchStart, onTouchMove, onMouseDown, onMouseMove, onMouseUp }
+
+}

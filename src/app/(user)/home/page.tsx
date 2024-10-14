@@ -1,6 +1,7 @@
 'use client'
 import MainLoader from '@/app/components/MainLoader'
 import SinglePostCard from '@/app/components/SinglePostCard'
+import { usePreventSwipe } from '@/Hooks/useSwipeCustom'
 import { getAllPosts, setSearchBrandAndCate, usePostData } from '@/redux/slices/PostSlice'
 import { useThemeData } from '@/redux/slices/ThemeSlice'
 import { AppDispatch } from '@/redux/store'
@@ -128,23 +129,19 @@ function StorySection() {
 
 
   // // // Move story by btn ------------->
-  const moveHolderDiv = (where: string) => {
+  // const moveHolderDiv = (where: string) => {
 
-    let holderDiv = document.getElementById("story_holder_div")
+  //   let holderDiv = document.getElementById("story_holder_div")
 
-    if (holderDiv) {
+  //   if (holderDiv) {
 
-      holderDiv.scrollBy(100, 100)
+  //     holderDiv.scrollBy(100, 100)
 
-    }
-  }
-
-
-  function preventSwitchingInTabs(e: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement, MouseEvent>) {
-    e.stopPropagation()
-  }
+  //   }
+  // }
 
 
+  const preventSwipe = usePreventSwipe()
 
 
   return (
@@ -152,14 +149,7 @@ function StorySection() {
 
       <div
         className='scrooller_bar_hidden relative w-[98vw] lg:w-full flex lg:flex-wrap gap-1.5 px-2 items-center justify-start overflow-x-scroll z-[5] lg:max-h-[20vh]'
-
-        onTouchStart={preventSwitchingInTabs}
-        onTouchMove={preventSwitchingInTabs}
-        onTouchEnd={preventSwitchingInTabs}
-        onMouseDown={preventSwitchingInTabs}
-        onMouseMove={preventSwitchingInTabs}
-        onMouseUp={preventSwitchingInTabs}
-
+        {...preventSwipe}
       >
 
         <div

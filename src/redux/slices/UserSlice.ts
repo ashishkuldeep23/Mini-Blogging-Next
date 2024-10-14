@@ -1,6 +1,6 @@
 'use client'
 
-import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit"
+import { createAsyncThunk, createSlice, current, PayloadAction } from "@reduxjs/toolkit"
 import { useSelector } from "react-redux"
 import { RootState } from "../store"
 import toast from "react-hot-toast"
@@ -169,6 +169,10 @@ const userSlice = createSlice({
             state.userData.profilePic = action.payload.image
             state.userData.email = action.payload.email
         },
+
+        setIsLoading(state, action: PayloadAction<boolean>) {
+            state.isLoading = action.payload
+        }
 
     },
     extraReducers: (builder) => {
@@ -472,7 +476,7 @@ const userSlice = createSlice({
 })
 
 
-export const { setUserDataBySession } = userSlice.actions
+export const { setUserDataBySession, setIsLoading } = userSlice.actions
 
 export const useUserState = () => useSelector((state: RootState) => state.userReducer)
 
