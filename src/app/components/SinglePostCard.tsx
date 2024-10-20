@@ -40,7 +40,6 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
   // console.log(ele)
   const callModalFn = useOpenModalWithHTML()
 
-
   const seeFullSizeHandler = (e: any, ele: PostInterFace) => {
     e?.stopPropagation();
 
@@ -61,9 +60,6 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
 
     // dispatch(setInnerHTMLOfModal(innerHtml))
   }
-
-
-
 
   return (
     <motion.div
@@ -161,6 +157,7 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
 
                 </div>
 
+                {/* Here we need to impove, when we will deal with video to. */}
                 {
                   ele && ele?.image
                   &&

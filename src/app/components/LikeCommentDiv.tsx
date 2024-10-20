@@ -194,6 +194,10 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
 
             setCommentIds(idsOfComments)
         }
+        else if (post.comments.length === 0) {
+            setCommentIds([])
+        }
+
 
         if (post.likesId.length > 0) {
             let idsOflikes = post.likesId.map((ele: any) => {
@@ -207,12 +211,14 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
                 }
             })
 
-            // console.log(idsOflikes)
+            // console.log({ idsOflikes })
 
             setLikeIds(idsOflikes)
 
         }
-
+        else if (post.likesId.length === 0) {
+            setLikeIds([])
+        }
 
     }, [post])
 
@@ -285,6 +291,8 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
                     </div>
 
                     {
+                        // // // For post creator (btns ) ------->>
+
                         post?.author?.email === session?.user?.email
                         &&
                         <div className=' ml-auto mr-1 flex gap-0'>

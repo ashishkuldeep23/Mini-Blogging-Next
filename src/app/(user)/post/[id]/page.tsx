@@ -262,7 +262,7 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
             setLikeIds(idsOflikes)
         }
 
-    }, [])
+    }, [singlePost])
 
 
     return (
@@ -328,7 +328,7 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
                     }
                 </div>
 
-
+                {/* Here we need to impove, when we will deal with video to. */}
                 {
                     singlePost && singlePost?.image
                     &&

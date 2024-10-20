@@ -8,7 +8,7 @@ export function useCheckUserStatus() {
     const session = useSession()
 
     return function checkUserStatus(msg: string) {
-        console.log(session)
+        // console.log(session)
 
         if (!session?.data) {
             toast.error(msg)
