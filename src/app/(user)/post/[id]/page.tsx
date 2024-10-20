@@ -4,7 +4,9 @@ import ImageReact from '@/app/components/ImageReact'
 import LikeCommentDiv from '@/app/components/LikeCommentDiv'
 import MainLoader from '@/app/components/MainLoader'
 import Navbar from '@/app/components/Navbar'
-import { PostInterFace, setSinglePostdata, SinglePostType, usePostData } from '@/redux/slices/PostSlice'
+import { likeAnimationHandler } from '@/helper/likeAnimation'
+import { useCheckUserStatus } from '@/Hooks/useCheckUserStatus'
+import { likePost, PostInterFace, setSinglePostdata, SinglePostType, usePostData } from '@/redux/slices/PostSlice'
 import { useThemeData } from '@/redux/slices/ThemeSlice'
 import { UserDataInterface } from '@/redux/slices/UserSlice'
 import { AppDispatch } from '@/redux/store'
@@ -190,6 +192,10 @@ export default Page
 function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
 
     const router = useRouter()
+    const dispatch = useDispatch<AppDispatch>();
+    const { data: session } = useSession()
+    const [likeIds, setLikeIds] = useState<string[]>([])
+    const checkUserStatus = useCheckUserStatus()
 
     // console.log(singlePost)
 
@@ -219,6 +225,44 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
         // dispatch(setInnerHTMLOfModal(innerHtml))
     }
 
+    const postDoubleClickHandler = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+
+
+
+        e.stopPropagation();
+
+        if (!checkUserStatus("Plese login to Like post.")) return
+        if (!session?.user?.id) return
+
+
+        // // // This code will show animation --------->>
+        if (!likeIds.includes(session?.user?.id.toString())) {
+            likeAnimationHandler(`${e.clientX - 40}px`, `${e.clientY - 50}px`)
+        }
+
+        // // // This will handle like fn() -------------->>
+        dispatch(likePost({
+            postId: singlePost._id,
+            userId: session?.user?.id
+        }))
+
+    };
+
+
+    useEffect(() => {
+        if (singlePost.likesId.length > 0) {
+            let idsOflikes = singlePost.likesId.map((ele: any) => {
+
+                if (typeof ele === "string") {
+                    return ele
+                } else {
+                    return ele?._id
+                }
+            })
+            setLikeIds(idsOflikes)
+        }
+
+    }, [])
 
 
     return (
@@ -241,6 +285,7 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
             }}
         >
 
+            {/* User name and user info div here ---------->> */}
             <div
                 className="rounded-t flex items-center gap-1.5 border-b border-cyan-400 hover:cursor-pointer"
                 onClick={(e) => {
@@ -263,7 +308,11 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
             </div>
 
 
-            <div className=' py-5 min-h-40'>
+            {/* Image or Text main content of Post div ------------->> */}
+            <div
+                className=' py-5 min-h-40'
+                onDoubleClick={(e) => postDoubleClickHandler(e)}
+            >
 
 
                 <div className=" flex justify-between flex-wrap gap-1">
@@ -306,6 +355,8 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
 
             </div>
 
+
+            {/* Like and Comment Div (Component called) ----------->> */}
             <div className=' py-5'>
                 <LikeCommentDiv post={singlePost} />
             </div>

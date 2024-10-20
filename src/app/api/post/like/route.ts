@@ -10,11 +10,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function PUT(req: NextRequest) {
 
-    await  connect()
+    await connect()
 
     try {
-
-
 
         // console.log("fsdfsdfsdfsdfsfd")
 
@@ -49,9 +47,13 @@ export async function PUT(req: NextRequest) {
         // // // Now written logic for likes and dislike ------>
         // // // postData.likesId should be string[] (user_ids of arr) for logic 
 
+        let MES_For_Clinet = ""
+
         if (!postData.likesId.includes(userId)) {
             postData.likes = postData.likes + 1
             postData.likesId.push(userId)
+
+            MES_For_Clinet = "Like Done!"
         } else {
 
             // console.log(postData)
@@ -63,6 +65,8 @@ export async function PUT(req: NextRequest) {
 
             postData.likesId.splice(findIndex, 1)
             postData.likes = postData.likes - 1
+
+            MES_For_Clinet = "Unlike Done!"
         }
 
         // // // Save post here -------->
@@ -94,7 +98,7 @@ export async function PUT(req: NextRequest) {
         // console.log(updatedPostData)
 
 
-        return NextResponse.json({ success: true, data: updatedPostData, message: "Like done." }, { status: 200 })
+        return NextResponse.json({ success: true, data: updatedPostData, message: MES_For_Clinet }, { status: 200 })
 
     } catch (error: any) {
 

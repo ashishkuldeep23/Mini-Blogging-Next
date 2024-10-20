@@ -38,10 +38,6 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
   }
 
   // console.log(ele)
-
-
-
-
   const callModalFn = useOpenModalWithHTML()
 
 
@@ -78,7 +74,6 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
         stiffness: 260,
         damping: 20
       }}
-
 
       onClick={(e) => { e.stopPropagation(); cardClickHadler(ele._id) }}
       className={` lg:my-7 p-[2px] bg-gradient-to-tr from-cyan-400  sm:w-80  sm:p-2 rounded-xl hover:cursor-pointer hover:scale-105 sm:hover:scale-110 active:scale-75 focus:scale-75 transition-all ${className}`}
@@ -221,4 +216,4 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
 
     </motion.div>
   )
-}
+};

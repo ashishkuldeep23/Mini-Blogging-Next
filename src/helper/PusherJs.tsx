@@ -63,7 +63,6 @@ export default function PusherTestDiv({ channelName }: { channelName: string }) 
         });
 
 
-
         channel.bind('pusher:subscription_succeeded', () => {
             console.log('Subscription succeeded'); // Log subscription success
         });
@@ -80,6 +79,7 @@ export default function PusherTestDiv({ channelName }: { channelName: string }) 
 
 
     // // // Sending msg to me ---->
+    // // // This pusher is used to listen the own msg. ------------->>
     const { userData } = useUserState()
     // // // // Sign in by userId ---------->
     useEffect(() => {
@@ -88,6 +88,7 @@ export default function PusherTestDiv({ channelName }: { channelName: string }) 
             let userChannel = pusherClient.subscribe(`${userData._id}`)
 
             userChannel.bind('msg-me', (data: any) => {
+                console.log("U sended msg to your self.")
                 console.log({ data })
                 alert(`Msg me clicked, ${JSON.stringify(data)}`)
             })
@@ -119,7 +120,7 @@ export default function PusherTestDiv({ channelName }: { channelName: string }) 
 
 
         const result = await req.json();
-        console.log('Message sent result:', result); // Log result of sending message
+        // console.log('Message sent result:', result); // Log result of sending message
 
     };
 

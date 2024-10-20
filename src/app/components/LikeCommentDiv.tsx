@@ -1,6 +1,6 @@
 'Use client'
 
-import { Comment, PostInterFace, ReplyInterFace, setDeleteSinglePost, setSinglePostdata, setUpdateComment, setUpdatingPost, SinglePostType } from '@/redux/slices/PostSlice';
+import { Comment, likePost, PostInterFace, ReplyInterFace, setDeleteSinglePost, setIsLoading, setSinglePostdata, setUpdateComment, setUpdatingPost, SinglePostType, usePostData } from '@/redux/slices/PostSlice';
 import { useSession } from 'next-auth/react'
 import { usePathname, useRouter } from 'next/navigation'
 import React, { Fragment, RefObject, useEffect, useRef, useState } from 'react'
@@ -20,6 +20,7 @@ import AnimatedTooltip from './ui/animated-tooltip';
 import { PiPaperPlaneRight } from "react-icons/pi";
 import useOpenModalWithHTML from '@/utils/OpenModalWithHtml';
 import { useCheckUserStatus } from '@/Hooks/useCheckUserStatus';
+import { likeAnimationHandler } from '@/helper/likeAnimation';
 
 
 interface UpdatingComment {
@@ -31,9 +32,11 @@ interface UpdatingComment {
 
 const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
 
-    const { data: session, status } = useSession()
+    const { data: session } = useSession()
 
     const themeMode = useThemeData().mode
+
+    const isLoading = usePostData().isLoading
 
     const textAreaInputRef = useRef<HTMLTextAreaElement>(null)
 
@@ -42,8 +45,6 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
     const router = useRouter()
 
     const [showPostCommentDiv, setShowPostCommentDiv] = useState(false)
-
-    const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const [userID, setUserID] = useState<string>("")
 
@@ -61,42 +62,28 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
 
     const checkUserStatus = useCheckUserStatus()
 
+    const setLoading = (data: boolean) => dispatch(setIsLoading(data))
+
 
     const likeClickHandler = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.stopPropagation()
 
+
+
         if (!checkUserStatus("Plese login to Like post.")) return
+        if (!session?.user?.id) return
 
-        // console.log("user id", session?.user?.id)
-        // console.log("post id", post._id)
 
-        setIsLoading(true)
-
-        const option: RequestInit = {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ postId: post._id, userId: session?.user?.id })
-        }
-        const response = await fetch('/api/post/like', option)
-        let json = await response.json();
-
-        // console.log(json)
-
-        if (json.success) {
-            // dispatch(updateOnePost(json.data))
-            dispatch(setSinglePostdata(json.data))
+        // // // This code will show animation --------->>
+        if (!likeIds.includes(userID.toString())) {
+            likeAnimationHandler(`${e.clientX - 40}px`, `${e.clientY - 50}px`)
         }
 
-        else {
-            toast.error(json.message)
-        }
-
-
-        // console.log(data)
-
-        setIsLoading(false)
+        // // // This will handle like fn() -------------->>
+        dispatch(likePost({
+            postId: post._id,
+            userId: session?.user?.id
+        }))
 
     }
 
@@ -113,13 +100,15 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
     }
 
 
+
+    // // // ReWrite is the retwitte feature. ----------------->>
     const reWriteHandler = () => {
 
         if (!checkUserStatus("Plese login to rewrite post.")) return
 
-        setIsLoading(true)
+        setLoading(true)
 
-        setIsLoading(false)
+        setLoading(false)
     }
 
 
@@ -144,7 +133,7 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
         event.stopPropagation()
 
 
-        setIsLoading(true)
+        setLoading(true)
 
         const option: RequestInit = {
             method: 'PUT',
@@ -180,7 +169,7 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
 
         // console.log(data)
 
-        setIsLoading(false)
+        setLoading(false)
 
     }
 
@@ -204,9 +193,7 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
             // console.log(idsOfComments)
 
             setCommentIds(idsOfComments)
-
         }
-
 
         if (post.likesId.length > 0) {
             let idsOflikes = post.likesId.map((ele: any) => {
@@ -218,8 +205,6 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
                 } else {
                     return ele?._id
                 }
-
-
             })
 
             // console.log(idsOflikes)
@@ -243,15 +228,14 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
 
 
     // // // Below useEffect is very imp. this decide show rest ui or not ---->
-    useEffect(() => {
+    // useEffect(() => {
+    //     // console.log(params)
+    //     // if (params !== "/") {
+    //     //     setShowPostCommentDiv(true)
+    //     // }
+    // }, [])
 
-        // console.log(params)
 
-        // if (params !== "/") {
-        //     setShowPostCommentDiv(true)
-        // }
-
-    }, [])
 
     return (
         <div className=' relative'>
@@ -761,14 +745,10 @@ const SingleCommentUI = ({
 
     const router = useRouter()
 
-    async function likeComment() {
 
-        if (!checkUserStatus("Plese login to Like comment.")) return
-
-        // alert("Like Comment")
-
+    // // // I'll Handle all logic for like single comment -------->>
+    const mainLikeFnCode = async () => {
         setIsLoading(true)
-
 
         const option: RequestInit = {
             method: 'PUT',
@@ -781,7 +761,8 @@ const SingleCommentUI = ({
                 commentId: comment._id
 
             })
-        }
+        };
+
         const response = await fetch('/api/post/comment/like', option)
         let json = await response.json();
 
@@ -799,8 +780,44 @@ const SingleCommentUI = ({
 
 
         setIsLoading(false)
-
     }
+
+
+    async function likeComment(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+
+        e.stopPropagation();
+
+        if (!checkUserStatus("Plese login to Like comment.")) return
+        if (!session) return
+
+        // // // This code will show animation --------->>
+        if (!comment?.likesId?.includes(session?.user._id.toString())) {
+            likeAnimationHandler(`${e.clientX - 40}px`, `${e.clientY - 50}px`)
+        }
+
+        // // // This fn is created above
+        mainLikeFnCode();
+    }
+
+
+    const commentDoubleClickHandler = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+
+        e.stopPropagation();
+
+        if (!checkUserStatus("Plese login to Like post.")) return
+        if (!session?.user?.id) return
+
+
+        // // // This code will show animation --------->>
+        if (!comment?.likesId?.includes(session?.user._id.toString())) {
+            likeAnimationHandler(`${e.clientX - 40}px`, `${e.clientY - 50}px`)
+        }
+
+        // // // This fn is created above
+        mainLikeFnCode();
+
+    };
+
 
 
     function updateSingleComment() {
@@ -867,14 +884,13 @@ const SingleCommentUI = ({
 
 
 
-
-
     return (
 
         <>
             <div
                 key={comment._id}
                 className={` ${i % 2 !== 0 && "ml-auto"} border rounded m-1 my-7 p-0.5 w-[90%] sm:w-[80%] relative z-[1]`}
+                onDoubleClick={(e) => commentDoubleClickHandler(e)}
             >
 
                 {/* <span className=' absolute -top-[2.5vh] right-0 -z-0'>{length - (i)}</span> */}
@@ -956,7 +972,7 @@ const SingleCommentUI = ({
                             className={`flex gap-0.5 items-center justify-center mb-1.5 border p-1 rounded text-xs
                                      ${comment?.likesId?.includes(session?.user?.id || "") && "text-rose-500 border-rose-500 shadow-md shadow-rose-500"}
                             `}
-                            onClick={(e) => { e.stopPropagation(); likeComment() }}
+                            onClick={(e) => { likeComment(e); }}
                         >
 
                             <span>{comment.likes}</span>

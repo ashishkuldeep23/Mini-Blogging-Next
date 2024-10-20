@@ -156,6 +156,29 @@ export const updatePost = createAsyncThunk("post/updatePost", async ({ body, use
 })
 
 
+export const likePost = createAsyncThunk("post/likePost", async ({ userId, postId }: { userId: string, postId: string }) => {
+
+    // console.log({ body })
+
+    const options: RequestInit = {
+        credentials: 'include',
+        method: "PUT",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            postId: postId,
+            userId: userId
+        })
+    }
+
+    const response = await fetch('/api/post/like', options)
+    let data = await response.json();
+    return data
+
+})
+
+
 
 export interface ReplyInterFace {
     commentId: string
@@ -347,7 +370,6 @@ const psotSlice = createSlice({
             state.allPost.splice(findIndex, 1, action.payload)
 
             state.singlePostdata = action.payload
-
 
         },
 
@@ -600,6 +622,57 @@ const psotSlice = createSlice({
             })
 
             .addCase(updatePost.rejected, (state, action) => {
+
+                state.isLoading = false
+                state.isError = true
+                toast.error(` ${action.error.message || "SignUp failed"}`)
+                state.errMsg = action.error.message || 'Error'
+            })
+
+            .addCase(likePost.pending, (state) => {
+                state.writePostFullFilled = false
+                state.isLoading = true
+                state.errMsg = ''
+            })
+
+            .addCase(likePost.fulfilled, (state, action) => {
+
+                // console.log(action.payload)
+
+                if (action.payload.success === true) {
+                    // state.isFullfilled = true
+
+                    state.writePostFullFilled = true
+
+                    // state.allPost = action.payload.data
+                    toast.success(`${action.payload.message}`)
+
+                    // // // Storing errMsg (success message in this case) bcoz using in updated post code ------>
+                    // state.errMsg = action.payload.message
+
+                    // console.log(action.payload.data)
+
+                    // // // set post data into single post data 
+                    state.singlePostdata = action.payload.data
+                    let currentState = current(state)
+
+                    let findIndex = [...currentState.allPost].findIndex(ele => ele._id === action.payload.data._id)
+
+                    state.allPost.splice(findIndex, 1, action.payload.data)
+
+                    // state.allPost.unshift(action.payload.data)
+
+                } else {
+                    toast.error(`${action.payload.message || "Fetch failed."}`)
+                    state.isError = true
+                    state.errMsg = action.payload.message
+                }
+
+                state.isLoading = false
+
+            })
+
+            .addCase(likePost.rejected, (state, action) => {
 
                 state.isLoading = false
                 state.isError = true

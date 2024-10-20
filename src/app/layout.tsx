@@ -6,7 +6,6 @@ import { Toaster } from "react-hot-toast";
 import LogInProvider from "./components/LogInProvider";
 import Modal from "./components/ModalComponent";
 import PusherTestDiv from "../helper/PusherJs";
-import MainLoader from "./components/MainLoader";
 
 
 
@@ -48,7 +47,6 @@ export default function RootLayout({
             <div><Toaster /></div>
 
             {children}
-
           </LogInProvider>
 
         </StateProviders>

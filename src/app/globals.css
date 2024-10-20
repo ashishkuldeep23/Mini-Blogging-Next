@@ -182,3 +182,43 @@ body {
     display: flex;
     align-items: center
 }
+
+
+/* Like btn css code --------->> */
+
+.likeAnimation {
+    /* animation: likeAnimationCSS 1s alternate linear ease-in-out; */
+
+    /* animation-duration: 3s;
+    animation-name: likeAnimationCSS; */
+    animation: likeAnimationCSS 1s ease-in-out ;
+}
+
+
+@keyframes likeAnimationCSS {
+    0% {
+
+        transform: rotate3d(1, 0, 0, 90deg);
+    }
+
+    20% {
+        transform: rotate3d(1, 0, 0, 0deg) rotateZ(0deg) ;
+   
+    }
+
+    50% {
+
+        transform: rotateZ(-40deg);
+    }
+
+
+    80% {
+
+        transform: rotateZ(40deg) scale(1);
+    }
+
+    100% {
+        transform: rotateZ(0deg) scale(0.2);
+    }
+
+}

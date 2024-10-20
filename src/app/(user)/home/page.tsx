@@ -8,12 +8,13 @@ import { AppDispatch } from '@/redux/store'
 import React, { useEffect } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useDispatch } from 'react-redux'
+
+
 const HomePage = () => {
   return (
     <div className=' text-white w-[100%] relative '>
 
       <StorySection />
-
       <AllPostDiv />
 
     </div>

@@ -6,7 +6,7 @@ let appId = process.env.PUSHER_APP_ID || ""
 let key = process.env.PUSHER_KEY || ''
 let secret = process.env.PUSHER_SECRET || ''
 let cluster = process.env.PUSHER_CLUSTER || ''
-let encryptedKey = process.env.PUSHER_ENCRYPTED_KEY || ''
+let encryptedKey = process.env.PUSHER_ENCRYPTED_KEY || '8qdCNaqitxRS9mNIBgQGw3vDbCKEp0GvWtXnx+up3cU='
 
 export const pusherServer = new Pusher({
     appId: appId,
@@ -14,7 +14,7 @@ export const pusherServer = new Pusher({
     secret: secret,
     cluster: cluster,
     useTLS: true,
-    // encryptionMasterKeyBase64: encryptedKey
+    encryptionMasterKeyBase64: encryptedKey
 });
 
 
