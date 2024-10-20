@@ -262,7 +262,7 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
             setLikeIds(idsOflikes)
         }
 
-    }, [])
+    }, [singlePost])
 
 
     return (
