@@ -286,41 +286,49 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
                 </div>
 
 
-                {/* Here we need to impove, when we will deal with video to. */}
-                {
-                    singlePost?.image
-                        ?
-                        <>
-                            <ImageReact
-                                src={singlePost?.image}
-                                className=" w-full h-[35vh] my-2 rounded object-contain object-top"
-                            />
-                            <p className=" text-[0.5rem] -mt-2 text-end">Click to see full image.</p>
-                        </>
-                        :
-                        singlePost?.metaDataUrl
-                        &&
-                        <>
-                            {
-                                (singlePost?.metaDataType && singlePost?.metaDataType === 'video/mp4')
-                                    ?
-                                    <VideoPlayer
-                                        videoUrl={singlePost.metaDataUrl}
-                                    />
-                                    :
-                                    (singlePost.metaDataType === "image/jpeg" || singlePost.metaDataType === "image/png")
+                <div className=' max-h-[70vh] overflow-hidden '>
+
+
+                    {/* Here we need to impove, when we will deal with video to. */}
+                    {
+                        singlePost?.image
+                            ?
+                            <>
+                                <ImageReact
+                                    src={singlePost?.image}
+                                    className=" w-full h-[35vh] my-2 rounded object-contain object-top"
+                                />
+                                <p className=" text-[0.5rem] -mt-2 text-end">Click to see full image.</p>
+                            </>
+                            :
+                            singlePost?.metaDataUrl
+                            &&
+                            <>
+                                {
+                                    (singlePost?.metaDataType && singlePost?.metaDataType === 'video/mp4')
                                         ?
-                                        <ImageReact
-                                              className=" w-full h-[35vh] my-2 rounded object-contain object-top"
-                                            src={singlePost.metaDataUrl}
+                                        <VideoPlayer
+                                            videoUrl={singlePost.metaDataUrl}
+                                            height='70vh'
                                         />
-
                                         :
-                                        <p className=' text-5xl text-white'>Fuck</p>
-                            }
+                                        (singlePost.metaDataType === "image/jpeg" || singlePost.metaDataType === "image/png")
+                                            ?
+                                            <ImageReact
+                                                className=" w-full h-[35vh] my-2 rounded object-contain object-top"
+                                                src={singlePost.metaDataUrl}
+                                            />
 
-                        </>
-                }
+                                            :
+                                            <p className=' text-5xl text-white'>Fuck</p>
+                                }
+
+                            </>
+                    }
+
+
+                </div>
+
 
                 <p className=" text-[0.6rem] mt-2 text-end">Uploaded on : {singlePost.whenCreated || "Date"}</p>
 

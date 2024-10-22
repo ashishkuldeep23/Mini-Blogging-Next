@@ -1,17 +1,30 @@
-import { usePostData } from '@/redux/slices/PostSlice';
+import { setIsMuted, usePostData } from '@/redux/slices/PostSlice';
+import { AppDispatch } from '@/redux/store';
 import React, { useRef, useState, useEffect } from 'react';
 import { FaPlay, FaPause, FaVolumeUp } from 'react-icons/fa';
+import { HiOutlineSpeakerWave, HiOutlineSpeakerXMark } from 'react-icons/hi2';
+import { useDispatch } from 'react-redux';
 
 interface VideoPlayerProps {
     videoUrl: string; // The URL of the video to play
     objectFit?: "fill" | "contain" | 'cover' | 'none' | "scale-down"; // The URL of the video to play
+    height?: "35vh" | "70vh"
 }
 
-const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit }) => {
+const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height }) => {
     const videoRef = useRef<HTMLVideoElement>(null); // Reference to the video element
     const [isPlaying, setIsPlaying] = useState<boolean>(false); // State to track if video is playing
     const [progress, setProgress] = useState<number>(0); // State to track video progress (0-100)
+    // const [isMuted, setIsMuted] = useState<boolean>(true);
+    const [allBtnVisiable, setAllBtnVisiable] = useState<boolean>(false);
     const isLoading = usePostData().isLoading
+    const isMuted = usePostData().isMuted
+
+    const dispatch = useDispatch<AppDispatch>()
+
+    const setMute = (data: boolean) => dispatch(setIsMuted(data))
+
+    let a: any = ""
 
     // Play/Pause video based on view visibility
     useEffect(() => {
@@ -19,7 +32,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit }) => {
             (entries) => {
                 entries.forEach((entry) => {
                     if (videoRef.current) {
-                        if (entry.isIntersecting) {
+                        if (entry.isIntersecting && !isPlaying) {
                             videoRef.current.play();
                             setIsPlaying(true);
                         } else {
@@ -30,9 +43,12 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit }) => {
                 });
             },
             {
-                threshold: 0.5, // Trigger when 50% of the video is visible
+                // threshold: 0.5, // Trigger when 50% of the video is visible
+                threshold: 1,
             }
         );
+
+        a = observer;
 
         if (videoRef.current) {
             observer.observe(videoRef.current);
@@ -46,14 +62,19 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit }) => {
     }, []);
 
     // Play/Pause video manually
-    const togglePlayPause = () => {
+    const togglePlayPause = (e: React.MouseEvent<HTMLButtonElement>) => {
+
+        // e.stopPropagation();
+
         if (videoRef.current) {
             if (isPlaying) {
                 videoRef.current.pause();
+                setIsPlaying(false);
             } else {
                 videoRef.current.play();
+                setIsPlaying(true);
             }
-            setIsPlaying(!isPlaying);
+            // setIsPlaying(!isPlaying);
         }
     };
 
@@ -75,10 +96,16 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit }) => {
     };
 
 
+    const videoClickOutsideHandler = (e: React.MouseEvent<HTMLDivElement>) => {
+        e.stopPropagation();
+        setAllBtnVisiable(pre => !pre)
+    }
+
+
     return (
         <div
             className="relative w-full max-w-4xl mx-auto"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => videoClickOutsideHandler(e)}
         >
 
             {
@@ -87,44 +114,83 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit }) => {
 
                 < video
                     style={{
-                        objectFit: objectFit || "contain"
+                        objectFit: objectFit || "contain",
+                        height: height || "auto"
                     }}
                     ref={videoRef}
                     className="w-full h-auto rounded-lg cursor-pointer"
                     onTimeUpdate={handleProgress}
-                    onClick={togglePlayPause}
+                    // onClick={togglePlayPause}
                     src={videoUrl} // Video URL passed as a prop
-                    muted // Default muted to prevent autoplay issues in browsers
+                    muted={isMuted} // Default muted to prevent autoplay issues in browsers
                 />
 
             }
 
-            {/* Play/Pause Button */}
-            <div className="absolute inset-0 flex items-center justify-center">
-                <button
-                    className="bg-black bg-opacity-50 text-white rounded-full p-4 hover:bg-opacity-75 transition"
-                    onClick={togglePlayPause}
-                >
-                    {isPlaying ? <FaPause size={32} /> : <FaPlay size={32} />}
-                </button>
-            </div>
 
-            {/* Bottom Controls */}
-            <div className="absolute bottom-4 left-0 right-0 flex items-center justify-between px-4">
-                {/* Progress Bar */}
-                <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    value={progress}
-                    className="w-full cursor-pointer"
-                    onChange={handleSeek}
-                />
 
-                {/* Volume Button and Slider */}
+            {
 
-            </div>
-        </div>
+                !allBtnVisiable
+                &&
+
+                <>
+
+                    {/* Play/Pause Button */}
+                    <div className="absolute inset-0 flex items-center justify-center z-[1] ">
+
+                        <button
+                            className="bg-black bg-opacity-50 text-white rounded-full p-4 hover:bg-opacity-75 transition"
+                            onClick={togglePlayPause}
+                        >
+                            {isPlaying ? <FaPause size={32} /> : <FaPlay size={32} />}
+                        </button>
+
+
+                    </div>
+
+                    {/* Bottom Controls */}
+                    <div
+                        className="absolute bottom-4 left-0 right-0 flex items-center justify-between gap-1 px-4 z-[1]"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* Progress Bar */}
+                        <input
+                            type="range"
+                            min="0"
+                            max="100"
+                            value={progress}
+                            className="w-full cursor-pointer h-[4px]"
+                            onChange={handleSeek}
+                        />
+
+                        {/* Volume Button and Slider */}
+
+                        <div>
+
+                            <span
+                                className=' text-xl'
+                                onClick={() => setMute(!isMuted)}
+                            >
+
+                                {
+                                    isMuted
+                                        ?
+                                        <HiOutlineSpeakerXMark />
+                                        :
+                                        <HiOutlineSpeakerWave />
+                                }
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </>
+            }
+
+
+        </div >
     );
 };
 

@@ -181,10 +181,14 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
                       {
                         (ele?.metaDataType && ele?.metaDataType === 'video/mp4')
                           ?
-                          <VideoPlayer
-                            videoUrl={ele.metaDataUrl}
-                            objectFit={'cover'}
-                          />
+                          <div className="h-[35vh]">
+
+                            <VideoPlayer
+                              videoUrl={ele.metaDataUrl}
+                              objectFit={'cover'}
+                              height='35vh'
+                            />
+                          </div>
                           :
                           (ele.metaDataType === "image/jpeg" || ele.metaDataType === "image/png")
                           &&

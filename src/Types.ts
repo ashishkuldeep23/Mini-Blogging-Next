@@ -134,7 +134,8 @@ export interface PostSliceInterFace {
         category: string,
         page: number
     },
-    searchByText?: string
+    searchByText?: string;
+    isMuted: boolean;
 
 }
 

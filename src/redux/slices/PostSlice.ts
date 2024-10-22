@@ -234,7 +234,7 @@ const initialState: PostSliceInterFace = {
         page: 1
     },
     searchByText: "",
-
+    isMuted: true,
 }
 
 
@@ -340,6 +340,10 @@ const psotSlice = createSlice({
 
         setSearchByText(state, action: PayloadAction<string>) {
             state.searchByText = action.payload
+        },
+
+        setIsMuted(state, action: PayloadAction<boolean>) {
+            state.isMuted = action.payload
         }
 
 
@@ -613,7 +617,8 @@ export const {
     setDeleteSinglePost,
     setUpdatingPost,
     setSearchBrandAndCate,
-    setSearchByText
+    setSearchByText,
+    setIsMuted
     // setDeleteComment
 } = psotSlice.actions
 
