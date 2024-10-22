@@ -4,7 +4,7 @@ import { createAsyncThunk, createSlice, current, PayloadAction } from "@reduxjs/
 import { useSelector } from "react-redux"
 import { RootState } from "../store"
 import toast from "react-hot-toast"
-import { PostInterFace } from "./PostSlice"
+import { AddMoreFeilsUserData } from "@/Types"
 
 
 type BodyData = {
@@ -97,33 +97,6 @@ export const updateUserData = createAsyncThunk('user/updateUserData', async (bod
     let data = await response.json();
     return data
 })
-
-
-export interface UserDataInterface {
-    _id: string,
-    username: string,
-    profilePic: string,
-    email: string,
-    isVerified: boolean,
-    isAdmin: boolean,
-    allProfilePic?: string[]
-}
-
-
-export interface AddMoreFeilsUserData extends UserDataInterface {
-
-    allPostOfUser: PostInterFace[],
-    friendsAllFriend?: FriendsAllFriendData[],
-    reciveRequest?: UserDataInterface[],
-    sendRequest?: UserDataInterface[],
-    whoSeenProfile?: UserDataInterface[]
-
-}
-
-
-export interface FriendsAllFriendData extends UserDataInterface {
-    friends: string[]
-}
 
 
 

@@ -7,7 +7,7 @@ import MainLoader from '@/app/components/MainLoader'
 import SinglePostCard from '@/app/components/SinglePostCard'
 import AnimatedTooltip from '@/app/components/ui/animated-tooltip'
 import { useThemeData } from '@/redux/slices/ThemeSlice'
-import { AddMoreFeilsUserData, FriendsAllFriendData, getProfileData, setIsLoading, updateUserData, useUserState } from '@/redux/slices/UserSlice'
+import {getProfileData, setIsLoading, updateUserData, useUserState } from '@/redux/slices/UserSlice'
 import { AppDispatch } from '@/redux/store'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
@@ -27,6 +27,7 @@ import { MdOutlineZoomOutMap } from "react-icons/md";
 import { setInnerHTMLOfModal, setOpenMoadl, useModalState } from '@/redux/slices/ModalSlice'
 import useOpenModalWithHTML from '@/utils/OpenModalWithHtml'
 import { usePreventSwipe } from '@/Hooks/useSwipeCustom'
+import { AddMoreFeilsUserData, FriendsAllFriendData } from '@/Types'
 
 
 const ProfilePageParams = () => {
@@ -571,7 +572,6 @@ function ReciverRequestDiv() {
     )
 
 }
-
 
 
 function SenderRequestDiv() {

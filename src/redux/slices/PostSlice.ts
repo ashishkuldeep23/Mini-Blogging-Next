@@ -5,8 +5,7 @@ import { useSelector } from "react-redux"
 import { RootState } from "../store"
 import toast from "react-hot-toast"
 // import { NewPostType } from "@/app/new-post/page"
-import { UserDataInterface } from "./UserSlice"
-import { NewPostType } from "@/Types"
+import { NewPostType, PostInterFace, PostSliceInterFace, PostTypeForBackend, UpdateCommentInput } from "@/Types"
 
 
 
@@ -85,17 +84,19 @@ export const createNewPost = createAsyncThunk("post/createNewPost", async ({ bod
     let localDate = date.toLocaleDateString()
 
 
-    let makeBody = {
-        title: body.title,
+    let makeBody: PostTypeForBackend = {
+        title: body.title || "",
         category: body.category,
         promptReturn: body.content,
-        urlOfPrompt: body.url,
+        // urlOfPrompt: body.url,
         aiToolName: body.origin,
         hashthats: body.hashs,
         customize: body.customize,
         image: body.image,
+        metaDataType: body.metaDataType,
+        metaDataUrl: body.metaDataUrl,
+        whenCreated: localDate,
         author: userId,
-        whenCreated: localDate
     }
 
 
@@ -107,7 +108,6 @@ export const createNewPost = createAsyncThunk("post/createNewPost", async ({ bod
         },
         body: JSON.stringify(makeBody)
     }
-
 
     const response = await fetch('/api/post', options)
     let data = await response.json();
@@ -133,9 +133,11 @@ export const updatePost = createAsyncThunk("post/updatePost", async ({ body, use
         aiToolName: body.origin,
         hashthats: body.hashs,
         customize: body.customize,
-        author: userId,
+        metaDataType: body.metaDataType,
+        metaDataUrl: body.metaDataUrl,
         image: body.image,
         postId: postId,
+        author: userId,
     }
 
 
@@ -180,97 +182,6 @@ export const likePost = createAsyncThunk("post/likePost", async ({ userId, postI
 
 
 
-export interface ReplyInterFace {
-    commentId: string
-    reply: string
-    userId: UserDataInterface
-    whenCreated: string
-    _id: string
-}
-
-
-
-export interface Comment {
-    comment: string,
-    createdAt: string,
-    likes: number,
-    likesId: string[],
-    replies: ReplyInterFace[],
-    _id: string,
-    userId: UserDataInterface
-    whenCreated: string
-}
-
-export interface PostCustomization {
-    bgColor: string,
-    color: string,
-    bgImage: string,
-    font: string,
-}
-
-
-interface UpdateCommentInput {
-    comment: Comment,
-    whatUpadate: 'update' | 'delete' | 'like'
-}
-
-
-
-export interface PostInterFace {
-    _id: string,
-    title: string,
-    category: string,
-    promptReturn: string,
-    urlOfPrompt: string,
-    aiToolName: string,
-    hashthats: string[],
-    image?: string,
-    author: {
-        username: string,
-        email: string,
-        profilePic: string,
-        isVerified: boolean,
-        isAdmin: boolean,
-        _id: string
-    }
-    likes: 0,
-    // likesId: UserDataInterface[]|string[],
-    likesId: Array<string | UserDataInterface>,
-    comments: Comment[],
-    isDeleted: boolean,
-    customize?: PostCustomization
-    whenCreated?: string
-
-}
-
-
-interface PostSliceInterFace {
-    isLoading: boolean,
-    isFullfilled: boolean,
-    writePostFullFilled: boolean;
-    isError: boolean,
-    errMsg: string,
-    allPost: PostInterFace[],
-    singlePostId: string,
-    updatingPost: boolean,
-    singlePostdata?: PostInterFace
-    postCategories: string[],
-    posthashtags: string[],
-    allPostsLength: number,
-    searchHashAndCate: {
-        hash: string,
-        category: string,
-        page: number
-    },
-    searchByText?: string
-
-}
-
-
-// // // Baking type for single post -------->
-export interface SinglePostType extends Omit<PostInterFace, 'likesId'> {
-    likesId: UserDataInterface[]
-}
 
 const innitialSingleState: PostInterFace = {
 
@@ -360,7 +271,6 @@ const psotSlice = createSlice({
         setSinglePostdata(state, action: PayloadAction<PostInterFace>) {
             state.singlePostdata = action.payload
 
-
             let currentState = current(state)
 
             let findIndex = [...currentState.allPost].findIndex(ele => ele._id === action.payload._id)
@@ -370,7 +280,6 @@ const psotSlice = createSlice({
             state.allPost.splice(findIndex, 1, action.payload)
 
             state.singlePostdata = action.payload
-
         },
 
         setDeleteSinglePost(state, action: PayloadAction<PostInterFace>) {
@@ -710,7 +619,7 @@ export const {
 
 export const usePostData = () => useSelector((state: RootState) => state.postReducer)
 
-export default psotSlice.reducer
+export default psotSlice.reducer;
 
 
 

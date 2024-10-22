@@ -4,8 +4,8 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '@/redux/store';
+// import { useDispatch } from 'react-redux';
+// import { AppDispatch } from '@/redux/store';
 import { logInUser, useUserState } from '@/redux/slices/UserSlice';
 import MainLoader from '../components/MainLoader';
 import { useThemeData } from '@/redux/slices/ThemeSlice';

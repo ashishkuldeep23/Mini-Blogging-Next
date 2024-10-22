@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
-import { NextResponse } from "next/server";
-
-
+// import { NextResponse } from "next/server";
 
 
 // // // Technique by hitesh sir ------->
@@ -10,10 +8,7 @@ type ConnectionObj = {
     isConnected?: number
 }
 
-
 const checkConnection: ConnectionObj = {}
-
-
 
 export async function connect() {
 

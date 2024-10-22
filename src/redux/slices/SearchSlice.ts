@@ -3,8 +3,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { useSelector } from "react-redux"
 import { RootState } from "../store"
-import { PostInterFace } from "./PostSlice"
-import { FriendsAllFriendData } from "./UserSlice"
+import { PostInterFace , FriendsAllFriendData } from "@/Types"
 
 
 

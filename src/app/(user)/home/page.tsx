@@ -99,15 +99,15 @@ function AllPostDiv() {
         {
 
           allPostData.length > 0
-            ?
+          &&
 
-            allPostData.map((ele, i) => {
-              return (
-                <SinglePostCard key={i} ele={ele} className=" hover:z-10" />
-              )
-            })
+          allPostData.map((ele, i) => {
+            return (
+              <SinglePostCard key={i} ele={ele} className=" hover:z-10" />
+            )
+          })
 
-            : <></>
+
 
           // : [null, null, null, null, null, null, null, null, null, null].map((ele, i) => {
           //   return (

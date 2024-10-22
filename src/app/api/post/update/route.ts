@@ -6,8 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function PUT(req: NextRequest) {
 
 
-    await  connect()
-
+    await connect()
 
     try {
 
@@ -17,9 +16,9 @@ export async function PUT(req: NextRequest) {
 
         // console.log(reqBody)
 
-        const { title, category, promptReturn, author, postId } = reqBody
+        const { category, promptReturn, author, postId } = reqBody
 
-        if (!title || !category || !promptReturn) {
+        if (!category || !promptReturn) {
             return NextResponse.json({ success: false, message: 'Mandatory fields not given.' }, { status: 400 })
         }
 
@@ -35,7 +34,7 @@ export async function PUT(req: NextRequest) {
         if (findPost.isDeleted) return NextResponse.json({ success: false, message: 'Post is aleady deleted.' }, { status: 404 })
 
         // // // Authorisation here --------->>
-        if (findPost.author.toString() !== author) return NextResponse.json({ success: false, message: 'Post is not given by you.' }, { status: 400 })
+        if (findPost.author.toString() !== author) return NextResponse.json({ success: false, message: 'Post is not created by you.' }, { status: 403 })
 
 
 
@@ -46,7 +45,6 @@ export async function PUT(req: NextRequest) {
             {
                 new: true,
                 upsert: true
-
             }
         )
             .populate({

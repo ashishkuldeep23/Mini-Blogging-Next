@@ -6,7 +6,7 @@ import MainLoader from '@/app/components/MainLoader'
 import Navbar from '@/app/components/Navbar'
 import SinglePostCard from '@/app/components/SinglePostCard'
 import { useThemeData } from '@/redux/slices/ThemeSlice'
-import { AddMoreFeilsUserData, FriendsAllFriendData, getUserData, updateUserData, useUserState } from '@/redux/slices/UserSlice'
+import { getUserData, updateUserData, useUserState } from '@/redux/slices/UserSlice'
 import { AppDispatch } from '@/redux/store'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
@@ -22,6 +22,7 @@ import { IoCheckmarkDoneOutline } from "react-icons/io5";
 import { PiSealCheckDuotone } from 'react-icons/pi'
 import { TbUserCancel } from "react-icons/tb";
 import SingleUserDiv from '@/app/components/SingleUserDiv'
+import { AddMoreFeilsUserData } from '@/Types'
 
 
 const UserPageParams = ({ params }: any) => {

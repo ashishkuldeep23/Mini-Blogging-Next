@@ -4,12 +4,14 @@ import ImageReact from '@/app/components/ImageReact'
 import LikeCommentDiv from '@/app/components/LikeCommentDiv'
 import MainLoader from '@/app/components/MainLoader'
 import Navbar from '@/app/components/Navbar'
+import VideoPlayer from '@/app/components/VideoPlayer'
 import { likeAnimationHandler } from '@/helper/likeAnimation'
 import { useCheckUserStatus } from '@/Hooks/useCheckUserStatus'
-import { likePost, PostInterFace, setSinglePostdata, SinglePostType, usePostData } from '@/redux/slices/PostSlice'
+import { likePost, setSinglePostdata, usePostData } from '@/redux/slices/PostSlice'
 import { useThemeData } from '@/redux/slices/ThemeSlice'
-import { UserDataInterface } from '@/redux/slices/UserSlice'
+// import { UserDataInterface } from '@/redux/slices/UserSlice'
 import { AppDispatch } from '@/redux/store'
+import { PostInterFace, SinglePostType } from '@/Types'
 import useOpenModalWithHTML from '@/utils/OpenModalWithHtml'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
@@ -17,8 +19,6 @@ import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { PiSealCheckDuotone } from 'react-icons/pi'
 import { useDispatch } from 'react-redux'
-
-
 
 
 
@@ -33,35 +33,36 @@ const Page = ({ params }: any) => {
     const singlePostdata = usePostData().singlePostdata
 
 
-    const initialPostData: SinglePostType = {
-        _id: "",
-        title: "",
-        category: "",
-        promptReturn: "",
-        urlOfPrompt: "",
-        aiToolName: "",
-        hashthats: [""],
-        image: "",
-        author: {
-            username: "",
-            email: "",
-            profilePic: "",
-            isVerified: false,
-            isAdmin: false,
-            _id: ""
-        },
-        likes: 0,
-        likesId: [],
-        comments: [],
-        isDeleted: false
-    }
+    // const initialPostData: SinglePostType = {
+    //     _id: "",
+    //     title: "",
+    //     category: "",
+    //     promptReturn: "",
+    //     urlOfPrompt: "",
+    //     aiToolName: "",
+    //     hashthats: [""],
+    //     image: "",
+    //     metaDataType: null,
+    //     metaDataUrl: "",
+    //     author: {
+    //         username: "",
+    //         email: "",
+    //         profilePic: "",
+    //         isVerified: false,
+    //         isAdmin: false,
+    //         _id: ""
+    //     },
+    //     likes: 0,
+    //     likesId: [],
+    //     comments: [],
+    //     isDeleted: false
+    // }
 
-    const [singlePost, setSinglePost] = useState<SinglePostType>(initialPostData)
+    // const [singlePost, setSinglePost] = useState<SinglePostType>(initialPostData)
 
     const [responseMsg, setRespoanceMsg] = useState<string>("")
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
-
 
     async function fetchPostData(postId: string) {
 
@@ -72,21 +73,18 @@ const Page = ({ params }: any) => {
         }
 
         const response = await fetch(`/api/post/${postId}`, option)
-        let data = await response.json();
+        let json = await response.json();
 
-        if (!data.success) {
-            setRespoanceMsg(data.message)
+        if (!json.success) {
+            setRespoanceMsg(json.message)
         } else {
 
-            // console.log(data.data)
-
-            setSinglePost(data.data)
-            dispatch(setSinglePostdata(data.data))
+            // setSinglePost(json.data)
+            dispatch(setSinglePostdata(json.data))
         }
 
         setIsLoading(false)
     }
-
 
     useEffect(() => {
 
@@ -108,49 +106,6 @@ const Page = ({ params }: any) => {
     }, [])
 
 
-
-
-    // // // Do this to update single post ---------->
-    // // // Very improtant code for single post data update --------->
-    useEffect(() => {
-        if (singlePostdata && singlePost?._id) {
-
-            let backDataHere: any = {
-                _id: singlePostdata._id,
-                title: singlePostdata.title,
-                category: singlePostdata.category,
-                promptReturn: singlePostdata.promptReturn,
-                urlOfPrompt: singlePostdata.urlOfPrompt,
-                aiToolName: singlePostdata.aiToolName,
-                hashthats: singlePostdata.hashthats,
-                author: singlePostdata.author,
-                likes: singlePostdata.likes,
-                comments: singlePostdata.comments,
-                isDeleted: singlePostdata.isDeleted,
-                customize: singlePostdata.customize,
-                image: singlePostdata.image,
-                whenCreated: singlePostdata.whenCreated
-
-                // likesId: singlePostdata.likesId
-            }
-
-
-            if ((singlePostdata.likesId.length > 0) && (typeof singlePostdata.likesId[0] !== "string")) {
-                backDataHere.likesId = singlePostdata.likesId
-            } else {
-                // // // Empty arr for some cases used when post got updated and ------->
-                backDataHere.likesId = []
-            }
-
-            setSinglePost(backDataHere)
-        }
-
-
-        // console.log(singlePostdata)
-    }, [singlePostdata])
-
-
-
     return (
         <section className={`flex min-h-screen flex-col items-center sm:gap-5 ${!themeMode ? " bg-black text-white " : " bg-white text-black"}`}>
 
@@ -169,16 +124,18 @@ const Page = ({ params }: any) => {
             }
 
 
-            {/* {
-                // JSON.stringify(singlePost)
-            } */}
-
-
             {
-                singlePost._id
+                singlePostdata && singlePostdata._id
                 &&
 
-                <MainPostUI singlePost={singlePost} />
+                // // // See likesId how i'm handling all this, how good i use filter.
+
+                <MainPostUI singlePost={{
+                    ...singlePostdata,
+                    likesId: (singlePostdata.likesId.length > 0 && typeof singlePostdata.likesId[0] !== "string")
+                        ? singlePostdata.likesId.filter(post => typeof post !== "string")
+                        : []
+                }} />
             }
 
 
@@ -328,15 +285,41 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
                     }
                 </div>
 
+
                 {/* Here we need to impove, when we will deal with video to. */}
                 {
-                    singlePost && singlePost?.image
-                    &&
-                    <ImageReact
-                        className=' rounded my-2 w-full max-h-[70vh] object-contain'
-                        src={singlePost?.image}
-                    />
+                    singlePost?.image
+                        ?
+                        <>
+                            <ImageReact
+                                src={singlePost?.image}
+                                className=" w-full h-[35vh] my-2 rounded object-contain object-top"
+                            />
+                            <p className=" text-[0.5rem] -mt-2 text-end">Click to see full image.</p>
+                        </>
+                        :
+                        singlePost?.metaDataUrl
+                        &&
+                        <>
+                            {
+                                (singlePost?.metaDataType && singlePost?.metaDataType === 'video/mp4')
+                                    ?
+                                    <VideoPlayer
+                                        videoUrl={singlePost.metaDataUrl}
+                                    />
+                                    :
+                                    (singlePost.metaDataType === "image/jpeg" || singlePost.metaDataType === "image/png")
+                                        ?
+                                        <ImageReact
+                                              className=" w-full h-[35vh] my-2 rounded object-contain object-top"
+                                            src={singlePost.metaDataUrl}
+                                        />
 
+                                        :
+                                        <p className=' text-5xl text-white'>Fuck</p>
+                            }
+
+                        </>
                 }
 
                 <p className=" text-[0.6rem] mt-2 text-end">Uploaded on : {singlePost.whenCreated || "Date"}</p>

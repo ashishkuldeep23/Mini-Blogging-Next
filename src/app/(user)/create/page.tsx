@@ -5,7 +5,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 // import Navbar from '../components/Navbar';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
-import { createNewPost, setWriteFullFilledVal, usePostData, updatePost, PostCustomization, setUpdatingPost, setIsLoading } from '@/redux/slices/PostSlice';
+import { createNewPost, setWriteFullFilledVal, usePostData, updatePost, setUpdatingPost, setIsLoading } from '@/redux/slices/PostSlice';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
@@ -16,21 +16,8 @@ import { uploadFileInCloudinary } from '@/lib/cloudinary'
 import ImageReact from '@/app/components/ImageReact';
 import MainLoader from '@/app/components/MainLoader';
 import Navbar from '@/app/components/Navbar';
-
-
-
-
-export interface NewPostType {
-  title: string,
-  category: string,
-  content: string,
-  url: string,
-  origin: string,
-  hashs: string[],
-  customize?: PostCustomization,
-  image?: string
-}
-
+import { NewPostType, PostCustomization, ValidInputFiles } from '@/Types';
+import VideoPlayer from '@/app/components/VideoPlayer';
 
 
 const NewPostPage = () => {
@@ -60,7 +47,9 @@ const NewPostPage = () => {
       bgImage: "",
       font: ""
     },
-    image: ""
+    image: "",
+    metaDataType: null,
+    metaDataUrl: ""
   }
 
   const [newPostData, setNewPostData] = useState<NewPostType>(initialNewPostData)
@@ -84,8 +73,7 @@ const NewPostPage = () => {
   // console.log(router)
 
 
-  // // // Customization added here ------------------>
-
+  // // // Customization added here ------------------>>
 
   const initailCustomize = {
     bgColor: "",
@@ -127,8 +115,9 @@ const NewPostPage = () => {
 
   // console.log(postImageUrl)
 
-
   const [imageFile, setImageFile] = useState<File>()
+
+  const [metaDataType, setMetaDataType] = useState<null | ValidInputFiles>(null)
 
   // console.log(imageFile)
 
@@ -207,7 +196,7 @@ const NewPostPage = () => {
   }
 
 
-  function imgInputOnchangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
+  function fileInputOnchangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
     e.stopPropagation();
     e.preventDefault();
 
@@ -227,21 +216,21 @@ const NewPostPage = () => {
 
       // // // Here now set file ---------->
       // File size should less then 2 mb. 
-      if (file.size > 4097152) {
-        return toast.error("File size should less then 2 mb")
+      let maxFileSize = 11007152
+      if (file.size > maxFileSize) {
+        return toast.error("File size should less then 10 mb");
       }
 
+      // // // Set variable here -------->>
       setImageFile(file)
-      // // // Show img direct by here --->
       setPostImageUrl(URL.createObjectURL(file))
-
-
+      setMetaDataType(file.type as ValidInputFiles)
     }
 
   }
 
 
-  async function submitFormData(even: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  async function onSubmitHandler(even: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>) {
 
     even.preventDefault()
 
@@ -249,6 +238,11 @@ const NewPostPage = () => {
 
     if (status === "unauthenticated") {
       router.push("/")
+    }
+
+    if (!newPostData.content) {
+      toast.error("Write something for new post!")
+      return
     }
 
     if (session?.user?.id) {
@@ -261,16 +255,27 @@ const NewPostPage = () => {
 
       let imageUrl = "";
 
+      // // // New Upadte  --------->>
+      let metaDataUrl: string = ""
+      let metaDataType: ValidInputFiles = null
+
+      let body = {
+        ...newPostData
+      }
+
       if (imageFile) {
 
         dispatch(setIsLoading(true))
 
         // // Now here we can uplaod file 2nd step ------>
-        imageUrl = await uploadFileInCloudinary(imageFile)
+        // imageUrl = await uploadFileInCloudinary(imageFile)
+        // //  now using diff var url 
+        metaDataUrl = await uploadFileInCloudinary(imageFile)
+        metaDataType = imageFile.type as ValidInputFiles
         // console.log({ imageUrl })
 
         /// // // now set url of image -------->
-        setNewPostData({ ...newPostData, image: imageUrl })
+        setNewPostData({ ...newPostData, metaDataType, metaDataUrl })
       }
 
 
@@ -279,15 +284,19 @@ const NewPostPage = () => {
         // alert("now call dispatch for update.")
 
         dispatch(updatePost({
-          body: { ...newPostData, image: newPostData.image || imageUrl },
+          body: {
+            ...newPostData,
+            metaDataUrl: newPostData.metaDataUrl || metaDataUrl,
+            metaDataType: newPostData.metaDataType || metaDataType,
+          },
+
           userId: session?.user?.id,
           postId: singlePostdata?._id
         }))
       } else {
 
-
         dispatch(createNewPost({
-          body: { ...newPostData, image: imageUrl },
+          body: { ...newPostData, metaDataType, metaDataUrl },
           userId: session?.user?.id
         }))
       }
@@ -306,15 +315,13 @@ const NewPostPage = () => {
 
 
   // // // DO THIS ON REDUX --------->
-
   // async function updatePost() {
   //     // // // when post is updated ------>
   //     // dispatch(setSinglePostdata(post))
   //     // dispatch(setUpdatingPost(true))
   // }
 
-  // // // Update customization here ------>
-
+  // // // Update customization here (For Customization) ------>
   useEffect(() => {
 
     // console.log(newPostData)
@@ -324,7 +331,7 @@ const NewPostPage = () => {
   }, [customize])
 
 
-  // // // Check user is loged in or not and also set 
+  // // // Check user is loged in or not and also set (For user logged in.)
   useEffect(() => {
     // console.log(session?.user?.id)
 
@@ -343,7 +350,7 @@ const NewPostPage = () => {
   }, [session, status])
 
 
-  // // // Redirect user here -------------------------->
+  // // // Redirect user here (For Redirect user form here.) -------------------------->
   useEffect(() => {
 
     if (writePostFullFilled) {
@@ -374,6 +381,7 @@ const NewPostPage = () => {
   // console.log(catAndHash.categories)
 
 
+  // // // (I need to check this again.)
   useEffect(() => {
 
     // console.log('from new post page ---> ', posthashtags)
@@ -384,7 +392,6 @@ const NewPostPage = () => {
 
     if (postCategories.length > 0) {
       setCatAndHash({ hashthasts: posthashtags, categories: postCategories })
-
       setNewPostData({ ...newPostData, category: postCategories[0] })
     }
 
@@ -397,7 +404,6 @@ const NewPostPage = () => {
 
     if (updatingPost && singlePostdata?._id) {
 
-
       setNewPostData(
         {
           title: singlePostdata?.title,
@@ -407,7 +413,9 @@ const NewPostPage = () => {
           origin: singlePostdata?.aiToolName,
           hashs: [...singlePostdata?.hashthats],
           customize: singlePostdata?.customize,
-          image: singlePostdata?.image
+          image: singlePostdata?.image,
+          metaDataType: singlePostdata?.metaDataType,
+          metaDataUrl: singlePostdata?.metaDataUrl
         }
       );
 
@@ -418,6 +426,12 @@ const NewPostPage = () => {
       if (singlePostdata?.image) {
         setPostImageUrl(singlePostdata?.image)
       }
+
+      if (singlePostdata?.metaDataUrl) {
+        setPostImageUrl(singlePostdata?.metaDataUrl)
+      }
+
+      if (singlePostdata?.metaDataType) setMetaDataType(singlePostdata.metaDataType)
 
 
     }
@@ -435,7 +449,7 @@ const NewPostPage = () => {
       className={`w-full min-h-screen flex flex-col items-center ${!themeMode ? " bg-black text-white " : " bg-white text-black"}`}
     >
 
-      <MainLoader isLoading={isLoading} />
+      <MainLoader isLoading={isLoading} className=' !fixed ' />
 
       <div className='flex flex-col items-center w-full '>
 
@@ -455,7 +469,7 @@ const NewPostPage = () => {
 
               <form
                 className=' flex flex-col gap-2'
-                onSubmit={(e) => { submitFormData(e) }}
+                onSubmit={(e) => { onSubmitHandler(e) }}
               >
 
 
@@ -664,9 +678,9 @@ const NewPostPage = () => {
                       className={`${classNamesForInputs} hidden`}
                       type="file"
                       name=""
-                      accept="image/png, image/png, image/jpeg"
+                      accept="image/png, image/png, image/jpeg, video/mp4"
                       id="change_img"
-                      onChange={(e) => { imgInputOnchangeHandler(e) }}
+                      onChange={(e) => { fileInputOnchangeHandler(e) }}
                     />
 
                     {/* <i className={`ri-camera-3-line text-6xl sm:text-8xl`}></i> */}
@@ -691,12 +705,12 @@ const NewPostPage = () => {
                   <label
                     className=' pl-2 pr-1  font-semibold'
                     htmlFor="change_img"
-                  >*Image</label>
+                  >*Image/Video</label>
 
                 </div>
 
-
-                <div className=' flex flex-col-reverse my-1'>
+                {/** 
+                <div className=' flex flex-col-reverse my-1'>c
                   <input
                     className={`${classNamesForInputs}`}
                     placeholder="Give url of post"
@@ -717,9 +731,9 @@ const NewPostPage = () => {
                   >*Url</label>
 
                 </div>
+                */}
 
-
-                <div className=' flex flex-col-reverse my-1'>
+                {/* <div className=' flex flex-col-reverse my-1'>
                   <input
                     className={`${classNamesForInputs}`}
                     placeholder="Give origin of post"
@@ -739,8 +753,7 @@ const NewPostPage = () => {
                     htmlFor="origin"
                   >*Origin</label>
 
-                </div>
-
+                </div> */}
 
                 <div>
 
@@ -762,7 +775,6 @@ const NewPostPage = () => {
                       })
                     }
                   </div>
-
 
                   <div className='my-1 flex flex-col-reverse'>
 
@@ -808,14 +820,10 @@ const NewPostPage = () => {
 
                       </div>
 
-
-
                       {
                         // // // Suggetion div with logic here ---------->
-
                         newHash
                         &&
-
                         <div className={`absolute z-[1] top-[110%] rounded w-full px-0.5 ${!themeMode ? "bg-black" : "bg-white"} `}>
 
                           {
@@ -858,7 +866,6 @@ const NewPostPage = () => {
                         </div>
                       }
 
-
                     </div>
 
 
@@ -868,7 +875,6 @@ const NewPostPage = () => {
                     >*Hasthats</label>
 
                   </div>
-
 
                 </div>
 
@@ -925,12 +931,20 @@ const NewPostPage = () => {
 
               {
                 (newPostData?.image || postImageUrl)
-                &&
-                <ImageReact
-                  style={{ objectFit: "cover" }}
-                  className=' rounded my-2 w-full'
-                  src={postImageUrl}
-                />
+                  &&
+                  metaDataType === 'video/mp4'
+                  ?
+                  <VideoPlayer
+                    videoUrl={postImageUrl}
+                  />
+                  :
+                  (metaDataType === "image/jpeg" || metaDataType === "image/png")
+                  &&
+                  <ImageReact
+                    style={{ objectFit: "cover" }}
+                    className=' rounded my-2 w-full'
+                    src={postImageUrl}
+                  />
               }
 
 
@@ -1089,8 +1103,8 @@ const NewPostPage = () => {
             <div className=' flex justify-end'>
 
               <button
-                className={`px-8 mx-8 my-1 rounded-full font-bold bg-green-400 hover:bg-green-600 transition-all ${themeMode ? "text-green-900" : "text-green-900"}`}
-                onClick={(e) => { submitFormData(e) }}
+                className={` text-3xl px-10 py-2 mb-4 mx-4 my-1 rounded-full font-bold bg-green-400 active:scale-90 hover:bg-green-600 transition-all ${themeMode ? "text-green-900" : "text-green-900"}`}
+                onClick={(e) => { onSubmitHandler(e) }}
               >
                 {
                   !updatingPost ? "Create" : "Update"

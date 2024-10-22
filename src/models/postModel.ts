@@ -5,14 +5,14 @@ const PostSchema = new mongoose.Schema({
 
     title: {
         type: String,
-        required: true,
+        // required: true,
         default: "Title of post.",
         trim: true
     },
     category: {
         type: String,
         required: true,
-        default: "Category of post.",
+        default: "General",
         trim: true
     },
     promptReturn: {
@@ -21,11 +21,11 @@ const PostSchema = new mongoose.Schema({
         required: true,
         default: "Prompt Return.",
     },
-    urlOfPrompt: {
-        type: String,
-        default: '',
-        trim: true,
-    },
+    // urlOfPrompt: {
+    //     type: String,
+    //     default: '',
+    //     trim: true,
+    // },
     aiToolName: {
         type: String,
         trim: true,
@@ -60,6 +60,17 @@ const PostSchema = new mongoose.Schema({
         default: '',
     },
 
+    metaDataType: {
+        type: String,
+        trim: true,
+        default: '',
+    },
+    metaDataUrl: {
+        type: String,
+        trim: true,
+        default: '',
+    },
+    
     customize: {
         bgColor: {
             type: String,

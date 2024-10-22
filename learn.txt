@@ -50,3 +50,29 @@ Post update ----------------->
 
     If you want to share a web that is present n ur local (Both devices should connected with same wifi)
         IP_OF_LEPTOP:PORT <<============= Search this into mobile phone.
+
+
+
+
+=========================================================>>
+
+See this err and my approch to fix this ( TS err ) ------->>
+
+ERR -->>
+Type '(string | UserDataInterface)[]' is not assignable to type 'UserDataInterface[]'.
+  Type 'string | UserDataInterface' is not assignable to type 'UserDataInterface'.
+    Type 'string' is not assignable to type 'UserDataInterface'.ts(2322)
+
+FIX -->>
+      <MainPostUI singlePost={{
+                    ...singlePostdata,
+                    likesId: (singlePostdata.likesId.length > 0 && typeof singlePostdata.likesId[0] !== "string")
+                        ? singlePostdata.likesId.filter(post => typeof post !== "string")
+                        : []
+                }} />
+
+
+
+============================================>>
+
+https://ui.aceternity.com/components UI i'm using for ui in this project

@@ -9,10 +9,9 @@
 
 
 
-function sleep(ms: number): Promise<void> {
-
-    return new Promise((resolve) => setTimeout(resolve, ms))
-}
+// function sleep(ms: number): Promise<void> {
+//     return new Promise((resolve) => setTimeout(resolve, ms))
+// }
 
 
 
@@ -26,7 +25,7 @@ export default function bodyTranstion() {
 
     setTimeout(() => {
         body?.classList.remove("page_transition");
-    }, 500)
+    }, 650)
 }
 
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { PostInterFace, setSinglePostId } from "@/redux/slices/PostSlice"
+import { setSinglePostId } from "@/redux/slices/PostSlice"
 import { useThemeData } from "@/redux/slices/ThemeSlice"
 import { useRouter } from "next/navigation"
 import { useDispatch } from "react-redux"
@@ -11,11 +11,13 @@ import { PiSealCheckDuotone } from "react-icons/pi";
 import { motion } from "framer-motion";
 import { setInnerHTMLOfModal, setOpenMoadl, useModalState } from "@/redux/slices/ModalSlice"
 import useOpenModalWithHTML from "@/utils/OpenModalWithHtml"
+import { PostInterFace } from "@/Types"
+import VideoPlayer from "./VideoPlayer"
+import { MdZoomOutMap } from "react-icons/md";
+
 // import { useSession } from "next-auth/react"
 
 export default function SinglePostCard({ ele, className }: { ele: PostInterFace, className?: string }) {
-
-
   const themeMode = useThemeData().mode
 
   const dispatch = useDispatch()
@@ -158,16 +160,41 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
                 </div>
 
                 {/* Here we need to impove, when we will deal with video to. */}
+                {/* This is modified now, Now we showing video also. */}
                 {
-                  ele && ele?.image
-                  &&
-                  <>
-                    <ImageReact
-                      src={ele?.image}
-                      className=" w-full h-[35vh] my-2 rounded object-contain object-top"
-                    />
-                    <p className=" text-[0.5rem] -mt-2 text-end">Click to see full image.</p>
-                  </>
+                  ele?.image
+                    ?
+                    <div className=" relative">
+                      <ImageReact
+                        src={ele?.image}
+                        className=" w-full h-[35vh] my-2 rounded object-top !object-cover"
+                      />
+                      <MdZoomOutMap className=" absolute bottom-2 right-2 text-md " />
+                    </div>
+
+                    :
+
+                    ele?.metaDataUrl
+                    &&
+                    <>
+
+                      {
+                        (ele?.metaDataType && ele?.metaDataType === 'video/mp4')
+                          ?
+                          <VideoPlayer
+                            videoUrl={ele.metaDataUrl}
+                            objectFit={'cover'}
+                          />
+                          :
+                          (ele.metaDataType === "image/jpeg" || ele.metaDataType === "image/png")
+                          &&
+                          <ImageReact
+                            className=" w-full h-[35vh] my-2 rounded object-top !object-cover"
+                            src={ele.metaDataUrl}
+                          />
+                      }
+
+                    </>
                 }
 
 

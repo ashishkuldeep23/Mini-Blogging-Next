@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
 
         const { title, category, promptReturn, author } = reqBody
 
-        if (!title || !category || !promptReturn) return NextResponse.json({ success: false, message: 'Mandatory fields not given.' }, { status: 400 })
+        if (!category || !promptReturn) return NextResponse.json({ success: false, message: 'Mandatory fields not given.' }, { status: 400 })
 
         if (!author) return NextResponse.json({ success: false, message: 'Author id is not given.' }, { status: 400 })
 
@@ -33,13 +33,11 @@ export async function POST(req: NextRequest) {
 
         if (!findUser) return NextResponse.json({ success: false, message: 'No User find with given post id.' }, { status: 404 })
 
-
         let createNewPost = new Post(reqBody)
 
         createNewPost = await createNewPost.save()
 
         // return NextResponse.json({ success: true, data: createNewPost, message: "User created." }, { status: 201 })
-
 
         let upadatedPost = createNewPost
 

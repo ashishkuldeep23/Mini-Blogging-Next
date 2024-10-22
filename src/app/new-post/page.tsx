@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
-import { createNewPost, setWriteFullFilledVal, usePostData, updatePost, PostCustomization, setUpdatingPost, setIsLoading } from '@/redux/slices/PostSlice';
+import { createNewPost, setWriteFullFilledVal, usePostData, updatePost, setUpdatingPost, setIsLoading } from '@/redux/slices/PostSlice';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
@@ -13,7 +13,7 @@ import MainLoader from '../components/MainLoader';
 import ImageReact from '../components/ImageReact';
 import { FaCamera } from "react-icons/fa";
 import { uploadFileInCloudinary } from '@/lib/cloudinary'
-import { NewPostType } from '@/Types';
+import { NewPostType, PostCustomization } from '@/Types';
 
 
 const NewPostPage = () => {
