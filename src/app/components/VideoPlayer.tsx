@@ -13,7 +13,7 @@ interface VideoPlayerProps {
     videoUrl: string; // The URL of the video to play
     objectFit?: "fill" | "contain" | 'cover' | 'none' | "scale-down"; // The URL of the video to play
     height?: "35vh" | "70vh",
-    postData: PostInterFace
+    postData?: PostInterFace
 }
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, postData }) => {
@@ -106,8 +106,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
 
     const zoomClickHandler = (e: React.MouseEvent<HTMLSpanElement>) => {
         e.stopPropagation()
-
-        router.push(`/post/${postData._id}`)
+        if (postData && postData._id) router.push(`/post/${postData._id}`)
     }
 
 
