@@ -1,17 +1,22 @@
+import { usePreventSwipe } from '@/Hooks/useSwipeCustom';
 import { setIsMuted, usePostData } from '@/redux/slices/PostSlice';
 import { AppDispatch } from '@/redux/store';
+import { PostInterFace } from '@/Types';
 import React, { useRef, useState, useEffect } from 'react';
 import { FaPlay, FaPause, FaVolumeUp } from 'react-icons/fa';
 import { HiOutlineSpeakerWave, HiOutlineSpeakerXMark } from 'react-icons/hi2';
+import { MdZoomOutMap } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
+import { usePathname, useRouter } from "next/navigation"
 
 interface VideoPlayerProps {
     videoUrl: string; // The URL of the video to play
     objectFit?: "fill" | "contain" | 'cover' | 'none' | "scale-down"; // The URL of the video to play
-    height?: "35vh" | "70vh"
+    height?: "35vh" | "70vh",
+    postData: PostInterFace
 }
 
-const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height }) => {
+const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, postData }) => {
     const videoRef = useRef<HTMLVideoElement>(null); // Reference to the video element
     const [isPlaying, setIsPlaying] = useState<boolean>(false); // State to track if video is playing
     const [progress, setProgress] = useState<number>(0); // State to track video progress (0-100)
@@ -19,12 +24,11 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height }
     const [allBtnVisiable, setAllBtnVisiable] = useState<boolean>(false);
     const isLoading = usePostData().isLoading
     const isMuted = usePostData().isMuted
-
     const dispatch = useDispatch<AppDispatch>()
-
     const setMute = (data: boolean) => dispatch(setIsMuted(data))
-
-    let a: any = ""
+    const router = useRouter();
+    const pathName = usePathname()
+    const preventSwipe = usePreventSwipe()
 
     // Play/Pause video based on view visibility
     useEffect(() => {
@@ -47,8 +51,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height }
                 threshold: 1,
             }
         );
-
-        a = observer;
 
         if (videoRef.current) {
             observer.observe(videoRef.current);
@@ -99,6 +101,13 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height }
     const videoClickOutsideHandler = (e: React.MouseEvent<HTMLDivElement>) => {
         e.stopPropagation();
         setAllBtnVisiable(pre => !pre)
+    }
+
+
+    const zoomClickHandler = (e: React.MouseEvent<HTMLSpanElement>) => {
+        e.stopPropagation()
+
+        router.push(`/post/${postData._id}`)
     }
 
 
@@ -162,27 +171,39 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height }
                             value={progress}
                             className="w-full cursor-pointer h-[4px]"
                             onChange={handleSeek}
+                            {...preventSwipe}
                         />
 
                         {/* Volume Button and Slider */}
 
-                        <div>
 
+                        <span
+                            className=' text-xl active:scale-75 transition-all'
+                            onClick={() => setMute(!isMuted)}
+                        >
+
+                            {
+                                isMuted
+                                    ?
+                                    <HiOutlineSpeakerXMark />
+                                    :
+                                    <HiOutlineSpeakerWave />
+                            }
+                        </span>
+
+
+                        {
+                            pathName === "/home"
+                            &&
                             <span
-                                className=' text-xl'
-                                onClick={() => setMute(!isMuted)}
+                                onClick={(e) => zoomClickHandler(e)}
+                                className='active:scale-75 transition-all'
                             >
-
-                                {
-                                    isMuted
-                                        ?
-                                        <HiOutlineSpeakerXMark />
-                                        :
-                                        <HiOutlineSpeakerWave />
-                                }
+                                <MdZoomOutMap className=" text-xl " />
                             </span>
 
-                        </div>
+                        }
+
 
                     </div>
 

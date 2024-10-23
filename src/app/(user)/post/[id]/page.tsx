@@ -310,6 +310,7 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
                                         <VideoPlayer
                                             videoUrl={singlePost.metaDataUrl}
                                             height='70vh'
+                                            postData={singlePost}
                                         />
                                         :
                                         (singlePost.metaDataType === "image/jpeg" || singlePost.metaDataType === "image/png")

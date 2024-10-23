@@ -169,7 +169,7 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
                         src={ele?.image}
                         className=" w-full h-[35vh] my-2 rounded object-top !object-cover"
                       />
-                      <MdZoomOutMap className=" absolute bottom-2 right-2 text-md " />
+                      <MdZoomOutMap className=" absolute bottom-2 right-2 text-xl " />
                     </div>
 
                     :
@@ -184,6 +184,7 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
                           <div className="h-[35vh]">
 
                             <VideoPlayer
+                              postData={ele}
                               videoUrl={ele.metaDataUrl}
                               objectFit={'cover'}
                               height='35vh'
