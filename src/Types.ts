@@ -114,7 +114,10 @@ export interface SinglePostType extends Omit<PostInterFace, 'likesId'> {
     likesId: UserDataInterface[]
 }
 
-
+export type MetaDataInfoType = {
+    id: string,
+    sec: string
+}
 
 export interface PostSliceInterFace {
     isLoading: boolean,
@@ -136,6 +139,7 @@ export interface PostSliceInterFace {
     },
     searchByText?: string;
     isMuted: boolean;
+    metaDataInfo?: MetaDataInfoType;
 
 }
 

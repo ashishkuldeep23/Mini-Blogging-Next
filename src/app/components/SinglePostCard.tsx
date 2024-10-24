@@ -9,7 +9,6 @@ import LikeCommentDiv from "./LikeCommentDiv"
 import { CardBody, CardContainer, CardItem } from "@/app/components/ui/3d_card";
 import { PiSealCheckDuotone } from "react-icons/pi";
 import { motion } from "framer-motion";
-import { setInnerHTMLOfModal, setOpenMoadl, useModalState } from "@/redux/slices/ModalSlice"
 import useOpenModalWithHTML from "@/utils/OpenModalWithHtml"
 import { PostInterFace } from "@/Types"
 import VideoPlayer from "./VideoPlayer"
@@ -18,17 +17,12 @@ import { MdZoomOutMap } from "react-icons/md";
 // import { useSession } from "next-auth/react"
 
 export default function SinglePostCard({ ele, className }: { ele: PostInterFace, className?: string }) {
-  const themeMode = useThemeData().mode
 
-  const dispatch = useDispatch()
-
-  const router = useRouter()
-
-  // const { data: session } = useSession()
-
-  const promptText = ele.promptReturn
-
-  const charactersWant = 90
+  const themeMode = useThemeData().mode;
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const promptText = ele.promptReturn;
+  const charactersWant = 90;
 
   function cardClickHadler(postId: string) {
 
@@ -40,7 +34,7 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
   }
 
   // console.log(ele)
-  const callModalFn = useOpenModalWithHTML()
+  const callModalFn = useOpenModalWithHTML();
 
   const seeFullSizeHandler = (e: any, ele: PostInterFace) => {
     e?.stopPropagation();
@@ -74,11 +68,11 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
       }}
 
       onClick={(e) => { e.stopPropagation(); cardClickHadler(ele._id) }}
-      className={` lg:my-7 p-[2px] bg-gradient-to-tr from-cyan-400  sm:w-80  sm:p-2 rounded-xl hover:cursor-pointer hover:scale-105 sm:hover:scale-110 active:scale-75 focus:scale-75 transition-all ${className}`}
+      className={`lg:my-7 p-[2px] bg-gradient-to-tr from-cyan-400  sm:w-80  sm:p-2 rounded-xl hover:cursor-pointer hover:scale-105 sm:hover:scale-110 active:scale-75 focus:scale-75 transition-all ${className}`}
     >
 
       <CardContainer className="inter-var">
-        <CardBody className={` bg-gray-50 relative group/card  dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1]  dark:border-white/[0.2] border-black/[0.1] h-auto rounded-xl  border shadow-xl w-[18rem] sm:w-[20rem] md:w-[25rem] lg:w-[30rem] ${!themeMode ? "dark:bg-black shadow-cyan-950" : "dark:bg-white shadow-cyan-50"} `}>
+        <CardBody className={` bg-gray-50 relative group/card  dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1]  dark:border-white/[0.2] border-black/[0.1] h-auto rounded-xl  border shadow-xl w-[19rem] sm:w-[22rem] md:w-[27rem] lg:w-[30rem] ${!themeMode ? "dark:bg-black shadow-cyan-950" : "dark:bg-white shadow-cyan-50"}  `}>
 
           <div
             className={` p-3 sm:p-6 rounded-xl border ${!themeMode ? " bg-black text-white border-slate-700 shadow-slate-700 " : " bg-white text-black border-slate-300 shadow-slate-300"}`}
@@ -87,7 +81,6 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
               color: ele?.customize?.color || '',
               backgroundImage: `${(ele?.image && (`url('${ele.author?.profilePic}')` === `${ele?.customize?.bgImage}`)) ? "" : `${ele?.customize?.bgImage}`}`,
               fontFamily: `${ele?.customize?.font} , sans-serif`,
-
 
               // // // added more style if user choosed profile pic as bg of post ------>
               backgroundRepeat: `url('${ele.author?.profilePic}')` === `${ele?.customize?.bgImage}` ? "no-repeat" : "",
@@ -109,7 +102,7 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
               >
 
                 <ImageReact
-                  className={`mt-2 rounded-full  w-8 h-8 aspect-square object-cover border p-[1px] border-[${ele?.customize?.color}] `}
+                  className={`mt-2 rounded-full  w-8 h-8 aspect-square !object-cover border p-[1px] border-[${ele?.customize?.color}] `}
                   src={`${ele?.author?.profilePic || "https://res.cloudinary.com/dlvq8n2ca/image/upload/v1701708322/jual47jntd2lpkgx8mfx.png"}`}
                   style={{ borderColor: ele?.customize?.color }}
                   alt=""

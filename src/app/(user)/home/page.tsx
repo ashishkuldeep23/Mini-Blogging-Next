@@ -93,7 +93,7 @@ function AllPostDiv() {
         <MainLoader
           isLoading={isLoading}
           // isLoading={true}
-          className=" lg:-translate-x-[50%]"
+          className=" lg:-translate-x-[50%] !fixed "
         />
 
         {

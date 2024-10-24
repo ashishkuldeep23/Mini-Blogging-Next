@@ -5,7 +5,7 @@ import { useSelector } from "react-redux"
 import { RootState } from "../store"
 import toast from "react-hot-toast"
 // import { NewPostType } from "@/app/new-post/page"
-import { NewPostType, PostInterFace, PostSliceInterFace, PostTypeForBackend, UpdateCommentInput } from "@/Types"
+import { MetaDataInfoType, NewPostType, PostInterFace, PostSliceInterFace, PostTypeForBackend, UpdateCommentInput } from "@/Types"
 
 
 
@@ -235,6 +235,10 @@ const initialState: PostSliceInterFace = {
     },
     searchByText: "",
     isMuted: true,
+    metaDataInfo: {
+        id: "",
+        sec: "",
+    }
 }
 
 
@@ -344,6 +348,10 @@ const psotSlice = createSlice({
 
         setIsMuted(state, action: PayloadAction<boolean>) {
             state.isMuted = action.payload
+        },
+
+        setMetaDataInfo(state, action: PayloadAction<MetaDataInfoType>) {
+            state.metaDataInfo = action.payload
         }
 
 
@@ -618,7 +626,8 @@ export const {
     setUpdatingPost,
     setSearchBrandAndCate,
     setSearchByText,
-    setIsMuted
+    setIsMuted,
+    setMetaDataInfo
     // setDeleteComment
 } = psotSlice.actions
 

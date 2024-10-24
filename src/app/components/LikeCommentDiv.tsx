@@ -247,7 +247,7 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
     return (
         <div className=' relative'>
 
-            <MainLoader isLoading={isLoading} />
+            {/* <MainLoader isLoading={isLoading} /> */}
 
 
             <div className="mt-2">
