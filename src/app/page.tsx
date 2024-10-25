@@ -25,7 +25,6 @@ export default function Home() {
     dispatch(getAllPosts(searchObj))
   }
 
-
   useEffect(() => {
     if (allPostData.length <= 1) {
 
@@ -34,7 +33,6 @@ export default function Home() {
       // dispatch(getAllPosts())
     }
   }, [])
-
 
   return (
     <main className={` relative flex min-h-screen flex-col items-center ${!themeMode ? " bg-black text-white " : " bg-white text-black"}`}>
@@ -176,7 +174,6 @@ function FeatureDetailShowHomeFirstTime() {
   )
 
 }
-
 
 const FooterDiv = () => {
 
