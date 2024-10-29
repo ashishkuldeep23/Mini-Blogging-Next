@@ -160,7 +160,7 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
                     <div className=" relative">
                       <ImageReact
                         src={ele?.image}
-                        className=" w-full h-[35vh] my-2 rounded object-top !object-cover"
+                        className=" w-full h-[38vh] my-2 rounded object-top !object-cover"
                       />
                       <MdZoomOutMap className=" absolute bottom-2 right-2 text-xl " />
                     </div>
@@ -174,7 +174,7 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
                       {
                         (ele?.metaDataType && ele?.metaDataType === 'video/mp4')
                           ?
-                          <div className="h-[35vh]">
+                          <div className="h-[38vh]">
 
                             <VideoPlayer
                               postData={ele}
@@ -187,7 +187,7 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
                           (ele.metaDataType === "image/jpeg" || ele.metaDataType === "image/png")
                           &&
                           <ImageReact
-                            className=" w-full h-[35vh] my-2 rounded object-top !object-cover"
+                            className=" w-full h-[38vh] my-2 rounded object-top !object-cover"
                             src={ele.metaDataUrl}
                           />
                       }

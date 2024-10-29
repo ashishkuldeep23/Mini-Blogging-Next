@@ -113,7 +113,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
 
     return (
         <div
-            className="relative w-full max-w-4xl mx-auto min-h-[35vh]"
+            className="relative w-full max-w-4xl mx-auto min-h-[38vh]"
             onClick={(e) => videoClickOutsideHandler(e)}
         >
 

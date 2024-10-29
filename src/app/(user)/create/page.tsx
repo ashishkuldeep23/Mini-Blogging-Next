@@ -259,9 +259,9 @@ const NewPostPage = () => {
       let metaDataUrl: string = ""
       let metaDataType: ValidInputFiles = null
 
-      let body = {
-        ...newPostData
-      }
+      // let body = {
+      //   ...newPostData
+      // }
 
       if (imageFile) {
 

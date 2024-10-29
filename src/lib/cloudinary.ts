@@ -34,6 +34,7 @@ export async function uploadFileInCloudinary(file: File): Promise<string> {
 
         formData.append("file", myRenamedFile)
         formData.append("upload_preset", preset_key)
+        formData.append("folder", "MiniBlogging")
 
         // let request = await fetch.post(urlForCloudinary, formData)
         let request = await fetch(urlForCloudinary, { method: "POST", body: formData })
