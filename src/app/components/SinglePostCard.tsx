@@ -72,7 +72,7 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
     >
 
       <CardContainer className="inter-var">
-        <CardBody className={` bg-gray-50 relative group/card  dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1]  dark:border-white/[0.2] border-black/[0.1] h-auto rounded-xl  border shadow-xl w-[19rem] sm:w-[22rem] md:w-[27rem] lg:w-[30rem] ${!themeMode ? "dark:bg-black shadow-cyan-950" : "dark:bg-white shadow-cyan-50"}  `}>
+        <CardBody className={` bg-gray-50 relative group/card  dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1]  dark:border-white/[0.2] border-black/[0.1] h-auto rounded-xl  border shadow-xl w-[20rem] sm:w-[23rem] md:w-[27rem] lg:w-[32rem] ${!themeMode ? "dark:bg-black shadow-cyan-950" : "dark:bg-white shadow-cyan-50"}  `}>
 
           <div
             className={` p-3 sm:p-6 rounded-xl border ${!themeMode ? " bg-black text-white border-slate-700 shadow-slate-700 " : " bg-white text-black border-slate-300 shadow-slate-300"}`}
@@ -160,7 +160,7 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
                     <div className=" relative">
                       <ImageReact
                         src={ele?.image}
-                        className=" w-full h-[38vh] my-2 rounded object-top !object-cover"
+                        className=" w-full h-[43vh] my-2 rounded !object-center !object-cover"
                       />
                       <MdZoomOutMap className=" absolute bottom-2 right-2 text-xl " />
                     </div>
@@ -174,20 +174,20 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
                       {
                         (ele?.metaDataType && ele?.metaDataType === 'video/mp4')
                           ?
-                          <div className="h-[38vh]">
+                          <div className="h-[43vh]">
 
                             <VideoPlayer
                               postData={ele}
                               videoUrl={ele.metaDataUrl}
                               objectFit={'cover'}
-                              height='35vh'
+                              height='43vh'
                             />
                           </div>
                           :
                           (ele.metaDataType === "image/jpeg" || ele.metaDataType === "image/png")
                           &&
                           <ImageReact
-                            className=" w-full h-[38vh] my-2 rounded object-top !object-cover"
+                            className=" w-full h-[43vh] my-2 rounded !object-center !object-cover"
                             src={ele.metaDataUrl}
                           />
                       }

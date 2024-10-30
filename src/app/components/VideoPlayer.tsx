@@ -12,9 +12,9 @@ import { usePathname, useRouter } from "next/navigation"
 interface VideoPlayerProps {
     videoUrl: string; // The URL of the video to play
     objectFit?: "fill" | "contain" | 'cover' | 'none' | "scale-down"; // The URL of the video to play
-    height?: "35vh" | "70vh",
+    height?: "43vh" | "70vh",
     postData?: PostInterFace
-}
+};
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, postData }) => {
 
@@ -31,23 +31,46 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
     const pathName = usePathname()
     const preventSwipe = usePreventSwipe()
 
+
+
+    const palyTheVideo = () => {
+        videoRef.current && videoRef.current?.play()
+        setIsPlaying(true);
+
+    }
+
+    const pauseTheVideo = () => {
+        videoRef.current && videoRef.current?.pause()
+        setIsPlaying(false);
+
+    }
+
+
     // Play/Pause video based on view visibility
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
+
+                    // console.log({ entry })
+
                     if (videoRef.current) {
                         if (entry.isIntersecting && !isPlaying) {
-                            videoRef.current.play();
+                            // if (entry.isIntersecting) {
+                            // videoRef.current.play();
+                            palyTheVideo();
                             setIsPlaying(true);
                         } else {
-                            videoRef.current.pause();
+                            // videoRef.current.pause();
+                            pauseTheVideo();
                             setIsPlaying(false);
                         }
                     }
                 });
             },
             {
+                root: null,
+                rootMargin: '0px',
                 // threshold: 0.5, // Trigger when 50% of the video is visible
                 threshold: 1,
             }
@@ -71,11 +94,11 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
 
         if (videoRef.current) {
             if (isPlaying) {
-                videoRef.current.pause();
-                setIsPlaying(false);
+                // videoRef.current.pause();
+                pauseTheVideo();
             } else {
-                videoRef.current.play();
-                setIsPlaying(true);
+                // videoRef.current.play();
+                palyTheVideo();
             }
             // setIsPlaying(!isPlaying);
         }
@@ -113,7 +136,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
 
     return (
         <div
-            className="relative w-full max-w-4xl mx-auto min-h-[38vh]"
+            className="relative w-full max-w-4xl mx-auto min-h-[43vh]"
             onClick={(e) => videoClickOutsideHandler(e)}
         >
 
@@ -127,7 +150,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
                     }}
                     ref={videoRef}
                     className="w-full h-auto rounded-lg cursor-pointer"
-                    // onTimeUpdate={handleProgress}
+                    onTimeUpdate={handleProgress}
                     // onClick={togglePlayPause}
                     src={videoUrl} // Video URL passed as a prop
                     muted={isMuted} // Default muted to prevent autoplay issues in browsers

@@ -76,3 +76,11 @@ FIX -->>
 ============================================>>
 
 https://ui.aceternity.com/components UI i'm using for ui in this project
+
+
+
+==================================================>> 
+For testing Next app on locally -------->>
+
+If u r connected with same wifi then follow ur leptop ip address with port value.
+
