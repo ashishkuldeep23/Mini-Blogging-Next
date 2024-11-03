@@ -140,7 +140,6 @@ export interface PostSliceInterFace {
     searchByText?: string;
     isMuted: boolean;
     metaDataInfo?: MetaDataInfoType;
-
 }
 
 

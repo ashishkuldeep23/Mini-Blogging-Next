@@ -1,5 +1,5 @@
 import { usePreventSwipe } from '@/Hooks/useSwipeCustom';
-import { setIsMuted, usePostData } from '@/redux/slices/PostSlice';
+import { setIsMuted, setMetaDataInfo, usePostData } from '@/redux/slices/PostSlice';
 import { AppDispatch } from '@/redux/store';
 import { PostInterFace } from '@/Types';
 import React, { useRef, useState, useEffect } from 'react';
@@ -13,43 +13,65 @@ interface VideoPlayerProps {
     videoUrl: string; // The URL of the video to play
     objectFit?: "fill" | "contain" | 'cover' | 'none' | "scale-down"; // The URL of the video to play
     height?: "43vh" | "70vh",
-    postData?: PostInterFace
+    postData?: PostInterFace,
+    playPauseToggleBtn?: boolean,
+    videoClickHandler?: Function,
+    observerOn?: boolean
 };
 
-const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, postData }) => {
+const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, postData, playPauseToggleBtn = false, videoClickHandler, observerOn = false }) => {
 
     const videoRef = useRef<HTMLVideoElement>(null); // Reference to the video element
     const [isPlaying, setIsPlaying] = useState<boolean>(false); // State to track if video is playing
     const [progress, setProgress] = useState<number>(0); // State to track video progress (0-100)
     // const [isMuted, setIsMuted] = useState<boolean>(true);
     const [allBtnVisiable, setAllBtnVisiable] = useState<boolean>(false);
-    const isLoading = usePostData().isLoading
-    const isMuted = usePostData().isMuted
-    const dispatch = useDispatch<AppDispatch>()
-    const setMute = (data: boolean) => dispatch(setIsMuted(data))
+    const isLoading = usePostData().isLoading;
+    const isMuted = usePostData().isMuted;
+    const metaDataInfo = usePostData().metaDataInfo;
+    const dispatch = useDispatch<AppDispatch>();
+    const setMute = (data: boolean) => dispatch(setIsMuted(data));
     const router = useRouter();
-    const pathName = usePathname()
-    const preventSwipe = usePreventSwipe()
+    const pathName = usePathname();
+    const preventSwipe = usePreventSwipe();
+
+    // // // Not working now.
+    let ignoreObserver = false;
 
 
 
     const palyTheVideo = () => {
-        videoRef.current && videoRef.current?.play()
+        videoRef.current && videoRef.current?.play();
         setIsPlaying(true);
 
-    }
+        if (postData) {
+            dispatch(setMetaDataInfo({ id: postData._id, sec: progress.toString() }));
+        };
+    };
 
     const pauseTheVideo = () => {
-        videoRef.current && videoRef.current?.pause()
+        videoRef.current && videoRef.current?.pause();
         setIsPlaying(false);
+        dispatch(setMetaDataInfo({ id: "", sec: "" }));
+    };
 
-    }
+
+    // // // A useEffect that matches postData with globally stored post id.
+    // useEffect(() => {
+    //     if (metaDataInfo?.id && metaDataInfo?.id !== postData?._id) {
+    //         pauseTheVideo();
+    //     }
+    // }, [metaDataInfo])
+
 
 
     // Play/Pause video based on view visibility
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
+
+                if (ignoreObserver) return; // Skip if ignoring observer
+
                 entries.forEach((entry) => {
 
                     // console.log({ entry })
@@ -76,8 +98,15 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
             }
         );
 
-        if (videoRef.current) {
-            observer.observe(videoRef.current);
+        if (observerOn) {
+            if (videoRef.current) {
+                observer.observe(videoRef.current);
+            }
+        } else {
+
+            // // // This code will play video for single page video comp. -------->> (Becuse observer will pause there and if it is off then play song initially.)
+            palyTheVideo();
+
         }
 
         return () => {
@@ -92,6 +121,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
 
         e.stopPropagation();
 
+        // ignoreObserver = true; // Temporarily ignore observer
+
         if (videoRef.current) {
             if (isPlaying) {
                 // videoRef.current.pause();
@@ -99,9 +130,18 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
             } else {
                 // videoRef.current.play();
                 palyTheVideo();
+                setMute(false)
+
             }
             // setIsPlaying(!isPlaying);
         }
+
+        // Reset ignoreObserver after a short delay (e.g., 500ms)
+
+        // setTimeout(() => {
+        //     ignoreObserver = false;
+        // }, 500);
+
     };
 
     // Update progress as video plays
@@ -125,6 +165,10 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
     const videoClickOutsideHandler = (e: React.MouseEvent<HTMLDivElement>) => {
         e.stopPropagation();
         setAllBtnVisiable(pre => !pre)
+
+        // // // Video Click Handler is given ------------>>
+        videoClickHandler && videoClickHandler();
+
     }
 
 
@@ -167,17 +211,21 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
                 <>
 
                     {/* Play/Pause Button */}
-                    <div className="absolute inset-0 flex items-center justify-center">
 
-                        <button
-                            className="bg-black bg-opacity-50 text-white rounded-full p-4 hover:bg-opacity-75 transition relative z-[10] "
-                            onClick={togglePlayPause}
-                        >
-                            {isPlaying ? <FaPause size={32} /> : <FaPlay size={32} />}
-                        </button>
+                    {
+                        playPauseToggleBtn
+                        &&
+                        <div className="absolute inset-0 flex items-center justify-center">
+                            <button
+                                className="bg-black bg-opacity-50 text-white rounded-full p-4 hover:bg-opacity-75 transition relative z-[10] "
+                                onClick={togglePlayPause}
+                            >
+                                {isPlaying ? <FaPause size={32} /> : <FaPlay size={32} />}
+                            </button>
+                        </div>
+                    }
 
 
-                    </div>
 
                     {/* Bottom Controls */}
                     <div

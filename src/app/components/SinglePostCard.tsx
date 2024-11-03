@@ -24,13 +24,10 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
   const promptText = ele.promptReturn;
   const charactersWant = 90;
 
-  function cardClickHadler(postId: string) {
+  function cardClickHadler() {
 
-    // console.log(postId)
-
-    dispatch(setSinglePostId(postId))
-
-    router.push(`/post/${postId}`)
+    dispatch(setSinglePostId(ele._id))
+    router.push(`/post/${ele._id}`)
   }
 
   // console.log(ele)
@@ -67,7 +64,7 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
         damping: 20
       }}
 
-      onClick={(e) => { e.stopPropagation(); cardClickHadler(ele._id) }}
+      onClick={(e) => { e.stopPropagation(); cardClickHadler() }}
       className={`lg:my-7 p-[2px] bg-gradient-to-tr from-cyan-400  sm:w-80  sm:p-2 rounded-xl hover:cursor-pointer hover:scale-105 sm:hover:scale-110 active:scale-75 focus:scale-75 transition-all ${className}`}
     >
 
@@ -181,6 +178,8 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
                               videoUrl={ele.metaDataUrl}
                               objectFit={'cover'}
                               height='43vh'
+                              observerOn={true}
+                              videoClickHandler={() => cardClickHadler()}
                             />
                           </div>
                           :
