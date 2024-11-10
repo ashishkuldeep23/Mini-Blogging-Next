@@ -23,23 +23,18 @@ const LayoutPage = (
     // console.log(session)
 
     useEffect(() => {
-
         if (session.status === 'unauthenticated') {
-
             router.push('/home')
         }
-
     }, [])
+
 
     return (
         <div>
 
             <Navbar />
 
-            <div className='  w-full h-16 flex justify-center items-center border-2 text-rose-500 border-rose-500 rounded'>
-                <p className=' '>Go to general Chat BTN here</p>
-            </div>
-            <div className='p-1 '>{children}</div>
+            <div>{children}</div>
 
         </div>
     )

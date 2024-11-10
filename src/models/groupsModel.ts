@@ -2,27 +2,28 @@ import mongoose from "mongoose";
 
 
 const groupScheam = new mongoose.Schema({
-
-    name : {
-        type : String ,
-        default : "",
-        required : true
+    conversationId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "conversations"
     },
-    description : {
-        type : String ,
-        default : "",
-        required : true
+    name: {
+        type: String,
+        default: "",
+        required: true
     },
-    members: {
-        type: [mongoose.Schema.Types.ObjectId],
-        default: [],
-        ref: "users"
+    description: {
+        type: String,
+        default: "",
+        required: true
     },
-    admins: {
-        type: [mongoose.Schema.Types.ObjectId],
-        default: [],
-        ref: "users"
-    },
+    members: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users'
+    }],
+    admins: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users'
+    }],
     whenCreated: {
         type: String,
         default: () => {

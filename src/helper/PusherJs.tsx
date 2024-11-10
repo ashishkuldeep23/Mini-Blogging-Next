@@ -34,7 +34,6 @@ export default function PusherTestDiv({ channelName }: { channelName: string }) 
 
     channelName = `p-chat`
 
-
     useEffect(() => {
 
         if (!channelName) {
@@ -61,7 +60,6 @@ export default function PusherTestDiv({ channelName }: { channelName: string }) 
         channel.bind('reply', (data: any) => {
             setReplies((prevReplies) => [...prevReplies, data]);
         });
-
 
         channel.bind('pusher:subscription_succeeded', () => {
             console.log('Subscription succeeded'); // Log subscription success

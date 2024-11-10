@@ -11,7 +11,6 @@ const messageScheam = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "users"
     },
-
     text: {
         type: String,
         default: "",
@@ -24,6 +23,10 @@ const messageScheam = new mongoose.Schema({
     isDeleted: {
         type: Boolean,
         default: false
+    },
+    replying: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "messages"
     },
     whenCreated: {
         type: String,

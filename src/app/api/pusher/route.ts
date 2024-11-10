@@ -1,20 +1,20 @@
 import Pusher from 'pusher';
 
 
-let appId = process.env.PUSHER_APP_ID || ""
-let key = process.env.PUSHER_KEY || ''
-let secret = process.env.PUSHER_SECRET || ''
-let cluster = process.env.PUSHER_CLUSTER || ''
-let encryptedKey = process.env.PUSHER_ENCRYPTED_KEY || ''
+// let appId = process.env.PUSHER_APP_ID || ""
+// let key = process.env.PUSHER_KEY || ''
+// let secret = process.env.PUSHER_SECRET || ''
+// let cluster = process.env.PUSHER_CLUSTER || ''
+// let encryptedKey = process.env.PUSHER_ENCRYPTED_KEY || ''
 
-const pusher = new Pusher({
-    appId: appId,
-    key: key,
-    secret: secret,
-    cluster: cluster,
-    useTLS: true,
-    // encryptionMasterKeyBase64: encryptedKey
-});
+// const pusher = new Pusher({
+//     appId: appId,
+//     key: key,
+//     secret: secret,
+//     cluster: cluster,
+//     useTLS: true,
+//     // encryptionMasterKeyBase64: encryptedKey
+// });
 
 
 import { NextRequest, NextResponse } from "next/server";
@@ -45,7 +45,6 @@ export async function POST(req: NextRequest) {
 
 
         return NextResponse.json({ success: true, message: 'Event triggered.', responce }, { status: 200 })
-
     }
     catch (error: any) {
 

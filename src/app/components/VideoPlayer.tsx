@@ -165,6 +165,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
     const videoClickOutsideHandler = (e: React.MouseEvent<HTMLDivElement>) => {
         e.stopPropagation();
         setAllBtnVisiable(pre => !pre)
+        setMute(!isMuted)
 
         // // // Video Click Handler is given ------------>>
         videoClickHandler && videoClickHandler();

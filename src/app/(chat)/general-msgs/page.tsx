@@ -2,7 +2,7 @@ import React from 'react'
 
 const GeneralMessagePage = () => {
   return (
-    <div>GeneralMessagePage</div>
+    <div className=' '>GeneralMessagePage</div>
   )
 }
 
