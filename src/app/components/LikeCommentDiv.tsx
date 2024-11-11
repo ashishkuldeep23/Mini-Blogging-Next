@@ -65,11 +65,8 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
 
     const setLoading = (data: boolean) => dispatch(setIsLoading(data))
 
-
     const likeClickHandler = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.stopPropagation()
-
-
 
         if (!checkUserStatus("Plese login to Like post.")) return
         if (!session?.user?.id) return
@@ -249,9 +246,7 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
 
             {/* <MainLoader isLoading={isLoading} /> */}
 
-
             <div className="mt-2">
-
 
                 {/* Like comments buttons (all 3 buttons here) -----> */}
                 <div className=' pt-3 flex flex-row-reverse  items-center md:flex-row gap-8 md:gap-x-16'>
@@ -892,9 +887,7 @@ const SingleCommentUI = ({
     }
 
 
-
     return (
-
         <>
             <div
                 key={comment._id}
@@ -926,7 +919,7 @@ const SingleCommentUI = ({
                         >
 
                             <ImageReact
-                                className="  border-t-2 w-[2rem] !h-[1.5rem] overflow-hidden mx-1 -mt-[0.15rem] rounded-full object-cover "
+                                className="  border-t-2 !w-[1.5rem] !h-[1.5rem] overflow-hidden mx-1 -mt-[0.15rem] rounded-full object-cover "
                                 src={comment?.userId?.profilePic}
                                 alt=""
                             />
@@ -1022,7 +1015,6 @@ const SingleCommentUI = ({
 
             </div>
         </>
-
     )
 }
 

@@ -79,6 +79,14 @@ export interface UpdateCommentInput {
 }
 
 
+export type SearchObj = {
+    hash?: string,
+    category?: string,
+    page?: number,
+    limit?: number,
+}
+
+
 
 export interface PostInterFace {
     _id: string,

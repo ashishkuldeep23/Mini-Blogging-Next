@@ -39,7 +39,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
     let ignoreObserver = false;
 
 
-
     const palyTheVideo = () => {
         videoRef.current && videoRef.current?.play();
         setIsPlaying(true);
@@ -102,12 +101,13 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
             if (videoRef.current) {
                 observer.observe(videoRef.current);
             }
-        } else {
+        } 
+        // // // Not Using now
+        // else {
 
             // // // This code will play video for single page video comp. -------->> (Becuse observer will pause there and if it is off then play song initially.)
-            palyTheVideo();
-
-        }
+            // palyTheVideo();
+        // }
 
         return () => {
             if (videoRef.current) {
@@ -165,7 +165,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
     const videoClickOutsideHandler = (e: React.MouseEvent<HTMLDivElement>) => {
         e.stopPropagation();
         setAllBtnVisiable(pre => !pre)
-        setMute(!isMuted)
+        setMute(false)
 
         // // // Video Click Handler is given ------------>>
         videoClickHandler && videoClickHandler();
@@ -188,7 +188,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
             {
                 !isLoading
                 &&
-                < video
+                <video
                     style={{
                         objectFit: objectFit || "contain",
                         height: height || "auto"

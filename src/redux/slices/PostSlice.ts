@@ -5,17 +5,9 @@ import { useSelector } from "react-redux"
 import { RootState } from "../store"
 import toast from "react-hot-toast"
 // import { NewPostType } from "@/app/new-post/page"
-import { MetaDataInfoType, NewPostType, PostInterFace, PostSliceInterFace, PostTypeForBackend, UpdateCommentInput } from "@/Types"
+import { MetaDataInfoType, NewPostType, PostInterFace, PostSliceInterFace, PostTypeForBackend, SearchObj, UpdateCommentInput } from "@/Types"
 
 
-
-
-type SearchObj = {
-    hash?: string,
-    category?: string,
-    page?: number,
-    limit?: string,
-}
 
 
 

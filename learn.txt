@@ -44,9 +44,7 @@ Post update ----------------->
 
 
 
-
-
-====================================================================================================>>
+====================================================================================================>> BEST WAY ------>>
 
     If you want to share a web that is present n ur local (Both devices should connected with same wifi)
         IP_OF_LEPTOP:PORT <<============= Search this into mobile phone.
@@ -83,4 +81,6 @@ https://ui.aceternity.com/components UI i'm using for ui in this project
 For testing Next app on locally -------->>
 
 If u r connected with same wifi then follow ur leptop ip address with port value.
+
+
 

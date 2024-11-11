@@ -5,6 +5,7 @@ import { usePreventSwipe } from '@/Hooks/useSwipeCustom'
 import { getAllPosts, setSearchBrandAndCate, usePostData } from '@/redux/slices/PostSlice'
 import { useThemeData } from '@/redux/slices/ThemeSlice'
 import { AppDispatch } from '@/redux/store'
+import { SearchObj } from '@/Types'
 import React, { useEffect } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useDispatch } from 'react-redux'
@@ -33,26 +34,29 @@ function AllPostDiv() {
 
   const themeMode = useThemeData().mode
 
-
+  let searchObj: SearchObj = {
+    hash: "",
+    category: "",
+    limit: 7,
+    page: 1,
+  }
 
   function fetchAllPostData() {
-    let searchObj = { hash: "", category: "", page: 1 }
     dispatch(setSearchBrandAndCate(searchObj))
     dispatch(getAllPosts(searchObj))
-
   }
 
 
   function fetchMorePostData() {
-    let searchObj = { hash: "", category: "", page: searchHashAndCate.page + 1 }
-    dispatch(setSearchBrandAndCate(searchObj))
-    dispatch(getAllPosts(searchObj))
+    let searchObjMore: SearchObj = { ...searchObj, page: searchHashAndCate.page + 1 }
+    dispatch(setSearchBrandAndCate(searchObjMore))
+    dispatch(getAllPosts(searchObjMore))
   }
 
 
   useEffect(() => {
     if (allPostData.length <= 1) {
-
+      
       // // // Before calling all posts we need to set queryObject --------->
       fetchAllPostData()
       // dispatch(getAllPosts())
@@ -65,7 +69,6 @@ function AllPostDiv() {
     <InfiniteScroll
       dataLength={allPostData.length} //This is important field to render the next data
       next={() => {
-
         if (allPostData.length < allPostsLength && !searchHashAndCate.category && !searchHashAndCate.hash) {
           fetchMorePostData()
         }
@@ -90,11 +93,11 @@ function AllPostDiv() {
 
       <div className="card_container mt-10 lg:ml-10 p-0.5 relative sm:px-[8vh] flex gap-10 gap-x-64 flex-wrap justify-center lg:justify-start items-center ">
 
-        <MainLoader
+        {/* <MainLoader
           isLoading={isLoading}
           // isLoading={true}
           className=" lg:-translate-x-[50%] !fixed "
-        />
+        /> */}
 
         {
 

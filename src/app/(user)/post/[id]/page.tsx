@@ -312,6 +312,7 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
                                             height='70vh'
                                             postData={singlePost}
                                             playPauseToggleBtn={true}
+                                            observerOn={true}
                                         />
                                         :
                                         (singlePost.metaDataType === "image/jpeg" || singlePost.metaDataType === "image/png")
