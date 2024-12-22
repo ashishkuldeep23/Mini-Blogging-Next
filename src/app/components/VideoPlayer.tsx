@@ -39,6 +39,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
     let ignoreObserver = false;
 
 
+
     const palyTheVideo = () => {
         videoRef.current && videoRef.current?.play();
         setIsPlaying(true);
@@ -101,12 +102,12 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
             if (videoRef.current) {
                 observer.observe(videoRef.current);
             }
-        } 
+        }
         // // // Not Using now
         // else {
 
-            // // // This code will play video for single page video comp. -------->> (Becuse observer will pause there and if it is off then play song initially.)
-            // palyTheVideo();
+        // // // This code will play video for single page video comp. -------->> (Becuse observer will pause there and if it is off then play song initially.)
+        // palyTheVideo();
         // }
 
         return () => {
@@ -169,7 +170,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
 
         // // // Video Click Handler is given ------------>>
         videoClickHandler && videoClickHandler();
-
     }
 
 
@@ -181,7 +181,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
 
     return (
         <div
-            className="relative w-full max-w-4xl mx-auto min-h-[43vh]"
+            className="relative w-full max-w-4xl mx-auto min-h-[43vh] "
             onClick={(e) => videoClickOutsideHandler(e)}
         >
 
@@ -233,6 +233,15 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
                         className="absolute bottom-4 left-0 right-0 flex items-center justify-between gap-1 px-4 z-[1]"
                         onClick={(e) => e.stopPropagation()}
                     >
+
+                        {/* Play pause btn */}
+                        <button
+                            className=" text-white rounded-full px-1 hover:bg-opacity-75 transition relative z-[10] "
+                            onClick={togglePlayPause}
+                        >
+                            {isPlaying ? <FaPause /> : <FaPlay />}
+                        </button>
+
                         {/* Progress Bar */}
                         <input
                             type="range"
@@ -245,11 +254,11 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
                         />
 
                         {/* Volume Button and Slider */}
-
-
                         <span
                             className=' text-xl active:scale-75 transition-all'
-                            onClick={() => setMute(!isMuted)}
+                            onClick={(e) => {
+                                e.stopPropagation(); setMute(!isMuted);
+                            }}
                         >
 
                             {

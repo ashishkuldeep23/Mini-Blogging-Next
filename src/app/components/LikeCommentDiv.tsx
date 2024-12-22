@@ -47,7 +47,8 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
 
     const [showPostCommentDiv, setShowPostCommentDiv] = useState(false)
 
-    const [userID, setUserID] = useState<string>("")
+    // const [userID, setUserID] = useState<string>("")
+    const userID = session?.user?.id || ""
 
     const [updatingComment, setUpdatingComment] = useState<UpdatingComment>({
         mode: false,
@@ -174,18 +175,16 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
 
     useEffect(() => {
 
+        // console.log({ sdasad: JSON.stringify(post.comments) })
+
         if (post.comments.length > 0) {
             let idsOfComments = post.comments.map((ele: any) => {
-
-                // console.log(ele)
 
                 if (typeof ele === "string") {
                     return ele
                 } else {
                     return ele?.userId?._id
                 }
-
-
             })
 
             // console.log(idsOfComments)
@@ -221,13 +220,12 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
     }, [post])
 
 
-    useEffect(() => {
 
-        if (session?.user?.id) {
-            setUserID(session?.user?.id)
-        }
-
-    }, [session])
+    // useEffect(() => {
+    //     if (session?.user?.id) {
+    //         setUserID(session?.user?.id)
+    //     }
+    // }, [session])
 
 
 
@@ -256,7 +254,7 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
                         {/* Like btn */}
                         <button
                             className={`  border px-1 rounded-lg flex items-center gap-1 ${likeIds.includes(userID.toString()) && "text-rose-500 border-rose-500 shadow-md shadow-rose-500"} `}
-                            onClick={(e) => { e.stopPropagation(); likeClickHandler(e) }}
+                            onClick={likeClickHandler}
                         >
                             <span>{post.likes}</span>
                             <span > <SlLike /> </span>
@@ -268,7 +266,7 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
                             className={`border px-1 rounded-lg flex items-center gap-1
                             ${commentIds.includes(userID.toString()) && "text-yellow-500 border-yellow-500 shadow-md shadow-yellow-500"}
                         `}
-                            onClick={(e) => { e.stopPropagation(); commentBtnClicked(e) }}
+                            onClick={commentBtnClicked}
                         >
                             <span>{post.comments.length}</span>
                             <span><FaRegCommentDots /> </span>
