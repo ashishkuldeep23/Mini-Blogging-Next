@@ -13,6 +13,7 @@ import useOpenModalWithHTML from "@/utils/OpenModalWithHtml"
 import { PostInterFace } from "@/Types"
 import VideoPlayer from "./VideoPlayer"
 import { MdZoomOutMap } from "react-icons/md";
+import { useState } from "react"
 
 // import { useSession } from "next-auth/react"
 
@@ -23,6 +24,8 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
   const router = useRouter();
   const promptText = ele.promptReturn;
   const charactersWant = 90;
+
+  const [height, setHeight] = useState<"auto" | "h-[43vh]">("h-[43vh]")
 
   function cardClickHadler() {
 
@@ -53,6 +56,13 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
 
     // dispatch(setInnerHTMLOfModal(innerHtml))
   }
+
+
+  const zoomImageHandler = (e: React.MouseEvent<SVGElement, MouseEvent>) => {
+    e.stopPropagation();
+    setHeight((p) => p === "auto" ? "h-[43vh]" : "auto")
+  }
+
 
   return (
     <motion.div
@@ -100,8 +110,11 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
 
                 <ImageReact
                   className={`mt-2 rounded-full  w-8 h-8 aspect-square !object-cover border p-[1px] border-[${ele?.customize?.color}] `}
+
                   src={`${ele?.author?.profilePic || "https://res.cloudinary.com/dlvq8n2ca/image/upload/v1701708322/jual47jntd2lpkgx8mfx.png"}`}
-                  style={{ borderColor: ele?.customize?.color }}
+                  style={{
+                    borderColor: ele?.customize?.color
+                  }}
                   alt=""
                 />
 
@@ -136,15 +149,11 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
                   {/* <p className=" ml-[75%] text-xs">({ele.category})</p> */}
                 </div>
 
-                <div className=" text-sm"
-
-                // style={{ overflow : "hidden" , textOverflow : "ellipsis", whiteSpace : "balance"}}
-                >
+                <div className=" text-sm" >
 
                   {
                     promptText.toString().length > charactersWant ? `${promptText.slice(0, charactersWant)}...` : `${promptText}`
 
-                    // promptText
                   }
 
                 </div>
@@ -154,12 +163,15 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
                 {
                   ele?.image
                     ?
-                    <div className=" relative">
+                    <div className=" relative ">
                       <ImageReact
                         src={ele?.image}
-                        className=" w-full h-[43vh] my-2 rounded !object-center !object-cover"
+                        className={`w-full my-2 rounded !object-center !object-cover ${height} `}
                       />
-                      <MdZoomOutMap className=" absolute bottom-2 right-2 text-xl " />
+                      <MdZoomOutMap
+                        className=" absolute bottom-2 right-2 text-xl active:scale-75 transition-all "
+                        onClick={zoomImageHandler}
+                      />
                     </div>
 
                     :
@@ -171,7 +183,9 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
                       {
                         (ele?.metaDataType && ele?.metaDataType === 'video/mp4')
                           ?
-                          <div className="h-[43vh]">
+                          <div
+                          // className="h-[43vh]"
+                          >
 
                             <VideoPlayer
                               postData={ele}
@@ -185,10 +199,16 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
                           :
                           (ele.metaDataType === "image/jpeg" || ele.metaDataType === "image/png")
                           &&
-                          <ImageReact
-                            className=" w-full h-[43vh] my-2 rounded !object-center !object-cover"
-                            src={ele.metaDataUrl}
-                          />
+                          <div className=" relative">
+                            <ImageReact
+                              className={`w-full my-2 rounded !object-center !object-cover ${height} `}
+                              src={ele.metaDataUrl}
+                            />
+                            <MdZoomOutMap
+                              onClick={zoomImageHandler}
+                              className=" absolute bottom-4 right-2 text-xl active:scale-75 transition-all "
+                            />
+                          </div>
                       }
 
                     </>

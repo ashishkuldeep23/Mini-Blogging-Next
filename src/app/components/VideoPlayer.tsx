@@ -34,6 +34,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
     const router = useRouter();
     const pathName = usePathname();
     const preventSwipe = usePreventSwipe();
+    const [newHeight, setNewHeight] = useState<"auto" | "43vh" | "70vh">(height || "43vh")
+
 
     // // // Not working now.
     let ignoreObserver = false;
@@ -175,7 +177,12 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
 
     const zoomClickHandler = (e: React.MouseEvent<HTMLSpanElement>) => {
         e.stopPropagation()
-        if (postData && postData._id) router.push(`/post/${postData._id}`)
+        // // // Not rouing user now 
+        // if (postData && postData._id) router.push(`/post/${postData._id}`)
+
+        // // Now inc the height of post.
+        setNewHeight('auto')
+
     }
 
 
@@ -191,7 +198,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
                 <video
                     style={{
                         objectFit: objectFit || "contain",
-                        height: height || "auto"
+                        height: newHeight || "auto"
                     }}
                     ref={videoRef}
                     className="w-full h-auto rounded-lg cursor-pointer"
@@ -212,11 +219,10 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
                 <>
 
                     {/* Play/Pause Button */}
-
                     {
                         playPauseToggleBtn
                         &&
-                        <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="absolute inset-0 flex items-center justify-center ">
                             <button
                                 className="bg-black bg-opacity-50 text-white rounded-full p-4 hover:bg-opacity-75 transition relative z-[10] "
                                 onClick={togglePlayPause}
@@ -227,10 +233,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
                     }
 
 
-
                     {/* Bottom Controls */}
                     <div
-                        className="absolute bottom-4 left-0 right-0 flex items-center justify-between gap-1 px-4 z-[1]"
+                        className="absolute bottom-4 left-0 right-0 flex items-center justify-between gap-1 px-4 z-[5] py-3"
                         onClick={(e) => e.stopPropagation()}
                     >
 

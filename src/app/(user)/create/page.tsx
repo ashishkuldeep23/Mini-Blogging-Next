@@ -432,11 +432,7 @@ const NewPostPage = () => {
       }
 
       if (singlePostdata?.metaDataType) setMetaDataType(singlePostdata.metaDataType)
-
-
     }
-
-
   }, [singlePostdata])
 
 

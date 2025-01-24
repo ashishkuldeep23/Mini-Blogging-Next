@@ -328,6 +328,7 @@ export async function PUT(req: NextRequest) {
             updatedUser = await findUserData.save()
 
         }
+
         else if (whatUpdate === "makeProfilePic") {
 
             // // // Here sender means userId 
@@ -344,6 +345,7 @@ export async function PUT(req: NextRequest) {
             updatedUser = await findUserData.save()
 
         }
+        
         else {
             return NextResponse.json({ success: false, message: 'whatUpdate is not given.' }, { status: 400 })
         }
