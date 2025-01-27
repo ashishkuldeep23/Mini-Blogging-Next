@@ -181,7 +181,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
         // if (postData && postData._id) router.push(`/post/${postData._id}`)
 
         // // Now inc the height of post.
-        setNewHeight('auto')
+        // setNewHeight('auto')
+        setNewHeight('70vh')
 
     }
 
@@ -201,14 +202,13 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
                         height: newHeight || "auto"
                     }}
                     ref={videoRef}
-                    className="w-full h-auto rounded-lg cursor-pointer"
+                    className="w-full h-auto rounded-lg cursor-pointer transition-all duration-300"
                     onTimeUpdate={handleProgress}
                     // onClick={togglePlayPause}
                     src={videoUrl} // Video URL passed as a prop
                     muted={isMuted} // Default muted to prevent autoplay issues in browsers
                 />
             }
-
 
 
             {
@@ -231,7 +231,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
                             </button>
                         </div>
                     }
-
 
                     {/* Bottom Controls */}
                     <div

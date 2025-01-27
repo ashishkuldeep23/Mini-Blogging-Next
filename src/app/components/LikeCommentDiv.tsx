@@ -253,33 +253,33 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
 
                         {/* Like btn */}
                         <button
-                            className={`  border px-1 rounded-lg flex items-center gap-1 ${likeIds.includes(userID.toString()) && "text-rose-500 border-rose-500 shadow-md shadow-rose-500"} `}
+                            className={`  border px-1 py-0.5 rounded-lg flex items-center gap-1 ${likeIds.includes(userID.toString()) && "text-rose-500 border-rose-500 shadow-md shadow-rose-500"} `}
                             onClick={likeClickHandler}
                         >
-                            <span>{post.likes}</span>
-                            <span > <SlLike /> </span>
+                            <span className=" text-[0.6rem] mr-0.5 ">{post.likes}</span>
+                            <span className=" scale-125 " > <SlLike /> </span>
                         </button>
 
 
                         {/* comment btn */}
                         <button
-                            className={`border px-1 rounded-lg flex items-center gap-1
+                            className={`border px-1 py-0.5 rounded-lg flex items-center gap-1
                             ${commentIds.includes(userID.toString()) && "text-yellow-500 border-yellow-500 shadow-md shadow-yellow-500"}
                         `}
                             onClick={commentBtnClicked}
                         >
-                            <span>{post.comments.length}</span>
-                            <span><FaRegCommentDots /> </span>
+                            <span className=" text-[0.6rem] mr-0.5 ">{post.comments.length}</span>
+                            <span className=" scale-125 "><FaRegCommentDots /> </span>
                         </button>
 
 
                         {/* rewrite btn */}
                         <button
-                            className=' border px-1 rounded-lg flex items-center gap-1'
+                            className=' border px-1 py-0.5 rounded-lg flex items-center gap-1'
                             onClick={(e) => { e.stopPropagation(); reWriteHandler() }}
                         >
-                            <span>{post.comments.length}</span>
-                            <span><AiOutlineRetweet /> </span>
+                            <span className=" text-[0.6rem] mr-0.5 ">{post.comments.length}</span>
+                            <span className=" scale-125 "><AiOutlineRetweet /> </span>
                         </button>
 
                     </div>

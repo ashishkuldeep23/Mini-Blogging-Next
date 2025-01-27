@@ -8,12 +8,12 @@ export interface MessageInterface {
     senderId: number;
 }
 
+
 export interface FriendInterface {
     id: number;
     name: string;
     online: boolean;
 }
-
 
 
 export interface UserDataInterface {
@@ -33,15 +33,12 @@ export interface AddMoreFeilsUserData extends UserDataInterface {
     reciveRequest?: UserDataInterface[],
     sendRequest?: UserDataInterface[],
     whoSeenProfile?: UserDataInterface[]
-
 }
 
 
 export interface FriendsAllFriendData extends UserDataInterface {
     friends: string[]
 }
-
-
 
 
 export interface ReplyInterFace {
@@ -51,7 +48,6 @@ export interface ReplyInterFace {
     whenCreated: string
     _id: string
 }
-
 
 
 export interface Comment {
@@ -64,6 +60,7 @@ export interface Comment {
     userId: UserDataInterface
     whenCreated: string
 }
+
 
 export interface PostCustomization {
     bgColor: string,
@@ -122,10 +119,12 @@ export interface SinglePostType extends Omit<PostInterFace, 'likesId'> {
     likesId: UserDataInterface[]
 }
 
+
 export type MetaDataInfoType = {
     id: string,
     sec: string
 }
+
 
 export interface PostSliceInterFace {
     isLoading: boolean,
@@ -181,8 +180,4 @@ export interface PostTypeForBackend {
 }
 
 
-
 export type ValidInputFiles = "image/png" | "image/jpeg" | "video/mp4" | null
-
-
-

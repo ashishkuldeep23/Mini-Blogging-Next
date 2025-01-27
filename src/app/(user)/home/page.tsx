@@ -1,6 +1,7 @@
 'use client'
 import MainLoader from '@/app/components/MainLoader'
-import SinglePostCard from '@/app/components/SinglePostCard'
+// import SinglePostCard from '@/app/components/SinglePostCard'
+import SinglePostCardNew from '@/app/components/SinglePostCardNew'
 import { usePreventSwipe } from '@/Hooks/useSwipeCustom'
 import { getAllPosts, setSearchBrandAndCate, usePostData } from '@/redux/slices/PostSlice'
 import { useThemeData } from '@/redux/slices/ThemeSlice'
@@ -56,7 +57,7 @@ function AllPostDiv() {
 
   useEffect(() => {
     if (allPostData.length <= 1) {
-      
+
       // // // Before calling all posts we need to set queryObject --------->
       fetchAllPostData()
       // dispatch(getAllPosts())
@@ -91,7 +92,7 @@ function AllPostDiv() {
       className="w-full min-h-[50vh] pt-[1vh] pb-[7vh] px-[2vh] !overflow-auto flex flex-col items-center justify-center"
     >
 
-      <div className="card_container mt-10 lg:ml-10 p-0.5 relative sm:px-[8vh] flex gap-10 gap-x-64 flex-wrap justify-center lg:justify-start items-center ">
+      <div className="card_container mt-10 lg:ml-10 p-0.5 relative sm:px-[8vh] sm:gap-10 flex gap-x-64 flex-wrap justify-center lg:justify-start items-center ">
 
         {/* <MainLoader
           isLoading={isLoading}
@@ -106,7 +107,8 @@ function AllPostDiv() {
 
           allPostData.map((ele, i) => {
             return (
-              <SinglePostCard key={i} ele={ele} className=" hover:z-10" />
+              // <SinglePostCard key={i} ele={ele} className=" hover:z-10" />
+              <SinglePostCardNew key={i} ele={ele} className=" hover:z-10" />
             )
           })
 

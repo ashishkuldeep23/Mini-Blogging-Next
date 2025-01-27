@@ -17,6 +17,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
+import { MdZoomOutMap } from 'react-icons/md'
 import { PiSealCheckDuotone } from 'react-icons/pi'
 import { useDispatch } from 'react-redux'
 
@@ -221,6 +222,13 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
 
     }, [singlePost])
 
+    const [zoomImg, setZoomImg] = useState<boolean>(false)
+
+    const zoomImageHandler = () => {
+        setZoomImg(p => !p)
+    }
+
+
 
     return (
 
@@ -286,20 +294,24 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
                 </div>
 
 
-                <div className=' max-h-[70vh] overflow-hidden '>
+                <div className='  overflow-hidden '>
 
 
                     {/* Here we need to impove, when we will deal with video to. */}
                     {
                         singlePost?.image
                             ?
-                            <>
+                            <div className=' relative'>
                                 <ImageReact
                                     src={singlePost?.image}
-                                    className=" w-full h-[35vh] my-2 rounded object-contain object-top"
+                                    className={`w-full h-auto  my-2 rounded object-top ${!zoomImg ? " !object-contain max-h-[70vh] " : " !object-cover "} transition-all duration-300 `}
+                                />
+                                <MdZoomOutMap
+                                    className=" absolute bottom-4 right-2 text-xl active:scale-75 transition-all "
+                                    onClick={zoomImageHandler}
                                 />
                                 <p className=" text-[0.5rem] -mt-2 text-end">Click to see full image.</p>
-                            </>
+                            </div>
                             :
                             singlePost?.metaDataUrl
                             &&
@@ -317,13 +329,21 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
                                         :
                                         (singlePost.metaDataType === "image/jpeg" || singlePost.metaDataType === "image/png")
                                             ?
-                                            <ImageReact
-                                                className=" w-full h-[35vh] my-2 rounded object-contain object-top"
-                                                src={singlePost.metaDataUrl}
-                                            />
+                                            <div className=" relative ">
+
+                                                <ImageReact
+                                                    className={`w-full h-auto  my-2 rounded object-top ${!zoomImg ? " !object-contain max-h-[70vh] " : " !object-cover"} transition-all duration-300 `}
+                                                    src={singlePost.metaDataUrl}
+                                                />
+                                                <MdZoomOutMap
+                                                    className=" absolute bottom-4 right-2 text-xl active:scale-75 transition-all "
+                                                    onClick={zoomImageHandler}
+                                                />
+
+                                            </div>
 
                                             :
-                                            <p className=' text-5xl text-white'>Fuck</p>
+                                            <p className=' text-5xl text-white'>Nope</p>
                                 }
 
                             </>

@@ -4,7 +4,7 @@
 import ImageReact from '@/app/components/ImageReact'
 import MainLoader from '@/app/components/MainLoader'
 // import HomeButton from '@/app/components/HomeButton'
-import SinglePostCard from '@/app/components/SinglePostCard'
+// import SinglePostCard from '@/app/components/SinglePostCard'
 import AnimatedTooltip from '@/app/components/ui/animated-tooltip'
 import { useThemeData } from '@/redux/slices/ThemeSlice'
 import {getProfileData, setIsLoading, updateUserData, useUserState } from '@/redux/slices/UserSlice'
@@ -28,6 +28,7 @@ import { setInnerHTMLOfModal, setOpenMoadl, useModalState } from '@/redux/slices
 import useOpenModalWithHTML from '@/utils/OpenModalWithHtml'
 import { usePreventSwipe } from '@/Hooks/useSwipeCustom'
 import { AddMoreFeilsUserData, FriendsAllFriendData } from '@/Types'
+import SinglePostCardNew from '@/app/components/SinglePostCardNew'
 
 
 const ProfilePageParams = () => {
@@ -1099,7 +1100,7 @@ function AllPostByYou() {
 
                         {
                             userData.allPostOfUser.map((ele) => {
-                                return <SinglePostCard ele={ele} key={ele._id} />
+                                return <SinglePostCardNew ele={ele} key={ele._id} />
                             })
 
                         }

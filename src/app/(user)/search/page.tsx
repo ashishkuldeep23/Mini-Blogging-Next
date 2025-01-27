@@ -15,8 +15,9 @@ import { useSession } from 'next-auth/react';
 // import { PlaceholdersAndVanishInput } from '../components/ui/placeholders-and-vanish-input';
 import { getAllPosts, setSearchBrandAndCate, setSearchByText, usePostData } from '@/redux/slices/PostSlice';
 import SingleUserDiv from '@/app/components/SingleUserDiv';
-import SinglePostCard from '@/app/components/SinglePostCard';
+// import SinglePostCard from '@/app/components/SinglePostCard';
 import { PlaceholdersAndVanishInput } from '@/app/components/ui/placeholders-and-vanish-input';
+import SinglePostCardNew from '@/app/components/SinglePostCardNew';
 
 
 
@@ -505,7 +506,7 @@ function SuggetionForPost() {
                     {
                         posts.map((ele, i) => {
                             return (
-                                <SinglePostCard key={i} ele={ele} className=' scale-[0.85] sm:scale-[0.7] hover:z-10' />
+                                <SinglePostCardNew key={i} ele={ele} className=' scale-[0.85] sm:scale-[0.7] hover:z-10' />
                             )
                         })
                     }

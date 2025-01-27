@@ -4,7 +4,7 @@
 import ImageReact from '@/app/components/ImageReact'
 import MainLoader from '@/app/components/MainLoader'
 import Navbar from '@/app/components/Navbar'
-import SinglePostCard from '@/app/components/SinglePostCard'
+// import SinglePostCard from '@/app/components/SinglePostCard'
 import { useThemeData } from '@/redux/slices/ThemeSlice'
 import { getUserData, updateUserData, useUserState } from '@/redux/slices/UserSlice'
 import { AppDispatch } from '@/redux/store'
@@ -23,6 +23,7 @@ import { PiSealCheckDuotone } from 'react-icons/pi'
 import { TbUserCancel } from "react-icons/tb";
 import SingleUserDiv from '@/app/components/SingleUserDiv'
 import { AddMoreFeilsUserData } from '@/Types'
+import SinglePostCardNew from '@/app/components/SinglePostCardNew'
 
 
 const UserPageParams = ({ params }: any) => {
@@ -134,7 +135,7 @@ const UserPageParams = ({ params }: any) => {
                     searchedUser.allPostOfUser.length > 0
                     &&
                     searchedUser.allPostOfUser.map((ele) => {
-                        return <SinglePostCard ele={ele} key={ele._id} />
+                        return <SinglePostCardNew ele={ele} key={ele._id} />
                     })
                 }
 
