@@ -62,7 +62,7 @@ const SinglePostCardNew: React.FC<{ ele: PostInterFace, className?: string }> = 
     return (
         <div
             onClick={(e) => { e.stopPropagation(); cardClickHadler() }}
-            className={` sm:rounded-xl lg:my-7 sm:bg-gradient-to-tr from-cyan-400  sm:p-0.5  hover:cursor-pointer hover:scale-105 sm:hover:scale-110 transition-all ${className}`}
+            className={` sm:rounded-xl lg:my-7 sm:bg-gradient-to-tr from-cyan-400  sm:p-0.5  hover:cursor-pointer transition-all ${className}`}
         >
             <div className="inter-var">
                 <div className={` sm:rounded-xl w-[95vw] sm:w-[23rem] md:w-[25rem] lg:w-[27rem] !max-w-[30rem] bg-gray-50 relative group/card  dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1]  dark:border-white/[0.2] border-black/[0.1] h-auto border-y shadow-xl  ${!themeMode ? "dark:bg-black shadow-cyan-950" : "dark:bg-white shadow-cyan-50"}  `}>
