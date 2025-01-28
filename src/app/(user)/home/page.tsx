@@ -89,7 +89,7 @@ function AllPostDiv() {
         </div>
       }
 
-      className="w-full min-h-[50vh] pt-[1vh] pb-[7vh] px-[2vh] !overflow-auto flex flex-col items-center justify-center"
+      className=" !w-[98vw] min-h-[50vh] pt-[1vh] pb-[7vh] px-0.5 !overflow-auto flex flex-col items-center justify-center"
     >
 
       <div className="card_container mt-10 lg:ml-10 p-0.5 relative sm:px-[8vh] sm:gap-10 flex gap-x-64 flex-wrap justify-center lg:justify-start items-center ">

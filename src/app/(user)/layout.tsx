@@ -195,11 +195,7 @@ const LayoutPage = (
             {...handlers}
         >
 
-            {/* <h1 className=' text-5xl text-cyan-400'>Swipe {swipeDirection}</h1> */}
-
             {
-                // pathname
-
                 <Navbar
                     className={dont_show_nav_for_pages.includes(pathname) ? " !invisible !-top-10" : ""}
                 />
@@ -286,8 +282,6 @@ const LayoutPage = (
                 </div>
 
             </div>
-
-
         </div>
     )
 }
@@ -378,7 +372,6 @@ function SingleTabLi({ ele, osmClickHangler, setPostionOfFirstLi, className, dis
     }, [ele.name, selectedPath])
 
 
-
     // main_visiable_for_user
     return (
         <li
@@ -392,7 +385,6 @@ function SingleTabLi({ ele, osmClickHangler, setPostionOfFirstLi, className, dis
             `}
         >
             {
-
                 ele.name === "profile"
                     ?
                     <>

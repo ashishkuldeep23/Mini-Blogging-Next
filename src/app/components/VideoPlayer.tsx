@@ -246,7 +246,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
 
                     {/* Bottom Controls */}
                     <div
-                        className="absolute bottom-4 left-0 right-0 flex items-center justify-between gap-1 px-4 z-[5] py-3"
+                        className="absolute bottom-2 left-0 right-0 flex items-center justify-between gap-1 px-4 z-[5] py-3"
                         onClick={(e) => e.stopPropagation()}
                     >
 
