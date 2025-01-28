@@ -9,8 +9,6 @@ import { MetaDataInfoType, NewPostType, PostInterFace, PostSliceInterFace, PostT
 
 
 
-
-
 // // // Not using now -------->
 export const getAllPosts = createAsyncThunk('post/getAllPost', async (queryObj?: SearchObj) => {
 
@@ -53,7 +51,6 @@ export const getAllPosts = createAsyncThunk('post/getAllPost', async (queryObj?:
 })
 
 
-
 // // Not using now -------->
 export const getCatAndHash = createAsyncThunk('post/getCatAndHash', async () => {
     const option: RequestInit = {
@@ -64,7 +61,6 @@ export const getCatAndHash = createAsyncThunk('post/getCatAndHash', async () => 
     let data = await response.json();
     return data
 })
-
 
 
 export const createNewPost = createAsyncThunk("post/createNewPost", async ({ body, userId }: { body: NewPostType, userId: string }) => {
@@ -106,11 +102,6 @@ export const createNewPost = createAsyncThunk("post/createNewPost", async ({ bod
     return data
 
 })
-
-
-// interface UpdatePostBody extends NewPostType {
-//     postId: string
-// }
 
 
 export const updatePost = createAsyncThunk("post/updatePost", async ({ body, userId, postId }: { body: NewPostType, userId: string, postId: string }) => {
@@ -171,8 +162,6 @@ export const likePost = createAsyncThunk("post/likePost", async ({ userId, postI
     return data
 
 })
-
-
 
 
 const innitialSingleState: PostInterFace = {
@@ -345,7 +334,6 @@ const psotSlice = createSlice({
         setMetaDataInfo(state, action: PayloadAction<MetaDataInfoType>) {
             state.metaDataInfo = action.payload
         }
-
 
     },
 

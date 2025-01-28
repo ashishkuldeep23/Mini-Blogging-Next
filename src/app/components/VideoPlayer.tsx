@@ -31,7 +31,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
     const metaDataInfo = usePostData().metaDataInfo;
     const dispatch = useDispatch<AppDispatch>();
     const setMute = (data: boolean) => dispatch(setIsMuted(data));
-    const router = useRouter();
+    // const router = useRouter();
     const pathName = usePathname();
     const preventSwipe = usePreventSwipe();
     const [newHeight, setNewHeight] = useState<"auto" | "43vh" | "70vh">(height || "43vh")
@@ -41,13 +41,12 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
     let ignoreObserver = false;
 
 
-
-    const palyTheVideo = () => {
+    const playTheVideo = () => {
         videoRef.current && videoRef.current?.play();
         setIsPlaying(true);
 
         if (postData) {
-            dispatch(setMetaDataInfo({ id: postData._id, sec: progress.toString() }));
+            dispatch(setMetaDataInfo({ id: videoUrl, sec: progress.toString() }));
         };
     };
 
@@ -56,7 +55,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
         setIsPlaying(false);
         dispatch(setMetaDataInfo({ id: "", sec: "" }));
     };
-
 
     // // // A useEffect that matches postData with globally stored post id.
     // useEffect(() => {
@@ -82,7 +80,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
                         if (entry.isIntersecting && !isPlaying) {
                             // if (entry.isIntersecting) {
                             // videoRef.current.play();
-                            palyTheVideo();
+                            playTheVideo();
                             setIsPlaying(true);
                         } else {
                             // videoRef.current.pause();
@@ -109,7 +107,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
         // else {
 
         // // // This code will play video for single page video comp. -------->> (Becuse observer will pause there and if it is off then play song initially.)
-        // palyTheVideo();
+        // playTheVideo();
         // }
 
         return () => {
@@ -118,6 +116,22 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
             }
         };
     }, []);
+
+    // // // I'm responsable for play the video that is clicked ------->>
+    useEffect(() => {
+        if (metaDataInfo?.id && metaDataInfo?.id !== videoUrl) pauseTheVideo();
+    }, [metaDataInfo])
+
+    // // // I'll hide control btns ------>> 
+    useEffect(() => {
+
+        if (isPlaying && !allBtnVisiable) {
+            setTimeout(() => {
+                setAllBtnVisiable(true)
+            }, 2 * 1000)
+        }
+
+    }, [allBtnVisiable, isPlaying])
 
     // Play/Pause video manually
     const togglePlayPause = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -132,7 +146,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
                 pauseTheVideo();
             } else {
                 // videoRef.current.play();
-                palyTheVideo();
+                playTheVideo();
                 setMute(false)
 
             }
@@ -164,16 +178,16 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
         }
     };
 
-
     const videoClickOutsideHandler = (e: React.MouseEvent<HTMLDivElement>) => {
         e.stopPropagation();
-        setAllBtnVisiable(pre => !pre)
         setMute(false)
+        setAllBtnVisiable(pre => !pre)
 
-        // // // Video Click Handler is given ------------>>
-        videoClickHandler && videoClickHandler();
+        // // // Video Click Handler is given (This can be used for Going to this post) ------------>>
+        // // STOP redirecting for now --------->>
+        // videoClickHandler && videoClickHandler();
+
     }
-
 
     const zoomClickHandler = (e: React.MouseEvent<HTMLSpanElement>) => {
         e.stopPropagation()
@@ -182,10 +196,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
 
         // // Now inc the height of post.
         // setNewHeight('auto')
-        setNewHeight('70vh')
-
+        setNewHeight(p => p === "43vh" ? '70vh' : '43vh')
     }
-
 
     return (
         <div
@@ -284,9 +296,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
                             >
                                 <MdZoomOutMap className=" text-xl " />
                             </span>
-
                         }
-
 
                     </div>
 
@@ -294,7 +304,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
             }
 
 
-        </div >
+        </div>
     );
 };
 
