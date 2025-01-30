@@ -143,6 +143,7 @@ const SinglePostCardNew: React.FC<{ ele: PostInterFace, className?: string }> = 
                                         <div className=" relative ">
                                             <ImageReact
                                                 src={ele?.image}
+                                                onClick={(e)=>{e.stopPropagation()}}
                                                 className={`w-full my-2 rounded !object-top !object-cover transition-all duration-300 ${height} `}
                                             />
                                             <MdZoomOutMap
@@ -175,6 +176,7 @@ const SinglePostCardNew: React.FC<{ ele: PostInterFace, className?: string }> = 
                                                         <ImageReact
                                                             className={`w-full my-2 rounded !object-top !object-cover transition-all duration-300 ${height} `}
                                                             src={ele.metaDataUrl}
+                                                            onClick={(e)=>{e.stopPropagation()}}
                                                         />
                                                         <MdZoomOutMap
                                                             onClick={zoomImageHandler}
