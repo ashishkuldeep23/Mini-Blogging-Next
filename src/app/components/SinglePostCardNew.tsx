@@ -122,12 +122,12 @@ const SinglePostCardNew: React.FC<{ ele: PostInterFace, className?: string }> = 
                             className="w-full"
                         >
                             {/* <> */}
-                                <div className=" flex flex-wrap items-center gap-1">
+                                <div className=" my-1 flex flex-wrap items-center gap-1">
                                     <p className="capitalize text-xl">{ele.title}</p>
                                     {/* <p className=" ml-[75%] text-xs">({ele.category})</p> */}
                                 </div>
 
-                                <div className=" text-sm" >
+                                <div className=" my-1 text-sm" >
 
                                     {
                                         promptText.toString().length > charactersWant ? `${promptText.slice(0, charactersWant)}...` : `${promptText}`

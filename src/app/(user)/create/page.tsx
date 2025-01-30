@@ -70,9 +70,6 @@ const NewPostPage = () => {
 
   const { postCategories, posthashtags } = usePostData();
 
-  // console.log(router)
-
-
   // // // Customization added here ------------------>>
 
   const initailCustomize = {
@@ -175,7 +172,6 @@ const NewPostPage = () => {
     })
   }
 
-
   function selectOnChangeHandler(e: React.ChangeEvent<HTMLSelectElement>) {
 
     if (e.target.value === "plus") {
@@ -194,7 +190,6 @@ const NewPostPage = () => {
     }
 
   }
-
 
   function fileInputOnchangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
     e.stopPropagation();
@@ -228,7 +223,6 @@ const NewPostPage = () => {
     }
 
   }
-
 
   async function onSubmitHandler(even: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>) {
 
@@ -451,7 +445,7 @@ const NewPostPage = () => {
 
         <p className=' my-5 px-4 text-2xl font-semibold'>Create a new post here👇</p>
 
-        <div className={`rounded flex flex-col border w-11/12 xs:w-[80%]  sm:w-3/4 md:w-2/3 
+        <div className={`rounded flex flex-col border w-11/12 xs:w-[89%]  sm:w-3/4 md:w-2/3 
                     ${themeMode ? ` ${!updatingPost ? "bg-green-100" : "bg-rose-100"}` : ` ${!updatingPost ? "bg-green-950" : "bg-rose-950"}`} 
                     `}>
 
@@ -1112,7 +1106,7 @@ const NewPostPage = () => {
 
         </div>
 
-      </div >
+      </div>
 
     </div>
   )

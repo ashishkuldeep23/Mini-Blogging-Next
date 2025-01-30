@@ -821,7 +821,6 @@ const SingleCommentUI = ({
     };
 
 
-
     function updateSingleComment() {
 
         if (!checkUserStatus("Plese login to update comment.")) return
@@ -884,135 +883,134 @@ const SingleCommentUI = ({
         // dispatch(setInnerHTMLOfModal(innerHtml))
     }
 
-
     return (
-        <>
-            <div
-                key={comment._id}
-                className={` ${i % 2 !== 0 && "ml-auto"} border rounded m-1 my-7 p-0.5 w-[90%] sm:w-[80%] relative z-[1]`}
-                onDoubleClick={(e) => commentDoubleClickHandler(e)}
-            >
 
-                {/* <span className=' absolute -top-[2.5vh] right-0 -z-0'>{length - (i)}</span> */}
+        <div
+            key={comment._id}
+            className={` ${i % 2 !== 0 && "ml-auto"} border rounded m-1 my-7 p-0.5 w-[95%] sm:w-[80%] relative z-[1]`}
+            onDoubleClick={(e) => commentDoubleClickHandler(e)}
+        >
 
-                <MainLoader isLoading={isLoading} />
+            {/* <span className=' absolute -top-[2.5vh] right-0 -z-0'>{length - (i)}</span> */}
 
-
-                <div className='flex gap-1 items-end justify-between'>
+            <MainLoader isLoading={isLoading} />
 
 
-                    <div className="w-[90%] flex flex-col gap-1 ">
+            <div className='flex gap-1 items-end justify-between'>
 
-                        <div
-                            className=" flex items-start gap-1"
-                            onClick={(e) => {
 
-                                seeFullSizeHandler(e, {
-                                    username: comment?.userId?.username,
-                                    _id: comment?.userId?._id,
-                                    profilePic: comment?.userId?.profilePic
-                                })
+                <div className="w-[90%] flex flex-col gap-1 ">
 
-                            }}
-                        >
+                    <div
+                        className=" flex items-start gap-1"
+                        onClick={(e) => {
 
-                            <ImageReact
-                                className="  border-t-2 !w-[1.5rem] !h-[1.5rem] overflow-hidden mx-1 -mt-[0.15rem] rounded-full object-cover "
-                                src={comment?.userId?.profilePic}
-                                alt=""
-                            />
-                            <div className=' leading-[.7rem]'>
-                                <p className=" capitalize underline font-semibold">{comment?.userId?.username}</p>
-                                <p className=" text-xs ">{comment?.userId?.email}</p>
-                            </div>
+                            seeFullSizeHandler(e, {
+                                username: comment?.userId?.username,
+                                _id: comment?.userId?._id,
+                                profilePic: comment?.userId?.profilePic
+                            })
 
+                        }}
+                    >
+
+                        <ImageReact
+                            className="  border-t-2 !w-[1.5rem] !h-[1.5rem] overflow-hidden mx-1 -mt-[0.15rem] rounded-full object-cover "
+                            src={comment?.userId?.profilePic}
+                            alt=""
+                        />
+                        <div className=' leading-[.7rem]'>
+                            <p className=" capitalize underline font-semibold">{comment?.userId?.username}</p>
+                            <p className=" text-xs ">{comment?.userId?.email}</p>
                         </div>
-
-                        <div className=" ml-1">
-
-                            <p>{comment.comment}</p>
-                        </div>
-
-
-                        {
-                            // // // Edit and delete btns here --------->
-                            comment?.userId?.email === session?.user?.email
-                            &&
-
-                            <div>
-
-                                <button
-                                    className=" border rounded p-1 mx-1 hover:bg-blue-500"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        updateSingleComment()
-                                    }}
-                                >
-                                    <BiPencil />
-
-                                </button>
-
-                                <button
-                                    onClick={(e) => { e.stopPropagation(); deleteSingleComment(); }}
-                                    className=" border rounded p-1 mx-1 hover:bg-red-500"
-                                >
-                                    <AiTwotoneDelete />
-
-                                </button>
-
-                            </div>
-                        }
 
                     </div>
 
-                    {/* Like and comment div here -----> */}
-                    <div className=" p-0.5 py-1 flex flex-col">
+                    <div className=" ml-1">
 
-                        <button
-                            className={`flex gap-0.5 items-center justify-center mb-1.5 border p-1 rounded text-xs
-                                     ${comment?.likesId?.includes(session?.user?.id || "") && "text-rose-500 border-rose-500 shadow-md shadow-rose-500"}
-                            `}
-                            onClick={(e) => { likeComment(e); }}
-                        >
-
-                            <span>{comment.likes}</span>
-
-                            <SlLike />
-                        </button>
-
-                        <button
-                            className=" flex gap-0.5 items-center justify-center border p-1 rounded text-xs"
-                            onClick={(e) => { e.stopPropagation(); setCommentClicked((last) => !last) }}
-                        >
-                            {
-                                (comment.likes === 0) && (comment.replies.length === 0)
-                                    ?
-                                    <>
-                                        <span>Reply</span>
-                                    </>
-                                    :
-                                    <>
-                                        <span>{comment.replies.length}</span>
-
-                                        <FaRegCommentDots />
-                                    </>
-                            }
-
-
-                        </button>
-
+                        <p>{comment.comment}</p>
                     </div>
+
+
+                    {
+                        // // // Edit and delete btns here --------->
+                        comment?.userId?.email === session?.user?.email
+                        &&
+
+                        <div>
+
+                            <button
+                                className=" border rounded p-1 mx-1 hover:bg-blue-500"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    updateSingleComment()
+                                }}
+                            >
+                                <BiPencil />
+
+                            </button>
+
+                            <button
+                                onClick={(e) => { e.stopPropagation(); deleteSingleComment(); }}
+                                className=" border rounded p-1 mx-1 hover:bg-red-500"
+                            >
+                                <AiTwotoneDelete />
+
+                            </button>
+
+                        </div>
+                    }
 
                 </div>
 
-                <SeeMoreOfComment
-                    commentClicked={commentClicked}
-                    comment={comment}
-                    setCommentClicked={setCommentClicked}
-                />
+                {/* Like and comment div here -----> */}
+                <div className=" p-0.5 py-1 flex flex-col">
+
+                    <button
+                        className={`flex gap-0.5 items-center justify-center mb-1.5 border p-1 rounded text-xs
+                                     ${comment?.likesId?.includes(session?.user?.id || "") && "text-rose-500 border-rose-500 shadow-md shadow-rose-500"}
+                            `}
+                        onClick={(e) => { likeComment(e); }}
+                    >
+
+                        <span>{comment.likes}</span>
+
+                        <SlLike />
+                    </button>
+
+                    <button
+                        className=" flex gap-0.5 items-center justify-center border p-1 rounded text-xs"
+                        onClick={(e) => { e.stopPropagation(); setCommentClicked((last) => !last) }}
+                    >
+                        {
+                            (comment.likes === 0) && (comment.replies.length === 0)
+                                ?
+                                <>
+                                    <span>Reply</span>
+                                </>
+                                :
+                                <>
+                                    <span>{comment.replies.length}</span>
+
+                                    <FaRegCommentDots />
+                                </>
+                        }
+
+
+                    </button>
+
+                </div>
 
             </div>
-        </>
+
+            <SeeMoreOfComment
+                commentClicked={commentClicked}
+                comment={comment}
+                setCommentClicked={setCommentClicked}
+            />
+
+        </div>
+
     )
 }
 
@@ -1054,6 +1052,8 @@ function SeeMoreOfComment(
     const [replies, setReplies] = useState<ReplyInterFace[]>([])
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
+
+    const callModalFn = useOpenModalWithHTML()
 
     async function getCommentData() {
 
@@ -1237,6 +1237,26 @@ function SeeMoreOfComment(
         setIsLoading(false)
     }
 
+    const onClickOnReplyHandler = (ele: ReplyInterFace) => {
+        router.push(`/user/${ele?.userId?._id}`);
+
+
+        const innerHtml = <div className=' flex flex-col items-center justify-center '>
+            <ImageReact
+                src={ele?.userId?.profilePic}
+                className=' rounded '
+            />
+            <button
+                className=' capitalize text-xs px-4 py-2 rounded-md bg-green-500 my-2'
+                onClick={() => {
+                    router.push(`/user/${ele._id}`);
+                }}
+            >See, {ele?.userId?.username || "Name Kumar"}'s profile</button>
+        </div>
+
+        callModalFn({ innerHtml })
+
+    }
 
     useEffect(() => {
 
@@ -1255,7 +1275,6 @@ function SeeMoreOfComment(
 
     return (
         <>
-
             <div
                 className='flex flex-col'
             >
@@ -1308,7 +1327,6 @@ function SeeMoreOfComment(
                         </button>
                     }
                 </div>
-
 
                 {/* Main UI here -------> */}
                 <div
@@ -1480,13 +1498,11 @@ function SeeMoreOfComment(
                     }
 
 
-
                     {
                         replies.length > 0
                         &&
 
                         <div className=' rounded my-1 p-0.5'>
-
 
                             <p className=' text-center'>
                                 <span>Replies are</span>
@@ -1498,22 +1514,30 @@ function SeeMoreOfComment(
                                     return (
                                         <div
                                             key={i}
-                                            className=' border rounded-xl pl-4 sm:pl-1.5 py-1 mt-1 w-full flex items-center justify-between flex-wrap gap-0.5 overflow-hidden'
+                                            className=' border rounded-xl pl-4 sm:pl-1.5 py-1 mt-1  flex items-start justify-between w-full gap-0.5 overflow-hidden'
                                         >
 
                                             <div>
-
                                                 <p>{ele.reply}</p>
                                             </div>
 
+                                            <div className=' ml-auto flex flex-col justify-center items-center gap-1 flex-wrap px-0.5'>
 
-                                            <div className=' ml-auto flex justify-center items-center gap-1 flex-wrap'>
 
+                                                <div
+                                                    className='border rounded-full pr-2 flex items-center gap-1 hover:cursor-pointer'
+                                                    onClick={() => onClickOnReplyHandler(ele)}
+                                                >
+                                                    <ImageReact className='w-7 h-7 object-cover rounded-full border' src={ele?.userId?.profilePic} />
+                                                    <p className=' text-xs capitalize'>{ele?.userId?.username}</p>
+
+                                                </div>
 
                                                 {
+                                                    // // // EDIT and DELETE BTNs -------->>
                                                     session?.user?.email === ele.userId.email
                                                     &&
-                                                    <div className='border rounded-full px-1 flex items-center gap-1'>
+                                                    <div className=' ml-auto border rounded-full px-1 flex items-center gap-1'>
                                                         <button
                                                             className=' px-0.5 rounded-full hover:bg-blue-500 '
                                                             onClick={(e) => {
@@ -1540,18 +1564,6 @@ function SeeMoreOfComment(
                                                         </button>
                                                     </div>
                                                 }
-
-
-
-                                                <div
-                                                    className='border rounded-full pr-2 flex items-center gap-1 hover:cursor-pointer'
-                                                    onClick={() => { router.push(`/user/${ele?.userId?._id}`); }}
-                                                >
-
-                                                    <ImageReact className='w-7 rounded-full border' src={ele?.userId?.profilePic} />
-                                                    <p className=' text-xs capitalize'>{ele?.userId?.username}</p>
-
-                                                </div>
 
                                             </div>
 
