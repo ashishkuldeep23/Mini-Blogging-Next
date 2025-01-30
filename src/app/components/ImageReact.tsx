@@ -42,7 +42,7 @@ const ImageReact = ({
 
 
             <img
-                onClick={() => { onClick && onClick() }}
+                onClick={(e : any) => { onClick && onClick(e) }}
                 width={width}
                 src={src}
                 alt={alt || ""}
