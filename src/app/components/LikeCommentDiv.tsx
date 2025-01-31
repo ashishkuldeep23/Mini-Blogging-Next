@@ -219,67 +219,46 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
 
     }, [post])
 
-
-
-    // useEffect(() => {
-    //     if (session?.user?.id) {
-    //         setUserID(session?.user?.id)
-    //     }
-    // }, [session])
-
-
-
-    // // // Below useEffect is very imp. this decide show rest ui or not ---->
-    // useEffect(() => {
-    //     // console.log(params)
-    //     // if (params !== "/") {
-    //     //     setShowPostCommentDiv(true)
-    //     // }
-    // }, [])
-
-
-
     return (
         <div className=' relative'>
 
             {/* <MainLoader isLoading={isLoading} /> */}
-
             <div className="mt-2">
 
                 {/* Like comments buttons (all 3 buttons here) -----> */}
                 <div className=' pt-3 flex flex-row-reverse  items-center md:flex-row gap-8 md:gap-x-16'>
 
-                    <div className='flex gap-2 flex-wrap justify-between flex-row md:flex-row-reverse'>
+                    <div className='flex gap-2 flex-wrap justify-between items-center flex-row-reverse'>
 
                         {/* Like btn */}
                         <button
-                            className={`  border px-1 py-0.5 rounded-lg flex items-center gap-1 ${likeIds.includes(userID.toString()) && "text-rose-500 border-rose-500 shadow-md shadow-rose-500"} `}
+                            className={`border h-8 w-10 px-1 py-0.5 rounded-lg flex items-center gap-1 ${likeIds.includes(userID.toString()) && "text-rose-500 border-rose-500 shadow-md shadow-rose-500"} `}
                             onClick={likeClickHandler}
                         >
                             <span className=" text-[0.6rem] mr-0.5 ">{post.likes}</span>
-                            <span className=" scale-125 " > <SlLike /> </span>
+                            <span className=" scale-150 " > <SlLike /> </span>
                         </button>
 
 
                         {/* comment btn */}
                         <button
-                            className={`border px-1 py-0.5 rounded-lg flex items-center gap-1
+                            className={`border  h-8 w-10  px-1 py-0.5 rounded-lg flex items-center gap-1
                             ${commentIds.includes(userID.toString()) && "text-yellow-500 border-yellow-500 shadow-md shadow-yellow-500"}
                         `}
                             onClick={commentBtnClicked}
                         >
                             <span className=" text-[0.6rem] mr-0.5 ">{post.comments.length}</span>
-                            <span className=" scale-125 "><FaRegCommentDots /> </span>
+                            <span className=" scale-150 "><FaRegCommentDots /> </span>
                         </button>
 
 
                         {/* rewrite btn */}
                         <button
-                            className=' border px-1 py-0.5 rounded-lg flex items-center gap-1'
+                            className=' border  h-8 w-10  px-1 py-0.5 rounded-lg flex items-center gap-1'
                             onClick={(e) => { e.stopPropagation(); reWriteHandler() }}
                         >
                             <span className=" text-[0.6rem] mr-0.5 ">{post.comments.length}</span>
-                            <span className=" scale-125 "><AiOutlineRetweet /> </span>
+                            <span className=" scale-150 "><AiOutlineRetweet /> </span>
                         </button>
 
                     </div>
