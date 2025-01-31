@@ -19,7 +19,15 @@ interface VideoPlayerProps {
     observerOn?: boolean
 };
 
-const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, postData, playPauseToggleBtn = false, videoClickHandler, observerOn = false }) => {
+const VideoPlayer: React.FC<VideoPlayerProps> = ({
+    videoUrl,
+    objectFit,
+    height,
+    postData,
+    observerOn = false,
+    playPauseToggleBtn = false,
+    videoClickHandler,
+}) => {
 
     const videoRef = useRef<HTMLVideoElement>(null); // Reference to the video element
     const [isPlaying, setIsPlaying] = useState<boolean>(false); // State to track if video is playing
@@ -93,8 +101,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
             {
                 root: null,
                 rootMargin: '0px',
-                // threshold: 0.5, // Trigger when 50% of the video is visible
-                threshold: 1,
+                threshold: 0.5, // Trigger when 50% of the video is visible
+                // threshold: 1,
             }
         );
 
@@ -232,11 +240,11 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
 
                     {/* Play/Pause Button */}
                     {
-                        playPauseToggleBtn
-                        &&
+                        // playPauseToggleBtn
+                        // &&
                         <div className="absolute inset-0 flex items-center justify-center ">
                             <button
-                                className="bg-black bg-opacity-50 text-white rounded-full p-4 hover:bg-opacity-75 transition relative z-[10] "
+                                className="bg-black bg-opacity-50 text-inherit rounded-full p-4 hover:bg-opacity-75 transition relative z-[10] "
                                 onClick={togglePlayPause}
                             >
                                 {isPlaying ? <FaPause size={32} /> : <FaPlay size={32} />}
@@ -252,7 +260,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, objectFit, height, 
 
                         {/* Play pause btn */}
                         <button
-                            className=" text-white rounded-full px-1 hover:bg-opacity-75 transition relative z-[10] "
+                            className=" rounded-full px-1 hover:bg-opacity-75 transition relative z-[10] "
                             onClick={togglePlayPause}
                         >
                             {isPlaying ? <FaPause /> : <FaPlay />}

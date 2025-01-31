@@ -1528,7 +1528,10 @@ function SeeMoreOfComment(
                                                     className='border rounded-full pr-2 flex items-center gap-1 hover:cursor-pointer'
                                                     onClick={() => onClickOnReplyHandler(ele)}
                                                 >
-                                                    <ImageReact className='w-7 h-7 object-cover rounded-full border' src={ele?.userId?.profilePic} />
+                                                    <ImageReact
+                                                        className='w-7 h-7 object-cover rounded-full border'
+                                                        src={ele?.userId?.profilePic}
+                                                    />
                                                     <p className=' text-xs capitalize'>{ele?.userId?.username}</p>
 
                                                 </div>

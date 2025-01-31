@@ -1,5 +1,6 @@
 'use client'
 import MainLoader from '@/app/components/MainLoader'
+import MaskerText from '@/app/components/MaskerText'
 // import SinglePostCard from '@/app/components/SinglePostCard'
 import SinglePostCardNew from '@/app/components/SinglePostCardNew'
 import { usePreventSwipe } from '@/Hooks/useSwipeCustom'
@@ -18,7 +19,7 @@ const HomePage = () => {
 
       <StorySection />
       <AllPostDiv />
-
+      <MaskerText className="font-bold text-2xl" text="I'm Footer dude" />
     </div>
   )
 }
@@ -89,38 +90,24 @@ function AllPostDiv() {
         </div>
       }
 
-      className=" !w-[98vw] min-h-[50vh] pt-[1vh] pb-[7vh] px-0.5 !overflow-auto flex flex-col items-center justify-center"
+      className=" !w-[98vw] min-h-[50vh] pt-[1vh] pb-[7vh] px-0.5 !overflow-auto flex flex-col items-center justify-center  md:!w-[40vw] "
     >
 
-      <div className="card_container mt-10 lg:ml-10 p-0.5 relative sm:px-[8vh] sm:gap-10 flex gap-x-64 flex-wrap justify-center lg:justify-start items-center ">
-
-        {/* <MainLoader
-          isLoading={isLoading}
-          // isLoading={true}
-          className=" lg:-translate-x-[50%] !fixed "
-        /> */}
+      <div
+        className="card_container p-0.5 relative sm:px-[8vh] sm:gap-10 flex gap-x-64 flex-wrap justify-center lg:justify-start items-center md:flex-col"
+      >
 
         {
 
           allPostData.length > 0
           &&
-
           allPostData.map((ele, i) => {
             return (
               // <SinglePostCard key={i} ele={ele} className=" hover:z-10" />
-              <SinglePostCardNew key={i} ele={ele} className=" hover:z-10" />
+              <SinglePostCardNew key={ele._id} index={i} ele={ele} className=" hover:z-10" />
             )
           })
 
-
-
-          // : [null, null, null, null, null, null, null, null, null, null].map((ele, i) => {
-          //   return (
-
-          //     <Card key={i} ele={ele} />
-
-          //   )
-          // })
         }
 
       </div>

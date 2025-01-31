@@ -233,7 +233,7 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
     return (
 
         <div
-            className={` sm:my-[5vh] rounded-lg  p-2 sm:p-4 w-[95%] sm:w-[80%] md:w-[60%] sm:border border-yellow-500  `}
+            className={` sm:my-[5vh] rounded-lg  p-2 sm:p-4 w-[95%] sm:w-[80%] sm:border border-yellow-500  `}
             style={{
                 backgroundColor: singlePost?.customize?.bgColor,
                 color: singlePost?.customize?.color,
@@ -279,7 +279,6 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
                 onDoubleClick={(e) => postDoubleClickHandler(e)}
             >
 
-
                 <div className=" flex justify-between flex-wrap gap-1">
                     <p className="capitalize">{singlePost.title}</p>
                     <p className=" ml-auto text-xs">({singlePost.category})</p>
@@ -287,15 +286,12 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
 
                 <div className=" text-sm"
                 >
-
                     {
                         singlePost.promptReturn
                     }
                 </div>
 
-
                 <div className='  overflow-hidden '>
-
 
                     {/* Here we need to impove, when we will deal with video to. */}
                     {
@@ -323,8 +319,8 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
                                             videoUrl={singlePost.metaDataUrl}
                                             height='70vh'
                                             postData={singlePost}
-                                            playPauseToggleBtn={true}
                                             observerOn={true}
+                                        // playPauseToggleBtn={true}
                                         />
                                         :
                                         (singlePost.metaDataType === "image/jpeg" || singlePost.metaDataType === "image/png")
@@ -380,5 +376,4 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
 
     )
 }
-
 

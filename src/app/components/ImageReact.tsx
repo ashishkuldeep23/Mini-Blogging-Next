@@ -32,7 +32,6 @@ const ImageReact = ({
 
         <>
 
-
             <span
                 className={className}
                 style={{ display: isLoaded ? 'none' : 'inline' }}
@@ -42,7 +41,7 @@ const ImageReact = ({
 
 
             <img
-                onClick={(e : any) => { onClick && onClick(e) }}
+                onClick={(e: any | React.MouseEvent<HTMLImageElement, MouseEvent>) => { onClick && onClick(e) }}
                 width={width}
                 src={src}
                 alt={alt || ""}
