@@ -5,6 +5,7 @@ import LikeCommentDiv from '@/app/components/LikeCommentDiv'
 import MainLoader from '@/app/components/MainLoader'
 import Navbar from '@/app/components/Navbar'
 import VideoPlayer from '@/app/components/VideoPlayer'
+import { formatDateToDDMMYYYY } from '@/helper/DateFomater'
 import { likeAnimationHandler } from '@/helper/likeAnimation'
 import { useCheckUserStatus } from '@/Hooks/useCheckUserStatus'
 import { likePost, setSinglePostdata, usePostData } from '@/redux/slices/PostSlice'
@@ -26,11 +27,8 @@ import { useDispatch } from 'react-redux'
 const Page = ({ params }: any) => {
 
     const themeMode = useThemeData().mode
-
     const router = useRouter()
-
     const dispatch = useDispatch<AppDispatch>()
-
     const singlePostdata = usePostData().singlePostdata
 
 
@@ -154,11 +152,6 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
     const { data: session } = useSession()
     const [likeIds, setLikeIds] = useState<string[]>([])
     const checkUserStatus = useCheckUserStatus()
-
-    // console.log(singlePost)
-
-
-
     const callModalFn = useOpenModalWithHTML()
 
 
@@ -227,7 +220,6 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
     const zoomImageHandler = () => {
         setZoomImg(p => !p)
     }
-
 
 
     return (
@@ -349,7 +341,7 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
                 </div>
 
 
-                <p className=" text-[0.6rem] mt-2 text-end">Uploaded on : {singlePost.whenCreated || "Date"}</p>
+                <p className=" text-[0.6rem] mt-0 text-end">Uploaded on : {formatDateToDDMMYYYY(singlePost.updatedAt) || `${singlePost.whenCreated || "Date"}`}</p>
 
                 <div className=" flex flex-wrap gap-0.[2px] text-violet-500 font-semibold ">
                     {

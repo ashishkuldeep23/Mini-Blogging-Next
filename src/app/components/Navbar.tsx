@@ -148,10 +148,9 @@ const Navbar = ({ className }: { className?: string }) => {
             className={`sticky -top-5 z-[12] flex justify-between items-start gap-1.5 w-full lg:w-[98%] px-2 sm:px-0 lg:px-28 py-4
                 ${!themeMode ? " bg-black text-white border-zinc-700 " : " bg-white text-black border-zinc-300"}
                 ${params === "/" && "!w-[100%]"}
+                ${params === "/create" && ' hidden'}
                 ${className}
             `}
-
-
         >
 
             <div

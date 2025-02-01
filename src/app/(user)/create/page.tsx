@@ -177,16 +177,11 @@ const NewPostPage = () => {
     if (e.target.value === "plus") {
 
       setNewPostData({ ...newPostData, category: "" })
-
       setPlusCategory({ ...plusCategory, mode: true })
-
     } else {
 
-
       setPlusCategory({ value: "", mode: false })
-
       setNewPostData({ ...newPostData, category: e.target.value })
-
     }
 
   }
@@ -202,7 +197,6 @@ const NewPostPage = () => {
     // const preset_key = process.env.CLOUDINARY_PRESET!
 
     // console.log({ urlForCloudinary, preset_key })
-
 
 
     if (e.target.files) {
@@ -221,11 +215,9 @@ const NewPostPage = () => {
       setPostImageUrl(URL.createObjectURL(file))
       setMetaDataType(file.type as ValidInputFiles)
     }
-
   }
 
   async function onSubmitHandler(even: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-
     even.preventDefault()
 
     // console.log(session)
@@ -318,8 +310,6 @@ const NewPostPage = () => {
   // // // Update customization here (For Customization) ------>
   useEffect(() => {
 
-    // console.log(newPostData)
-
     setNewPostData({ ...newPostData, customize: customize })
 
   }, [customize])
@@ -348,7 +338,6 @@ const NewPostPage = () => {
   useEffect(() => {
 
     if (writePostFullFilled) {
-
       // // // back to normal everything -------->
       setNewPostData(initialNewPostData)
 
@@ -379,18 +368,12 @@ const NewPostPage = () => {
   useEffect(() => {
 
     // console.log('from new post page ---> ', posthashtags)
-
-    // if (posthashtags.length > 0) {
-    //     setCatAndHash({ categories: catAndHash.categories, hashthasts : [...posthashtags] })
-    // }
-
     if (postCategories.length > 0) {
       setCatAndHash({ hashthasts: posthashtags, categories: postCategories })
       setNewPostData({ ...newPostData, category: postCategories[0] })
     }
 
   }, [postCategories, posthashtags])
-
 
 
   // // // Update post here =============> 
@@ -433,10 +416,14 @@ const NewPostPage = () => {
   // // // Some common class name that used in input fields ------->  
   const classNamesForInputs = ` w-[100%] border rounded-sm px-1 ${!themeMode ? " bg-slate-900 text-white" : " bg-slate-100 text-black"}`
 
-
   return (
     <div
-      className={`w-full min-h-screen flex flex-col items-center ${!themeMode ? " bg-black text-white " : " bg-white text-black"}`}
+      className={`w-full min-h-screen flex flex-col items-center ${!themeMode ? " bg-black text-white " : " bg-white text-black"} 
+       ${themeMode
+          ? ` ${!updatingPost ? "bg-green-100" : "bg-rose-100"}`
+          : ` ${!updatingPost ? "bg-green-950" : "bg-rose-950"}`
+        } 
+      `}
     >
 
       <MainLoader isLoading={isLoading} className=' !fixed ' />
@@ -445,9 +432,12 @@ const NewPostPage = () => {
 
         <p className=' my-5 px-4 text-2xl font-semibold'>Create a new post here👇</p>
 
-        <div className={`rounded flex flex-col border w-11/12 xs:w-[89%]  sm:w-3/4 md:w-2/3 
-                    ${themeMode ? ` ${!updatingPost ? "bg-green-100" : "bg-rose-100"}` : ` ${!updatingPost ? "bg-green-950" : "bg-rose-950"}`} 
-                    `}>
+        <div className={`rounded flex flex-col w-11/12 xs:w-[89%]  sm:w-3/4 md:w-2/3 
+                    ${themeMode
+            ? ` ${!updatingPost ? "bg-green-100" : "bg-rose-100"}`
+            : ` ${!updatingPost ? "bg-green-950" : "bg-rose-950"}`
+          } `}
+        >
 
           <div
             className='rounded mt-2 flex p-1 gap-2 flex-col sm:flex-row'
@@ -524,10 +514,7 @@ const NewPostPage = () => {
                     onChange={(e) => {
                       selectOnChangeHandler(e)
                     }}
-                    // {...register("category", { required: "Category is Required" })}
-                    // className=" text-black font-bold rounded capitalize py-1"
-
-                    className={`${classNamesForInputs}`}
+                    className={`${classNamesForInputs} !px-0 scale-[1.02] `}
                     name="" id="category_product"
                     value={newPostData.category ? newPostData.category : ''}
                   >
@@ -874,7 +861,6 @@ const NewPostPage = () => {
 
             </div>
 
-
             {/* Post UI of given data shown here -------> */}
             <div
               className={` relative overflow-hidden rounded p-1 border w-full transition-all duration-500 sm:w-2/5 ${!themeMode ? " bg-black" : " bg-white"}`}
@@ -977,7 +963,6 @@ const NewPostPage = () => {
 
           {/* Customization and create or update btn here ------> */}
           <div className=' flex flex-col '>
-
 
             <div className=' px-2 my-5 border rounded-xl m-1 py-2'>
 
@@ -1088,7 +1073,6 @@ const NewPostPage = () => {
               <p className=' text-xs mt-1'>* Make sure your post should look Awesome and visiable properly.</p>
               <p className=' text-xs'>* Make your post design as better as you can and inhance look and feel.</p>
             </div>
-
 
             <div className=' flex justify-end'>
 

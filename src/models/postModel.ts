@@ -98,10 +98,10 @@ const PostSchema = new mongoose.Schema({
     },
     whenCreated: {
         type: String,
-        default: () => {
-            let a = new Date()
-            return a.toLocaleDateString()
-        }
+        // default: () => {
+        //     let a = new Date()
+        //     return a.toLocaleDateString("en-GB")
+        // }
     }
 
 }, { timestamps: true })

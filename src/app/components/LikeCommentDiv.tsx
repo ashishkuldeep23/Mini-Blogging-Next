@@ -265,25 +265,24 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
 
                     {
                         // // // For post creator (btns ) ------->>
+                        // post?.author?.email === session?.user?.email
+                        // &&
+                        // <div className=' ml-auto mr-1 flex gap-0'>
 
-                        post?.author?.email === session?.user?.email
-                        &&
-                        <div className=' ml-auto mr-1 flex gap-0'>
+                        //     <button
+                        //         className=" border px-2 rounded-lg mx-0.5 hover:bg-blue-500"
+                        //         onClick={updatePostHandler}
+                        //     >
+                        //         <BiPencil />
+                        //     </button>
 
-                            <button
-                                className=" border px-2 rounded-lg mx-0.5 hover:bg-blue-500"
-                                onClick={(e) => { e.stopPropagation(); updatePostHandler(e) }}
-                            >
-                                <BiPencil />
-                            </button>
-
-                            <button
-                                className=" border px-2 rounded-lg  mx-0.5 hover:bg-red-500"
-                                onClick={(e) => { e.stopPropagation(); deletePostHandler(e) }}
-                            >
-                                <AiTwotoneDelete />
-                            </button>
-                        </div>
+                        //     <button
+                        //         className=" border px-2 rounded-lg  mx-0.5 hover:bg-red-500"
+                        //         onClick={deletePostHandler}
+                        //     >
+                        //         <AiTwotoneDelete />
+                        //     </button>
+                        // </div>
                     }
 
                 </div>
