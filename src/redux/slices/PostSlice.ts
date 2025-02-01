@@ -193,6 +193,8 @@ const innitialSingleState: PostInterFace = {
         font: ""
     },
     whenCreated: "",
+    createdAt: null,
+    updatedAt: null,
 }
 
 

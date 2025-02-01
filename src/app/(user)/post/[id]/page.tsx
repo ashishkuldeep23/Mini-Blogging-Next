@@ -340,8 +340,7 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
 
                 </div>
 
-
-                <p className=" text-[0.6rem] mt-0 text-end">Uploaded on : {formatDateToDDMMYYYY(singlePost.updatedAt) || `${singlePost.whenCreated || "Date"}`}</p>
+                <p className=" text-[0.6rem] mt-0 text-end">Uploaded on : {singlePost?.updatedAt ? formatDateToDDMMYYYY(singlePost?.updatedAt) : `${singlePost.whenCreated || "Date"}`}</p>
 
                 <div className=" flex flex-wrap gap-0.[2px] text-violet-500 font-semibold ">
                     {

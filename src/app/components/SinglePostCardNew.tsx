@@ -347,7 +347,7 @@ const SinglePostCardNew: React.FC<{ ele: PostInterFace, className?: string, inde
                             <div className=" w-full flex justify-between items-center px-1">
                                 <p className=" text-xs">({ele.category})</p>
                                 {/* <p className=" text-[0.6rem] mt-0 text-end">Uploaded on : {ele.whenCreated || "Date"}</p> */}
-                                <p className=" text-[0.6rem] mt-0 text-end">Uploaded on : {formatDateToDDMMYYYY(ele.updatedAt) || `${ele.whenCreated || "Date"}`}</p>
+                                <p className=" text-[0.6rem] mt-0 text-end">Uploaded on : {ele?.updatedAt ? formatDateToDDMMYYYY(ele?.updatedAt) : `${ele.whenCreated || "Date"}`}</p>
                             </div>
 
 

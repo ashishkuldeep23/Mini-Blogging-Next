@@ -111,8 +111,8 @@ export interface PostInterFace {
     whenCreated?: string
     metaDataType?: ValidInputFiles
     metaDataUrl?: string,
-    createdAt: Date,
-    updatedAt: Date,
+    createdAt: Date | null,
+    updatedAt: Date | null,
 }
 
 
