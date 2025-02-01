@@ -104,11 +104,12 @@ const SinglePostCardNew: React.FC<{ ele: PostInterFace, className?: string, inde
                                 />
 
                                 <div
-                                    className={`mt-1 ml-1.5 rounded-br-2xl pr-5 relative border-b `}
+                                    className={`mt-1 rounded-br-2xl pr-4 pl-6 -ml-3.5 relative border-b `}
                                     style={{
                                         borderColor: ele?.customize?.color || ""
                                     }}
                                 >
+
                                     <p className="  capitalize ">{ele?.author?.username || "Name Kumar"}</p>
                                     <p className=" text-[0.6rem] -mt-[1.5vh]">{ele?.author?.email || "xyz100@gmail.com"}</p>
 
@@ -119,6 +120,7 @@ const SinglePostCardNew: React.FC<{ ele: PostInterFace, className?: string, inde
                                             <PiSealCheckDuotone />
                                         </span>
                                     }
+
                                 </div>
 
 
@@ -128,7 +130,7 @@ const SinglePostCardNew: React.FC<{ ele: PostInterFace, className?: string, inde
 
                         {/* Post info div here  */}
                         <div
-                            className={`w-fullll w-[95%] ml-auto py-2 pl-5 border-l `}
+                            className={`w-fullll w-[95%] ml-auto py-2 pl-5 border-l border-opacity-50 `}
                             style={{
                                 borderColor: ele?.customize?.color || ""
                             }}
@@ -218,16 +220,23 @@ const SinglePostCardNew: React.FC<{ ele: PostInterFace, className?: string, inde
                             </div>
 
 
+                            <div
+                                className="px-4 py-2 ml-auto md:ml-2 rounded-xl text-xs font-normal "
+                            >
+                                <LikeCommentDiv post={ele} />
+                            </div>
+
+
                             {/* </> */}
 
                         </div>
 
                         {/* Post like and all here */}
-                        <div
+                        {/* <div
                             className="px-4 py-2 ml-auto md:ml-2 rounded-xl text-xs font-normal "
                         >
                             <LikeCommentDiv post={ele} />
-                        </div>
+                        </div> */}
 
                     </div>
 
