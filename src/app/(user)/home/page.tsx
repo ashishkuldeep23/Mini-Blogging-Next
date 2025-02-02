@@ -111,7 +111,7 @@ function AllPostDiv() {
             <>
               {
                 [null, null, null, null, null].map((_, i) => {
-                  return <div className=' w-[95vw] sm:w-[23rem] md:w-[25rem] lg:w-[27rem] !max-w-[30rem] h-60 my-1 bg-gray-500 rounded-lg animate-pulse '></div>
+                  return <div key={i} className=' w-[95vw] sm:w-[23rem] md:w-[25rem] lg:w-[27rem] !max-w-[30rem] h-60 my-1 bg-gray-500 rounded-lg animate-pulse '></div>
                 })
               }
             </>
