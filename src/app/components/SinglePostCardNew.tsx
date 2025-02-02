@@ -206,7 +206,7 @@ const SinglePostCardNew: React.FC<{ ele: PostInterFace, className?: string, inde
 
                         {/* Post info div here  */}
                         <div
-                            className={`w-fullll w-[99%] -mt-2 ml-auto py-2 pt-4 pl-5 border-l border-opacity-50 `}
+                            className={`w-fullll w-[99%] -mt-1.5 ml-auto py-2 pt-4 pl-5 border-l border-opacity-50 `}
                             style={{
                                 borderColor: ele?.customize?.color || ""
                             }}
