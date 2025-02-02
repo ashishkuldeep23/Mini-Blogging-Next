@@ -7,6 +7,7 @@ import Navbar from '@/app/components/Navbar'
 import VideoPlayer from '@/app/components/VideoPlayer'
 import { formatDateToDDMMYYYY } from '@/helper/DateFomater'
 import { likeAnimationHandler } from '@/helper/likeAnimation'
+import useEditAndDelPostFns from '@/helper/useEditAndDelPostFns'
 import { useCheckUserStatus } from '@/Hooks/useCheckUserStatus'
 import { likePost, setSinglePostdata, usePostData } from '@/redux/slices/PostSlice'
 import { useThemeData } from '@/redux/slices/ThemeSlice'
@@ -18,8 +19,10 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
+import { AiTwotoneDelete } from 'react-icons/ai'
+import { BiPencil } from 'react-icons/bi'
 import { MdZoomOutMap } from 'react-icons/md'
-import { PiSealCheckDuotone } from 'react-icons/pi'
+import { PiDotsThreeOutlineVertical } from 'react-icons/pi'
 import { useDispatch } from 'react-redux'
 
 
@@ -153,6 +156,8 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
     const [likeIds, setLikeIds] = useState<string[]>([])
     const checkUserStatus = useCheckUserStatus()
     const callModalFn = useOpenModalWithHTML()
+    const themeMode = useThemeData().mode;
+    const { updatePostHandler, deletePostHandler, showOptionPanel, setShowOptionPanel } = useEditAndDelPostFns(singlePost)
 
 
     const seeFullSizeHandler = (e: any, ele: PostInterFace) => {
@@ -161,7 +166,7 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
         const innerHtml = <div className=' flex flex-col items-center justify-center '>
             <ImageReact
                 src={ele?.author?.profilePic}
-                className=' rounded '
+                className=' rounded max-h-[70vh] '
             />
             <button
                 className=' capitalize text-xs px-4 py-2 rounded-md bg-green-500 my-2'
@@ -177,8 +182,6 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
     }
 
     const postDoubleClickHandler = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-
-
 
         e.stopPropagation();
 
@@ -222,10 +225,15 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
     }
 
 
+    const handleShowPanelClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.stopPropagation(); setShowOptionPanel(p => !p);
+    }
+
+
     return (
 
         <div
-            className={` sm:my-[5vh] rounded-lg  p-2 sm:p-4 w-[95%] sm:w-[80%] sm:border border-yellow-500  `}
+            className={` sm:my-[5vh] rounded-lg  p-2 sm:p-4 w-[95%] sm:w-[80%] sm:border border-yellow-500 overflow-hidden  `}
             style={{
                 backgroundColor: singlePost?.customize?.bgColor,
                 color: singlePost?.customize?.color,
@@ -241,6 +249,61 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
                 backgroundSize: `url('${singlePost.author?.profilePic}')` === `${singlePost?.customize?.bgImage}` ? "contain" : "",
             }}
         >
+
+            {/* Edit and Options panel ------>> */}
+            <div
+                className={` flex flex-col items-end gap-1 w-full min-h-40 px-2 py-2 absolute  left-0 z-[1] ${!themeMode ? " bg-black text-white " : " bg-white text-black "} transition-all ${showOptionPanel ? 'top-0' : " -top-[110%] "} `}
+                style={{
+                    backgroundColor: singlePost?.customize?.bgColor || ''
+                }}
+                onClick={(e) => { e.stopPropagation(); }}
+            >
+
+                <button
+                    className=' text-sm ml-auto mt-2 bg-red-600 px-1.5 py-0.5 rounded-md font-bold active:scale-75 transition-all'
+                    onClick={handleShowPanelClick}
+                >✕</button>
+
+
+                {
+                    singlePost?.author?.email === session?.user?.email
+                    &&
+
+                    <>
+                        <button
+                            className=' text-lg px-2 py-1 border rounded-xl active:scale-75 transition-all hover:bg-green-500 w-[50%]  flex justify-center items-center gap-1 '
+                            onClick={updatePostHandler}
+                        >
+                            <BiPencil />
+                            <span>Edit</span>
+                        </button>
+                        <button
+                            className=' text-lg px-2 py-1 border rounded-xl active:scale-75 transition-all hover:bg-red-500 w-[60%] flex justify-center items-center gap-1 '
+                            onClick={deletePostHandler}
+                        >
+                            <AiTwotoneDelete />
+                            <span>Delete</span>
+                        </button>
+                    </>
+
+
+                }
+
+                <button
+                    className=' text-lg px-2 py-1 border rounded-xl active:scale-75 transition-all w-[70%] '
+                >
+                    <span>Save</span>
+                </button>
+                <button
+                    className=' text-lg px-2 py-1 border rounded-xl active:scale-75 transition-all w-[60%] '
+                >
+                    <span>Block</span>
+                </button>
+
+            </div>
+
+
+
 
             {/* User name and user info div here ---------->> */}
             <div
@@ -261,6 +324,14 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
                     <p className="  capitalize underline font-semibold">{singlePost?.author?.username || "Name Kumar"}</p>
                     <p className=" text-[0.6rem] -mt-[0.5vh]">{singlePost?.author?.email || "xyz100@gmail.com"}</p>
                 </div>
+
+
+                <button
+                    className=' ml-auto mt-2 px-2 rounded-md py-1 active:scale-75 transition-all'
+                    onClick={handleShowPanelClick}
+                >
+                    <PiDotsThreeOutlineVertical />
+                </button>
 
             </div>
 

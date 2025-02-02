@@ -1,4 +1,4 @@
-import { setDeleteSinglePost, setSinglePostdata, setSinglePostId, setUpdatingPost } from '@/redux/slices/PostSlice';
+import { setSinglePostId, usePostData } from '@/redux/slices/PostSlice';
 import { useThemeData } from '@/redux/slices/ThemeSlice';
 import { PostInterFace } from '@/Types'
 import useOpenModalWithHTML from '@/utils/OpenModalWithHtml';
@@ -18,6 +18,7 @@ import { AiTwotoneDelete } from 'react-icons/ai';
 import { setIsLoading } from '@/redux/slices/UserSlice';
 import toast from 'react-hot-toast';
 import { formatDateToDDMMYYYY } from '@/helper/DateFomater';
+import useEditAndDelPostFns from '@/helper/useEditAndDelPostFns';
 
 
 const SinglePostCardNew: React.FC<{ ele: PostInterFace, className?: string, index?: number }> = ({ ele, className, index }) => {
@@ -25,15 +26,13 @@ const SinglePostCardNew: React.FC<{ ele: PostInterFace, className?: string, inde
     const themeMode = useThemeData().mode;
     const dispatch = useDispatch();
     const router = useRouter();
-    const params = usePathname()
     const promptText = ele.promptReturn;
     const charactersWant = 90;
-    const [showOptionPanel, setShowOptionPanel] = useState<boolean>(false)
-    const [height, setHeight] = useState<"h-[70vh]" | "h-[43vh]">("h-[43vh]")
-    const setLoading = (data: boolean) => dispatch(setIsLoading(data))
+    const recentlyDeleted = usePostData().recentlyDeleted;
+    const [height, setHeight] = useState<"h-[73vh]" | "h-[43vh]">("h-[43vh]");
+    const { updatePostHandler, deletePostHandler, showOptionPanel, setShowOptionPanel } = useEditAndDelPostFns(ele)
 
     function cardClickHadler() {
-
         dispatch(setSinglePostId(ele._id))
         router.push(`/post/${ele._id}`)
     }
@@ -47,7 +46,7 @@ const SinglePostCardNew: React.FC<{ ele: PostInterFace, className?: string, inde
         const innerHtml = <div className=' flex flex-col items-center justify-center '>
             <ImageReact
                 src={ele?.author?.profilePic}
-                className=' rounded '
+                className=' rounded max-h-[70vh] '
             />
             <button
                 className=' capitalize text-xs px-4 py-2 rounded-md bg-green-500 my-2'
@@ -64,73 +63,12 @@ const SinglePostCardNew: React.FC<{ ele: PostInterFace, className?: string, inde
 
     const zoomImageHandler = (e: React.MouseEvent<SVGElement, MouseEvent>) => {
         e.stopPropagation();
-        setHeight((p) => p === "h-[70vh]" ? "h-[43vh]" : "h-[70vh]")
+        setHeight((p) => p === "h-[43vh]" ? "h-[73vh]" : "h-[43vh]")
     }
 
     const handleShowPanelClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.stopPropagation(); setShowOptionPanel(p => !p);
     }
-
-
-    const updatePostHandler = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        event.stopPropagation()
-
-        // toast.success("Update post")
-
-        // // // All dispatches here -------->
-        dispatch(setSinglePostdata(ele))
-        dispatch(setUpdatingPost(true))
-
-
-        // // // Page navigation here  -------->
-        router.push('/create')
-        // // // Use with "/" (forword slash) to go somewhere --->
-        // router.replace('new-post')
-    }
-
-    const deletePostHandler = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        event.stopPropagation()
-
-        setLoading(true)
-
-        const option: RequestInit = {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                postId: ele._id,
-                userId: session?.user?.id
-            })
-        }
-        const response = await fetch('/api/post/delete', option)
-        let json = await response.json();
-
-        // console.log(json)
-
-        if (json.success) {
-            // dispatch(updateOnePost(json.data))
-            // dispatch(setSinglePostdata(json.data))
-
-            dispatch(setDeleteSinglePost(json.data))
-
-            if (params !== '/') {
-                router.push("/")
-            }
-
-        }
-
-        else {
-            toast.error(json.message)
-        }
-
-
-        // console.log(data)
-
-        setLoading(false)
-
-    }
-
 
 
     return (
@@ -143,14 +81,14 @@ const SinglePostCardNew: React.FC<{ ele: PostInterFace, className?: string, inde
                 damping: 20
             }}
             onClick={(e) => { e.stopPropagation(); cardClickHadler() }}
-            className={` sm:rounded-xl lg:my-7 sm:bg-gradient-to-tr from-cyan-400  sm:p-0.5  hover:cursor-pointer transition-all ${className}`}
+            className={` ${recentlyDeleted.includes(ele._id) && " hidden "} sm:rounded-xl lg:my-7 sm:bg-gradient-to-tr from-cyan-400  sm:p-0.5  hover:cursor-pointer transition-all ${className}`}
         >
             <div className="inter-var">
                 <div
                     className={` overflow-hidden sm:rounded-xl w-[95vw] sm:w-[23rem] md:w-[25rem] lg:w-[27rem] !max-w-[30rem] bg-gray-50 relative group/card  dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1]  dark:border-white/[0.2] border-black/[0.1] h-auto  ${!themeMode ? " dark:bg-black shadow-cyan-950 " : " dark:bg-white shadow-cyan-50 "}   `}
                 >
 
-
+                    {/* Edit and Options panel ------>> */}
                     <div
                         className={` flex flex-col items-end gap-1 w-full min-h-40 px-2 py-2 absolute  left-0 z-[1] ${!themeMode ? " bg-black text-white " : " bg-white text-black "} transition-all ${showOptionPanel ? 'top-0' : " -top-[110%] "} `}
                         style={{
@@ -171,22 +109,18 @@ const SinglePostCardNew: React.FC<{ ele: PostInterFace, className?: string, inde
 
                             <>
                                 <button
-                                    className=' text-lg px-2 py-1 border rounded-xl active:scale-75 transition-all w-[50%]  flex justify-center items-center gap-1 '
+                                    className=' text-lg px-2 py-1 border rounded-xl active:scale-75 transition-all hover:bg-green-500 w-[50%]  flex justify-center items-center gap-1 '
                                     onClick={updatePostHandler}
                                 >
-                                    <>
-                                        <BiPencil />
-                                        <span>Edit</span>
-                                    </>
+                                    <BiPencil />
+                                    <span>Edit</span>
                                 </button>
                                 <button
-                                    className=' text-lg px-2 py-1 border rounded-xl active:scale-75 transition-all w-[60%] flex justify-center items-center gap-1 '
+                                    className=' text-lg px-2 py-1 border rounded-xl active:scale-75 transition-all hover:bg-red-500 w-[60%] flex justify-center items-center gap-1 '
                                     onClick={deletePostHandler}
                                 >
-                                    <>
-                                        <AiTwotoneDelete />
-                                        <span>Delete</span>
-                                    </>
+                                    <AiTwotoneDelete />
+                                    <span>Delete</span>
                                 </button>
                             </>
 
@@ -199,14 +133,14 @@ const SinglePostCardNew: React.FC<{ ele: PostInterFace, className?: string, inde
                             <span>Save</span>
                         </button>
                         <button
-                            className=' text-lg px-2 py-1 border rounded-xl active:scale-75 transition-all w-[80%] '
+                            className=' text-lg px-2 py-1 border rounded-xl active:scale-75 transition-all w-[60%] '
                         >
                             <span>Block</span>
                         </button>
 
                     </div>
 
-
+                    {/* Post UI */}
                     <div
                         className={` sm:rounded-xl p-2 py-5 sm:p-4  border-y ${!themeMode ? " bg-black text-white border-slate-700 shadow-slate-700 " : " bg-white text-black border-slate-300 shadow-slate-300"} ${index === 0 && " border-t-0 "}`}
                         style={{
@@ -241,7 +175,7 @@ const SinglePostCardNew: React.FC<{ ele: PostInterFace, className?: string, inde
                                 />
 
                                 <div
-                                    className={`mt-1 rounded-br-2xl pr-4 pl-6 -ml-3.5 relative border-b `}
+                                    className={`mt-1 rounded-br-2xlll pr-4 pl-8 -ml-5 relative border-b `}
                                     style={{
                                         borderColor: ele?.customize?.color || ""
                                     }}
@@ -272,12 +206,11 @@ const SinglePostCardNew: React.FC<{ ele: PostInterFace, className?: string, inde
 
                         {/* Post info div here  */}
                         <div
-                            className={`w-fullll w-[95%] ml-auto py-2 pl-5 border-l border-opacity-50 `}
+                            className={`w-fullll w-[99%] -mt-2 ml-auto py-2 pt-4 pl-5 border-l border-opacity-50 `}
                             style={{
                                 borderColor: ele?.customize?.color || ""
                             }}
                         >
-                            {/* <> */}
                             <div className=" my-1 flex flex-wrap items-center gap-1">
                                 <p className="capitalize text-xl">{ele.title}</p>
                                 {/* <p className=" ml-[75%] text-xs">({ele.category})</p> */}
@@ -368,9 +301,6 @@ const SinglePostCardNew: React.FC<{ ele: PostInterFace, className?: string, inde
                             >
                                 <LikeCommentDiv post={ele} />
                             </div>
-
-
-                            {/* </> */}
 
                         </div>
 

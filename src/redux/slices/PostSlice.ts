@@ -221,7 +221,8 @@ const initialState: PostSliceInterFace = {
     metaDataInfo: {
         id: "",
         sec: "",
-    }
+    },
+    recentlyDeleted: []
 }
 
 
@@ -270,17 +271,16 @@ const psotSlice = createSlice({
         },
 
         setDeleteSinglePost(state, action: PayloadAction<PostInterFace>) {
-            state.singlePostdata = action.payload
+            state.singlePostdata = action.payload;
+            let currentState = current(state);
 
+            // let findIndex = [...currentState.allPost].findIndex(ele => ele._id === action.payload._id);
+            // state.allPost.splice(findIndex, 1)
 
-            let currentState = current(state)
+            // // // deleting from allPost data -------->>
+            // state.allPost = [...currentState.allPost].filter((ele) => ele._id !== action.payload._id)
 
-            let findIndex = [...currentState.allPost].findIndex(ele => ele._id === action.payload._id)
-
-            // console.log(findIndex)
-
-            state.allPost.splice(findIndex, 1)
-
+            state.recentlyDeleted = [action.payload._id, ...currentState.recentlyDeleted]
 
         },
 

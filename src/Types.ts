@@ -141,6 +141,7 @@ export interface PostSliceInterFace {
     postCategories: string[],
     posthashtags: string[],
     allPostsLength: number,
+    recentlyDeleted: string[],
     searchHashAndCate: {
         hash: string,
         category: string,

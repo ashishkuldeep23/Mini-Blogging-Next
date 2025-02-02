@@ -217,7 +217,7 @@ function UserProfileImage() {
 
         const innerHtml = <ImageReact
             src={postImageUrl}
-            className=' rounded '
+            className=' rounded max-h-[70vh] '
         />
 
         dispatch(setInnerHTMLOfModal(innerHtml))
@@ -352,7 +352,7 @@ function AllUploadedPicturesDiv() {
         const innerHtml = <div className=' flex flex-col items-center justify-center '>
             <ImageReact
                 src={ele}
-                className=' rounded '
+                className=' rounded max-h-[70vh] '
             />
             <button
                 className=' px-4 py-2 rounded-md bg-green-500 my-2'

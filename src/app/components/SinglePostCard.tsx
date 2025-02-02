@@ -42,7 +42,7 @@ export default function SinglePostCard({ ele, className }: { ele: PostInterFace,
     const innerHtml = <div className=' flex flex-col items-center justify-center '>
       <ImageReact
         src={ele?.author?.profilePic}
-        className=' rounded '
+        className=' rounded max-h-[70vh] '
       />
       <button
         className=' capitalize text-xs px-4 py-2 rounded-md bg-green-500 my-2'

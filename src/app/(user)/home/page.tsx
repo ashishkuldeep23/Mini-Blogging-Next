@@ -100,14 +100,21 @@ function AllPostDiv() {
         {
 
           allPostData.length > 0
-          &&
-          allPostData.map((ele, i) => {
-            return (
-              // <SinglePostCard key={i} ele={ele} className=" hover:z-10" />
-              <SinglePostCardNew key={ele._id} index={i} ele={ele} className=" hover:z-10" />
-            )
-          })
-
+            ?
+            allPostData.map((ele, i) => {
+              return (
+                // <SinglePostCard key={i} ele={ele} className=" hover:z-10" />
+                <SinglePostCardNew key={ele._id} index={i} ele={ele} className=" hover:z-10" />
+              )
+            })
+            :
+            <>
+              {
+                [null, null, null, null, null].map((_, i) => {
+                  return <div className=' w-[95vw] sm:w-[23rem] md:w-[25rem] lg:w-[27rem] !max-w-[30rem] h-60 my-1 bg-gray-500 rounded-lg animate-pulse '></div>
+                })
+              }
+            </>
         }
 
       </div>

@@ -172,18 +172,22 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
 
     }
 
+    // console.log(userID.toString())
 
     useEffect(() => {
 
-        // console.log({ sdasad: JSON.stringify(post.comments) })
+        // console.log({
+        //     sdasad: JSON.stringify(post.comments),
+        //     user: userID.toString()
+        // })
 
         if (post.comments.length > 0) {
             let idsOfComments = post.comments.map((ele: any) => {
 
                 if (typeof ele === "string") {
-                    return ele
+                    return ele.toString()
                 } else {
-                    return ele?.userId?._id
+                    return ele?.userId?._id.toString()
                 }
             })
 
@@ -198,8 +202,6 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
 
         if (post.likesId.length > 0) {
             let idsOflikes = post.likesId.map((ele: any) => {
-
-                // console.log(ele)
 
                 if (typeof ele === "string") {
                     return ele
@@ -303,7 +305,7 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
 
                     <div className='rounded my-1 p-0.5 py-2 flex gap-2 items-center flex-wrap '>
 
-                        <p className={`flex gap-1 flex-wrap items-center ml-1 -mt-3 ${themeMode ? "text-black" : "text-white"} `}>
+                        <p className={`flex gap-1 flex-wrap items-center ml-1 -mt-3 `}>
                             <span className={`font-semibold`}>Likes</span>
                             <span>
                                 <PiPaperPlaneRight />
@@ -537,7 +539,7 @@ function PostCommentForm(
 
                 <MainLoader isLoading={isLoading} />
 
-                <p className={`ml-1 flex gap-1 flex-wrap items-center ${themeMode ? "text-black" : "text-white"} `}>
+                <p className={`ml-1 flex gap-1 flex-wrap items-center  `}>
                     Give your
                     <span className=" font-semibold border-b">comment</span>
                     here
@@ -846,7 +848,7 @@ const SingleCommentUI = ({
         const innerHtml = <div className=' flex flex-col items-center justify-center '>
             <ImageReact
                 src={ele?.profilePic}
-                className=' rounded '
+                className=' rounded max-h-[70vh] '
             />
             <button
                 className=' capitalize text-xs px-4 py-2 rounded-md bg-green-500 my-2'
@@ -1222,7 +1224,7 @@ function SeeMoreOfComment(
         const innerHtml = <div className=' flex flex-col items-center justify-center '>
             <ImageReact
                 src={ele?.userId?.profilePic}
-                className=' rounded '
+                className=' rounded max-h-[70vh] '
             />
             <button
                 className=' capitalize text-xs px-4 py-2 rounded-md bg-green-500 my-2'
@@ -1253,15 +1255,10 @@ function SeeMoreOfComment(
 
     return (
         <>
-            <div
-                className='flex flex-col'
-            >
-
+            <div className='flex flex-col'>
                 <div className=' flex items-center '>
 
-                    <p
-                        className=' ml-1 text-xs'
-                    >
+                    <p className=' ml-1 text-xs'>
 
                         <span className=' text-xs'>
                             {

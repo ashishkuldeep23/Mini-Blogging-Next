@@ -32,7 +32,6 @@ const UserPageParams = ({ params }: any) => {
     const router = useRouter()
     const themeMode = useThemeData().mode
     const { data: session, status } = useSession()
-
     const { searchedUser, isLoading, errMsg, userData } = useUserState()
 
 
@@ -49,8 +48,6 @@ const UserPageParams = ({ params }: any) => {
 
     }, [])
 
-
-
     useEffect(() => {
 
         if (userData._id && searchedUser._id) {
@@ -59,8 +56,6 @@ const UserPageParams = ({ params }: any) => {
 
     }, [userData, searchedUser])
 
-
-
     useEffect(() => {
 
         if (status === 'unauthenticated') {
@@ -68,9 +63,6 @@ const UserPageParams = ({ params }: any) => {
             router.push("/login")
         }
     }, [status])
-
-
-    // set All frineds ids.
 
     return (
         <div
@@ -104,7 +96,7 @@ const UserPageParams = ({ params }: any) => {
                         searchedUser?.profilePic
                         &&
                         <ImageReact
-                            className=" mr-4 w-40 border rounded-full mt-2"
+                            className=" object-contain mr-4 w-40 h-40 border rounded-full mt-2"
                             src={searchedUser?.profilePic}
                             alt=""
                         />

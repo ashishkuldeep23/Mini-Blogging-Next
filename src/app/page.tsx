@@ -88,7 +88,6 @@ export default function Home() {
   );
 }
 
-
 function FeatureDetailShowHomeFirstTime() {
 
   const [firstTime, setFirstTime] = useState("")
