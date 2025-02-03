@@ -532,11 +532,11 @@ const psotSlice = createSlice({
                 state.errMsg = action.error.message || 'Error'
             })
 
-            .addCase(likePost.pending, (state) => {
-                state.writePostFullFilled = false
-                state.isLoading = true
-                state.errMsg = ''
-            })
+            // .addCase(likePost.pending, (state) => {
+            //     state.writePostFullFilled = false
+            //     state.isLoading = true
+            //     state.errMsg = ''
+            // })
 
             .addCase(likePost.fulfilled, (state, action) => {
 

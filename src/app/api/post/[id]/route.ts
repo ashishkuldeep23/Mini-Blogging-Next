@@ -53,7 +53,7 @@ export async function GET(req: NextRequest, context: any) {
                 populate: {
                     path: "userId",
                     // match: { isDeleted: false },
-                    select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password",
+                    select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password -allProfilePic",
                 }
             })
             .select("-updatedAt -createdAt -__v ")

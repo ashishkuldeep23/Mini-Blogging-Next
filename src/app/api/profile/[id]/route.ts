@@ -18,7 +18,7 @@ import { getServerSession } from "next-auth/next"
 
 export async function POST(req: NextRequest, context: any) {
 
-    await  connect()
+    await connect()
     // const g = getServerSession()
     // console.log(g)
 
@@ -91,7 +91,7 @@ export async function POST(req: NextRequest, context: any) {
             .populate({
                 path: "author",
                 // match: { isDeleted: false },
-                select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password",
+                select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password -allProfilePic",
             })
             .populate({
                 path: "comments",
@@ -99,7 +99,7 @@ export async function POST(req: NextRequest, context: any) {
                 populate: {
                     path: "userId",
                     // match: { isDeleted: false },
-                    select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password",
+                    select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password -allProfilePic",
                 }
             })
             .select("-updatedAt -createdAt -__v ")

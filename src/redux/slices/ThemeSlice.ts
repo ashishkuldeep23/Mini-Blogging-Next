@@ -32,11 +32,22 @@ const themeSlice = createSlice({
         toggleModeValue(state) {
 
 
-            // if(!state.mode){
+
+            // state.darkMode = action.payload;
+            // const newTheme = action.payload ? 'dark' : 'light';
+            // state.darkMode = action.payload
+            // localStorage.setItem('stock_theme', JSON.stringify(action.payload));
+            // // Apply the new theme to the document body
+            // if (newTheme === 'dark') {
+            //     document.documentElement.classList.add('dark');
+            // } else {
+            //     document.documentElement.classList.remove('dark');
             // }
 
+
+
             if (!state.mode) {
-                state.value = "white"
+                state.value = "white"  // // we can avoid value.
                 state.mode = true
                 localStorage.setItem("authNextDark", JSON.stringify(true))
 
@@ -45,9 +56,11 @@ const themeSlice = createSlice({
                     body.style.backgroundColor = "white"
                 }
 
+                document.documentElement.classList.remove('dark');
+
             } else {
                 state.value = 'black'
-                state.mode = false
+                state.mode = false  // // we can avoid value.
                 localStorage.setItem("authNextDark", JSON.stringify(false))
 
                 const body = document.querySelector("body")
@@ -55,6 +68,7 @@ const themeSlice = createSlice({
                     body.style.backgroundColor = "black"
                 }
 
+                document.documentElement.classList.add('dark');
 
             }
 
