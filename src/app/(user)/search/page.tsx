@@ -154,7 +154,7 @@ const SearchPage = () => {
 
         // // // get user data by api (All Data) ----------->
         if (session && (!userData.friendsAllFriend || !userData.sendRequest || !userData.reciveRequest)) {
-            dispatch(getUserData(session?.user._id))
+            dispatch(getUserData({ userId: session?.user._id }))
         }
 
     }, [session])
