@@ -27,6 +27,8 @@ export async function POST(req: NextRequest, context: any) {
 
 
     try {
+        let { page } = await req.json()
+        // console.log(page);
 
         let userId = context?.params?.id
 
@@ -85,9 +87,21 @@ export async function POST(req: NextRequest, context: any) {
         }
 
 
-        // // // Getting all post for this user -------->
+        // // // Making pagination for user posts ------->>
+        let limitOfProducts = 4;
+        let pageNo = 1;
+        if (page) {
+            pageNo = Number(page)
+        }
 
-        let posts = await Post.find({ author: userId, isDeleted: false })
+        // // // Getting all post for this user -------->
+        let posts = await Post.find({
+            author: userId,
+            isDeleted: false
+        })
+            .limit(limitOfProducts * pageNo)
+            .select("-updatedAt -createdAt -__v ")
+            .sort({ "createdAt": "desc" })
             .populate({
                 path: "author",
                 // match: { isDeleted: false },
@@ -102,8 +116,7 @@ export async function POST(req: NextRequest, context: any) {
                     select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password -allProfilePic",
                 }
             })
-            .select("-updatedAt -createdAt -__v ")
-            .sort({ "createdAt": "desc" })
+
         // .exec()
 
 

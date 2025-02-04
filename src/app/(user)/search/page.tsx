@@ -13,7 +13,7 @@ import toast from 'react-hot-toast';
 import { useSession } from 'next-auth/react';
 // import SinglePostCard from '../components/SinglePostCard';
 // import { PlaceholdersAndVanishInput } from '../components/ui/placeholders-and-vanish-input';
-import { getAllPosts, setSearchBrandAndCate, setSearchByText, usePostData } from '@/redux/slices/PostSlice';
+import { getAllPosts, getCatAndHash, setSearchBrandAndCate, setSearchByText, usePostData } from '@/redux/slices/PostSlice';
 import SingleUserDiv from '@/app/components/SingleUserDiv';
 // import SinglePostCard from '@/app/components/SinglePostCard';
 import { PlaceholdersAndVanishInput } from '@/app/components/ui/placeholders-and-vanish-input';
@@ -92,8 +92,6 @@ const SearchPage = () => {
         }
     }
 
-
-
     function setsearchHistoryFunc(text: string) {
         // // // setsearchHistory set history ----->
 
@@ -111,8 +109,8 @@ const SearchPage = () => {
             searchInputRef.current?.focus()
         }
 
-        // // // Load history ---------->
-
+        // // // Getting all category and hashs here ------>>
+        dispatch(getCatAndHash())
 
     }, [])
 

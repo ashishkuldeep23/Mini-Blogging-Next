@@ -10,23 +10,20 @@ import { isValidObjectId, model, modelNames, models } from "mongoose"
 // import { getServerSession } from "next-auth/next"
 // import { NextApiRequest } from "next";
 
-
 // import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { getServerSession } from "next-auth/next"
 
-
-
+// // // context will have [id] by [id]/route.ts  ( That's how we'll get id by using this approch)
 export async function POST(req: NextRequest, context: any) {
 
     await connect()
-    // const g = getServerSession()
-    // console.log(g)
-
-    // // // This is used to print all register models
     console.log(modelNames())
 
+    console.log("dasfdssgfdgdfgfg ")
 
     try {
+        let { page } = await req.json()
+        // console.log(page);
 
         let userId = context?.params?.id
 
@@ -43,37 +40,24 @@ export async function POST(req: NextRequest, context: any) {
         const session = await getServerSession()
 
         // console.log({session})
-
-
-
-
-        // const reqBody = await req.json()
-        // console.log(reqBody)
-        // const { searchingUserId } = reqBody
-        // console.log({ userId, searchingUserId })
-
-
         // // // Jsut getting for comment data avilable below. 
         await Comment.findById("660cba65c543855317a68f02")
 
         // console.log(allComments)
 
-
+        // // // Getting user data in detailed way ------>>
         let user = await User.findById(userId)
             .populate({
                 path: "sendRequest",
-                // match: { isDeleted: false },
-                select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password -reciveRequest -sendRequest -friends -whoSeenProfile -notification",
+                select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password -reciveRequest -sendRequest -friends -whoSeenProfile -notification -allProfilePic",
             })
             .populate({
                 path: "reciveRequest",
-                // match: { isDeleted: false },
-                select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password -reciveRequest -sendRequest -friends -whoSeenProfile -notification",
+                select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password -reciveRequest -sendRequest -friends -whoSeenProfile -notification -allProfilePic",
             })
             .populate({
                 path: "whoSeenProfile",
-                // match: { isDeleted: false },
-                select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password -reciveRequest -sendRequest -friends -whoSeenProfile -notification",
+                select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password -reciveRequest -sendRequest -friends -whoSeenProfile -notification -allProfilePic",
             })
             .select("-updatedAt -createdAt -__v -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password")
 
@@ -84,14 +68,25 @@ export async function POST(req: NextRequest, context: any) {
             return NextResponse.json({ success: false, message: 'User not found with given id.' }, { status: 404 })
         }
 
+        // // // Making pagination for user posts ------->>
+        let limitOfProducts = 4;
+        let pageNo = 1;
+        if (page) {
+            pageNo = Number(page)
+        }
 
         // // // Getting all post for this user -------->
-
-        let posts = await Post.find({ author: userId, isDeleted: false })
+        let posts = await Post.find({
+            author: userId,
+            isDeleted: false
+        })
+            .limit(limitOfProducts * pageNo)
+            .select("-updatedAt -createdAt -__v ")
+            .sort({ "createdAt": "desc" })
             .populate({
                 path: "author",
                 // match: { isDeleted: false },
-                select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password",
+                select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password -allProfilePic",
             })
             .populate({
                 path: "comments",
@@ -99,16 +94,11 @@ export async function POST(req: NextRequest, context: any) {
                 populate: {
                     path: "userId",
                     // match: { isDeleted: false },
-                    select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password",
+                    select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password -allProfilePic",
                 }
             })
-            .select("-updatedAt -createdAt -__v ")
-            .sort({ "createdAt": "desc" })
+
         // .exec()
-
-
-
-        // console.log({ user })
 
 
         // // // An Experimental logic here --------------------->
@@ -117,8 +107,6 @@ export async function POST(req: NextRequest, context: any) {
             user.sendRequest = null
             user.whoSeenProfile = null
         }
-
-
 
 
         // // // Who is serching your id logic here ---------->
@@ -149,7 +137,11 @@ export async function POST(req: NextRequest, context: any) {
             // // 1. Searching user should frined of searched user.
             // // 2. Searching user and searched user both should be.
 
-            if (user.friends.includes(searchingUserId._id.toString()) || user.email === searchingUserId.email) {
+            if (
+                user.friends.includes(searchingUserId._id.toString())
+                ||
+                user.email === searchingUserId.email
+            ) {
 
                 // console.log(152)
 
@@ -157,7 +149,7 @@ export async function POST(req: NextRequest, context: any) {
                     .populate({
                         path: "friends",
                         // match: { isDeleted: false },
-                        select: "-updatedAt -createdAt -__v -friendshipRequests -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password -whoSeenProfile -notification",
+                        select: "-updatedAt -createdAt -__v -friendshipRequests -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password -whoSeenProfile -notification -allProfilePic",
                     })
 
 
@@ -184,7 +176,8 @@ export async function POST(req: NextRequest, context: any) {
             data: {
                 user,
                 posts,
-                friendsAllFriend
+                friendsAllFriend,
+                page
             },
             message: "New post created."
         }, { status: 200 })

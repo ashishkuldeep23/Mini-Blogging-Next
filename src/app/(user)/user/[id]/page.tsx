@@ -1,29 +1,30 @@
 
 'use client'
 
-import ImageReact from '@/app/components/ImageReact'
-import MainLoader from '@/app/components/MainLoader'
-import Navbar from '@/app/components/Navbar'
-// import SinglePostCard from '@/app/components/SinglePostCard'
+// import Navbar from '@/app/components/Navbar';
+// import SinglePostCard from '@/app/components/SinglePostCard';
+// import AnimatedTooltip from '@/app/components/ui/animated-tooltip';
+// import { IoIosArrowBack } from "react-icons/io";
+// import { PiSealCheckDuotone } from 'react-icons/pi';
+import React, { Fragment, useEffect, useState } from 'react'
+import Link from 'next/link'
+import toast from 'react-hot-toast'
+import MainLoader from '@/app/components/MainLoader';
+import ImageReact from '@/app/components/ImageReact';
+import SingleUserDiv from '@/app/components/SingleUserDiv'
+import SinglePostCardNew from '@/app/components/SinglePostCardNew'
+import { useRouter } from 'next/navigation'
 import { useThemeData } from '@/redux/slices/ThemeSlice'
-import { getUserData, updateUserData, useUserState } from '@/redux/slices/UserSlice'
+import { getUserData, setPageValue, updateUserData, useUserState } from '@/redux/slices/UserSlice'
 import { AppDispatch } from '@/redux/store'
 import { useSession } from 'next-auth/react'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import React, { Fragment, useEffect, useState } from 'react'
-import toast from 'react-hot-toast'
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 import { useDispatch } from 'react-redux'
 import { RiUserAddLine } from "react-icons/ri";
-import { IoIosArrowBack } from "react-icons/io";
-import AnimatedTooltip from '@/app/components/ui/animated-tooltip'
 import { IoCheckmarkDoneOutline } from "react-icons/io5";
-import { PiSealCheckDuotone } from 'react-icons/pi'
 import { TbUserCancel } from "react-icons/tb";
-import SingleUserDiv from '@/app/components/SingleUserDiv'
 import { AddMoreFeilsUserData } from '@/Types'
-import SinglePostCardNew from '@/app/components/SinglePostCardNew'
+import InfinityScrollWithLogic from '@/app/components/InfinityScrollWithLogic';
 
 
 const UserPageParams = ({ params }: any) => {
@@ -32,7 +33,13 @@ const UserPageParams = ({ params }: any) => {
     const router = useRouter()
     const themeMode = useThemeData().mode
     const { data: session, status } = useSession()
-    const { searchedUser, isLoading, errMsg, userData } = useUserState()
+    const { searchedUser, isLoading, errMsg, userData, page } = useUserState()
+
+
+    function getUserDataApiCall() {
+        dispatch(getUserData({ userId: params.id, page }));
+        dispatch(setPageValue(page + 1));
+    }
 
 
     useEffect(() => {
@@ -42,7 +49,7 @@ const UserPageParams = ({ params }: any) => {
         if (params?.id && params?.id !== "undefined") {
 
             if (searchedUser?._id !== params?.id) {
-                dispatch(getUserData(params.id))
+                getUserDataApiCall()
             }
         }
 
@@ -81,35 +88,37 @@ const UserPageParams = ({ params }: any) => {
 
 
             {
-                searchedUser?.username
-                &&
+                searchedUser?._id
+                    ?
 
-                <div className=' my-5 border p-2 rounded flex flex-wrap justify-center items-center relative'>
+                    <div className=' my-5 border p-2 rounded flex flex-wrap justify-center items-center relative'>
 
-                    {
-                        isLoading
-                        &&
-                        <MainLoader isLoading={isLoading} />
-                    }
+                        {
+                            isLoading
+                            &&
+                            <MainLoader isLoading={isLoading} />
+                        }
 
-                    {
-                        searchedUser?.profilePic
-                        &&
-                        <ImageReact
-                            className=" object-contain mr-4 w-40 h-40 border rounded-full mt-2"
-                            src={searchedUser?.profilePic}
-                            alt=""
-                        />
-                    }
+                        {
+                            searchedUser?.profilePic
+                            &&
+                            <ImageReact
+                                className=" object-contain mr-4 w-40 h-40 border rounded-full mt-2"
+                                src={searchedUser?.profilePic}
+                                alt=""
+                            />
+                        }
 
 
-                    <div className=' text-center'>
-                        {/* <p>User</p> */}
-                        <p className=' capitalize text-3xl font-semibold text-cyan-500'>{searchedUser?.username}</p>
-                        <p className=' font-semibold'>{searchedUser?.email}</p>
+                        <div className=' text-center'>
+                            {/* <p>User</p> */}
+                            <p className=' capitalize text-3xl font-semibold text-cyan-500'>{searchedUser?.username}</p>
+                            <p className=' font-semibold'>{searchedUser?.email}</p>
+                        </div>
+
                     </div>
-
-                </div>
+                    :
+                    <div className='w-[95%] sm:w-[70%] h-52 rounded-md bg-gray-400 animate-pulse my-5'></div>
 
             }
 
@@ -119,7 +128,20 @@ const UserPageParams = ({ params }: any) => {
                 userData={userData}
             />
 
+
             <div
+                className=" my-20 card_container relative sm:px-[8vh] mt-16 flex gap-10 gap-x-64 p-0.5 flex-wrap justify-center items-start "
+            >
+                <InfinityScrollWithLogic
+                    allPostData={searchedUser.allPostOfUser}
+                    next={getUserDataApiCall}
+                    isLoading={isLoading}
+                />
+            </div>
+
+
+            {/* This div will show all post of user. */}
+            {/* <div
                 className=" my-20 card_container relative sm:px-[8vh] mt-16 flex gap-10 gap-x-64 p-0.5 flex-wrap justify-center items-start "
             >
 
@@ -131,23 +153,7 @@ const UserPageParams = ({ params }: any) => {
                     })
                 }
 
-
-                {
-
-                    (
-                        session?.user?.id
-                        && !isLoading
-                        // && searchedUser.allPostOfUser.length === 0
-                    )
-
-                    &&
-                    <div className=' text-center'>
-                        <p className=' text-red-600 font-semibold'>Fail to laod user data.❌</p>
-                        <Link href={"/"} className=' px-2 text-xs border rounded'>Goto Home</Link>
-                    </div>
-                }
-
-            </div>
+            </div> */}
 
         </div >
     )

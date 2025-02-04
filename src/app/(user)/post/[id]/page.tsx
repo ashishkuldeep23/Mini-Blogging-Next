@@ -109,7 +109,7 @@ const Page = ({ params }: any) => {
 
 
     return (
-        <section className={`flex min-h-screen flex-col items-center sm:gap-5 ${!themeMode ? " bg-black text-white " : " bg-white text-black"}`}>
+        <section className={`flex min-h-[70vh] flex-col items-center sm:gap-5 ${!themeMode ? " bg-black text-white " : " bg-white text-black"}`}>
 
             {/* <p>{params.id}</p> */}
 

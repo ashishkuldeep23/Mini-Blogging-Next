@@ -12,8 +12,6 @@ export async function POST(req: NextRequest) {
     await connect()
 
     // console.log(modelNames())
-
-
     // console.log("Called --------------->")
 
     try {
@@ -45,6 +43,7 @@ export async function POST(req: NextRequest) {
 
         let searchByQuery = false
 
+        // // // If getting posts by hash or category then limits should be 100 max.
         if (hash) {
             // searchObject.brand = brand.toLowerCase()
             searchObject.hashthats = { $regex: new RegExp(hash, 'i') }
@@ -70,22 +69,12 @@ export async function POST(req: NextRequest) {
 
         let getAllPosts = await Post.find(searchObject)
             .sort({ "createdAt": "desc" })
-            // .skip(limitOfProducts * (pageNo - 1))
             .limit(limitOfProducts * pageNo)
-            // .sort({ 
-            //     createdAt: "-1"
-            // })
-            // .sort(["desc"])
             .populate({
                 path: "author",
                 // match: { isDeleted: false },
                 select: "-updatedAt -createdAt -__v -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password -allProfilePic",
             })
-            // .populate({
-            //     path: "likesId",
-            //     // match: { isDeleted: false },
-            //     select: "-updatedAt -createdAt -__v -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password",
-            // })
             .select("-updatedAt -createdAt -__v ")
 
         // console.log(getAllPosts)

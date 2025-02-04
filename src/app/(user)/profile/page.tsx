@@ -7,7 +7,7 @@ import MainLoader from '@/app/components/MainLoader'
 // import SinglePostCard from '@/app/components/SinglePostCard'
 import AnimatedTooltip from '@/app/components/ui/animated-tooltip'
 import { useThemeData } from '@/redux/slices/ThemeSlice'
-import {getProfileData, setIsLoading, updateUserData, useUserState } from '@/redux/slices/UserSlice'
+import { getProfileData, setIsLoading, setPageValue, updateUserData, useUserState } from '@/redux/slices/UserSlice'
 import { AppDispatch } from '@/redux/store'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
@@ -29,6 +29,7 @@ import useOpenModalWithHTML from '@/utils/OpenModalWithHtml'
 import { usePreventSwipe } from '@/Hooks/useSwipeCustom'
 import { AddMoreFeilsUserData, FriendsAllFriendData } from '@/Types'
 import SinglePostCardNew from '@/app/components/SinglePostCardNew'
+import InfinityScrollWithLogic from '@/app/components/InfinityScrollWithLogic'
 
 
 const ProfilePageParams = () => {
@@ -41,9 +42,15 @@ const ProfilePageParams = () => {
 
     const dispatch = useDispatch<AppDispatch>()
 
-    const { userData, isLoading, errMsg } = useUserState()
+    const { userData, isLoading, errMsg, page } = useUserState()
 
     // console.log(userData._id, session?.user._id)
+    // console.log(status);
+
+    function getUserDataApiCall() {
+        dispatch(getProfileData({ userId: session?.user._id || "", page }));
+        dispatch(setPageValue(page + 1));
+    }
 
 
     useEffect(() => {
@@ -55,7 +62,7 @@ const ProfilePageParams = () => {
         }
 
         if ((session?.user && session?.user._id) && (userData._id !== session?.user._id)) {
-            dispatch(getProfileData(session?.user._id))
+            getUserDataApiCall();
         }
 
     }, [session, status, userData])
@@ -107,7 +114,23 @@ const ProfilePageParams = () => {
                 userData={userData}
             />
 
-            <AllPostByYou />
+            {/* <AllPostByYou /> */}
+
+            {
+
+
+                userData.allPostOfUser.length > 0
+                &&
+                <div>
+                    <p className=' text-center text-2xl '>All post by you 👇</p>
+
+                    <InfinityScrollWithLogic
+                        allPostData={userData.allPostOfUser}
+                        next={getUserDataApiCall}
+                        isLoading={isLoading}
+                    />
+                </div>
+            }
 
 
         </div>
@@ -365,8 +388,6 @@ function AllUploadedPicturesDiv() {
 
         callModalFn({ innerHtml })
     }
-
-
 
     const preventSwipe = usePreventSwipe()
 

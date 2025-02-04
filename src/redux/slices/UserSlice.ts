@@ -51,24 +51,30 @@ export const logInUser = createAsyncThunk('user/login', async (body: { email: st
 })
 
 
-export const getUserData = createAsyncThunk('user/getUserData', async (userId: string) => {
-
+export const getUserData = createAsyncThunk('user/getUserData', async ({ userId, page = 1 }: { userId: string, page?: number }) => {
 
     const option: RequestInit = {
         cache: 'no-store',
         method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ page })
     }
     const response = await fetch(`/api/users/${userId}`, option)
     let data = await response.json();
     return data
 })
 
-export const getProfileData = createAsyncThunk('user/getProfileData', async (userId: string) => {
-
+export const getProfileData = createAsyncThunk('user/getProfileData', async ({ userId, page = 1 }: { userId: string, page?: number }) => {
 
     const option: RequestInit = {
         cache: 'no-store',
         method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ page })
     }
     const response = await fetch(`/api/profile/${userId}`, option)
     let data = await response.json();
@@ -98,8 +104,6 @@ export const updateUserData = createAsyncThunk('user/updateUserData', async (bod
     return data
 })
 
-
-
 const initialSingleUserData: AddMoreFeilsUserData = {
     _id: "",
     username: "",
@@ -110,7 +114,6 @@ const initialSingleUserData: AddMoreFeilsUserData = {
     allPostOfUser: [],
 }
 
-
 interface UserInter {
     isLoading: boolean,
     isFullfilled: boolean,
@@ -118,6 +121,7 @@ interface UserInter {
     errMsg: string
     userData: AddMoreFeilsUserData,
     searchedUser: AddMoreFeilsUserData,
+    page: number,
 }
 
 const initialState: UserInter = {
@@ -127,6 +131,7 @@ const initialState: UserInter = {
     errMsg: "",
     userData: initialSingleUserData,
     searchedUser: initialSingleUserData,
+    page: 1
     // allPostOfUser: []
 }
 
@@ -145,6 +150,10 @@ const userSlice = createSlice({
 
         setIsLoading(state, action: PayloadAction<boolean>) {
             state.isLoading = action.payload
+        },
+
+        setPageValue(state, action: PayloadAction<number>) {
+            state.page = action.payload
         }
 
     },
@@ -233,12 +242,10 @@ const userSlice = createSlice({
             })
             .addCase(getUserData.fulfilled, (state, action) => {
 
-                // console.log(action.payload.data)
-
                 if (action.payload.success === true) {
 
                     // console.log("All good ------>")
-                    const { friendsAllFriend, user, posts } = action.payload.data
+                    const { friendsAllFriend, user, posts, page } = action.payload.data
 
                     // // // check getting some extra or not (User personal data) ---------->
 
@@ -249,11 +256,16 @@ const userSlice = createSlice({
                     // // Means searching for different user ----->
                     // if (sendRequest && !whoSeenProfile) {
 
-                    state.searchedUser = user
-                    state.searchedUser.allPostOfUser = posts
-                    state.searchedUser.friendsAllFriend = friendsAllFriend
-                    state.searchedUser.reciveRequest = reciveRequest
+                    if (page === 1) {
 
+                        state.searchedUser = user
+                        state.searchedUser.allPostOfUser = posts
+                        state.searchedUser.friendsAllFriend = friendsAllFriend
+                        state.searchedUser.reciveRequest = reciveRequest
+
+                    } else {
+                        state.searchedUser.allPostOfUser = posts
+                    }
                     // }
 
                     state.isFullfilled = true
@@ -286,6 +298,8 @@ const userSlice = createSlice({
             .addCase(getProfileData.fulfilled, (state, action) => {
 
                 // console.log(action.payload.data)
+                // console.log(action.payload.data?.posts?.length)
+                // console.log(action.payload.data.posts)
 
                 if (action.payload.success === true) {
 
@@ -449,7 +463,7 @@ const userSlice = createSlice({
 })
 
 
-export const { setUserDataBySession, setIsLoading } = userSlice.actions
+export const { setUserDataBySession, setIsLoading, setPageValue } = userSlice.actions
 
 export const useUserState = () => useSelector((state: RootState) => state.userReducer)
 

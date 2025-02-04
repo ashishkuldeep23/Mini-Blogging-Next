@@ -39,34 +39,24 @@ const LayoutPage = (
     }>
 ) => {
 
-
-    // const handlers = useSwipeable({
-    //     // onSwipedLeft: () => alert("next"),
-    //     onSwipedLeft: () => nextTab(),
-    //     onSwipedRight: () => previousTab(),
-    //     // Add other event handlers as needed
-    // });
-
     // // // custome swipe fn() init here ---------------->
     const handlers = useSwipeCustom(previousTab, nextTab)
     // // // Swipe up and down also ----------->
     // const handlers = useSwipeCustom(previousTab, nextTab, () => alert("down"), () => alert("up"))
 
     const router = useRouter();
-
     const pathname = usePathname();
-
     const themeMode = useThemeData().mode
 
+    const [postionOfFirstLi, setPostionOfFirstLi] = useState<PostitionType>({ top: '0px', left: '0px' })
+
+    let dont_show_nav_for_pages: string[] = ['/search', '/create']
+
+    // console.log({ pathname })
+    const [sliderVisiable, setSliderVisiable] = useState<'hidden' | 'inline'>('inline')
+
+
     const tabArr: SingleTabData[] = [
-        // {
-        //     icons: <CiHome />,
-        //     name: "ashish",
-        // },
-        // {
-        //     icons: <CgProfile />,
-        //     name: "kuldeep",
-        // },
         {
             name: "home",
         },
@@ -93,9 +83,6 @@ const LayoutPage = (
 
         },
     ]
-
-
-    // console.log(pathname);
 
 
     function nextTab() {
@@ -148,14 +135,6 @@ const LayoutPage = (
         }, 700)
     }
 
-
-    const [postionOfFirstLi, setPostionOfFirstLi] = useState<PostitionType>({ top: '0px', left: '0px' })
-
-    let dont_show_nav_for_pages: string[] = ['/search', '/create']
-
-    // console.log({ pathname })
-
-    const [sliderVisiable, setSliderVisiable] = useState<'hidden' | 'inline'>('inline')
     // // // remove slider when other page is open 
     useEffect(() => {
         if (pathname) {
@@ -172,7 +151,6 @@ const LayoutPage = (
 
         }
     }, [pathname])
-
 
     // // // screen size code -------------------->
     useEffect(() => {
@@ -301,30 +279,22 @@ interface SingleTabData {
 import { CiLock } from "react-icons/ci";
 import { useUserState } from '@/redux/slices/UserSlice';
 import ImageReact from '../components/ImageReact';
+import { useSession } from 'next-auth/react';
 
 function SingleTabLi({ ele, osmClickHangler, setPostionOfFirstLi, className, display }: { ele: SingleTabData, osmClickHangler: Function, setPostionOfFirstLi: Function, className?: string, display?: string }) {
 
     // const router = useRouter()
 
     const userId = useUserState().userData._id
-    const userImg = useUserState().userData.profilePic
-
-    const pathname = usePathname()
-
-    const [selectedPath, setSelectedPath] = useState<string>('')
-
-    const themeMode = useThemeData().mode
+    const userImg = useUserState().userData.profilePic;
+    const pathname = usePathname();
+    const [selectedPath, setSelectedPath] = useState<string>('');
+    const themeMode = useThemeData().mode;
+    let publicPages = ['home', "search", 'back'];
+    const liRef = useRef<HTMLLIElement | null>(null)
+    const { data: session, status } = useSession();
 
     // console.log(selectedPath)
-
-    useEffect(() => {
-        pathname && setSelectedPath(pathname.slice(1))
-    }, [pathname])
-
-    let publicPages = ['home', "search", 'back']
-
-
-    const liRef = useRef<HTMLLIElement | null>(null)
 
     useEffect(() => {
 
@@ -372,6 +342,10 @@ function SingleTabLi({ ele, osmClickHangler, setPostionOfFirstLi, className, dis
     }, [ele.name, selectedPath])
 
 
+    useEffect(() => {
+        pathname && setSelectedPath(pathname.slice(1))
+    }, [pathname])
+
     // main_visiable_for_user
     return (
         <li
@@ -418,18 +392,20 @@ function SingleTabLi({ ele, osmClickHangler, setPostionOfFirstLi, className, dis
 
             {/* Lock icon and Name of tab here -----------------> */}
             <span className={` mx-0.5 inline-flex gap-1 justify-center items-center capitalize text-[0.5rem] lg:text-xl leading-[0.8rem] lg:leading-none 
-                 ${selectedPath === ele.name && " font-[cursive] font-bold scale-125 text-sky-600 lg:ml-2.5"}
+                 ${selectedPath === ele.name && " font-[cursive] font-bold scale-125 text-sky-600 lg:ml-2.5 "}
                 
                 `}>
 
-                {ele.name}
+                <span>{ele.name}</span>
 
                 {
-                    (!userId) && (!publicPages.includes(ele.name))
+                    // (!userId)
+                    !session?.user?._id
+                    &&
+                    (!publicPages.includes(ele.name))
                     &&
                     <CiLock className=' text-xs' />
                 }
-
 
             </span>
 

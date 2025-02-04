@@ -48,7 +48,7 @@ const Navbar = ({ className }: { className?: string }) => {
 
     const dispatch = useDispatch<AppDispatch>()
 
-    const { data: session } = useSession()
+    const { data: session, status } = useSession()
 
     const { userData } = useUserState()
 
@@ -84,10 +84,11 @@ const Navbar = ({ className }: { className?: string }) => {
     }, [params])
 
 
-    // console.log(status)
+    // console.log(session, status)
 
     // // // Get and set user data from server -------->
     useEffect(() => {
+        
         setIsUserLogined(!!session)
         // console.log(session)
 
@@ -96,14 +97,15 @@ const Navbar = ({ className }: { className?: string }) => {
         if (session) {
 
             let user = session.user
-
+            // // // This is used to set session data in store ------>>
             dispatch(setUserDataBySession({ ...user }))
         }
 
+        // // // Of this api call for now.
         // // // get user data by api (All Data) ----------->
-        if (session && (!userData.friendsAllFriend || !userData.sendRequest || !userData.reciveRequest)) {
-            dispatch(getProfileData(session?.user._id))
-        }
+        // if (session && (!userData.friendsAllFriend || !userData.sendRequest || !userData.reciveRequest)) {
+        // dispatch(getProfileData(session?.user._id))
+        // }
 
     }, [session])
 
@@ -117,16 +119,6 @@ const Navbar = ({ className }: { className?: string }) => {
             dispatch(setModeOnLoad({ mode: getPrivousThemeValue }))
         }
     }, [])
-
-
-    // // // Get category and hashtags ------->
-    useEffect(() => {
-
-        dispatch(getCatAndHash())
-
-    }, [])
-
-
 
     // console.log(firstTimeRedirect)
 
