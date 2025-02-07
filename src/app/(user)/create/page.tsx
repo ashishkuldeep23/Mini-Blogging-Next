@@ -205,9 +205,9 @@ const NewPostPage = () => {
 
       // // // Here now set file ---------->
       // File size should less then 2 mb. 
-      let maxFileSize = 11007152
+      let maxFileSize = 16007152
       if (file.size > maxFileSize) {
-        return toast.error("File size should less then 10 mb");
+        return toast.error("File size should less then 12 mb");
       }
 
       // // // Set variable here -------->>
