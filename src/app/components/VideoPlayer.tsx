@@ -1,23 +1,16 @@
 import { usePreventSwipe } from '@/Hooks/useSwipeCustom';
 import { setIsMuted, setMetaDataInfo, usePostData } from '@/redux/slices/PostSlice';
 import { AppDispatch } from '@/redux/store';
-import { PostInterFace } from '@/Types';
+import { PostInterFace, VideoPlayerProps } from '@/Types';
 import React, { useRef, useState, useEffect } from 'react';
 import { FaPlay, FaPause, FaVolumeUp } from 'react-icons/fa';
 import { HiOutlineSpeakerWave, HiOutlineSpeakerXMark } from 'react-icons/hi2';
 import { MdZoomOutMap } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
 import { usePathname, useRouter } from "next/navigation"
+import { MdTimer3 } from "react-icons/md";
 
-interface VideoPlayerProps {
-    videoUrl: string; // The URL of the video to play
-    objectFit?: "fill" | "contain" | 'cover' | 'none' | "scale-down"; // The URL of the video to play
-    height?: "43vh" | "70vh",
-    postData?: PostInterFace,
-    playPauseToggleBtn?: boolean,
-    videoClickHandler?: Function,
-    observerOn?: boolean
-};
+
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({
     videoUrl,
@@ -47,6 +40,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
 
     // // // Not working now.
     let ignoreObserver = false;
+
+    // // // Exp ---->>
+    let eventForAvoid = false;
 
 
     const playTheVideo = () => {
@@ -133,13 +129,15 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     // // // I'll hide control btns ------>> 
     useEffect(() => {
 
+        let sec: number = 2.5;
+
         if (isPlaying && !allBtnVisiable) {
             setTimeout(() => {
                 setAllBtnVisiable(true)
-            }, 2 * 1000)
+            }, sec * 1000)
         }
 
-    }, [allBtnVisiable, isPlaying])
+    }, [allBtnVisiable, isPlaying, eventForAvoid])
 
     // Play/Pause video manually
     const togglePlayPause = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -177,7 +175,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         }
     };
 
-    // Seek to a different part of the video
+    // Seek to a different part of the video/
+    // // // Adding some time by progress
     const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (videoRef.current) {
             const time = (parseFloat(e.target.value) / 100) * videoRef.current.duration;
@@ -186,9 +185,35 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         }
     };
 
+
+    const handle3sBack = (e: React.MouseEvent<HTMLButtonElement>) => {
+
+        e.stopPropagation();
+
+        if (videoRef.current) {
+
+            videoRef.current.currentTime = videoRef.current.currentTime - 3;
+        }
+    }
+
+
+    const handle3sForward = (e: React.MouseEvent<HTMLButtonElement>) => {
+
+        e.stopPropagation();
+
+        if (videoRef.current) {
+
+            videoRef.current.currentTime = videoRef.current.currentTime + 3;
+        }
+    }
+
+
     const videoClickOutsideHandler = (e: React.MouseEvent<HTMLDivElement>) => {
         e.stopPropagation();
-        setMute(false)
+        // setMute(false)
+
+        setMute(!isMuted)
+
         setAllBtnVisiable(pre => !pre)
 
         // // // Video Click Handler is given (This can be used for Going to this post) ------------>>
@@ -243,12 +268,34 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
                         // playPauseToggleBtn
                         // &&
                         <div className="absolute inset-0 flex items-center justify-center ">
+
+                            <button
+                                className='bg-black w-14 h-14 bg-opacity-50 text-inherit rounded-full px-3 py-1.5 hover:bg-opacity-75 z-[10] mx-5 relative active:scale-75 transition-all '
+                                onClick={handle3sBack}
+
+                            >
+                                <span className=' absolute top-1/2 left-1/2 -translate-x-[70%] -translate-y-1/2  text-4xl opacity-50'>{"◁"}</span>
+                                <MdTimer3 className=' absolute top-[40%] left-1/2 -translate-x-[65%]  text-xs ' />
+
+                            </button>
+
                             <button
                                 className="bg-black bg-opacity-50 text-inherit rounded-full p-4 hover:bg-opacity-75 transition relative z-[10] "
                                 onClick={togglePlayPause}
                             >
-                                {isPlaying ? <FaPause size={32} /> : <FaPlay size={32} />}
+                                {isPlaying ? <FaPause size={40} /> : <FaPlay size={40} />}
                             </button>
+
+
+                            <button
+                                className='bg-black w-14 h-14 bg-opacity-50 text-inherit rounded-full px-3 py-1.5 hover:bg-opacity-75 z-[10] mx-5 relative active:scale-75 transition-all '
+                                onClick={handle3sForward}
+                            >
+                                <span className=' absolute top-1/2 left-[50%] -translate-x-1/2 -translate-y-1/2  text-4xl opacity-50'>{"▷"}</span>
+                                <MdTimer3 className=' absolute top-[40%] left-[45%] -translate-x-[65%]  text-xs  ' />
+
+                            </button>
+
                         </div>
                     }
 

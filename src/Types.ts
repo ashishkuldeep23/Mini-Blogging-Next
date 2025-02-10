@@ -184,3 +184,15 @@ export interface PostTypeForBackend {
 
 
 export type ValidInputFiles = "image/png" | "image/jpeg" | "video/mp4" | null
+
+
+export interface VideoPlayerProps {
+    videoUrl: string; // The URL of the video to play
+    objectFit?: "fill" | "contain" | 'cover' | 'none' | "scale-down"; // The URL of the video to play
+    height?: "43vh" | "70vh",
+    postData?: PostInterFace,
+    playPauseToggleBtn?: boolean,
+    videoClickHandler?: Function,
+    observerOn?: boolean
+};
+
