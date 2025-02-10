@@ -12,7 +12,7 @@ export default function useSwipeCustom(rightHandler: Function, leftHandler: Func
     const isTouching = useRef<boolean>(false);
 
 
-    const minSwipeDistance = 80; // Minimum distance for a swipe, this value will checked in pixels;
+    const minSwipeDistance = 180; // Minimum distance for a swipe, this value will checked in pixels;
 
 
     // // // Custome mouse move events --------------->
