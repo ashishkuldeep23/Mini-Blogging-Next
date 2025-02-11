@@ -210,9 +210,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
 
     const videoClickOutsideHandler = (e: React.MouseEvent<HTMLDivElement>) => {
         e.stopPropagation();
-        // setMute(false)
+        setMute(false)
 
-        setMute(!isMuted)
+       // setMute(!isMuted)
 
         setAllBtnVisiable(pre => !pre)
 
@@ -300,12 +300,11 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
                         >
 
                             <button
-                                className='bg-black w-14 h-14 bg-opacity-50 text-inherit rounded-full px-3 py-1.5 hover:bg-opacity-75 z-[10] mx-5 relative active:scale-75 transition-all '
+                                className=' w-14 h-14 bg-opacity-50 text-inherit rounded-full px-3 py-1.5 hover:bg-opacity-75 z-[10] mx-5 relative active:scale-75 transition-all '
                                 onClick={handle3sBack}
                             >
                                 <span className=' absolute top-1/2 left-1/2 -translate-x-[70%] -translate-y-1/2  text-4xl opacity-50'>{"◁"}</span>
                                 <MdTimer3 className=' absolute top-[40%] left-1/2 -translate-x-[65%]  text-xs ' />
-
                             </button>
 
                             <button
@@ -317,12 +316,11 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
 
 
                             <button
-                                className='bg-black w-14 h-14 bg-opacity-50 text-inherit rounded-full px-3 py-1.5 hover:bg-opacity-75 z-[10] mx-5 relative active:scale-75 transition-all '
+                                className=' w-14 h-14 bg-opacity-50 text-inherit rounded-full px-3 py-1.5 hover:bg-opacity-75 z-[10] mx-5 relative active:scale-75 transition-all '
                                 onClick={handle3sForward}
                             >
                                 <span className=' absolute top-1/2 left-[50%] -translate-x-1/2 -translate-y-1/2  text-4xl opacity-50'>{"▷"}</span>
                                 <MdTimer3 className=' absolute top-[40%] left-[45%] -translate-x-[65%]  text-xs  ' />
-
                             </button>
 
                         </div>
