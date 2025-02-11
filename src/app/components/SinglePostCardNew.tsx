@@ -296,20 +296,20 @@ const SinglePostCardNew: React.FC<{ ele: PostInterFace, className?: string, inde
                             </div>
 
 
-                            <div
+                            {/* <div
                                 className="px-4 py-2 ml-auto md:ml-2 rounded-xl text-xs font-normal "
                             >
                                 <LikeCommentDiv post={ele} />
-                            </div>
+                            </div> */}
 
                         </div>
 
                         {/* Post like and all here */}
-                        {/* <div
+                        <div
                             className="px-4 py-2 ml-auto md:ml-2 rounded-xl text-xs font-normal "
                         >
                             <LikeCommentDiv post={ele} />
-                        </div> */}
+                        </div>
 
                     </div>
 

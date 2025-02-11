@@ -186,9 +186,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     };
 
 
-    const handle3sBack = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const handle3sBack = (e: React.MouseEvent<HTMLButtonElement> | null) => {
 
-        e.stopPropagation();
+        e && e.stopPropagation();
 
         if (videoRef.current) {
 
@@ -197,9 +197,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     }
 
 
-    const handle3sForward = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const handle3sForward = (e: React.MouseEvent<HTMLButtonElement> | null) => {
 
-        e.stopPropagation();
+        e && e.stopPropagation();
 
         if (videoRef.current) {
 
@@ -232,10 +232,35 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         setNewHeight(p => p === "43vh" ? '70vh' : '43vh')
     }
 
+
+    const onDoubleClickHandler = (e: React.MouseEvent<HTMLVideoElement | HTMLDivElement>) => {
+
+        e.stopPropagation();
+
+        // handle3sBack(null);
+        // alert("httrhdfhd")
+
+        let widthOfInnerWindow = window.innerWidth;
+
+        let halfWidthNum = Math.floor(widthOfInnerWindow / 2)
+
+
+        if (e.clientX < halfWidthNum) {
+            handle3sBack(null);
+        } else {
+            handle3sForward(null);
+        }
+
+
+
+    };
+
+
     return (
         <div
             className="relative w-full max-w-4xl mx-auto min-h-[43vh] "
-            onClick={(e) => videoClickOutsideHandler(e)}
+            onClick={videoClickOutsideHandler}
+            onDoubleClick={onDoubleClickHandler}
         >
 
             {
@@ -252,6 +277,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
                     // onClick={togglePlayPause}
                     src={videoUrl} // Video URL passed as a prop
                     muted={isMuted} // Default muted to prevent autoplay issues in browsers
+
+                    onDoubleClick={onDoubleClickHandler}
+                    
                 />
             }
 
@@ -267,7 +295,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
                     {
                         // playPauseToggleBtn
                         // &&
-                        <div className="absolute inset-0 flex items-center justify-center ">
+                        <div
+                            className="absolute inset-0 flex items-center justify-center "
+                        >
 
                             <button
                                 className='bg-black w-14 h-14 bg-opacity-50 text-inherit rounded-full px-3 py-1.5 hover:bg-opacity-75 z-[10] mx-5 relative active:scale-75 transition-all '
