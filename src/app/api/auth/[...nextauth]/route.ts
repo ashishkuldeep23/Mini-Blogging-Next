@@ -3,10 +3,10 @@ import User from "@/models/userModel";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { DOMAIN, GOOGLE_ID, GOOGLE_SECRET, NEXTAUTH_SECRET } from "@/constant";
+import { DOMAIN, GOOGLE_ID, GOOGLE_SECRATE, NEXTAUTH_SECRET } from "@/constant";
 
 const clientIdText = GOOGLE_ID!;
-const clientSecretText = GOOGLE_SECRET!;
+const clientSecretText = GOOGLE_SECRATE!;
 
 // console.log(
 //     {

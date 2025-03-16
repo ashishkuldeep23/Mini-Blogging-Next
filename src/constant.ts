@@ -10,7 +10,7 @@ export const NEXTAUTH_URL: string = process.env.NEXTAUTH_URL!;
 
 export const NEXTAUTH_URL_INTERNAL: string = process.env.NEXTAUTH_URL_INTERNAL!;
 
-export const PUSHER_SECRET : string = process.env.PUSHER_SECRET!;
+export const PUSHER_SECRET: string = process.env.PUSHER_SECRET!;
 
 export const PUSHER_CLUSTER: string = process.env.PUSHER_CLUSTER!;
 
@@ -28,10 +28,14 @@ export const PUSHER_ENCRYPTED_KEY: string = process.env.PUSHER_ENCRYPTED_KEY!;
 
 export const GOOGLE_ID: string = process.env.GOOGLE_ID!;
 
-export const GOOGLE_SECRET: string = process.env.GOOGLE_SECRET!;
+export const GOOGLE_SECRATE: string = process.env.GOOGLE_SECRATE!;
 
 export const CLOUDINARY_URL: string = process.env.CLOUDINARY_URL!;
 
 export const CLOUDINARY_PRESET: string = process.env.CLOUDINARY_PRESET!;
 
 export const ENCRYPTION_KEY: string = process.env.ENCRYPTION_KEY!;
+
+
+// GOOGLE_SECRATE
+// GOOGLE_SECRET
