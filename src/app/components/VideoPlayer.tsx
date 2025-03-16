@@ -13,7 +13,7 @@ import { MdZoomOutMap } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import { usePathname, useRouter } from "next/navigation";
 import { MdTimer3 } from "react-icons/md";
-import { useInView } from "react-intersection-observer";
+// import { useInView } from "react-intersection-observer";
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({
   videoUrl,
@@ -42,7 +42,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   //   console.log(progress);
 
   // // // Not working now.
-  //   let ignoreObserver = false;
+  let ignoreObserver = false;
 
   const playTheVideo = () => {
     videoRef.current && videoRef.current?.play();
@@ -116,10 +116,10 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   //     };
   //   }, []);
 
-  const { ref, inView } = useInView({
-    /* Optional options */
-    threshold: 0,
-  });
+  //   const { ref, inView } = useInView({
+  //     /* Optional options */
+  //     threshold: 0,
+  //   });
 
   // Play/Pause video manually
   const togglePlayPause = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -213,66 +213,68 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     }
   };
 
-  // Play/Pause video based on view visibility
-  //   useEffect(() => {
-  //     const observer = new IntersectionObserver(
-  //       (entries) => {
-  //         if (ignoreObserver) return; // Skip if ignoring observer
+  //   Play/Pause video based on view visibility
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (ignoreObserver) return; // Skip if ignoring observer
 
-  //         entries.forEach((entry) => {
-  //           // console.log({ entry })
+        entries.forEach((entry) => {
+          // console.log({ entry })
 
-  //           if (videoRef.current) {
-  //             if (entry.isIntersecting && !isPlaying) {
-  //               // if (entry.isIntersecting) {
-  //               // videoRef.current.play();
-  //               playTheVideo();
-  //               setIsPlaying(true);
-  //             } else {
-  //               // videoRef.current.pause();
-  //               pauseTheVideo();
-  //               setIsPlaying(false);
-  //             }
-  //           }
-  //         });
-  //       },
-  //       {
-  //         root: null,
-  //         rootMargin: "0px",
-  //         threshold: 0.5, // Trigger when 50% of the video is visible
-  //         // threshold: 1,
-  //       }
-  //     );
+          if (videoRef.current) {
+            if (entry.isIntersecting && !isPlaying) {
+              // if (entry.isIntersecting) {
+              // videoRef.current.play();
+              setTimeout(() => {
+                playTheVideo();
+                setIsPlaying(true);
+              }, 50);
+            } else {
+              // videoRef.current.pause();
+              pauseTheVideo();
+              setIsPlaying(false);
+            }
+          }
+        });
+      },
+      {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.5, // Trigger when 50% of the video is visible
+        // threshold: 1,
+      }
+    );
 
-  //     if (observerOn) {
-  //       if (videoRef.current) {
-  //         observer.observe(videoRef.current);
-  //       }
-  //     }
-  //     // // // Not Using now
-  //     // else {
+    if (observerOn) {
+      if (videoRef.current) {
+        observer.observe(videoRef.current);
+      }
+    }
+    // // // Not Using now
+    // else {
 
-  //     // // // This code will play video for single page video comp. -------->> (Becuse observer will pause there and if it is off then play song initially.)
-  //     // playTheVideo();
-  //     // }
+    // // // This code will play video for single page video comp. -------->> (Becuse observer will pause there and if it is off then play song initially.)
+    // playTheVideo();
+    // }
 
-  //     return () => {
-  //       if (videoRef.current) {
-  //         observer.unobserve(videoRef.current);
-  //       }
-  //     };
-  //   }, []);
+    return () => {
+      if (videoRef.current) {
+        observer.unobserve(videoRef.current);
+      }
+    };
+  }, []);
 
   //   console.log({ inView, entry });
-  useEffect(() => {
-    if (inView) {
-      playTheVideo();
-    } else {
-      pauseTheVideo();
-    }
-  }, [inView]);
+  //   useEffect(() => {
+  //     if (inView) {
+  //       playTheVideo();
+  //     } else {
+  //       pauseTheVideo();
+  //     }
+  //   }, [inView]);
 
-  // // // I'm responsable for play the video that is clicked ------->>
+  // // I'm responsable for play the video that is clicked ------->>
   useEffect(() => {
     if (metaDataInfo?.id && metaDataInfo?.id !== videoUrl) pauseTheVideo();
   }, [metaDataInfo]);
@@ -287,12 +289,10 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     }
   }, [allBtnVisiable, isPlaying]);
 
-  // // // Move window little bit below when progress is 100
+  // // // Move window little bit below when progress is 100 (Move to next post if video is over.)
   useEffect(() => {
     if (isPlaying && progress === 100) {
-      window.scrollBy(0, 500);
-
-      //   console.log(100);
+      window.scrollBy(0, 600);
     }
   }, [progress]);
 
@@ -301,7 +301,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       className="relative w-full max-w-4xl mx-auto min-h-[43vh] "
       onClick={videoClickOutsideHandler}
       onDoubleClick={onDoubleClickHandler}
-      ref={ref}
+      //   ref={ref}
     >
       {!isLoading && (
         <video
