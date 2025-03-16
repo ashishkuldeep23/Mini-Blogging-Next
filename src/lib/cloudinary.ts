@@ -1,21 +1,16 @@
 
 
-
-// const urlForCloudinary = process.env.CLOUDINARY_URL!
-// const preset_key = process.env.CLOUDINARY_PRESET!
-
+import { CLOUDINARY_PRESET, CLOUDINARY_URL } from "@/constant"
 import toast from "react-hot-toast"
 
 
 export async function uploadFileInCloudinary(file: File): Promise<string> {
 
-    // console.log({ urlForCloudinary, preset_key })
+ 
     try {
 
-
-
-        const urlForCloudinary = process.env.CLOUDINARY_URL || 'https://api.cloudinary.com/v1_1/dlvq8n2ca/upload'
-        const preset_key = process.env.CLOUDINARY_PRESET || 'crzz0lfv'
+        const urlForCloudinary = CLOUDINARY_URL || 'https://api.cloudinary.com/v1_1/dlvq8n2ca/upload'
+        const preset_key = CLOUDINARY_PRESET || 'crzz0lfv'
 
 
         if (!preset_key || !urlForCloudinary) {

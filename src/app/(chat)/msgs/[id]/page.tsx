@@ -15,13 +15,7 @@ const Chat = ({ params }: any) => {
 
     useEffect(() => {
 
-
         console.log(params.id)
-
-
-        // const pusher = new Pusher(process.env.PUSHER_KEY, {
-        //     cluster: process.env.PUSHER_CLUSTER,
-        // });
 
         const channel = pusherClient.subscribe("p-chat");
 
@@ -34,10 +28,6 @@ const Chat = ({ params }: any) => {
 
     const handleSendMessage = async () => {
         // Encrypt message using Crypto-JS
-        // const encryptedMessage = CryptoJS.AES.encrypt(
-        //     newMessage,
-        //     process.env.ENCRYPTION_KEY
-        // ).toString();
         // const encryptedMessage = encryptMessage(newMessage);
         const encryptedMessage = encryptMessage(newMessage);
 
@@ -67,13 +57,6 @@ const Chat = ({ params }: any) => {
             <ul>
                 {messages.map((message, index) => (
                     <li key={index}>
-                        {/* Decrypt message using Crypto-JS */}
-                        {/* <span>
-                            {CryptoJS.AES.decrypt(
-                                message,
-                                process.env.ENCRYPTION_KEY
-                            ).toString(CryptoJS.enc.Utf8)}
-                        </span> */}
                         <span>
                             {decryptMessage(message) || message}
                         </span>

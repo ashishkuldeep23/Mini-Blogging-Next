@@ -1,52 +1,44 @@
 import mongoose from "mongoose";
+import { MONGO_URL } from "@/constant";
 // import { NextResponse } from "next/server";
 
-
 // // // Technique by hitesh sir ------->
-
 type ConnectionObj = {
-    isConnected?: number
-}
+  isConnected?: number;
+};
 
-const checkConnection: ConnectionObj = {}
+const checkConnection: ConnectionObj = {};
 
 export async function connect() {
+  if (checkConnection.isConnected) {
+    console.log("Already connected to database.");
+    return;
+  }
 
+  try {
+    let db = await mongoose.connect(MONGO_URL);
 
-    if (checkConnection.isConnected) {
-        console.log("Already connected to database.")
-        return
-    }
+    // // // Set connection value if connected to db
+    checkConnection.isConnected = db.connections[0].readyState;
 
-    try {
+    // console.log(db.connections[0])
 
-        let db = await mongoose.connect(process.env.MONGO_URL!)
+    const connection = mongoose.connection;
 
-        // // // Set connection value if connected to db
+    connection.on("connected", () => {
+      console.log("DB connected successfully");
+    });
 
-        checkConnection.isConnected = db.connections[0].readyState
+    connection.on("error", (err) => {
+      console.log("Error in db connection.");
+      console.log(err);
+      process.exit();
+    });
+  } catch (error: any) {
+    console.log("Something goes wrong!");
+    console.log(error);
+    process.exit();
 
-        // console.log(db.connections[0])
-
-        const connection = mongoose.connection;
-
-        connection.on("connected", () => {
-            console.log('DB connected successfully')
-        })
-
-        connection.on("error", (err) => {
-            console.log("Error in db connection.")
-            console.log(err)
-            process.exit()
-        })
-
-    } catch (error: any) {
-        console.log("Something goes wrong!")
-        console.log(error)
-        process.exit()
-
-        // return NextResponse.json({ success: false, message: `${error.message} (Server Error)` }, { status: 500 })
-
-    }
-
+    // return NextResponse.json({ success: false, message: `${error.message} (Server Error)` }, { status: 500 })
+  }
 }

@@ -194,16 +194,6 @@ const NewPostPage = () => {
         e.stopPropagation();
         e.preventDefault();
 
-
-        // // // Check this letter why not getting below val from env
-
-        // const urlForCloudinary = process.env.CLOUDINARY_URL!
-        // const preset_key = process.env.CLOUDINARY_PRESET!
-
-        // console.log({ urlForCloudinary, preset_key })
-
-
-
         if (e.target.files) {
 
             const file = e?.target?.files[0]

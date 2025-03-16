@@ -1,29 +1,27 @@
-import Pusher from 'pusher';
+import {
+  NEXT_PUBLIC_PUSHER_CLUSTER,
+  NEXT_PUBLIC_PUSHER_KEY,
+  PUSHER_APP_ID,
+  PUSHER_CLUSTER,
+  PUSHER_ENCRYPTED_KEY,
+  PUSHER_KEY,
+  PUSHER_SECRET,
+} from "@/constant";
+import Pusher from "pusher";
 
 import PusherJs from "pusher-js";
 
-let appId = process.env.PUSHER_APP_ID || ""
-let key = process.env.PUSHER_KEY || ''
-let secret = process.env.PUSHER_SECRET || ''
-let cluster = process.env.PUSHER_CLUSTER || ''
-let encryptedKey = process.env.PUSHER_ENCRYPTED_KEY || '8qdCNaqitxRS9mNIBgQGw3vDbCKEp0GvWtXnx+up3cU='
-
+// // Working pusher code ------------>
 export const pusherServer = new Pusher({
-    appId: appId,
-    key: key,
-    secret: secret,
-    cluster: cluster,
-    useTLS: true,
-    encryptionMasterKeyBase64: encryptedKey
+  appId: PUSHER_APP_ID,
+  key: PUSHER_KEY,
+  secret: PUSHER_SECRET,
+  cluster: PUSHER_CLUSTER,
+  encryptionMasterKeyBase64: PUSHER_ENCRYPTED_KEY,
+  useTLS: true,
 });
 
-
-
 // // Working pusher code ------------>
-export const pusherClient = new PusherJs(
-    process.env.NEXT_PUBLIC_PUSHER_KEY!,
-    {
-        cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!
-    }
-)
-
+export const pusherClient = new PusherJs(NEXT_PUBLIC_PUSHER_KEY!, {
+  cluster: NEXT_PUBLIC_PUSHER_CLUSTER!,
+});

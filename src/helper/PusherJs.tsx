@@ -41,15 +41,9 @@ export default function PusherTestDiv({ channelName }: { channelName: string }) 
             return
         }
 
-
         Pusher.logToConsole = true; // Enable logging
 
-        // const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
-        //   cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
-        //   authEndpoint: '/api/pusher/auth', // Correct auth endpoint
-        // });
-
-
+        // // // Subscribe to the channel
         const channel = pusherClient.subscribe(`${channelName}`);
 
         channel.bind('message', (data: any) => {
