@@ -4,7 +4,6 @@
 import ImageReact from '@/app/components/ImageReact'
 import MainLoader from '@/app/components/MainLoader'
 // import HomeButton from '@/app/components/HomeButton'
-// import SinglePostCard from '@/app/components/SinglePostCard'
 import AnimatedTooltip from '@/app/components/ui/animated-tooltip'
 import { useThemeData } from '@/redux/slices/ThemeSlice'
 import { getProfileData, setIsLoading, setPageValue, updateUserData, useUserState } from '@/redux/slices/UserSlice'

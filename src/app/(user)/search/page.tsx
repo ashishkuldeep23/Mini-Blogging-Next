@@ -11,11 +11,9 @@ import { useDispatch } from 'react-redux';
 import { getUserData, setUserDataBySession, updateUserData, useUserState } from '@/redux/slices/UserSlice';
 import toast from 'react-hot-toast';
 import { useSession } from 'next-auth/react';
-// import SinglePostCard from '../components/SinglePostCard';
 // import { PlaceholdersAndVanishInput } from '../components/ui/placeholders-and-vanish-input';
 import { getAllPosts, getCatAndHash, setSearchBrandAndCate, setSearchByText, usePostData } from '@/redux/slices/PostSlice';
 import SingleUserDiv from '@/app/components/SingleUserDiv';
-// import SinglePostCard from '@/app/components/SinglePostCard';
 import { PlaceholdersAndVanishInput } from '@/app/components/ui/placeholders-and-vanish-input';
 import SinglePostCardNew from '@/app/components/SinglePostCardNew';
 

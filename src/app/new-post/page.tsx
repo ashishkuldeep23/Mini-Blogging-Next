@@ -967,39 +967,6 @@ const NewPostPage = () => {
 
                             </div>
 
-
-
-                            {/* Not using now ----> */}
-                            {/* <SinglePostCard
-                                ele={
-                                    {
-
-                                        _id: "",
-                                        title: newPostData.title,
-                                        category: newPostData.category,
-                                        promptReturn: newPostData.content,
-                                        urlOfPrompt: newPostData.url,
-                                        aiToolName: newPostData.origin,
-                                        hashthats: newPostData.hashs,
-                                        author: {
-                                            username: (session?.user.name || "Name"),
-                                            email: (session?.user.email || "Email"),
-                                            profilePic: (session?.user.image || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwV9k8Uxfa2bIUN1C5bybUsLeU2Ik2YDkAZlp3QYoedLj3QyJfkGs6r51MCrtpCEAlR2Y&usqp=CAU"),
-                                            isVerified: false,
-                                            isAdmin: false
-
-                                        },
-                                        likes: 0,
-                                        // likesId: UserDataInterface[]|string[],
-                                        likesId: [],
-                                        comments: [],
-                                        isDeleted: false
-                                    }
-                                }
-                            /> */}
-
-
-
                         </div>
 
                         {/* Customization and create or update btn here ------> */}

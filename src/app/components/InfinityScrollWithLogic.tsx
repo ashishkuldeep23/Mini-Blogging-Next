@@ -52,7 +52,6 @@ const InfinityScrollWithLogic: React.FC<TypeInfinityScrollWithLogic> = ({ allPos
                             ?
                             allPostData.map((ele, i) => {
                                 return (
-                                    // <SinglePostCard key={i} ele={ele} className=" hover:z-10" />
                                     <SinglePostCardNew key={ele._id} index={i} ele={ele} className=" hover:z-10" />
                                 )
                             })

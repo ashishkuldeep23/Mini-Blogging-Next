@@ -2,7 +2,6 @@
 'use client'
 
 // import Navbar from '@/app/components/Navbar';
-// import SinglePostCard from '@/app/components/SinglePostCard';
 // import AnimatedTooltip from '@/app/components/ui/animated-tooltip';
 // import { IoIosArrowBack } from "react-icons/io";
 // import { PiSealCheckDuotone } from 'react-icons/pi';
@@ -12,7 +11,6 @@ import toast from 'react-hot-toast'
 import MainLoader from '@/app/components/MainLoader';
 import ImageReact from '@/app/components/ImageReact';
 import SingleUserDiv from '@/app/components/SingleUserDiv'
-import SinglePostCardNew from '@/app/components/SinglePostCardNew'
 import { useRouter } from 'next/navigation'
 import { useThemeData } from '@/redux/slices/ThemeSlice'
 import { getUserData, setPageValue, updateUserData, useUserState } from '@/redux/slices/UserSlice'
@@ -138,22 +136,6 @@ const UserPageParams = ({ params }: any) => {
                     isLoading={isLoading}
                 />
             </div>
-
-
-            {/* This div will show all post of user. */}
-            {/* <div
-                className=" my-20 card_container relative sm:px-[8vh] mt-16 flex gap-10 gap-x-64 p-0.5 flex-wrap justify-center items-start "
-            >
-
-                {
-                    searchedUser.allPostOfUser.length > 0
-                    &&
-                    searchedUser.allPostOfUser.map((ele) => {
-                        return <SinglePostCardNew ele={ele} key={ele._id} />
-                    })
-                }
-
-            </div> */}
 
         </div >
     )

@@ -1,7 +1,6 @@
 'use client'
 import InfinityScrollWithLogic from '@/app/components/InfinityScrollWithLogic'
 import MaskerText from '@/app/components/MaskerText'
-// import SinglePostCard from '@/app/components/SinglePostCard'
 import { usePreventSwipe } from '@/Hooks/useSwipeCustom'
 import { getAllPosts, setSearchBrandAndCate, usePostData } from '@/redux/slices/PostSlice'
 import { AppDispatch } from '@/redux/store'
