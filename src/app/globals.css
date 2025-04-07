@@ -2,123 +2,113 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
 /* Fonts import here ----------> */
 
-
-
-
 * {
-    scroll-behavior: smooth;
-    transition: all 100ms;
+  scroll-behavior: smooth;
+  transition: all 100ms;
 }
-
 
 ::-webkit-scrollbar {
-    width: 4px;
-    background-color: rgb(144, 144, 144);
+  width: 4px;
+  background-color: rgb(144, 144, 144);
 }
-
 
 ::-webkit-scrollbar-thumb {
-    border-radius: 5vh;
-    background-color: black;
+  border-radius: 5vh;
+  background-color: black;
 }
-
 
 .ai_heading {
+  color: transparent;
 
-    color: transparent;
+  /* color:  ; */
+  /* background-color: ; */
+  /* background: linear-gradient(40deg, red, blue, red); */
+  /* background: radial-gradient(); */
 
-    /* color:  ; */
-    /* background-color: ; */
-    /* background: linear-gradient(40deg, red, blue, red); */
-    /* background: radial-gradient(); */
-
-    background: radial-gradient(closest-side, #ff7100, #ff7100, #00dcff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    -webkit-text-stroke: 1px var(--text);
+  background: radial-gradient(closest-side, #ff7100, #ff7100, #00dcff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 1px var(--text);
 }
-
 
 /* Card related code starts here ==========> */
 
 .card_background {
-    background: linear-gradient(40deg, #ff7100, #ff7100, #00dcff);
+  background: linear-gradient(40deg, #ff7100, #ff7100, #00dcff);
 }
 
 .card_container {
-    perspective: 200px;
+  perspective: 200px;
 }
 
 .single_Card {
-    transform: rotate3d(-2, 1, -3, 3deg);
-    box-shadow: 10px -10px 10px gray;
+  transform: rotate3d(-2, 1, -3, 3deg);
+  box-shadow: 10px -10px 10px gray;
 }
 
 .single_Card:hover {
-    z-index: 10;
-    box-shadow: none;
+  z-index: 10;
+  box-shadow: none;
 }
 
 .add_button_down_right {
-
-    filter: drop-shadow(2px 2px 1px #40fcfc);
-
+  filter: drop-shadow(2px 2px 1px #40fcfc);
 }
 
-.filter_container>p {
-    position: relative;
-    transition: all 700ms;
+.filter_container > p {
+  position: relative;
+  transition: all 700ms;
 }
 
-.filter_container>p::after {
-    content: "";
-    width: 0%;
-    height: 2px;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background: #8b5cf6;
-    transition: all 700ms;
+.filter_container > p::after {
+  content: "";
+  width: 0%;
+  height: 2px;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #8b5cf6;
+  transition: all 700ms;
 }
 
-.filter_container:hover>p {
-    color: #8b5cf6;
+.filter_container:hover > p {
+  color: #8b5cf6;
 }
 
-.filter_container:hover>p::after {
-    width: 100%;
-
+.filter_container:hover > p::after {
+  width: 100%;
 }
-
 
 .scrooller_bar_hidden::-webkit-scrollbar {
-    height: 0px;
+  height: 0px;
 }
 
+.scrooller_bar_small::-webkit-scrollbar {
+  height: 5px;
+}
+
+.scrooller_bar_small::-webkit-scrollbar:hover {
+  cursor: pointer;
+}
 
 /* page transition code here ----------------> */
 
 body {
+  background-color: black;
+  color: white;
 
-    background-color: black;
-    color: white;
-
-    transition-property: opacity, transform, filter;
-    transition-timing-function: ease-in-out;
-    transition-duration: 500ms;
+  transition-property: opacity, transform, filter;
+  transition-timing-function: ease-in-out;
+  transition-duration: 500ms;
 }
 
 .page_transition {
-    opacity: .5;
-    transform: translateY(40px);
-    filter: blur(12px);
+  opacity: 0.5;
+  transform: translateY(40px);
+  filter: blur(12px);
 }
-
-
 
 /* Back and forword arrow  onSwap --------------->> */
 
@@ -127,103 +117,87 @@ body {
 } */
 
 .back_arrow_code {
-    display: flex;
-    align-items: center;
-    justify-content: left;
-    text-align: start;
-    height: 4px;
-    border-radius: 50px;
-    background-color: red;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  text-align: start;
+  height: 4px;
+  border-radius: 50px;
+  background-color: red;
 }
-
 
 .back_arrow_code span {
+  color: red;
+  font-size: 1.5rem;
 
-    color: red;
-    font-size: 1.5rem;
-
-    /* margin-left: -5px;
+  /* margin-left: -5px;
     margin-top: -12px; */
 
-    position: absolute;
-    top: -0px;
-    left: -0.2rem;
+  position: absolute;
+  top: -0px;
+  left: -0.2rem;
 
-    height: 3px;
-    display: flex;
-    align-items: center;
-
+  height: 3px;
+  display: flex;
+  align-items: center;
 }
 
-
-
 .forword_arrow_code {
-    display: flex;
-    align-items: center;
-    justify-content: end;
-    text-align: end;
-    height: 4px;
-    border-radius: 50px;
-    background-color: blue;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  text-align: end;
+  height: 4px;
+  border-radius: 50px;
+  background-color: blue;
 }
 
 .forword_arrow_code span {
-    font-size: 1.5rem;
-    color: blue;
+  font-size: 1.5rem;
+  color: blue;
 
-    /* margin-top: -12px;
+  /* margin-top: -12px;
     margin-right: -5px; */
 
-    position: absolute;
-    top: -0px;
-    right: -0.2rem;
+  position: absolute;
+  top: -0px;
+  right: -0.2rem;
 
-    height: 4px;
-    display: flex;
-    align-items: center
+  height: 4px;
+  display: flex;
+  align-items: center;
 }
-
 
 /* Like btn css code --------->> */
 
 .likeAnimation {
-    /* animation: likeAnimationCSS 1s alternate linear ease-in-out; */
+  /* animation: likeAnimationCSS 1s alternate linear ease-in-out; */
 
-    /* animation-duration: 3s;
+  /* animation-duration: 3s;
     animation-name: likeAnimationCSS; */
-    animation: likeAnimationCSS 1s ease-in-out ;
+  animation: likeAnimationCSS 1s ease-in-out;
 }
-
 
 /* Input range btn css for videos  */
 
-
-
-
 @keyframes likeAnimationCSS {
-    0% {
+  0% {
+    transform: rotate3d(1, 0, 0, 90deg);
+  }
 
-        transform: rotate3d(1, 0, 0, 90deg);
-    }
+  20% {
+    transform: rotate3d(1, 0, 0, 0deg) rotateZ(0deg);
+  }
 
-    20% {
-        transform: rotate3d(1, 0, 0, 0deg) rotateZ(0deg) ;
-   
-    }
+  50% {
+    transform: rotateZ(-40deg);
+  }
 
-    50% {
+  80% {
+    transform: rotateZ(40deg) scale(1);
+  }
 
-        transform: rotateZ(-40deg);
-    }
-
-
-    80% {
-
-        transform: rotateZ(40deg) scale(1);
-    }
-
-    100% {
-        transform: rotateZ(0deg) scale(0.2);
-    }
-
+  100% {
+    transform: rotateZ(0deg) scale(0.2);
+  }
 }

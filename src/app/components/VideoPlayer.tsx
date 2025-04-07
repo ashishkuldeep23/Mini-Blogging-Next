@@ -318,7 +318,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         />
       )}
 
-      {!allBtnVisiable && (
+      {!allBtnVisiable ? (
         <>
           {
             // playPauseToggleBtn
@@ -329,9 +329,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
                 onClick={handle3sBack}
               >
                 <span className=" absolute top-1/2 left-1/2 -translate-x-[70%] -translate-y-1/2  text-4xl opacity-50">
-                  {"◁"}
+                  {"↺"}
+                  <MdTimer3 className=" absolute  top-[55%] left-[45%] -translate-x-1/2 -translate-y-1/2  text-xs  " />
                 </span>
-                <MdTimer3 className=" absolute top-[40%] left-1/2 -translate-x-[65%]  text-xs " />
               </button>
 
               <button
@@ -346,9 +346,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
                 onClick={handle3sForward}
               >
                 <span className=" absolute top-1/2 left-[50%] -translate-x-1/2 -translate-y-1/2  text-4xl opacity-50">
-                  {"▷"}
+                  {"↻"}
+                  <MdTimer3 className="absolute  top-[55%] left-[55%] -translate-x-1/2 -translate-y-1/2  text-xs  " />
                 </span>
-                <MdTimer3 className=" absolute top-[40%] left-[45%] -translate-x-[65%]  text-xs  " />
               </button>
             </div>
           }
@@ -398,6 +398,10 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
             )}
           </div>
         </>
+      ) : (
+        <span className=" text-sm absolute bottom-2 right-2">
+          -{100 - Number(progress.toFixed(0))}%
+        </span>
       )}
     </div>
   );

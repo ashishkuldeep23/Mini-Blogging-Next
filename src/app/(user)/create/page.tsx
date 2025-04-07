@@ -1050,16 +1050,18 @@ const NewPostPage = () => {
             </div>
 
             <div className=" flex justify-end">
-              <button
-                className={` text-3xl px-10 py-2 mb-4 mx-4 my-1 rounded-full font-bold bg-green-400 active:scale-90 hover:bg-green-600 transition-all ${
-                  themeMode ? "text-green-900" : "text-green-900"
-                }`}
-                onClick={(e) => {
-                  onSubmitHandler(e);
-                }}
-              >
-                {!updatingPost ? "Create" : "Update"}
-              </button>
+              {!isLoading && (
+                <button
+                  className={` text-3xl px-10 py-2 mb-4 mx-4 my-1 rounded-full font-bold bg-green-400 active:scale-90 hover:bg-green-600 transition-all ${
+                    themeMode ? "text-green-900" : "text-green-900"
+                  }`}
+                  onClick={(e) => {
+                    onSubmitHandler(e);
+                  }}
+                >
+                  {!updatingPost ? "Create" : "Update"}
+                </button>
+              )}
             </div>
           </div>
         </div>
