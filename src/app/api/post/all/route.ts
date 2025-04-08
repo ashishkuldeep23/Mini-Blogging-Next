@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
             pageNo = Number(page)
         }
 
-        let limitOfProducts = 4
+        let limitOfProducts = 10;
         if (limit) {
             limitOfProducts = Number(limit)
         }

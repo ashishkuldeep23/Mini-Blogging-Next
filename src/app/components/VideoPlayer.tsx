@@ -328,10 +328,10 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
                 className=" w-14 h-14 bg-opacity-50 text-inherit rounded-full px-3 py-1.5 hover:bg-opacity-75 z-[10] mx-5 relative active:scale-75 transition-all "
                 onClick={handle3sBack}
               >
-                <span className=" absolute top-1/2 left-1/2 -translate-x-[70%] -translate-y-1/2  text-4xl opacity-50">
+                <span className=" absolute top-1/2 left-1/2 -translate-x-[70%] -translate-y-1/2  text-4xl opacity-50 -rotate-[60deg]  ">
                   {"↺"}
-                  <MdTimer3 className=" absolute  top-[55%] left-[45%] -translate-x-1/2 -translate-y-1/2  text-xs  " />
                 </span>
+                <MdTimer3 className=" absolute  top-[53%] left-[40%] -translate-x-1/2 -translate-y-1/2  text-xs  " />
               </button>
 
               <button
@@ -345,10 +345,10 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
                 className=" w-14 h-14 bg-opacity-50 text-inherit rounded-full px-3 py-1.5 hover:bg-opacity-75 z-[10] mx-5 relative active:scale-75 transition-all "
                 onClick={handle3sForward}
               >
-                <span className=" absolute top-1/2 left-[50%] -translate-x-1/2 -translate-y-1/2  text-4xl opacity-50">
+                <span className=" absolute top-1/2 left-[50%] -translate-x-1/2 -translate-y-1/2  text-4xl opacity-50 rotate-[60deg] ">
                   {"↻"}
-                  <MdTimer3 className="absolute  top-[55%] left-[55%] -translate-x-1/2 -translate-y-1/2  text-xs  " />
                 </span>
+                <MdTimer3 className="absolute  top-[53%] left-[50%] -translate-x-1/2 -translate-y-1/2  text-xs  " />
               </button>
             </div>
           }
@@ -399,9 +399,12 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
           </div>
         </>
       ) : (
-        <span className=" text-sm absolute bottom-2 right-2">
-          -{100 - Number(progress.toFixed(0))}%
-        </span>
+        100 - Number(progress.toFixed(0)) <= 10 &&
+        100 - Number(progress.toFixed(0)) >= 1 && (
+          <span className=" text-xs absolute bottom-2 right-2 border rounded-full px-1 ">
+            {100 - Number(progress.toFixed(0))}
+          </span>
+        )
       )}
     </div>
   );

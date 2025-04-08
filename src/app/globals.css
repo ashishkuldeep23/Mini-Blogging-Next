@@ -201,3 +201,9 @@ body {
     transform: rotateZ(0deg) scale(0.2);
   }
 }
+
+@media (max-width: 512px) {
+  .scrooller_bar_small::-webkit-scrollbar {
+    height: 0px;
+  }
+}

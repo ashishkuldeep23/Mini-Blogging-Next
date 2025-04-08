@@ -34,7 +34,7 @@ function AllPostDiv() {
   let searchObj: SearchObj = {
     hash: "",
     category: "",
-    limit: 7,
+    limit: 10,
     page: 1,
   };
 
