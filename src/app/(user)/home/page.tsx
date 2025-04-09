@@ -1,4 +1,5 @@
 "use client";
+import AdBanner from "@/app/components/GoogleAds/GoogleAds";
 import InfinityScrollWithLogic from "@/app/components/InfinityScrollWithLogic";
 import MaskerText from "@/app/components/MaskerText";
 import { usePreventSwipe } from "@/Hooks/useSwipeCustom";
@@ -15,6 +16,9 @@ import { useDispatch } from "react-redux";
 const HomePage = () => {
   return (
     <div className=" text-white w-[100%] relative ">
+      {/* Checking ads here ----->> */}
+      <AdBanner />
+
       <StorySection />
       <AllPostDiv />
       <MaskerText className="font-bold text-2xl" text="I'm Footer dude" />

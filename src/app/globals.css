@@ -4,6 +4,10 @@
 
 /* Fonts import here ----------> */
 
+:root {
+  --range_input_color: #0284c7;
+}
+
 * {
   scroll-behavior: smooth;
   transition: all 100ms;
@@ -21,12 +25,6 @@
 
 .ai_heading {
   color: transparent;
-
-  /* color:  ; */
-  /* background-color: ; */
-  /* background: linear-gradient(40deg, red, blue, red); */
-  /* background: radial-gradient(); */
-
   background: radial-gradient(closest-side, #ff7100, #ff7100, #00dcff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -206,4 +204,84 @@ body {
   .scrooller_bar_small::-webkit-scrollbar {
     height: 0px;
   }
+}
+
+/* Copy pasting here --------------->> */
+
+/********** Range Input Styles **********/
+/*Range Reset*/
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  background: transparent;
+  cursor: pointer;
+  width: 15rem;
+}
+
+/* Removes default focus */
+input[type="range"]:focus {
+  outline: none;
+}
+
+/***** Chrome, Safari, Opera and Edge Chromium styles *****/
+/* slider track */
+input[type="range"]::-webkit-slider-runnable-track {
+  background-color: var(--range_input_color);
+  border-radius: 0.5rem;
+  height: 0.4rem;
+}
+
+/* slider thumb */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  margin-top: -5.5px; /* Centers thumb on the track */
+  /*custom styles*/
+  background-color: #19b2fe;
+  background: url("https://res.cloudinary.com/dlvq8n2ca/image/upload/v1701708322/jual47jntd2lpkgx8mfx.png")
+    no-repeat center;
+  background-size: cover;
+  height: 1rem;
+  width: 1rem;
+  border-radius: 50%;
+  scale: 1.2;
+}
+
+input[type="range"]:focus::-webkit-slider-thumb {
+  border: 1px solid var(--range_input_color);
+  outline: 3px solid var(--range_input_color);
+  outline-offset: 0.125rem;
+  scale: 1.5;
+}
+
+/******** Firefox styles ********/
+/* slider track */
+input[type="range"]::-moz-range-track {
+  background-color: var(--range_input_color);
+  border-radius: 0.5rem;
+  height: 0.3rem;
+}
+
+/* slider thumb */
+input[type="range"]::-moz-range-thumb {
+  border: none; /*Removes extra border that FF applies*/
+  border-radius: 0; /*Removes default border-radius that FF applies*/
+
+  /*custom styles*/
+  background-color: #19b2fe;
+  background: url("https://res.cloudinary.com/dlvq8n2ca/image/upload/v1701708322/jual47jntd2lpkgx8mfx.png")
+    no-repeat center;
+  background-size: cover;
+  height: 1rem;
+  width: 1rem;
+  border-radius: 50%;
+  scale: 1.2;
+}
+
+input[type="range"]:focus::-moz-range-thumb {
+  border: 1px solid var(--range_input_color);
+  outline: 3px solid var(--range_input_color);
+  outline-offset: 0.125rem;
+  scale: 1.5;
 }

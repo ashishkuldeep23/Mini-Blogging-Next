@@ -388,7 +388,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
               {isMuted ? <HiOutlineSpeakerXMark /> : <HiOutlineSpeakerWave />}
             </span>
 
-            {pathName === "/home" && (
+            {!pathName.includes("/post") && (
               <span
                 onClick={(e) => zoomClickHandler(e)}
                 className="active:scale-75 transition-all"

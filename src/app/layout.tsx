@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import "./normalize.css";
 import { StateProviders } from "@/redux/providers";
 import { Toaster } from "react-hot-toast";
 import LogInProvider from "./components/LogInProvider";
@@ -24,6 +25,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Load AdSense script here */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8351627559637354"
+          crossOrigin="anonymous"
+          // strategy="afterInteractive"
+        />
+        <script
+          async
+          custom-element="amp-ad"
+          src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"
+        />
+      </head>
+
       <body className={inter.className} suppressHydrationWarning={true}>
         <StateProviders>
           <LogInProvider>
@@ -36,7 +52,7 @@ export default function RootLayout({
 
             {/* Hot toster ---> */}
             <div>
-              <Toaster />
+              <Toaster position="bottom-center" />
             </div>
 
             {children}

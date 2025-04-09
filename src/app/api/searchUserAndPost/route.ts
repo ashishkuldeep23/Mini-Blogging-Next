@@ -66,7 +66,6 @@ export async function POST(req: NextRequest) {
 
 
 
-
         return NextResponse.json({ success: true, data: { users: getUsersFromDB, posts: getPostsFromDB }, message: "New post created." }, { status: 201 })
 
     } catch (error: any) {
