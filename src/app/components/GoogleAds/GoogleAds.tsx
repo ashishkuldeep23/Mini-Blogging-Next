@@ -26,7 +26,7 @@ const AdBanner: React.FC = () => {
   return (
     <ins
       className="adsbygoogle"
-      style={{ display: "inline-block", height: "70px" }}
+      style={{ display: "inline-block", height: "70px", width: "100vw" }}
       data-ad-client="ca-pub-8351627559637354"
       data-ad-slot="2645453984"
     />
@@ -46,7 +46,7 @@ export const CardShapeAd = () => {
       data-auto-format="rspv"
       data-full-width=""
     >
-      <div></div>
+      <div style={{ overflow: "hidden" }}></div>
     </amp-ad>
   );
 };
