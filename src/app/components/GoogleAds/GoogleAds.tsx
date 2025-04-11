@@ -12,7 +12,7 @@ declare global {
   }
 }
 
-const AdBanner: React.FC = () => {
+const GoogleAdsCardFomate: React.FC = () => {
   useEffect(() => {
     try {
       if (typeof window !== "undefined") {
@@ -26,14 +26,16 @@ const AdBanner: React.FC = () => {
   return (
     <ins
       className="adsbygoogle"
-      style={{ display: "inline-block", height: "70px", width: "100vw" }}
+      style={{ display: "block" }}
       data-ad-client="ca-pub-8351627559637354"
       data-ad-slot="2645453984"
-    />
+      data-ad-format="auto"
+      data-full-width-responsive="true"
+    ></ins>
   );
 };
 
-export default AdBanner;
+export default GoogleAdsCardFomate;
 
 export const CardShapeAd = () => {
   return (

@@ -3,7 +3,7 @@ import React, { Fragment } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import SinglePostCardNew from "./SinglePostCardNew";
 import SinglePostSkeletonUI from "./SinglePostSkeletonUI";
-import { CardShapeAd } from "./GoogleAds/GoogleAds";
+import GoogleAdsCardFomate, { CardShapeAd } from "./GoogleAds/GoogleAds";
 
 type TypeInfinityScrollWithLogic = {
   allPostData: PostInterFace[];
@@ -54,7 +54,7 @@ const InfinityScrollWithLogic: React.FC<TypeInfinityScrollWithLogic> = ({
                     className=" hover:z-10"
                   />
 
-                  {(i + 1) % 3 === 0 && <GoogleAdsInProductCard />}
+                  {(i + 1) % 3 === 0 && <GoogleAdsCardFomate />}
                 </Fragment>
               );
             })
