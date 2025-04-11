@@ -7,6 +7,7 @@ import { Toaster } from "react-hot-toast";
 import LogInProvider from "./components/LogInProvider";
 import Modal from "./components/ModalComponent";
 import PusherTestDiv from "../helper/PusherJs";
+import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,16 +29,11 @@ export default function RootLayout({
       <head>
         <meta name="google-adsense-account" content="ca-pub-8351627559637354" />
         {/* Load AdSense script here */}
-        <script
+        <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8351627559637354"
           crossOrigin="anonymous"
-          // strategy="afterInteractive"
-        />
-        <script
-          async
-          custom-element="amp-ad"
-          src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"
+          strategy="afterInteractive"
         />
       </head>
 
