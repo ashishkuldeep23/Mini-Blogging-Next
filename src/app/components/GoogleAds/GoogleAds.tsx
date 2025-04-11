@@ -26,11 +26,9 @@ const GoogleAdsCardFomate: React.FC = () => {
   return (
     <ins
       className="adsbygoogle"
-      style={{ display: "block" }}
+      style={{ display: "inline-block", height: "70px" }}
       data-ad-client="ca-pub-8351627559637354"
       data-ad-slot="2645453984"
-      data-ad-format="auto"
-      data-full-width-responsive="true"
     ></ins>
   );
 };
