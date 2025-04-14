@@ -13,7 +13,7 @@ import MainLoader from '../components/MainLoader';
 import ImageReact from '../components/ImageReact';
 import { FaCamera } from "react-icons/fa";
 import { uploadFileInCloudinary } from '@/lib/cloudinary'
-import { NewPostType, PostCustomization } from '@/Types';
+import { NewPostType, PostCustomization } from '../../../types/Types';
 
 
 const NewPostPage = () => {

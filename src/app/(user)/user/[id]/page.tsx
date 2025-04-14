@@ -21,7 +21,7 @@ import { useDispatch } from 'react-redux'
 import { RiUserAddLine } from "react-icons/ri";
 import { IoCheckmarkDoneOutline } from "react-icons/io5";
 import { TbUserCancel } from "react-icons/tb";
-import { AddMoreFeilsUserData } from '@/Types'
+import { AddMoreFeilsUserData } from '../../../../../types/Types'
 import InfinityScrollWithLogic from '@/app/components/InfinityScrollWithLogic';
 
 

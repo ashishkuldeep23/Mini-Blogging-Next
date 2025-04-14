@@ -9,7 +9,7 @@ import {
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import toast from "react-hot-toast";
-import { AddMoreFeilsUserData } from "@/Types";
+import { AddMoreFeilsUserData, SavedPostDataType } from "../../../types/Types";
 
 type BodyData = {
   email: string;
@@ -89,6 +89,19 @@ export const getProfileData = createAsyncThunk(
   }
 );
 
+export const getSavedPostData = createAsyncThunk(
+  "user/getSavedPostData",
+  async () => {
+    const option: RequestInit = {
+      cache: "no-store",
+      method: "GET",
+    };
+    const response = await fetch(`/api/post/save`, option);
+    let data = await response.json();
+    return data;
+  }
+);
+
 type WhatUpdateData =
   | "sendFriendRequest"
   | "addFriend"
@@ -126,6 +139,8 @@ const initialSingleUserData: AddMoreFeilsUserData = {
   isVerified: false,
   isAdmin: false,
   allPostOfUser: [],
+  savedPost: {},
+  allProfilePic: [],
 };
 
 interface UserInter {
@@ -137,7 +152,6 @@ interface UserInter {
   searchedUser: AddMoreFeilsUserData;
   page: number;
 }
-
 const initialState: UserInter = {
   isLoading: false,
   isFullfilled: false,
@@ -166,6 +180,10 @@ const userSlice = createSlice({
 
     setPageValue(state, action: PayloadAction<number>) {
       state.page = action.payload;
+    },
+
+    setSavedPostData(state, action: PayloadAction<SavedPostDataType>) {
+      state.userData.savedPost = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -285,6 +303,7 @@ const userSlice = createSlice({
       })
       .addCase(getProfileData.fulfilled, (state, action) => {
         // console.log(action.payload.data)
+
         // console.log(action.payload.data?.posts?.length)
         // console.log(action.payload.data.posts)
 
@@ -293,11 +312,10 @@ const userSlice = createSlice({
           const { friendsAllFriend, user, posts } = action.payload.data;
 
           // // // check getting some extra or not (User personal data) ---------->
-
           const { reciveRequest, sendRequest, whoSeenProfile } = user;
 
-          // // User data
-          // // Means of my own ----->
+          // // User data --------->>
+          // // Means this data is my own data ----->
           if (sendRequest && whoSeenProfile) {
             state.userData = user;
             state.userData.allPostOfUser = posts;
@@ -408,12 +426,38 @@ const userSlice = createSlice({
         state.isError = true;
         toast.error(` ${action.error.message || "SignUp failed"}`);
         state.errMsg = action.error.message || "Error";
+      })
+
+      .addCase(getSavedPostData.pending, (state) => {
+        state.isLoading = true;
+        state.errMsg = "";
+      })
+      .addCase(getSavedPostData.fulfilled, (state, action) => {
+        // console.log(action.payload);
+
+        if (action.payload.success === true) {
+          state.userData.savedPost = action.payload.data;
+        }
+
+        state.isLoading = false;
+      })
+      .addCase(getSavedPostData.rejected, (state, action) => {
+        // console.log(action)
+
+        state.isLoading = false;
+        state.isError = true;
+        toast.error(` ${action.error.message || "SignUp failed"}`);
+        state.errMsg = action.error.message || "Error";
       });
   },
 });
 
-export const { setUserDataBySession, setIsLoading, setPageValue } =
-  userSlice.actions;
+export const {
+  setUserDataBySession,
+  setIsLoading,
+  setPageValue,
+  setSavedPostData,
+} = userSlice.actions;
 
 export const useUserState = () =>
   useSelector((state: RootState) => state.userReducer);

@@ -18,7 +18,7 @@ import {
   PostTypeForBackend,
   SearchObj,
   UpdateCommentInput,
-} from "@/Types";
+} from "../../../types/Types";
 
 // // // Not using now -------->
 export const getAllPosts = createAsyncThunk(
@@ -331,6 +331,29 @@ const psotSlice = createSlice({
       }
     },
 
+    setSaveSinglePost(
+      state,
+      action: PayloadAction<{ userId: string; postId: string }>
+    ) {
+
+      state.allPost.map((ele) => {
+        if (ele._id === action.payload.postId) {
+          if (ele?.savedById) {
+            if (ele.savedById.includes(action.payload.userId)) {
+              ele.savedById = ele?.savedById.filter(
+                (id) => id !== action.payload.userId
+              );
+            } else {
+              ele.savedById = [action.payload.userId, ...ele?.savedById];
+            }
+          } else {
+            ele.savedById = [action.payload.userId];
+          }
+        }
+      });
+
+    },
+
     setSearchBrandAndCate(
       state,
       action: PayloadAction<{ hash?: string; category?: string; page?: number }>
@@ -595,6 +618,7 @@ export const {
   setSearchByText,
   setIsMuted,
   setMetaDataInfo,
+  setSaveSinglePost,
   // setDeleteComment
 } = psotSlice.actions;
 

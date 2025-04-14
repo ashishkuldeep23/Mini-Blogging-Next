@@ -78,6 +78,16 @@ const UserSchema = new mongoose.Schema(
     },
 
     // // // Creating save and block post feature now -------->>
+    savedPost: {
+      type: Map,
+      of: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "posts",
+        },
+      ],
+      default: {}, //  default to empty object
+    },
   },
   { timestamps: true }
 );

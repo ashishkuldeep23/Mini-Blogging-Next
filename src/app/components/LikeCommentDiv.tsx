@@ -1,6 +1,6 @@
 'Use client'
 
-import { Comment, PostInterFace, ReplyInterFace, SinglePostType, } from "@/Types"
+import { Comment, PostInterFace, ReplyInterFace, SinglePostType, } from "../../../types/Types"
 import { likePost, setDeleteSinglePost, setIsLoading, setSinglePostdata, setUpdateComment, setUpdatingPost, usePostData } from '@/redux/slices/PostSlice';
 import { useSession } from 'next-auth/react'
 import { usePathname, useRouter } from 'next/navigation'
@@ -16,10 +16,10 @@ import { SlLike } from "react-icons/sl";
 import { AiOutlineRetweet, AiTwotoneDelete } from "react-icons/ai";
 import { BiPencil } from "react-icons/bi";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
-import { UserDataInterface } from '@/Types';
+import { UserDataInterface } from '../../../types/Types';
 import AnimatedTooltip from './ui/animated-tooltip';
 import { PiPaperPlaneRight } from "react-icons/pi";
-import useOpenModalWithHTML from '@/utils/OpenModalWithHtml';
+import useOpenModalWithHTML from '@/Hooks/useOpenModalWithHtml';
 import { useCheckUserStatus } from '@/Hooks/useCheckUserStatus';
 import { likeAnimationHandler } from '@/helper/likeAnimation';
 
@@ -111,75 +111,7 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
     }
 
 
-    const updatePostHandler = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        event.stopPropagation()
-
-        // toast.success("Update post")
-
-        // // // All dispatches here -------->
-        dispatch(setSinglePostdata(post))
-        dispatch(setUpdatingPost(true))
-
-
-        // // // Page navigation here  -------->
-        router.push('/create')
-        // // // Use with "/" (forword slash) to go somewhere --->
-        // router.replace('new-post')
-    }
-
-
-    const deletePostHandler = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        event.stopPropagation()
-
-
-        setLoading(true)
-
-        const option: RequestInit = {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                postId: post._id,
-                userId: session?.user?.id
-            })
-        }
-        const response = await fetch('/api/post/delete', option)
-        let json = await response.json();
-
-        // console.log(json)
-
-        if (json.success) {
-            // dispatch(updateOnePost(json.data))
-            // dispatch(setSinglePostdata(json.data))
-
-            dispatch(setDeleteSinglePost(json.data))
-
-            if (params !== '/') {
-                router.push("/")
-            }
-
-        }
-
-        else {
-            toast.error(json.message)
-        }
-
-
-        // console.log(data)
-
-        setLoading(false)
-
-    }
-
-    // console.log(userID.toString())
-
     useEffect(() => {
-
-        // console.log({
-        //     sdasad: JSON.stringify(post.comments),
-        //     user: userID.toString()
-        // })
 
         if (post.comments.length > 0) {
             let idsOfComments = post.comments.map((ele: any) => {
@@ -264,29 +196,6 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
                         </button>
 
                     </div>
-
-                    {
-                        // // // For post creator (btns ) ------->>
-                        // post?.author?.email === session?.user?.email
-                        // &&
-                        // <div className=' ml-auto mr-1 flex gap-0'>
-
-                        //     <button
-                        //         className=" border px-2 rounded-lg mx-0.5 hover:bg-blue-500"
-                        //         onClick={updatePostHandler}
-                        //     >
-                        //         <BiPencil />
-                        //     </button>
-
-                        //     <button
-                        //         className=" border px-2 rounded-lg  mx-0.5 hover:bg-red-500"
-                        //         onClick={deletePostHandler}
-                        //     >
-                        //         <AiTwotoneDelete />
-                        //     </button>
-                        // </div>
-                    }
-
                 </div>
 
 

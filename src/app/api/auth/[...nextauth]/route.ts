@@ -8,12 +8,6 @@ import { DOMAIN, GOOGLE_ID, GOOGLE_SECRATE, NEXTAUTH_SECRET } from "@/constant";
 const clientIdText = GOOGLE_ID!;
 const clientSecretText = GOOGLE_SECRATE!;
 
-// console.log(
-//     {
-//         clientIdText,
-//         clientSecretText
-//     }
-// )
 
 const authOptions: NextAuthOptions = {
   providers: [
@@ -88,7 +82,6 @@ const authOptions: NextAuthOptions = {
           email: session.user.email,
         });
 
-        // console.log(sessionUserData)
 
         // // // Store user image url in session ------>
         session.user.image = sessionUserData.profilePic.toString();
@@ -114,8 +107,6 @@ const authOptions: NextAuthOptions = {
 
         // if (!profile) return false
 
-        // console.log({ profile, user })
-
         let email, name, picture;
 
         if (profile) {
@@ -132,8 +123,6 @@ const authOptions: NextAuthOptions = {
         }
 
         const getUser = await User.findOne({ email });
-
-        // console.log(getUser)
 
         // // // For new users here ------>
         if (!getUser) {

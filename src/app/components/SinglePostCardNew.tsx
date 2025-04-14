@@ -1,9 +1,9 @@
 import { setSinglePostId, usePostData } from "@/redux/slices/PostSlice";
 import { useThemeData } from "@/redux/slices/ThemeSlice";
-import { PostInterFace } from "@/Types";
-import useOpenModalWithHTML from "@/utils/OpenModalWithHtml";
+import { PostInterFace } from "../../../types/Types";
+import useOpenModalWithHTML from "@/Hooks/useOpenModalWithHtml";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import ImageReact from "./ImageReact";
 import VideoPlayer from "./VideoPlayer";
@@ -11,14 +11,9 @@ import { MdZoomOutMap } from "react-icons/md";
 import LikeCommentDiv from "./LikeCommentDiv";
 import { PiSealCheckDuotone } from "react-icons/pi";
 import { motion } from "framer-motion";
-import { PiDotsThreeOutlineVertical } from "react-icons/pi";
 import { useSession } from "next-auth/react";
-import { BiPencil } from "react-icons/bi";
-import { AiTwotoneDelete } from "react-icons/ai";
-import { setIsLoading } from "@/redux/slices/UserSlice";
-import toast from "react-hot-toast";
 import { formatDateToDDMMYYYY } from "@/helper/DateFomater";
-import useEditAndDelPostFns from "@/helper/useEditAndDelPostFns";
+import EditPanelForSinglePost from "./EditPanelForSinglePost";
 
 const SinglePostCardNew: React.FC<{
   ele: PostInterFace;
@@ -32,20 +27,14 @@ const SinglePostCardNew: React.FC<{
   const promptText = ele.promptReturn;
   const charactersWant = 90;
   const recentlyDeleted = usePostData().recentlyDeleted;
-  const [height, setHeight] = useState<"h-[73vh]" | "h-[43vh]">("h-[43vh]");
-  const {
-    updatePostHandler,
-    deletePostHandler,
-    showOptionPanel,
-    setShowOptionPanel,
-  } = useEditAndDelPostFns(ele);
+  type TypeHeight = "h-[75vh]" | "h-[45vh]";
+  const [height, setHeight] = useState<TypeHeight>("h-[45vh]");
 
   function cardClickHadler() {
     dispatch(setSinglePostId(ele._id));
     router.push(`/post/${ele._id}`);
   }
 
-  // console.log(ele)
   const callModalFn = useOpenModalWithHTML();
 
   const seeFullSizeHandler = (e: any, ele: PostInterFace) => {
@@ -75,14 +64,7 @@ const SinglePostCardNew: React.FC<{
 
   const zoomImageHandler = (e: React.MouseEvent<SVGElement, MouseEvent>) => {
     e.stopPropagation();
-    setHeight((p) => (p === "h-[43vh]" ? "h-[73vh]" : "h-[43vh]"));
-  };
-
-  const handleShowPanelClick = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    e.stopPropagation();
-    setShowOptionPanel((p) => !p);
+    setHeight((p) => (p === "h-[45vh]" ? "h-[75vh]" : "h-[45vh]"));
   };
 
   return (
@@ -104,57 +86,13 @@ const SinglePostCardNew: React.FC<{
     >
       <div className="inter-var">
         <div
-          className={` overflow-hidden sm:rounded-xl w-[95vw] sm:w-[23rem] md:w-[25rem] lg:w-[27rem] !max-w-[30rem] bg-gray-50 relative group/card  dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1]  dark:border-white/[0.2] border-black/[0.1] h-auto  ${
+          className={` !relative overflow-hidden sm:rounded-xl w-[95vw] sm:w-[23rem] md:w-[25rem] lg:w-[30rem] !max-w-[30rem] bg-gray-50 group/card  dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1]  dark:border-white/[0.2] border-black/[0.1] h-auto  ${
             !themeMode
               ? " dark:bg-black shadow-cyan-950 "
               : " dark:bg-white shadow-cyan-50 "
           }   `}
         >
-          {/* Edit and Options panel ------>> */}
-          <div
-            className={` flex flex-col items-end gap-1 w-full min-h-40 px-2 py-2 absolute  left-0 z-[1] ${
-              !themeMode ? " bg-black text-white " : " bg-white text-black "
-            } transition-all ${showOptionPanel ? "top-0" : " -top-[110%] "} `}
-            style={{
-              backgroundColor: ele?.customize?.bgColor || "",
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-          >
-            <button
-              className=" text-sm ml-auto mt-2 bg-red-600 px-1.5 py-0.5 rounded-md font-bold active:scale-75 transition-all"
-              onClick={handleShowPanelClick}
-            >
-              ✕
-            </button>
-
-            {ele?.author?.email === session?.user?.email && (
-              <>
-                <button
-                  className=" text-lg px-2 py-1 border rounded-xl active:scale-75 transition-all hover:bg-green-500 w-[50%]  flex justify-center items-center gap-1 "
-                  onClick={updatePostHandler}
-                >
-                  <BiPencil />
-                  <span>Edit</span>
-                </button>
-                <button
-                  className=" text-lg px-2 py-1 border rounded-xl active:scale-75 transition-all hover:bg-red-500 w-[60%] flex justify-center items-center gap-1 "
-                  onClick={deletePostHandler}
-                >
-                  <AiTwotoneDelete />
-                  <span>Delete</span>
-                </button>
-              </>
-            )}
-
-            <button className=" text-lg px-2 py-1 border rounded-xl active:scale-75 transition-all w-[70%] ">
-              <span>Save</span>
-            </button>
-            <button className=" text-lg px-2 py-1 border rounded-xl active:scale-75 transition-all w-[60%] ">
-              <span>Block</span>
-            </button>
-          </div>
+          <EditPanelForSinglePost ele={ele} />
 
           {/* Post UI */}
           <div
@@ -228,19 +166,12 @@ const SinglePostCardNew: React.FC<{
                   </p>
 
                   {ele?.author?.isVerified && (
-                    <span className="mr-2 mt-2.5 text-green-500 absolute -top-1 -right-3 ">
+                    <span className="mr-2 mt-2.5 text-green-500 absolute -top-1.5 -right-4 ">
                       <PiSealCheckDuotone />
                     </span>
                   )}
                 </div>
               </div>
-
-              <button
-                className=" ml-auto mt-2 px-2 rounded-md py-1 active:scale-75 transition-all"
-                onClick={handleShowPanelClick}
-              >
-                <PiDotsThreeOutlineVertical />
-              </button>
             </div>
 
             {/* Post info div here  */}
@@ -252,7 +183,6 @@ const SinglePostCardNew: React.FC<{
             >
               <div className=" my-1 flex flex-wrap items-center gap-1">
                 <p className="capitalize text-xl">{ele.title}</p>
-                {/* <p className=" ml-[75%] text-xs">({ele.category})</p> */}
               </div>
 
               <div className=" my-1 text-sm">
@@ -334,12 +264,6 @@ const SinglePostCardNew: React.FC<{
                     );
                   })}
               </div>
-
-              {/* <div
-                                className="px-4 py-2 ml-auto md:ml-2 rounded-xl text-xs font-normal "
-                            >
-                                <LikeCommentDiv post={ele} />
-                            </div> */}
             </div>
 
             {/* Post like and all here */}

@@ -9,7 +9,7 @@ import {
   usePostData,
 } from "@/redux/slices/PostSlice";
 import { AppDispatch } from "@/redux/store";
-import { SearchObj } from "@/Types";
+import { SearchObj } from "../../../../types/Types";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 

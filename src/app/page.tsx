@@ -197,18 +197,6 @@ const FooterDiv = () => {
 
   return (
     <>
-      {/* {
-        (isLoading && searchHashAndCate.page > 1)
-        &&
-        (allPostData.length < allPostsLength)
-        &&
-        <div className=" mt-10 flex gap-2 items-center">
-          <span>LOADING</span>
-          <span className=" w-4 h-4   rounded-full animate-spin "></span>
-        </div>
-
-      } */}
-
       <div className=" mb-7 mt-2" ref={footerDivRef}>
         <MaskerText className="font-bold text-3xl" text="I'm Footer dude" />
       </div>

@@ -165,9 +165,9 @@ const LayoutPage = ({
         />
       }
 
-      <div className=" relative flex items-start justify-center lg:w-[80%] gap-5 flex-col-reverse lg:flex-row">
+      <div className=" relative flex items-start justify-center lg:justify-between lg:px-[10vh] lg:w-[95%] gap-5 flex-col-reverse lg:flex-row">
         <div
-          className={`border-t lg:border-t-0 w-[100%] lg:w-[20%] flex lg:flex fixed -bottom-0.5 left-0 lg:sticky lg:top-7 lg:left-0 lg:bottom-auto p-1 lg:p-2 lg:rounded-md lg:m-1 border-gray-500/90 shadow-md z-30 ${
+          className={`border-t lg:border-t-0 w-[100vw] lg:w-[20%] flex lg:flex fixed -bottom-0.5 left-0 lg:sticky lg:top-7 lg:left-0 lg:bottom-auto p-1 lg:p-2 lg:rounded-md lg:m-1 border-gray-500/90 shadow-md z-30 ${
             themeMode ? " bg-white" : " bg-black"
           }  `}
         >
@@ -221,7 +221,7 @@ const LayoutPage = ({
         {/* Main UI div here ----------> */}
         <div
           id="main_visiable_for_user"
-          className=" relative w-[100%] lg:w-[60%] min-h-[90vh] p-1 mb-5 rounded-md border-gray-500/90  "
+          className=" relative w-[100%] lg:w-[75%]  min-h-[90vh] p-1 mb-5 rounded-md border-gray-500/90  "
         >
           {/* This div will conatain main UI as children */}
           <div className=" mb-5 ">{children}</div>
@@ -388,6 +388,6 @@ function SingleTabLi({
 
 const MessageDivForLeptipop: React.FC = () => {
   return (
-    <div className=" hidden lg:block fixed bottom-2 lg:right-0 xl:right-[7vh] min-h-[55vh] min-w-[20vw] bg-rose-800 rounded-md border border-rose-400"></div>
+    <div className=" hidden lg:block fixed bottom-2 lg:!right-24 xl:right-[7vh] min-h-[55vh] min-w-[20vw] bg-rose-800 rounded-md border border-rose-400"></div>
   );
 };

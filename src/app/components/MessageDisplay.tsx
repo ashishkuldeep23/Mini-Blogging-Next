@@ -1,6 +1,6 @@
 'use client'
 import React from 'react';
-import { MessageInterface, FriendInterface } from '@/Types';
+import { MessageInterface, FriendInterface } from '../../../types/Types';
 import { useThemeData } from '@/redux/slices/ThemeSlice';
 
 interface Props {

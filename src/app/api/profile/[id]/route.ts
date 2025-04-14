@@ -44,6 +44,7 @@ export async function POST(req: NextRequest, context: any) {
         // // // This is how we can get user data in backend. data included like (name , email , profilePhoto).
         const session = await getServerSession()
 
+   
         // console.log({session})
 
 
