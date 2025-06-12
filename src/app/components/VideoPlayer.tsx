@@ -289,10 +289,19 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     }
   }, [allBtnVisiable, isPlaying]);
 
+  // console.log(pathName);
+
   // // // Move window little bit below when progress is 100 (Move to next post if video is over.)
   useEffect(() => {
     if (isPlaying && progress === 100) {
-      window.scrollBy(0, 600);
+      if (pathName.includes("/post") && videoRef?.current) {
+        // // // Play Again the video.
+        videoRef.current.currentTime = 0;
+        setProgress(0);
+        playTheVideo();
+      } else {
+        window.scrollBy(0, 600);
+      }
     }
   }, [progress]);
 

@@ -2,7 +2,6 @@
 
 import ImageReact from "@/app/components/ImageReact";
 import MainLoader from "@/app/components/MainLoader";
-// import HomeButton from '@/app/components/HomeButton'
 import AnimatedTooltip from "@/app/components/ui/animated-tooltip";
 import { useThemeData } from "@/redux/slices/ThemeSlice";
 import {
@@ -112,7 +111,7 @@ const ProfilePageParams = () => {
 
       <Link
         className=" my-4 px-4 py-1.5 bg-green-700 rounded-lg "
-        href={"/profile/saved-post"}
+        href={"/profile/savedposts"}
       >
         Go To Saved Post Page
       </Link>

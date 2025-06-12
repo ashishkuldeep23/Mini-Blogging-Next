@@ -185,3 +185,5 @@ export interface VideoPlayerProps {
   videoClickHandler?: Function;
   observerOn?: boolean;
 }
+
+export type TypeHeight = "h-[75vh]" | "h-[45vh]";

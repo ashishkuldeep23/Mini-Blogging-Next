@@ -1,6 +1,6 @@
 import { setSinglePostId, usePostData } from "@/redux/slices/PostSlice";
 import { useThemeData } from "@/redux/slices/ThemeSlice";
-import { PostInterFace } from "../../../types/Types";
+import { PostInterFace, TypeHeight } from "../../../types/Types";
 import useOpenModalWithHTML from "@/Hooks/useOpenModalWithHtml";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -14,20 +14,21 @@ import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
 import { formatDateToDDMMYYYY } from "@/helper/DateFomater";
 import EditPanelForSinglePost from "./EditPanelForSinglePost";
+import ImageForPostCard from "./ImageForPostCard";
 
 const SinglePostCardNew: React.FC<{
   ele: PostInterFace;
   className?: string;
   index?: number;
 }> = ({ ele, className, index }) => {
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
   const themeMode = useThemeData().mode;
   const dispatch = useDispatch();
   const router = useRouter();
   const promptText = ele.promptReturn;
   const charactersWant = 90;
   const recentlyDeleted = usePostData().recentlyDeleted;
-  type TypeHeight = "h-[75vh]" | "h-[45vh]";
+
   const [height, setHeight] = useState<TypeHeight>("h-[45vh]");
 
   function cardClickHadler() {
@@ -194,19 +195,11 @@ const SinglePostCardNew: React.FC<{
               {/* Here we need to impove, when we will deal with video to. */}
               {/* This is modified now, Now we showing video also. */}
               {ele?.image ? (
-                <div className=" relative ">
-                  <ImageReact
-                    src={ele?.image}
-                    onClick={(e: any) => {
-                      e?.stopPropagation();
-                    }}
-                    className={`w-full my-2 rounded !object-top !object-cover transition-all duration-300 ${height} `}
-                  />
-                  <MdZoomOutMap
-                    className=" absolute bottom-2 right-2 text-xl active:scale-75 transition-all "
-                    onClick={zoomImageHandler}
-                  />
-                </div>
+                <ImageForPostCard
+                  ele={ele}
+                  height={height}
+                  zoomImageHandler={zoomImageHandler}
+                />
               ) : (
                 ele?.metaDataUrl && (
                   <>
@@ -224,19 +217,11 @@ const SinglePostCardNew: React.FC<{
                     ) : (
                       (ele.metaDataType === "image/jpeg" ||
                         ele.metaDataType === "image/png") && (
-                        <div className="relative">
-                          <ImageReact
-                            className={`w-full my-2 rounded !object-top !object-cover transition-all duration-300 ${height} `}
-                            src={ele.metaDataUrl}
-                            onClick={(e: any) => {
-                              e?.stopPropagation();
-                            }}
-                          />
-                          <MdZoomOutMap
-                            onClick={zoomImageHandler}
-                            className=" absolute bottom-4 right-2 text-xl active:scale-75 transition-all "
-                          />
-                        </div>
+                        <ImageForPostCard
+                          ele={ele}
+                          height={height}
+                          zoomImageHandler={zoomImageHandler}
+                        />
                       )
                     )}
                   </>

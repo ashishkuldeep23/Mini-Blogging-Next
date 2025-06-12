@@ -20,7 +20,11 @@ import { uploadFileInCloudinary } from "@/lib/cloudinary";
 import ImageReact from "@/app/components/ImageReact";
 import MainLoader from "@/app/components/MainLoader";
 import Navbar from "@/app/components/Navbar";
-import { NewPostType, PostCustomization, ValidInputFiles } from "../../../../types/Types";
+import {
+  NewPostType,
+  PostCustomization,
+  ValidInputFiles,
+} from "../../../../types/Types";
 import VideoPlayer from "@/app/components/VideoPlayer";
 
 const NewPostPage = () => {
@@ -309,7 +313,8 @@ const NewPostPage = () => {
             createNewPost({
               body: {
                 ...newPostData,
-                category: "General",
+                // category: "General",
+                category: newPostData.category || "General",
                 metaDataType,
                 metaDataUrl,
               },
