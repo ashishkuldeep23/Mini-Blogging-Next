@@ -287,7 +287,11 @@ function SingleTabLi({
 
       // console.log("ref ----------->>" , liRef.current.children[1].getBoundingClientRect().width)
 
-      if (window && window.innerWidth >= LgBreakValue) {
+      if (
+        typeof window !== "undefined" &&
+        window &&
+        window.innerWidth >= LgBreakValue
+      ) {
         // // // Desktop View ------------>
 
         // // // Old using this ------------->

@@ -111,7 +111,9 @@ const ProfilePageParams = () => {
 
       <Link
         className=" my-4 px-4 py-1.5 bg-green-700 rounded-lg "
-        href={"/profile/savedposts"}
+        // href={"/profile/savedposts"}
+        // // // See post btn here.
+        href={"/profile"}
       >
         Go To Saved Post Page
       </Link>
