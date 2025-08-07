@@ -5,7 +5,7 @@ import { useThemeData } from "@/redux/slices/ThemeSlice";
 import { signIn, useSession, getProviders } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
-import { FcGoogle } from "react-icons/fc";
+import { FaGoogle } from "react-icons/fa";
 
 const LogInWithGoogle = () => {
   const themeMode = useThemeData().mode;
@@ -59,12 +59,14 @@ const LogInWithGoogle = () => {
               }}
             >
               <p
-                className={` flex gap-2 justify-center items-center mb-1  rounded text-white px-4 py-0.5 m-1 ${
-                  prov.id === "google" ? "bg-gray-700" : "bg-blue-500"
+                className={` font-semibold flex gap-1 justify-center items-center mb-1  rounded text-white px-4 py-1 m-1 hover:text-gray-300 transition-all ${
+                  prov.id === "google" ? "bg-red-500" : "bg-blue-500"
                 }`}
               >
                 <span>
-                  {prov?.id === "google" && <FcGoogle className="w-4 h-4" />}{" "}
+                  {prov?.id === "google" && (
+                    <FaGoogle className="w-4 h-4 pt-0.5" />
+                  )}{" "}
                 </span>
                 <span>Continue with {prov?.name}</span>
               </p>
