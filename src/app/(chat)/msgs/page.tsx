@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function MessagePage() {
@@ -31,12 +32,14 @@ export default function MessagePage() {
           .fill(null)
           .map((_, i) => {
             return (
-              <div
-                key={i}
-                className=" my-1 bg-teal-900 text-white h-16 rounded w-full flex  justify-center items-center "
-              >
-                <p>All msgs here {i + 1}</p>
-              </div>
+              <Link className=" block w-full " href={`/msgs/${i+1}`}>
+                <div
+                  key={i}
+                  className=" my-1 bg-teal-900 text-white h-16 rounded w-full flex  justify-center items-center "
+                >
+                  <p>All msgs here {i + 1}</p>
+                </div>
+              </Link>
             );
           })}
       </div>

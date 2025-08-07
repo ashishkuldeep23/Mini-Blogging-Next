@@ -1,51 +1,55 @@
-import mongoose from "mongoose";
+import mongoose, { Schema, Document, Model } from "mongoose";
 
-//  ref 
+export interface IConversation extends Document {
+  _id: string;
+  type: "direct" | "group";
+  name?: string;
+  avatar?: string;
+  participants: string[];
+  admins: string[];
+  lastMessage?: {
+    content: string;
+    sender: string;
+    timestamp: Date;
+    messageType: "text" | "image" | "file";
+  };
+  lastMessageAt: Date;
+  isActive: boolean;
+  createdBy: string | undefined;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
-const conversationScheam = new mongoose.Schema({
-
-    participants: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'users'
-    }],
-
-    // members: [{
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'users'
-    // }],
-
-    messages: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'messages'
-    }],
-    pinned: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'messages'
-    }],
-    type: {
+const ConversationSchema = new Schema<IConversation>(
+  {
+    type: { type: String, enum: ["direct", "group"], required: true },
+    name: { type: String, trim: true, maxlength: 100 },
+    avatar: { type: String, default: "" },
+    participants: [
+      { type: Schema.Types.ObjectId, ref: "User", required: true },
+    ],
+    admins: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    lastMessage: {
+      content: String,
+      sender: { type: Schema.Types.ObjectId, ref: "User" },
+      timestamp: Date,
+      messageType: {
         type: String,
-        enum: ['personal', 'group']
+        enum: ["text", "image", "file"],
+        default: "text",
+      },
     },
-    personalId: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'users'
-    }],
-    groupId: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'groups'
-    }],
-    whenCreated: {
-        type: String,
-        default: () => {
-            let a = new Date()
-            return a.toLocaleDateString()
-        }
-    }
-}, { timestamps: true })
+    lastMessageAt: { type: Date, default: Date.now },
+    isActive: { type: Boolean, default: true },
+    createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  },
+  { timestamps: true }
+);
 
+ConversationSchema.index({ participants: 1 });
+ConversationSchema.index({ lastMessageAt: -1 });
 
-const ConversationsModel = mongoose.models.conversations || mongoose.model("conversations", conversationScheam);
-
-export default ConversationsModel;
-
-
+const ConversationModel: Model<IConversation> =
+  mongoose.models.Conversation ||
+  mongoose.model<IConversation>("Conversation", ConversationSchema);
+export default ConversationModel;

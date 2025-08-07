@@ -1,70 +1,79 @@
-// components/Chat.js
+"use client";
 
-'use client'
+import ChatDemoUI from "@/app/components/Chat_Componets/ChatComponent";
 
-import React, { useState, useEffect } from "react";
-import Pusher from "pusher-js";
-import { decryptMessage, encryptMessage } from "@/lib/Crypto-JS";
-import { pusherClient } from "@/lib/pusher";
+// import React, { useState, useEffect } from "react";
+// import Pusher from "pusher-js";
+// import { decryptMessage, encryptMessage } from "@/lib/Crypto-JS";
+// import { pusherClient } from "@/lib/pusherClient";
+// // import { pusherClient } from "@/lib/pusher";
 
+// const Chat = ({ params }: any) => {
+//   const [messages, setMessages] = useState([
+//     "U2FsdGVkX1/HANV05x+KDcLe343IHQ/V4/RK0lhvOXE=",
+//     "U2FsdGVkX1/LNWEBBcxtBq1RFl2oQR1Fc8suFBNZ7z0=",
+//     "U2FsdGVkX19Ua4tfDXLCx4RdfRodIQLozIlDOgWjsBY=",
+//   ]);
+//   const [newMessage, setNewMessage] = useState("");
+//   const [user, setUser] = useState(null);
 
-const Chat = ({ params }: any) => {
-    const [messages, setMessages] = useState(['U2FsdGVkX1/HANV05x+KDcLe343IHQ/V4/RK0lhvOXE=', 'U2FsdGVkX1/LNWEBBcxtBq1RFl2oQR1Fc8suFBNZ7z0=', 'U2FsdGVkX19Ua4tfDXLCx4RdfRodIQLozIlDOgWjsBY=', 'ok4', 'ok5']);
-    const [newMessage, setNewMessage] = useState("");
-    const [user, setUser] = useState(null);
+//   useEffect(() => {
+//     console.log(params.id);
 
-    useEffect(() => {
+//     const channel = pusherClient.subscribe("p-chat");
 
-        console.log(params.id)
+//     channel.bind("new-message", (data: any) => {
+//       // setMessages((prevMessages) => [...prevMessages, data.message]);
+//     });
 
-        const channel = pusherClient.subscribe("p-chat");
+//     // Fetch user data and messages on mount
+//   }, []);
 
-        channel.bind("new-message", (data: any) => {
-            // setMessages((prevMessages) => [...prevMessages, data.message]);
-        });
+//   const handleSendMessage = async () => {
+//     // Encrypt message using Crypto-JS
+//     // const encryptedMessage = encryptMessage(newMessage);
+//     const encryptedMessage = encryptMessage(newMessage);
 
-        // Fetch user data and messages on mount
-    }, []);
+//     // Send message to Pusher
+//     await fetch("/api/send-message", {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({
+//         message: encryptedMessage,
+//         // recipientId: (link unavailable),
+//       }),
+//     });
 
-    const handleSendMessage = async () => {
-        // Encrypt message using Crypto-JS
-        // const encryptedMessage = encryptMessage(newMessage);
-        const encryptedMessage = encryptMessage(newMessage);
+//     setNewMessage("");
+//   };
 
-        // Send message to Pusher
-        await fetch("/api/send-message", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                message: encryptedMessage,
-                // recipientId: (link unavailable),
-            }),
-        });
+//   return (
+//     <div>
+//       <input
+//         type="text"
+//         value={newMessage}
+//         onChange={(e) => setNewMessage(e.target.value)}
+//       />
+//       <button onClick={handleSendMessage}>Send</button>
+//       <ul>
+//         {messages.map((message, index) => (
+//           <li key={index}>
+//             <span>
+//               {decryptMessage(message) || `Encrypted message : ${message}`}
+//             </span>
+//           </li>
+//         ))}
+//       </ul>
+//     </div>
+//   );
+// };
 
-        setNewMessage("");
-    };
+// export default Chat;
 
-    return (
-        <div>
-            <input
-                type="text"
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-            />
-            <button onClick={handleSendMessage}>Send</button>
-            <ul>
-                {messages.map((message, index) => (
-                    <li key={index}>
-                        <span>
-                            {decryptMessage(message) || message}
-                        </span>
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
+const ChatUI = () => {
+  return <ChatDemoUI />;
 };
 
-export default Chat;
+export default ChatUI;

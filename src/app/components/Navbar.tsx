@@ -56,8 +56,6 @@ const Navbar = ({ className }: { className?: string }) => {
 
     const [isUserOnHaome, setIsUserOnHome] = useState<boolean>(false)
 
-
-
     // console.log(session)
 
     function goToHome() {
@@ -74,13 +72,9 @@ const Navbar = ({ className }: { className?: string }) => {
         bodyTranstion()
     }
 
-
-
     useEffect(() => {
-
         if (params === "/") setIsUserOnHome(true);
         else setIsUserOnHome(false);
-
     }, [params])
 
 

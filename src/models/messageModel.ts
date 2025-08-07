@@ -1,45 +1,55 @@
-import mongoose, { Mongoose } from "mongoose";
+import mongoose, { Schema, Document, Model } from "mongoose";
 
+export interface IMessage extends Document {
+  _id: string;
+  conversationId: string | undefined;
+  sender: string | undefined;
+  content: string;
+  messageType: "text" | "image" | "file" | "system";
+  replyTo?: string;
+  readBy: { user: string; readAt: Date }[];
+  reactions: { emoji: string; users: string[] }[];
+  isEdited: boolean;
+  isDeleted: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
-const messageScheam = new mongoose.Schema({
-
+const MessageSchema = new Schema<IMessage>(
+  {
     conversationId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "conversations"
+      type: Schema.Types.ObjectId,
+      ref: "Conversation",
+      required: true,
     },
-    senderId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "users"
+    sender: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    content: { type: String, required: true, maxlength: 2000 },
+    messageType: {
+      type: String,
+      enum: ["text", "image", "file", "system"],
+      default: "text",
     },
-    text: {
-        type: String,
-        default: "",
-        required: true,
-    },
-    isRead: {
-        type: Boolean,
-        default: false
-    },
-    isDeleted: {
-        type: Boolean,
-        default: false
-    },
-    replying: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "messages"
-    },
-    whenCreated: {
-        type: String,
-        default: () => {
-            let a = new Date()
-            return a.toLocaleDateString()
-        }
-    },
+    replyTo: { type: Schema.Types.ObjectId, ref: "Message" },
+    readBy: [
+      {
+        user: { type: Schema.Types.ObjectId, ref: "User" },
+        readAt: { type: Date, default: Date.now },
+      },
+    ],
+    reactions: [
+      {
+        emoji: String,
+        users: [{ type: Schema.Types.ObjectId, ref: "User" }],
+      },
+    ],
+    isEdited: { type: Boolean, default: false },
+    isDeleted: { type: Boolean, default: false },
+  },
+  { timestamps: true }
+);
 
-}, { timestamps: true })
+MessageSchema.index({ conversationId: 1, createdAt: -1 });
 
-
-const messageModel = mongoose.models.messages || mongoose.model("messages", messageScheam);
-
-export default messageModel;
-
+const Message: Model<IMessage> =
+  mongoose.models.Message || mongoose.model<IMessage>("Message", MessageSchema);
+export default Message;

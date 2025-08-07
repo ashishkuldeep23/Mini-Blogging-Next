@@ -1,13 +1,14 @@
 'use client'
 
 import Pusher from 'pusher-js'
-import { pusherClient } from "@/lib/pusher";
+// import { pusherClient } from "@/lib/pusher";
 import { useUserState } from "@/redux/slices/UserSlice";
 // import NavBottomMobile from "./components/NavBottomMobile";
 // import MainLoader from "./components/MainLoader";
 // import Modal from "./components/ModalComponent";
 import { useEffect, useState } from 'react';
 import { useThemeData } from '@/redux/slices/ThemeSlice';
+import { pusherClient } from '@/lib/pusherClient';
 
 const username = "ashish"
 const recipient = "kuldeep"

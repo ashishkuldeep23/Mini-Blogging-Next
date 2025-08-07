@@ -34,8 +34,10 @@ export const CLOUDINARY_URL: string = process.env.CLOUDINARY_URL!;
 
 export const CLOUDINARY_PRESET: string = process.env.CLOUDINARY_PRESET!;
 
-export const ENCRYPTION_KEY: string = process.env.ENCRYPTION_KEY!;
+export const ENCRYPTION_KEY: string =
+  process.env.ENCRYPTION_KEY || "secret_key_ashish_123";
 
+export const JWT_SECRET: string = process.env.JWT_SECRET || "MOST_SECRET_PASS";
 
 // GOOGLE_SECRATE
 // GOOGLE_SECRET

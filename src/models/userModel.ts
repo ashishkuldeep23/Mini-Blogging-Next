@@ -77,6 +77,16 @@ const UserSchema = new mongoose.Schema(
       ref: "notifications",
     },
 
+    isOnline: { type: Boolean, default: false },
+
+    lastSeen: { type: Date, default: Date.now },
+
+    blockedUsers: {
+      type: [mongoose.Schema.Types.ObjectId],
+      default: [],
+      ref: "users",
+    },
+
     // // // Creating save and block post feature now -------->>
     savedPost: {
       type: Map,

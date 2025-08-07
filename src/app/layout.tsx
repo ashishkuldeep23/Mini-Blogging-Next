@@ -45,7 +45,7 @@ export default function RootLayout({
 
             {/* Now i'm going to user pusher ------> */}
             {/* Pusher working code -----------> */}
-            <PusherTestDiv channelName="ashish" />
+            {/* <PusherTestDiv channelName="ashish" /> */}
 
             {/* Hot toster ---> */}
             <div>

@@ -17,7 +17,8 @@ const HomePage = () => {
   return (
     <div className=" text-white w-[100%] relative ">
       {/* Checking ads here ----->> */}
-      <AdBanner />
+      {/*  Make Add in absoulute position in Future -------------------------->>> */}
+      {/* <AdBanner /> */}
 
       <StorySection />
       <AllPostDiv />
