@@ -32,11 +32,8 @@ export default function MessagePage() {
           .fill(null)
           .map((_, i) => {
             return (
-              <Link className=" block w-full " href={`/msgs/${i+1}`}>
-                <div
-                  key={i}
-                  className=" my-1 bg-teal-900 text-white h-16 rounded w-full flex  justify-center items-center "
-                >
+              <Link key={i} className=" block w-full " href={`/msgs/${i + 1}`}>
+                <div className=" my-1 bg-teal-900 text-white h-16 rounded w-full flex  justify-center items-center ">
                   <p>All msgs here {i + 1}</p>
                 </div>
               </Link>
