@@ -12,7 +12,7 @@ import { AppDispatch } from "@/redux/store";
 import MaskerText from "./components/MaskerText";
 import { useRouter } from "next/navigation";
 import Navbar from "./components/Navbar";
-import MainLoader from "./components/MainLoader";
+import MainLoader from "./components/LoaderUi";
 
 export default function Home() {
   const router = useRouter();

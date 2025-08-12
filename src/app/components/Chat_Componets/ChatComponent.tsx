@@ -4,6 +4,11 @@ import React, { useState, useRef, useEffect } from "react";
 import { Send, User, Bot } from "lucide-react";
 import Link from "next/link";
 import { useThemeData } from "@/redux/slices/ThemeSlice";
+import { useParams } from "next/navigation";
+import { fetchConversationById, useChatData } from "@/redux/slices/ChatSlice";
+import { useSession } from "next-auth/react";
+import { AppDispatch } from "@/redux/store";
+import { useDispatch } from "react-redux";
 
 // Types
 interface Message {
@@ -49,7 +54,7 @@ const MessageList: React.FC<MessageListProps> = ({
   const themeMode = useThemeData().mode;
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 space-y-4 ">
+    <div className="flex-1 overflow-y-auto p-4 space-y-4  hide_scrollbar_totally ">
       {messages.map((message) => {
         const isCurrentUser = message.userId === currentUserId;
         const isBot = message.type === "bot";
@@ -109,16 +114,18 @@ const MessageList: React.FC<MessageListProps> = ({
               </div>
             </div>
 
-            {isCurrentUser && (
+            {/* {isCurrentUser && (
               <div className="flex-shrink-0">
                 <div className="w-8 h-8 bg-sky-600 rounded-full flex items-center justify-center">
                   <User className="w-4 h-4 text-white" />
                 </div>
               </div>
-            )}
+            )} */}
           </div>
         );
       })}
+
+      {/* Below Div is only used to scrool the screen below --------->> */}
       <div ref={messagesEndRef} />
     </div>
   );
@@ -172,13 +179,13 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
 // Demo Component showing how to use both components
 const ChatDemoUI: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "1",
-      content: "Welcome to the chat!",
-      userId: "system",
-      timestamp: new Date(),
-      type: "system",
-    },
+    // {
+    //   id: "1",
+    //   content: "Welcome to the chat!",
+    //   userId: "system",
+    //   timestamp: new Date(),
+    //   type: "system",
+    // },
     {
       id: "2",
       content: "Hello! How can I help you today?",
@@ -214,18 +221,35 @@ const ChatDemoUI: React.FC = () => {
     }, 1000);
   };
 
-  const themeMode = useThemeData().mode;
+  const params = useParams();
+  const convo = useChatData().currentConvo;
+  const { data: session } = useSession();
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    if (
+      params?.id &&
+      typeof params?.id === "string" &&
+      session?.user?._id &&
+      // true
+      convo?._id !== params?.id
+    ) {
+      // // // Call to fetch convo data from server -------->>
+
+      dispatch(
+        fetchConversationById({ id: params?.id, userId: session?.user._id })
+      );
+    }
+  }, [params?.id, session?.user?._id]);
 
   return (
     <div
-      className={`sm:my-10 sm:rounded-md overflow-hidden flex flex-col h-[95vh] sm:h-[85vh] max-w-4xl mx-auto  shadow-lg ${
-        !themeMode ? "bg-gray-900 text-white" : "text-black bg-gray-100"
-      }`}
+      className={`sm:my-10 sm:rounded-md overflow-hidden flex flex-col h-[95vh] sm:h-[85vh] max-w-4xl mx-auto  shadow-lg bg-gray-900 text-white`}
     >
-      <div className="bg-sky-600  text-white px-2  flex items-center gap-1 ">
+      {/* <div className="bg-sky-600  text-white px-2  flex items-center gap-1 ">
         <Link href={"/msgs"}>◁</Link>
         <h1 className="text-xl font-semibold">Name and Img of User</h1>
-      </div>
+      </div> */}
 
       <MessageList messages={messages} currentUserId={currentUserId} />
       <MessageInput onSendMessage={handleSendMessage} />

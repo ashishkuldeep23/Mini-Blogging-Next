@@ -9,6 +9,7 @@ export interface IMessage extends Document {
   replyTo?: string;
   readBy: { user: string; readAt: Date }[];
   reactions: { emoji: string; users: string[] }[];
+  deletedBy: string[];
   isEdited: boolean;
   isDeleted: boolean;
   createdAt: Date;
@@ -19,30 +20,31 @@ const MessageSchema = new Schema<IMessage>(
   {
     conversationId: {
       type: Schema.Types.ObjectId,
-      ref: "Conversation",
+      ref: "conversations",
       required: true,
     },
-    sender: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    sender: { type: Schema.Types.ObjectId, ref: "users", required: true },
     content: { type: String, required: true, maxlength: 2000 },
     messageType: {
       type: String,
       enum: ["text", "image", "file", "system"],
       default: "text",
     },
-    replyTo: { type: Schema.Types.ObjectId, ref: "Message" },
+    replyTo: { type: Schema.Types.ObjectId, ref: "messages" },
     readBy: [
       {
-        user: { type: Schema.Types.ObjectId, ref: "User" },
+        user: { type: Schema.Types.ObjectId, ref: "users" },
         readAt: { type: Date, default: Date.now },
       },
     ],
     reactions: [
       {
         emoji: String,
-        users: [{ type: Schema.Types.ObjectId, ref: "User" }],
+        users: [{ type: Schema.Types.ObjectId, ref: "users" }],
       },
     ],
     isEdited: { type: Boolean, default: false },
+    deletedBy: [{ type: Schema.Types.ObjectId, ref: "users" }],
     isDeleted: { type: Boolean, default: false },
   },
   { timestamps: true }
@@ -50,6 +52,6 @@ const MessageSchema = new Schema<IMessage>(
 
 MessageSchema.index({ conversationId: 1, createdAt: -1 });
 
-const Message: Model<IMessage> =
+const MessageModel: Model<IMessage> =
   mongoose.models.Message || mongoose.model<IMessage>("Message", MessageSchema);
-export default Message;
+export default MessageModel;

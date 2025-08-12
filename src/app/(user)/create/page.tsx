@@ -18,7 +18,7 @@ import toast from "react-hot-toast";
 import { FaCamera } from "react-icons/fa";
 import { uploadFileInCloudinary } from "@/lib/cloudinary";
 import ImageReact from "@/app/components/ImageReact";
-import MainLoader from "@/app/components/MainLoader";
+import MainLoader from "@/app/components/LoaderUi";
 import Navbar from "@/app/components/Navbar";
 import {
   NewPostType,

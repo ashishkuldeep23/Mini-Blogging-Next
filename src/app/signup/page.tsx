@@ -7,7 +7,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import { createNewUser, useUserState } from "@/redux/slices/UserSlice";
-import MainLoader from "../components/MainLoader";
+import MainLoader from "../components/LoaderUi";
 import { useThemeData } from "@/redux/slices/ThemeSlice";
 import HomeButton from "../components/HomeButton";
 import LogInWithGoogle from "../components/LogInWithGoogle";

@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import { useThemeData } from "@/redux/slices/ThemeSlice";
 import ImageReact from "./ImageReact";
-import MainLoader from "./MainLoader";
+import MainLoader from "./LoaderUi";
 import { FaRegCommentDots } from "react-icons/fa";
 import { SlLike } from "react-icons/sl";
 import { AiOutlineRetweet, AiTwotoneDelete } from "react-icons/ai";

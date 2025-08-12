@@ -2,7 +2,7 @@
 
 import ImageReact from "@/app/components/ImageReact";
 import LikeCommentDiv from "@/app/components/LikeCommentDiv";
-import MainLoader from "@/app/components/MainLoader";
+import MainLoader from "@/app/components/LoaderUi";
 import Navbar from "@/app/components/Navbar";
 import VideoPlayer from "@/app/components/VideoPlayer";
 import { formatDateToDDMMYYYY } from "@/helper/DateFomater";
@@ -35,33 +35,6 @@ const Page = ({ params }: any) => {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const singlePostdata = usePostData().singlePostdata;
-
-  // const initialPostData: SinglePostType = {
-  //     _id: "",
-  //     title: "",
-  //     category: "",
-  //     promptReturn: "",
-  //     urlOfPrompt: "",
-  //     aiToolName: "",
-  //     hashthats: [""],
-  //     image: "",
-  //     metaDataType: null,
-  //     metaDataUrl: "",
-  //     author: {
-  //         username: "",
-  //         email: "",
-  //         profilePic: "",
-  //         isVerified: false,
-  //         isAdmin: false,
-  //         _id: ""
-  //     },
-  //     likes: 0,
-  //     likesId: [],
-  //     comments: [],
-  //     isDeleted: false
-  // }
-
-  // const [singlePost, setSinglePost] = useState<SinglePostType>(initialPostData)
 
   const [responseMsg, setRespoanceMsg] = useState<string>("");
 

@@ -8,7 +8,7 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import Link from 'next/link'
 import toast from 'react-hot-toast'
-import MainLoader from '@/app/components/MainLoader';
+import MainLoader from '@/app/components/LoaderUi';
 import ImageReact from '@/app/components/ImageReact';
 import SingleUserDiv from '@/app/components/SingleUserDiv'
 import { useRouter } from 'next/navigation'

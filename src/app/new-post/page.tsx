@@ -9,7 +9,7 @@ import { createNewPost, setWriteFullFilledVal, usePostData, updatePost, setUpdat
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import MainLoader from '../components/MainLoader';
+import MainLoader from '../components/LoaderUi';
 import ImageReact from '../components/ImageReact';
 import { FaCamera } from "react-icons/fa";
 import { uploadFileInCloudinary } from '@/lib/cloudinary'

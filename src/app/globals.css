@@ -79,6 +79,10 @@
   width: 100%;
 }
 
+.hide_scrollbar_totally::-webkit-scrollbar {
+  display: none;
+}
+
 .scrooller_bar_hidden::-webkit-scrollbar {
   height: 0px;
 }

@@ -78,8 +78,8 @@ const UserSchema = new mongoose.Schema(
     },
 
     isOnline: { type: Boolean, default: false },
-
     lastSeen: { type: Date, default: Date.now },
+    bio: { type: String, default: "" },
 
     blockedUsers: {
       type: [mongoose.Schema.Types.ObjectId],

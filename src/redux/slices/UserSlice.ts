@@ -152,6 +152,7 @@ interface UserInter {
   searchedUser: AddMoreFeilsUserData;
   page: number;
 }
+
 const initialState: UserInter = {
   isLoading: false,
   isFullfilled: false,
@@ -192,6 +193,7 @@ const userSlice = createSlice({
       .addCase(createNewUser.pending, (state) => {
         state.isLoading = true;
         state.errMsg = "";
+        state.isError = false;
       })
       .addCase(createNewUser.fulfilled, (state, action) => {
         // console.log(action.payload)

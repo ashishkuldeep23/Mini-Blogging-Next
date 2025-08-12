@@ -1,7 +1,7 @@
 "use client";
 
 import ImageReact from "@/app/components/ImageReact";
-import MainLoader from "@/app/components/MainLoader";
+import MainLoader from "@/app/components/LoaderUi";
 import AnimatedTooltip from "@/app/components/ui/animated-tooltip";
 import { useThemeData } from "@/redux/slices/ThemeSlice";
 import {

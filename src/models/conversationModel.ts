@@ -1,11 +1,13 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
+import User from "./userModel";
+import MessageModel from "./messageModel";
 
 export interface IConversation extends Document {
   _id: string;
   type: "direct" | "group";
   name?: string;
   avatar?: string;
-  participants: string[];
+  participants: any[];
   admins: string[];
   lastMessage?: {
     content: string;
@@ -26,22 +28,26 @@ const ConversationSchema = new Schema<IConversation>(
     name: { type: String, trim: true, maxlength: 100 },
     avatar: { type: String, default: "" },
     participants: [
-      { type: Schema.Types.ObjectId, ref: "User", required: true },
+      { type: Schema.Types.ObjectId, ref: "users", required: true },
     ],
-    admins: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    admins: [{ type: Schema.Types.ObjectId, ref: "users" }],
+    // lastMessage: {
+    //   content: String,
+    //   sender: { type: Schema.Types.ObjectId, ref: "User" },
+    //   timestamp: Date,
+    //   messageType: {
+    //     type: String,
+    //     enum: ["text", "image", "file"],
+    //     default: "text",
+    //   },
+    // },
     lastMessage: {
-      content: String,
-      sender: { type: Schema.Types.ObjectId, ref: "User" },
-      timestamp: Date,
-      messageType: {
-        type: String,
-        enum: ["text", "image", "file"],
-        default: "text",
-      },
+      type: Schema.Types.ObjectId,
+      ref: "messages",
     },
     lastMessageAt: { type: Date, default: Date.now },
     isActive: { type: Boolean, default: true },
-    createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    createdBy: { type: Schema.Types.ObjectId, ref: "users", required: true },
   },
   { timestamps: true }
 );
