@@ -86,7 +86,7 @@ export default function MessagePage() {
             .fill(null)
             .map((_, i) => {
               return (
-                <div className=" border-2  min-w-20 h-20 rounded-full overflow-hidden  flex flex-col  justify-end items-center p-1 m-0 active:scale-75 hover:bg-red-700 hover:cursor-pointer transition-all ">
+                <div key={i} className=" border-2  min-w-20 h-20 rounded-full overflow-hidden  flex flex-col  justify-end items-center p-1 m-0 active:scale-75 hover:bg-red-700 hover:cursor-pointer transition-all ">
                   <span className=" relative">
                     <TfiWorld className=" h-14 w-14 " />
                     <span className=" h-2 w-2 rounded-full bg-green-500 absolute bottom-0 right-0 "></span>
