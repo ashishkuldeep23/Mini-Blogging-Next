@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Chat_User, Conversation } from "../../../../types/chat-types";
-
+import { FaPencil } from "react-icons/fa6";
 import ImageReact from "@/app/components/ImageReact";
 import {
   CreateConversations,
@@ -17,6 +17,7 @@ import { AppDispatch } from "@/redux/store";
 import MainLoader from "@/app/components/LoaderUi";
 
 import { TfiWorld } from "react-icons/tfi";
+import NewChatDiv from "@/app/components/Chat_Componets/NewChatDiv";
 
 export default function MessagePage() {
   const router = useRouter();
@@ -28,6 +29,8 @@ export default function MessagePage() {
 
   const EmptyChats =
     !isLoading && allConversations.length === 0 && startConvo.length === 0;
+
+  const [newChatDiv, setNewChatDiv] = useState(false);
 
   // const friendsAllFriend = useUserState().userData.friendsAllFriend;
 
@@ -55,9 +58,20 @@ export default function MessagePage() {
     router.push(`/msgs/${convo._id}`);
   };
 
+  const newChatClickHandler = () => {
+    setNewChatDiv(!newChatDiv);
+  };
+
   return (
-    <div className=" min-h-[100vh] bg-black flex flex-col items-center">
+    <div className=" min-h-[100vh] bg-black flex flex-col items-center relative">
       <MainLoader isLoading={isLoading} />
+
+      {/* New Chat Div */}
+      <NewChatDiv
+        newChatDiv={newChatDiv}
+        newChatClickHandler={newChatClickHandler}
+      />
+
       <div
         className={` my-1 border-2 border-green-500 text-green-500 h-10 rounded w-full flex justify-center items-center md:w-[70%] lg:w-[60%] ${
           isLoading && " opacity-50"
@@ -67,7 +81,7 @@ export default function MessagePage() {
       </div>
 
       <div
-        className={`my-1 border-2 border-yellow-500  h-24 rounded  flex justify-start px-2 items-center w-[98vw] md:w-[70%] lg:w-[60%] overflow-hidden ${
+        className={`my-1 border-2 border-yellow-500  h-24 rounded  flex justify-start px-2 items-center w-[98vw] sm:w-[97%] md:w-[70%] lg:w-[60%] overflow-hidden ${
           isLoading && " opacity-50"
         } ${EmptyChats && "hidden"} `}
       >
@@ -86,7 +100,10 @@ export default function MessagePage() {
             .fill(null)
             .map((_, i) => {
               return (
-                <div key={i} className=" border-2  min-w-20 h-20 rounded-full overflow-hidden  flex flex-col  justify-end items-center p-1 m-0 active:scale-75 hover:bg-red-700 hover:cursor-pointer transition-all ">
+                <div
+                  key={i}
+                  className=" border-2  min-w-20 h-20 rounded-full overflow-hidden  flex flex-col  justify-end items-center p-1 m-0 active:scale-75 hover:bg-red-700 hover:cursor-pointer transition-all "
+                >
                   <span className=" relative">
                     <TfiWorld className=" h-14 w-14 " />
                     <span className=" h-2 w-2 rounded-full bg-green-500 absolute bottom-0 right-0 "></span>
@@ -201,6 +218,14 @@ export default function MessagePage() {
         </div>
       ) : (
         <></>
+      )}
+      {!isLoading && (
+        <div
+          onClick={newChatClickHandler}
+          className=" w-12 h-12 fixed bottom-7 right-7  md:bottom-10 md:right-[12rem] lg:right-[25rem] bg-sky-500 rounded-full hover:bg-sky-700 active:bg-sky-700 hover:cursor-pointer transition-all flex justify-center items-center"
+        >
+          <FaPencil className=" w-7 h-7" />
+        </div>
       )}
     </div>
   );

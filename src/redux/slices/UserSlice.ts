@@ -74,14 +74,22 @@ export const getUserData = createAsyncThunk(
 
 export const getProfileData = createAsyncThunk(
   "user/getProfileData",
-  async ({ userId, page = 1 }: { userId: string; page?: number }) => {
+  async ({
+    userId,
+    page = 1,
+    noPostData = false,
+  }: {
+    userId: string;
+    page?: number;
+    noPostData?: boolean;
+  }) => {
     const option: RequestInit = {
       cache: "no-store",
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ page }),
+      body: JSON.stringify({ page, noPostData }),
     };
     const response = await fetch(`/api/profile/${userId}`, option);
     let data = await response.json();

@@ -1,3 +1,4 @@
+import { getUserDataFromServer } from "@/app/api/getUserDataServer";
 import { connect } from "@/dbConfig/dbConfig";
 import ConversationModel from "@/models/conversationModel";
 import MessageModel from "@/models/messageModel";
@@ -52,6 +53,21 @@ export async function GET(req: NextRequest, context: any) {
       );
     }
 
+    let userData = await getUserDataFromServer();
+
+    if (!userData) {
+      return NextResponse.json(
+        { success: false, message: "User not found. Please LogIn again." },
+        { status: 404 }
+      );
+    }
+
+    let friendsData =
+      convoData.type === "direct" &&
+      convoData.participants.find(
+        (user: any) => user._id.toString() !== userData._id.toString()
+      );
+
     // // // now find last two msgs also -------->>
 
     let findMessages = await MessageModel.find({ conversationId: convoId })
@@ -64,7 +80,11 @@ export async function GET(req: NextRequest, context: any) {
     return NextResponse.json(
       {
         success: true,
-        data: convoData,
+        data: {
+          ...convoData,
+          name: friendsData?.username || convoData?.name,
+          avatar: friendsData?.profilePic || convoData?.avatar,
+        },
         convoId: convoId,
         messageArr: findMessages,
         message: "Conversation data fetched.",

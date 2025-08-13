@@ -33,6 +33,7 @@ const MessageList: React.FC<MessageListProps> = ({
   messages,
   currentUserId,
 }) => {
+  const illFetchNewMsgs = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -51,29 +52,19 @@ const MessageList: React.FC<MessageListProps> = ({
     }).format(timestamp);
   };
 
-  const themeMode = useThemeData().mode;
-
   return (
-    <div className="flex-1 overflow-y-auto p-4 space-y-4  hide_scrollbar_totally ">
+    <div className=" h-[85vh] flex flex-col overflow-y-auto p-4 space-y-4 hide_scrollbar_totally ">
+      <div ref={illFetchNewMsgs} />
+
       {messages.map((message) => {
         const isCurrentUser = message.userId === currentUserId;
-        const isBot = message.type === "bot";
-        const isSystem = message.type === "system";
-
-        if (isSystem) {
-          return (
-            <div key={message.id} className="flex justify-center">
-              <div className="bg-gray-200 text-gray-600 px-3 py-1 rounded-full text-sm">
-                {message.content}
-              </div>
-            </div>
-          );
-        }
-
+        // const isBot = message.type === "bot";
+        const isElsePerson = message.userId !== currentUserId;
+        // const isSystem = message.type === "system";
         return (
           <div
             key={message.id}
-            className={`flex ${
+            className={` mt-auto  flex ${
               isCurrentUser ? "justify-end" : "justify-start"
             } items-start space-x-2`}
           >
@@ -81,10 +72,10 @@ const MessageList: React.FC<MessageListProps> = ({
               <div className="flex-shrink-0">
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                    isBot ? "bg-sky-600 " : "bg-gray-400"
+                    isElsePerson ? "bg-sky-600 " : "bg-gray-400"
                   }`}
                 >
-                  {isBot ? (
+                  {isElsePerson ? (
                     <Bot className="w-4 h-4 text-white" />
                   ) : (
                     <User className="w-4 h-4 text-white" />
@@ -95,13 +86,7 @@ const MessageList: React.FC<MessageListProps> = ({
 
             <div
               className={`max-w-xs lg:max-w-xl px-4 py-2 rounded-lg ${
-                isCurrentUser
-                  ? "bg-sky-600 text-white"
-                  : isBot
-                  ? ` ${
-                      !themeMode ? "bg-black" : " bg-white"
-                    } border border-gray-500`
-                  : "bg-black "
+                isCurrentUser ? "bg-sky-600 text-white" : "bg-black"
               }`}
             >
               <div className="break-words">{message.content}</div>
@@ -113,14 +98,6 @@ const MessageList: React.FC<MessageListProps> = ({
                 {formatTime(message.timestamp)}
               </div>
             </div>
-
-            {/* {isCurrentUser && (
-              <div className="flex-shrink-0">
-                <div className="w-8 h-8 bg-sky-600 rounded-full flex items-center justify-center">
-                  <User className="w-4 h-4 text-white" />
-                </div>
-              </div>
-            )} */}
           </div>
         );
       })}
@@ -193,9 +170,22 @@ const ChatDemoUI: React.FC = () => {
       timestamp: new Date(),
       type: "bot",
     },
+    {
+      id: "3",
+      content: "Hello! How can I help you today?",
+      userId: "bot-2",
+      timestamp: new Date(),
+      type: "bot",
+    },
   ]);
 
-  const currentUserId = "user-123";
+  const params = useParams();
+  const convo = useChatData().currentConvo;
+  const { data: session } = useSession();
+  const dispatch = useDispatch<AppDispatch>();
+  const currentUserId = session?.user?._id || "";
+
+  // console.log("currentUserId", currentUserId);
 
   const handleSendMessage = (content: string) => {
     const newMessage: Message = {
@@ -208,7 +198,7 @@ const ChatDemoUI: React.FC = () => {
 
     setMessages((prev) => [...prev, newMessage]);
 
-    // Simulate bot response
+    // // // Simulate bot response
     setTimeout(() => {
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -221,11 +211,7 @@ const ChatDemoUI: React.FC = () => {
     }, 1000);
   };
 
-  const params = useParams();
-  const convo = useChatData().currentConvo;
-  const { data: session } = useSession();
-  const dispatch = useDispatch<AppDispatch>();
-
+  // / // Call to fetch convarsation data from server -------->>
   useEffect(() => {
     if (
       params?.id &&
@@ -246,11 +232,6 @@ const ChatDemoUI: React.FC = () => {
     <div
       className={`sm:my-10 sm:rounded-md overflow-hidden flex flex-col h-[95vh] sm:h-[85vh] max-w-4xl mx-auto  shadow-lg bg-gray-900 text-white`}
     >
-      {/* <div className="bg-sky-600  text-white px-2  flex items-center gap-1 ">
-        <Link href={"/msgs"}>◁</Link>
-        <h1 className="text-xl font-semibold">Name and Img of User</h1>
-      </div> */}
-
       <MessageList messages={messages} currentUserId={currentUserId} />
       <MessageInput onSendMessage={handleSendMessage} />
     </div>

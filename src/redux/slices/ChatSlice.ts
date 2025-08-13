@@ -216,15 +216,15 @@ const chatSlice = createSlice({
 
           let convoObj = { ...data };
 
-          let friendsData = convoObj?.participants?.find(
-            (user: any) => user?._id !== userId
-          );
+          // let friendsData = convoObj?.participants?.find(
+          //   (user: any) => user?._id !== userId
+          // );
 
-          if (friendsData) {
-            if (friendsData?.username) convoObj.name = friendsData?.username;
-            if (friendsData?.profilePic)
-              convoObj.avatar = friendsData?.profilePic;
-          }
+          // if (friendsData) {
+          //   if (friendsData?.username) convoObj.name = friendsData?.username;
+          //   if (friendsData?.profilePic)
+          //     convoObj.avatar = friendsData?.profilePic;
+          // }
 
           state.currentConvo = convoObj;
           state.allMessagesOfThisConvo = messageArr;

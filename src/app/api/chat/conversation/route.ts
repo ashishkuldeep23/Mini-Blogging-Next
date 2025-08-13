@@ -2,9 +2,10 @@ import { connect } from "@/dbConfig/dbConfig";
 import ConversationModel from "@/models/conversationModel";
 import User from "@/models/userModel";
 import { modelNames } from "mongoose";
-import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
+import { getUserDataFromServer } from "../../getUserDataServer";
 
+// // // Used to get all conversations
 export async function GET() {
   await connect();
 
@@ -13,31 +14,14 @@ export async function GET() {
   await User.findById("65ffbc7cf6215d659db3b197");
 
   try {
-    const session = await getServerSession();
+    let userData = await getUserDataFromServer();
 
-    // console.log("session", session);
-
-    if (!session)
+    if (!userData) {
       return NextResponse.json(
         { success: false, message: "User not found. Please LogIn again." },
         { status: 404 }
       );
-
-    const userEmail = session?.user?.email;
-
-    if (!userEmail)
-      return NextResponse.json(
-        { success: false, message: "User not found. Please LogIn again." },
-        { status: 404 }
-      );
-
-    let userData = await User.findOne({ email: userEmail });
-
-    if (!userData)
-      return NextResponse.json(
-        { success: false, message: "User not found. Please LogIn again." },
-        { status: 404 }
-      );
+    }
 
     // // // Need to include pagination here ---------->>
 
@@ -111,31 +95,17 @@ export async function POST(req: NextRequest) {
 
   try {
     const reqBody = await req.json();
-    const session = await getServerSession();
 
     // console.log("session", session);
 
-    if (!session)
+    let userData = await getUserDataFromServer();
+
+    if (!userData) {
       return NextResponse.json(
         { success: false, message: "User not found. Please LogIn again." },
         { status: 404 }
       );
-
-    const userEmail = session?.user?.email;
-
-    if (!userEmail)
-      return NextResponse.json(
-        { success: false, message: "User not found. Please LogIn again." },
-        { status: 404 }
-      );
-
-    let userData = await User.findOne({ email: userEmail });
-
-    if (!userData)
-      return NextResponse.json(
-        { success: false, message: "User not found. Please LogIn again." },
-        { status: 404 }
-      );
+    }
 
     // // // Now create logic for creating new convo.
 
