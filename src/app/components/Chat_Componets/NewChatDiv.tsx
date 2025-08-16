@@ -80,9 +80,9 @@ const NewChatDiv = ({
                   key={friend._id}
                   className={`overflow-hidden  bg-green-950 text-white min-h-16 rounded w-full flex items-center active:scale-90 hover:bg-green-700 active:bg-green-700 hover:cursor-pointer  `}
                 >
-                  <span className="  w-10  p-[0.1rem] rounded-full mx-4 border-2 border-sky-500 overflow-hidden">
+                  <span className="  w-10 h-10  p-[0.1rem] rounded-full mx-4 border-2 border-sky-500 overflow-hidden">
                     <ImageReact
-                      className=" w-[99%] h-[99%]rounded-full object-cover"
+                      className=" w-[99%] h-[99%] rounded-full object-cover"
                       src={friend?.profilePic || ""}
                     />
                   </span>

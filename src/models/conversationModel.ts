@@ -31,21 +31,20 @@ const ConversationSchema = new Schema<IConversation>(
       { type: Schema.Types.ObjectId, ref: "users", required: true },
     ],
     admins: [{ type: Schema.Types.ObjectId, ref: "users" }],
-    // lastMessage: {
-    //   content: String,
-    //   sender: { type: Schema.Types.ObjectId, ref: "User" },
-    //   timestamp: Date,
-    //   messageType: {
-    //     type: String,
-    //     enum: ["text", "image", "file"],
-    //     default: "text",
-    //   },
-    // },
     lastMessage: {
-      type: Schema.Types.ObjectId,
-      ref: "messages",
+      content: String,
+      sender: { type: Schema.Types.ObjectId, ref: "users" },
+      timestamp: {
+        type: Date,
+        default: new Date(),
+      },
+      messageType: {
+        type: String,
+        enum: ["text", "image", "file"],
+        default: "text",
+      },
     },
-    lastMessageAt: { type: Date, default: Date.now },
+    lastMessageAt: { type: Date, default: new Date() },
     isActive: { type: Boolean, default: true },
     createdBy: { type: Schema.Types.ObjectId, ref: "users", required: true },
   },

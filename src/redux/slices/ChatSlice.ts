@@ -3,9 +3,16 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
-import { ChatInterface, Conversation } from "../../../types/chat-types";
+import {
+  ChatInterface,
+  Conversation,
+  Message,
+  TypeFetchMsgsByConvoId,
+  TypeSendMsg,
+} from "../../../types/chat-types";
 import { RequestInit } from "next/dist/server/web/spec-extension/request";
 import toast from "react-hot-toast";
+import { encryptMessage } from "@/lib/Crypto-JS";
 
 export const fetchAllConversations = createAsyncThunk(
   "chat/fetchingAllConvos",
@@ -61,6 +68,48 @@ export const fetchConversationById = createAsyncThunk(
   }
 );
 
+export const sendMsgPostCall = createAsyncThunk(
+  "chat/sendMsg",
+  async ({ successFn, content, ...body }: TypeSendMsg) => {
+    content = encryptMessage(content);
+
+    const option: RequestInit = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content, ...body }),
+    };
+
+    const response = await fetch("/api/chat/messages", option);
+    let data = await response.json();
+    return { ...data, successFn };
+  }
+);
+
+export const fetchMsgsByConvoId = createAsyncThunk(
+  "chat/fetchMsgsByConvoId",
+  async ({
+    conversationId,
+    page = "1",
+    limit = "50",
+  }: TypeFetchMsgsByConvoId) => {
+    const option: RequestInit = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    const response = await fetch(
+      `/api/chat/messages?conversationId=${conversationId}&page=${page}&limit=${limit}`,
+      option
+    );
+    let data = await response.json();
+    return { ...data, conversationId };
+  }
+);
+
 const initialState: ChatInterface = {
   isLoading: false,
   isFullfilled: false,
@@ -85,6 +134,11 @@ const chatSlice = createSlice({
   reducers: {
     setCurrentConvo(state, action: PayloadAction<Conversation>) {
       state.currentConvo = action.payload;
+    },
+    pushOneMoreMsg(state, action: PayloadAction<Message>) {
+      if (state?.currentConvo?._id === action.payload.conversationId) {
+        state?.allMessagesOfThisConvo?.push(action.payload);
+      }
     },
   },
   extraReducers: (builder) => {
@@ -227,7 +281,9 @@ const chatSlice = createSlice({
           // }
 
           state.currentConvo = convoObj;
-          state.allMessagesOfThisConvo = messageArr;
+          if (state.allMessagesOfThisConvo?.length === 0) {
+            state.allMessagesOfThisConvo = messageArr;
+          }
 
           state.isFullfilled = true;
         }
@@ -239,11 +295,89 @@ const chatSlice = createSlice({
         state.isError = true;
         toast.error(` ${action.error.message || "Fetching failed"}`);
         state.errMsg = action.error.message || "Fetching failed";
+      })
+
+      .addCase(sendMsgPostCall.pending, (state) => {
+        // state.isLoading = true;
+        state.errMsg = "";
+        state.isError = false;
+        state.isLoadingMsg = true;
+      })
+      .addCase(sendMsgPostCall.fulfilled, (state, action) => {
+        if (action.payload.success === false) {
+          toast.error(`${action.payload.message || "Conversation Error"}`);
+          state.isError = true;
+          state.errMsg = action.payload.message;
+        } else {
+          // console.log(action);
+
+          const { data, successFn, conversationId = "" } = action.payload;
+
+          state.isFullfilled = true;
+
+          if (conversationId === state.currentConvo?._id) {
+            state?.allMessagesOfThisConvo?.push(data);
+          }
+
+          // // // now run success fn() ----------->>
+
+          successFn && successFn(data?._id);
+        }
+
+        state.isLoadingMsg = false;
+        state.isLoading = false;
+      })
+      .addCase(sendMsgPostCall.rejected, (state, action) => {
+        state.isLoadingMsg = false;
+        state.isLoading = false;
+        state.isError = true;
+        toast.error(` ${action.error.message || "Fetching failed"}`);
+        state.errMsg = action.error.message || "Fetching failed";
+      })
+      .addCase(fetchMsgsByConvoId.pending, (state) => {
+        state.isLoading = true;
+        state.errMsg = "";
+        state.isError = false;
+      })
+      .addCase(fetchMsgsByConvoId.fulfilled, (state, action) => {
+        if (action.payload.success === false) {
+          toast.error(`${action.payload.message || "Conversation Error"}`);
+          state.isError = true;
+          state.errMsg = action.payload.message;
+        } else {
+          const { data, total, pagination } = action.payload;
+
+          let msgsId =
+            state?.allMessagesOfThisConvo?.map((msg) => msg._id) || [];
+
+          // console.log(data, total, pagination);
+
+          // console.log(msgsId, data);
+
+          const allMsgsFilteredArr = data.filter((msg: any) => {
+            return !msgsId.includes(msg._id);
+          });
+
+          state.allMessagesOfThisConvo = [
+            ...(state.allMessagesOfThisConvo || []),
+            ...allMsgsFilteredArr,
+          ];
+
+          state.isFullfilled = true;
+        }
+
+        state.isLoading = false;
+      })
+      .addCase(fetchMsgsByConvoId.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        toast.error(` ${action.error.message || "Fetching failed"}`);
+        state.errMsg = action.error.message || "Fetching failed";
       });
   },
 });
 
-export const { setCurrentConvo } = chatSlice.actions;
+export const { setCurrentConvo, pushOneMoreMsg } = chatSlice.actions;
 
 export const useChatData = () =>
   useSelector((state: RootState) => state.chatReducer);

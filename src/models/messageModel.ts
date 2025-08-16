@@ -1,4 +1,6 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
+import User from "./userModel";
+import conversationModel from "./conversationModel";
 
 export interface IMessage extends Document {
   _id: string;
@@ -30,11 +32,11 @@ const MessageSchema = new Schema<IMessage>(
       enum: ["text", "image", "file", "system"],
       default: "text",
     },
-    replyTo: { type: Schema.Types.ObjectId, ref: "messages" },
+    replyTo: { type: Schema.Types.ObjectId, ref: "Message", default: null },
     readBy: [
       {
         user: { type: Schema.Types.ObjectId, ref: "users" },
-        readAt: { type: Date, default: Date.now },
+        readAt: { type: Date, default: new Date() },
       },
     ],
     reactions: [

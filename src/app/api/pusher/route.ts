@@ -1,36 +1,46 @@
-
 import { NextRequest, NextResponse } from "next/server";
-import { pusherServer } from '@/lib/pusherServer';
+import { pusherServer } from "@/lib/pusherServer";
 
-
+// // // Not using this api for now --------->>
 export async function POST(req: NextRequest) {
+  try {
+    // console.log(req)
+    // const requestHeaders = new Headers(req.headers);
+    // const userName = requestHeaders.get('userName');
+    // const userId = requestHeaders.get('userId');
+    // console.log({ userName, userId })
+    // console.log(requestHeaders.entries())
 
-    try {
+    const { event, data, channel, socketId } = await req.json();
 
-        // console.log(req)
-        // const requestHeaders = new Headers(req.headers);
-        // const userName = requestHeaders.get('userName');
-        // const userId = requestHeaders.get('userId');
-        // console.log({ userName, userId })
-        // console.log(requestHeaders.entries())
+    console.log({ event, data, channel });
 
+    if (!socketId || !channel || !event || !data)
+      return NextResponse.json(
+        { success: false, message: "Missing data." },
+        { status: 400 }
+      );
 
-        const { event, data, channel } = await req.json();
+    // Example: check session or JWT token
+    const auth = pusherServer.authorizeChannel(socketId, channel);
 
-        console.log({ event, data, channel })
+    console.log(auth);
 
-        let responce = await pusherServer.trigger(`${channel}`, event, data);
+    let responce = await pusherServer.trigger(`${channel}`, event, data);
 
-        console.log(responce.status)
-        // console.log(responce.body)
-        // console.log(responce.status)
+    console.log(responce.status);
+    // console.log(responce.body)
+    // console.log(responce.status)
 
-
-        return NextResponse.json({ success: true, message: 'Event triggered.', responce }, { status: 200 })
-    }
-    catch (error: any) {
-
-        console.log(error.message)
-        return NextResponse.json({ success: false, message: `${error.message} (Server Error)` }, { status: 500 })
-    }
+    return NextResponse.json(
+      { success: true, message: "Event triggered.", responce },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    console.log(error.message);
+    return NextResponse.json(
+      { success: false, message: `${error.message} (Server Error)` },
+      { status: 500 }
+    );
+  }
 }

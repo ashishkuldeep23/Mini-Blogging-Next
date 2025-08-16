@@ -75,6 +75,21 @@ export interface ChatInterface {
   // // // some states for pagination for fetching conversations and messages ------------->>
 }
 
+export type TypeSendMsg = {
+  conversationId: string;
+  sender: string;
+  content: string;
+  messageType: "text" | "image" | "file" | "system";
+  successFn?: (id: any) => void;
+};
+
+export type TypeFetchMsgsByConvoId = {
+  conversationId: string;
+  page?: string;
+  limit?: string;
+  successFn?: (id: any) => void;
+};
+
 // // // Not Using this now --------------->>>
 // export interface FriendRequest {
 //   _id: string;

@@ -18,6 +18,7 @@ import MainLoader from "@/app/components/LoaderUi";
 
 import { TfiWorld } from "react-icons/tfi";
 import NewChatDiv from "@/app/components/Chat_Componets/NewChatDiv";
+import { decryptMessage } from "@/lib/Crypto-JS";
 
 export default function MessagePage() {
   const router = useRouter();
@@ -96,7 +97,7 @@ export default function MessagePage() {
         </div>
 
         <div className=" scrooller_bar_small pl-1.5 gap-1  h-full flex  justify-start items-center overflow-y-auto">
-          {Array(4)
+          {Array(5)
             .fill(null)
             .map((_, i) => {
               return (
@@ -138,15 +139,15 @@ export default function MessagePage() {
             .fill(null)
             .map((_, i) => {
               return (
-                <Link
+                <span
                   key={i}
                   className=" block w-full "
-                  href={`/msgs/${i + 1}`}
+                  // href={`/msgs/${i + 1}`}
                 >
                   <div className=" my-1 bg-teal-900 text-white h-16 rounded w-full flex  justify-center items-center ">
                     {/* <p>All msgs here {i + 1}</p> */}
                   </div>
-                </Link>
+                </span>
               );
             })}
         </div>
@@ -171,9 +172,13 @@ export default function MessagePage() {
                   </span>
 
                   <div>
-                    <p className=" text-lg font-semibold">{ele?.name}</p>
+                    <p className=" text-lg font-semibold capitalize">
+                      {ele?.name}
+                    </p>
                     <p className=" opacity-70 text-sm ">
-                      {ele?.lastMessage?.content || "Dare to Chat."}
+                      {ele?.lastMessage?.content
+                        ? decryptMessage(ele?.lastMessage?.content)
+                        : "Dare to Chat."}
                     </p>
                   </div>
                 </div>

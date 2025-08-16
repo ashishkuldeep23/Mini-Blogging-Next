@@ -1,31 +1,29 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Send, User, Bot } from "lucide-react";
-import Link from "next/link";
-import { useThemeData } from "@/redux/slices/ThemeSlice";
+import { Send, User } from "lucide-react";
 import { useParams } from "next/navigation";
-import { fetchConversationById, useChatData } from "@/redux/slices/ChatSlice";
+import {
+  fetchConversationById,
+  fetchMsgsByConvoId,
+  pushOneMoreMsg,
+  sendMsgPostCall,
+  useChatData,
+} from "@/redux/slices/ChatSlice";
 import { useSession } from "next-auth/react";
 import { AppDispatch } from "@/redux/store";
 import { useDispatch } from "react-redux";
-
-// Types
-interface Message {
-  id: string;
-  content: string;
-  userId: string;
-  timestamp: Date;
-  type?: "user" | "bot" | "system";
-}
+import { Message, TypeSendMsg } from "../../../../types/chat-types";
+import toast from "react-hot-toast";
+import ImageReact from "../ImageReact";
+import { pusherClient } from "@/lib/pusherClient";
+import { decryptMessage } from "@/lib/Crypto-JS";
+import { sendMsgViaPusher } from "@/lib/sendMsgViaPusher";
+import Pusher from "pusher-js";
 
 interface MessageListProps {
   messages: Message[];
   currentUserId: string;
-}
-
-interface MessageInputProps {
-  onSendMessage: (content: string) => void;
 }
 
 // MessageList Component
@@ -35,35 +33,99 @@ const MessageList: React.FC<MessageListProps> = ({
 }) => {
   const illFetchNewMsgs = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const dispatch = useDispatch<AppDispatch>();
+  const params = useParams();
+  const session = useSession();
+
+  const userId = session?.data?.user?._id;
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
   const formatTime = (timestamp: Date) => {
+    // console.log(timestamp);
+    if (typeof timestamp === "string") {
+      timestamp = new Date(timestamp);
+    }
     return new Intl.DateTimeFormat("en-US", {
       hour: "2-digit",
       minute: "2-digit",
       hour12: true,
     }).format(timestamp);
   };
+  // console.log(params.id);
+
+  useEffect(() => {
+    const conversationId = params?.id;
+    if (conversationId && typeof conversationId === "string") {
+      dispatch(fetchMsgsByConvoId({ conversationId }));
+      // console.log("Now call server to laod the msgs with pagination");
+    }
+  }, [params?.id]);
+
+  // // //  new we can bind the pusher code ----------->>
+  // Subscribe to the conversation channel
+  useEffect(() => {
+    const conversationId = params?.id;
+
+    if (!conversationId || typeof conversationId !== "string") return;
+
+    // Pusher.logToConsole = true; // Enable logging
+
+    let channel = pusherClient.subscribe(
+      `private-conversation-${conversationId}`
+    );
+
+    channel.bind("new-message", (data: any) => {
+      // setMessages((prev) => [...prev, data]);
+      // console.log(data);
+
+      // // // Now add msg in state and also decrypt that ------>>
+
+      let whoSendMsg = data?.sender?._id;
+
+      if (whoSendMsg.toString() !== currentUserId.toString()) {
+        dispatch(pushOneMoreMsg(data as Message));
+      }
+    });
+
+    channel.bind("pusher:subscribe", () => {
+      console.log("Subscription succeeded"); // Log subscription success
+    });
+
+    channel.bind("pusher:error", (status: any) => {
+      console.error("Subscription error:", status); // Log subscription error
+    });
+
+    // pusherClient.connection.bind("connected", () => {
+    //   const socketId = pusherClient.connection.socket_id;
+    //   console.log("Socket ID:", socketId);
+    // });
+
+    return () => {
+      channel.unbind_all();
+      channel.unsubscribe();
+      pusherClient.unsubscribe(`private-conversation-${conversationId}`);
+    };
+  }, [params?.id]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   return (
     <div className=" h-[85vh] flex flex-col overflow-y-auto p-4 space-y-4 hide_scrollbar_totally ">
       <div ref={illFetchNewMsgs} />
 
       {messages.map((message) => {
-        const isCurrentUser = message.userId === currentUserId;
+        const isCurrentUser = message.sender._id === currentUserId;
         // const isBot = message.type === "bot";
-        const isElsePerson = message.userId !== currentUserId;
+        const isElsePerson = message.sender._id !== currentUserId;
         // const isSystem = message.type === "system";
         return (
           <div
-            key={message.id}
+            key={message._id}
             className={` mt-auto  flex ${
               isCurrentUser ? "justify-end" : "justify-start"
             } items-start space-x-2`}
@@ -71,12 +133,15 @@ const MessageList: React.FC<MessageListProps> = ({
             {!isCurrentUser && (
               <div className="flex-shrink-0">
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                    isElsePerson ? "bg-sky-600 " : "bg-gray-400"
+                  className={` rotate-45  mt-1 w-8 h-8 rounded-full rounded-tr-[3rem] flex items-center justify-center ${
+                    isElsePerson ? "bg-sky-600 -mr-0.5 " : "bg-gray-400"
                   }`}
                 >
                   {isElsePerson ? (
-                    <Bot className="w-4 h-4 text-white" />
+                    <ImageReact
+                      src={message?.sender?.profilePic || ""}
+                      className=" -rotate-45 w-7 h-7 rounded-full object-cover"
+                    />
                   ) : (
                     <User className="w-4 h-4 text-white" />
                   )}
@@ -86,16 +151,20 @@ const MessageList: React.FC<MessageListProps> = ({
 
             <div
               className={`max-w-xs lg:max-w-xl px-4 py-2 rounded-lg ${
-                isCurrentUser ? "bg-sky-600 text-white" : "bg-black"
+                isCurrentUser
+                  ? "bg-sky-600 text-white"
+                  : "bg-black border border-sky-500 "
               }`}
             >
-              <div className="break-words">{message.content}</div>
+              <div className="break-words">
+                {decryptMessage(message.content)}
+              </div>
               <div
                 className={`text-xs mt-1 ${
                   isCurrentUser ? "text-blue-100" : "text-gray-500"
                 }`}
               >
-                {formatTime(message.timestamp)}
+                {formatTime(message?.createdAt)}
               </div>
             </div>
           </div>
@@ -108,14 +177,53 @@ const MessageList: React.FC<MessageListProps> = ({
   );
 };
 
+interface MessageInputProps {
+  // onSendMessage: (content: string) => void;
+}
 // MessageInput Component
-const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
+const MessageInput: React.FC<MessageInputProps> = () => {
   const [message, setMessage] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const { data: session } = useSession();
+  const userId = session?.user?._id;
+  const convoId = useChatData().currentConvo?._id;
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleSubmit = () => {
-    if (message.trim()) {
-      onSendMessage(message.trim());
+    let sendMsg = message.trim();
+
+    if (!sendMsg) {
+      toast.error("Message can't be empty");
+      return;
+    }
+    if (!userId) {
+      toast.error("User not found");
+      return;
+    }
+    if (!convoId) {
+      toast.error("Conversation not found");
+      return;
+    }
+
+    if (sendMsg && convoId && userId) {
+      // onSendMessage(message.trim());
+
+      let makeBodyData: TypeSendMsg = {
+        conversationId: convoId,
+        sender: userId,
+        content: sendMsg,
+        messageType: "text",
+      };
+
+      dispatch(sendMsgPostCall(makeBodyData));
+
+      // // // now here we can call pusher fn ---------->>
+      // sendMsgViaPusher({
+      //   event: "new-message",
+      //   channelName: `private-conversation-${convoId}`,
+      //   bodyData: makeBodyData,
+      // });
+
       setMessage("");
     }
   };
@@ -127,6 +235,10 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
     }
   };
 
+  const handleChangeFn = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMessage(e.target.value);
+  };
+
   return (
     <div className="border-t border-sky-600  p-4">
       <div className="flex space-x-3">
@@ -135,8 +247,8 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
             ref={inputRef}
             type="text"
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyPress={handleKeyPress}
+            onChange={handleChangeFn}
+            onKeyDown={handleKeyPress}
             placeholder="Type your message..."
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 bg-inherit"
           />
@@ -155,61 +267,16 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
 
 // Demo Component showing how to use both components
 const ChatDemoUI: React.FC = () => {
-  const [messages, setMessages] = useState<Message[]>([
-    // {
-    //   id: "1",
-    //   content: "Welcome to the chat!",
-    //   userId: "system",
-    //   timestamp: new Date(),
-    //   type: "system",
-    // },
-    {
-      id: "2",
-      content: "Hello! How can I help you today?",
-      userId: "bot-1",
-      timestamp: new Date(),
-      type: "bot",
-    },
-    {
-      id: "3",
-      content: "Hello! How can I help you today?",
-      userId: "bot-2",
-      timestamp: new Date(),
-      type: "bot",
-    },
-  ]);
+  // const [messages, setMessages] = useState<Message[]>([]);
+
+  const messages = useChatData().allMessagesOfThisConvo;
+  // const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const params = useParams();
   const convo = useChatData().currentConvo;
   const { data: session } = useSession();
   const dispatch = useDispatch<AppDispatch>();
   const currentUserId = session?.user?._id || "";
-
-  // console.log("currentUserId", currentUserId);
-
-  const handleSendMessage = (content: string) => {
-    const newMessage: Message = {
-      id: Date.now().toString(),
-      content,
-      userId: currentUserId,
-      timestamp: new Date(),
-      type: "user",
-    };
-
-    setMessages((prev) => [...prev, newMessage]);
-
-    // // // Simulate bot response
-    setTimeout(() => {
-      const botMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        content: `You said: "${content}". How can I assist you further?`,
-        userId: "bot-1",
-        timestamp: new Date(),
-        type: "bot",
-      };
-      setMessages((prev) => [...prev, botMessage]);
-    }, 1000);
-  };
 
   // / // Call to fetch convarsation data from server -------->>
   useEffect(() => {
@@ -232,8 +299,8 @@ const ChatDemoUI: React.FC = () => {
     <div
       className={`sm:my-10 sm:rounded-md overflow-hidden flex flex-col h-[95vh] sm:h-[85vh] max-w-4xl mx-auto  shadow-lg bg-gray-900 text-white`}
     >
-      <MessageList messages={messages} currentUserId={currentUserId} />
-      <MessageInput onSendMessage={handleSendMessage} />
+      <MessageList messages={messages || []} currentUserId={currentUserId} />
+      <MessageInput />
     </div>
   );
 };

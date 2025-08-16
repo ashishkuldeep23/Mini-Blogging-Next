@@ -11,14 +11,14 @@ export const decryptMessage = (
   encryptedMessage: CryptoJS.lib.CipherParams | string
 ) => {
   try {
-    console.log(encryptedMessage, encryptionKey);
+    // console.log(encryptedMessage, encryptionKey);
 
     let returnThis = CryptoJS.AES.decrypt(
       encryptedMessage,
       encryptionKey
     ).toString(CryptoJS.enc.Utf8);
 
-    console.log(returnThis);
+    // console.log(returnThis);
 
     return returnThis;
   } catch (error) {

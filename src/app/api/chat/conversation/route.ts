@@ -4,17 +4,18 @@ import User from "@/models/userModel";
 import { modelNames } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 import { getUserDataFromServer } from "../../getUserDataServer";
+import MessageModel from "@/models/messageModel";
 
 // // // Used to get all conversations
 export async function GET() {
   await connect();
-
   console.log(modelNames());
   // // // Jsut getting for comment data avilable below.
   await User.findById("65ffbc7cf6215d659db3b197");
+  await MessageModel.findById("689e35e96fad307ce0d06faf");
 
   try {
-    let userData = await getUserDataFromServer();
+    const userData = await getUserDataFromServer();
 
     if (!userData) {
       return NextResponse.json(
@@ -92,6 +93,7 @@ export async function POST(req: NextRequest) {
   console.log(modelNames());
   // // // Jsut getting for comment data avilable below.
   await User.findById("65ffbc7cf6215d659db3b197");
+  await MessageModel.findById("689e35e96fad307ce0d06faf");
 
   try {
     const reqBody = await req.json();

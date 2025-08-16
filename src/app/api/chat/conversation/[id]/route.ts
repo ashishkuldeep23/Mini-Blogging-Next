@@ -2,11 +2,13 @@ import { getUserDataFromServer } from "@/app/api/getUserDataServer";
 import { connect } from "@/dbConfig/dbConfig";
 import ConversationModel from "@/models/conversationModel";
 import MessageModel from "@/models/messageModel";
-import { isValidObjectId } from "mongoose";
+import { isValidObjectId, modelNames } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest, context: any) {
   await connect();
+  console.log(modelNames());
+  await MessageModel.findById("689e35e96fad307ce0d06faf");
 
   try {
     let convoId = context?.params?.id;
@@ -70,12 +72,15 @@ export async function GET(req: NextRequest, context: any) {
 
     // // // now find last two msgs also -------->>
 
-    let findMessages = await MessageModel.find({ conversationId: convoId })
+    const findMessages = await MessageModel.find({ conversationId: convoId })
       .populate("sender", "name username avatar")
       .populate("replyTo", "content sender")
       .sort({ createdAt: -1 })
       .limit(2)
       .lean();
+
+    // Reverse to get chronological order
+    findMessages.reverse();
 
     return NextResponse.json(
       {
