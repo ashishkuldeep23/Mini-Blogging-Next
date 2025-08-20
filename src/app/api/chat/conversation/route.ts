@@ -88,6 +88,7 @@ export async function GET() {
   }
 }
 
+// // // Create new conversation
 export async function POST(req: NextRequest) {
   await connect();
   console.log(modelNames());

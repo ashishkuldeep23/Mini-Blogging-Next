@@ -9,6 +9,7 @@ export interface IConversation extends Document {
   avatar?: string;
   participants: any[];
   admins: string[];
+  adminOnly: boolean;
   lastMessage?: {
     content: string;
     sender: string;
@@ -46,6 +47,7 @@ const ConversationSchema = new Schema<IConversation>(
     },
     lastMessageAt: { type: Date, default: new Date() },
     isActive: { type: Boolean, default: true },
+    adminOnly: { type: Boolean, default: false },
     createdBy: { type: Schema.Types.ObjectId, ref: "users", required: true },
   },
   { timestamps: true }

@@ -9,6 +9,7 @@ import {
   Message,
   TypeFetchMsgsByConvoId,
   TypeSendMsg,
+  TypeUpdateMsg,
 } from "../../../types/chat-types";
 import { RequestInit } from "next/dist/server/web/spec-extension/request";
 import toast from "react-hot-toast";
@@ -110,6 +111,38 @@ export const fetchMsgsByConvoId = createAsyncThunk(
   }
 );
 
+export const updateMsgPutReq = createAsyncThunk(
+  "chat/updateMsgPutReq",
+  async (body: TypeUpdateMsg) => {
+    const {
+      isUpdating,
+      isEditted,
+      text,
+      replyTo,
+      reaction,
+      message,
+      isDeleting,
+      isDeletingForMe,
+    } = body;
+
+    if (!isUpdating && !isEditted) return;
+
+    const option: RequestInit = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...body,
+      }),
+    };
+
+    const response = await fetch(`/api/chat/messages`, option);
+    let data = await response.json();
+    return { ...data };
+  }
+);
+
 const initialState: ChatInterface = {
   isLoading: false,
   isFullfilled: false,
@@ -124,8 +157,11 @@ const initialState: ChatInterface = {
     name: "",
     avatar: "",
     participants: [],
+    admins: [],
+    adminOnly: false,
   },
   isLoadingMsg: false,
+  updatingMsg: null,
 };
 
 const chatSlice = createSlice({
@@ -138,6 +174,17 @@ const chatSlice = createSlice({
     pushOneMoreMsg(state, action: PayloadAction<Message>) {
       if (state?.currentConvo?._id === action.payload.conversationId) {
         state?.allMessagesOfThisConvo?.push(action.payload);
+      }
+    },
+    setUpdatedMsg(state, action: PayloadAction<Message>) {
+      if (state?.currentConvo?._id === action.payload.conversationId) {
+        state?.allMessagesOfThisConvo?.splice(
+          state?.allMessagesOfThisConvo?.findIndex(
+            (ele: Message) => ele._id === action.payload._id
+          ),
+          1,
+          action.payload
+        );
       }
     },
   },
@@ -203,7 +250,7 @@ const chatSlice = createSlice({
           state.isError = true;
           state.errMsg = action.payload.message;
         } else {
-          console.log(action);
+          // console.log(action);
 
           const { data, successFn, friendUserId = "" } = action.payload;
 
@@ -296,7 +343,6 @@ const chatSlice = createSlice({
         toast.error(` ${action.error.message || "Fetching failed"}`);
         state.errMsg = action.error.message || "Fetching failed";
       })
-
       .addCase(sendMsgPostCall.pending, (state) => {
         // state.isLoading = true;
         state.errMsg = "";
@@ -315,9 +361,10 @@ const chatSlice = createSlice({
 
           state.isFullfilled = true;
 
-          if (conversationId === state.currentConvo?._id) {
-            state?.allMessagesOfThisConvo?.push(data);
-          }
+          // // // Updating by pusher js ------------->>
+          // if (conversationId === state.currentConvo?._id) {
+          //   state?.allMessagesOfThisConvo?.push(data);
+          // }
 
           // // // now run success fn() ----------->>
 
@@ -373,11 +420,44 @@ const chatSlice = createSlice({
         state.isError = true;
         toast.error(` ${action.error.message || "Fetching failed"}`);
         state.errMsg = action.error.message || "Fetching failed";
+      })
+      .addCase(updateMsgPutReq.pending, (state) => {
+        // state.isLoading = true;
+        state.errMsg = "";
+        state.isError = false;
+      })
+      .addCase(updateMsgPutReq.fulfilled, (state, action) => {
+        if (action.payload.success === false) {
+          toast.error(`${action.payload.message || "Conversation Error"}`);
+          state.isError = true;
+          state.errMsg = action.payload.message;
+        } else {
+          // console.log(action);
+          // const { data } = action.payload;
+          // console.log({ action });
+
+          // // // set null again
+          state.updatingMsg = null;
+
+          state.isFullfilled = true;
+
+          // // // now run success fn() ----------->>
+          // successFn && successFn(data?._id);
+        }
+
+        state.isLoading = false;
+      })
+      .addCase(updateMsgPutReq.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        toast.error(` ${action.error.message || "Fetching failed"}`);
+        state.errMsg = action.error.message || "Fetching failed";
       });
   },
 });
 
-export const { setCurrentConvo, pushOneMoreMsg } = chatSlice.actions;
+export const { setCurrentConvo, pushOneMoreMsg, setUpdatedMsg } =
+  chatSlice.actions;
 
 export const useChatData = () =>
   useSelector((state: RootState) => state.chatReducer);

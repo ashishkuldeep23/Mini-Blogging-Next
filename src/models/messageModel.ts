@@ -5,12 +5,12 @@ import conversationModel from "./conversationModel";
 export interface IMessage extends Document {
   _id: string;
   conversationId: string | undefined;
-  sender: string | undefined;
+  sender: (string | { _id: string }) | undefined;
   content: string;
   messageType: "text" | "image" | "file" | "system";
   replyTo?: string;
   readBy: { user: string; readAt: Date }[];
-  reactions: { emoji: string; users: string[] }[];
+  reactions: { emoji: string; user: string }[];
   deletedBy: string[];
   isEdited: boolean;
   isDeleted: boolean;
@@ -26,7 +26,7 @@ const MessageSchema = new Schema<IMessage>(
       required: true,
     },
     sender: { type: Schema.Types.ObjectId, ref: "users", required: true },
-    content: { type: String, required: true, maxlength: 2000 },
+    content: { type: String, required: true, maxlength: 5000 },
     messageType: {
       type: String,
       enum: ["text", "image", "file", "system"],
@@ -42,7 +42,7 @@ const MessageSchema = new Schema<IMessage>(
     reactions: [
       {
         emoji: String,
-        users: [{ type: Schema.Types.ObjectId, ref: "users" }],
+        user: { type: Schema.Types.ObjectId, ref: "users" },
       },
     ],
     isEdited: { type: Boolean, default: false },

@@ -40,6 +40,8 @@ export interface Conversation {
   lastMessageAt?: Date;
   unreadCount?: number;
   theme?: ThemeConvo;
+  adminOnly: boolean;
+  admins: Chat_User[];
 }
 
 export interface Message {
@@ -55,10 +57,13 @@ export interface Message {
   }[];
   reactions: {
     emoji: string;
-    users: string[];
+    user: Chat_User;
   }[];
   isEdited: boolean;
   createdAt: Date;
+  // deletedBy?: (Chat_User | string)[];
+  deletedBy?: string[];
+  isDeleted?: boolean;
 }
 
 export interface ChatInterface {
@@ -71,7 +76,7 @@ export interface ChatInterface {
   allMessagesOfThisConvo?: Message[];
   currentConvo?: Conversation;
   isLoadingMsg?: boolean;
-
+  updatingMsg: TypeUpdateMsg | null;
   // // // some states for pagination for fetching conversations and messages ------------->>
 }
 
@@ -81,6 +86,7 @@ export type TypeSendMsg = {
   content: string;
   messageType: "text" | "image" | "file" | "system";
   successFn?: (id: any) => void;
+  replyTo?: string;
 };
 
 export type TypeFetchMsgsByConvoId = {
@@ -99,3 +105,19 @@ export type TypeFetchMsgsByConvoId = {
 //   message?: string;
 //   createdAt: Date;
 // }
+
+export type TypeUpdateMsg = {
+  isUpdating?: boolean;
+  isEditted?: boolean;
+  delReaction?: boolean;
+  text?: string;
+  replyTo?: string;
+  reaction?: {
+    emoji: string;
+    user: string;
+  };
+  message?: Message;
+
+  isDeleting?: boolean;
+  isDeletingForMe?: boolean;
+};

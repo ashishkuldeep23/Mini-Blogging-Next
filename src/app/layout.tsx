@@ -6,7 +6,6 @@ import { StateProviders } from "@/redux/providers";
 import { Toaster } from "react-hot-toast";
 import LogInProvider from "./components/LogInProvider";
 import Modal from "./components/ModalComponent";
-import PusherTestDiv from "../helper/PusherJs";
 import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });

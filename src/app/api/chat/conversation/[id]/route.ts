@@ -38,6 +38,7 @@ export async function GET(req: NextRequest, context: any) {
         "lastMessage.sender",
         " username email profilePic isOnline lastSeen"
       )
+      .populate("admins", "username email profilePic isOnline lastSeen")
       .sort({ lastMessageAt: -1 })
       .lean();
 

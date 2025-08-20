@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     const authResponse = pusherServer.authorizeChannel(socket_id, channel_name);
     // res.send(authResponse);
 
-    console.log(authResponse);
+    // console.log(authResponse);
 
     // let response = await pusherServer.trigger(`${channel_name}`, event, data);
 
