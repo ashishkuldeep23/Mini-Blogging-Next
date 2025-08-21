@@ -24,6 +24,14 @@ export interface UserDataInterface {
   allProfilePic?: string[];
 }
 
+export interface UserInSession {
+  email: string;
+  id: string;
+  image: string;
+  name: string;
+  _id: string;
+}
+
 export type SavedPostDataType = {
   [key: string]: PostInterFace[];
 };

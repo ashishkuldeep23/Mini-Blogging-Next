@@ -8,10 +8,10 @@ export const sendMsgViaPusher = async ({
 }: {
   event: string;
   channelName: string;
-  bodyData: any;
+  bodyData: object;
 }) => {
   try {
-    let req = await fetch("/api/pusher", {
+    await fetch("/api/pusher/send", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -20,11 +20,10 @@ export const sendMsgViaPusher = async ({
         event: event,
         data: bodyData,
         channel: channelName,
-        socketId: "",
       }),
     });
 
-    console.log({ req });
+    // console.log({ req });
   } catch (error: any) {
     console.log(error?.message);
     toast.error(error?.message || "Error in sending msg.");

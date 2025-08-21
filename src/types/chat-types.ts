@@ -77,6 +77,11 @@ export interface ChatInterface {
   currentConvo?: Conversation;
   isLoadingMsg?: boolean;
   updatingMsg: TypeUpdateMsg | null;
+  msgPagination: {
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
   // // // some states for pagination for fetching conversations and messages ------------->>
 }
 

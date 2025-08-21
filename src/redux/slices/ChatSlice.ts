@@ -93,7 +93,7 @@ export const fetchMsgsByConvoId = createAsyncThunk(
   async ({
     conversationId,
     page = "1",
-    limit = "50",
+    limit = "10",
   }: TypeFetchMsgsByConvoId) => {
     const option: RequestInit = {
       method: "GET",
@@ -159,6 +159,11 @@ const initialState: ChatInterface = {
     participants: [],
     admins: [],
     adminOnly: false,
+  },
+  msgPagination: {
+    page: 0,
+    limit: 10,
+    totalPages: 10,
   },
   isLoadingMsg: false,
   updatingMsg: null,
@@ -406,9 +411,17 @@ const chatSlice = createSlice({
           });
 
           state.allMessagesOfThisConvo = [
-            ...(state.allMessagesOfThisConvo || []),
             ...allMsgsFilteredArr,
+            ...(state.allMessagesOfThisConvo || []),
           ];
+
+          // console.log({ pagination });
+          // console.log("page :- ", pagination.page);
+
+          // // // set pagination
+          state.msgPagination.page = pagination.page;
+          state.msgPagination.limit = pagination.limit;
+          state.msgPagination.totalPages = pagination.totalPages;
 
           state.isFullfilled = true;
         }

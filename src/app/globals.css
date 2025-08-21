@@ -177,7 +177,7 @@ body {
 
   /* animation-duration: 3s;
     animation-name: likeAnimationCSS; */
-  animation: likeAnimationCSS 1s ease-in-out;
+  animation: likeAnimationCSS 1s 4 ease-in-out alternate-reverse;
 }
 
 /* Input range btn css for videos  */

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect, use } from "react";
+import React, { useState, useRef, useEffect, use, useCallback } from "react";
 import { Send, User } from "lucide-react";
 import { useParams } from "next/navigation";
 import {
@@ -15,11 +15,7 @@ import {
 import { useSession } from "next-auth/react";
 import { AppDispatch } from "@/redux/store";
 import { useDispatch } from "react-redux";
-import {
-  Message,
-  TypeSendMsg,
-  TypeUpdateMsg,
-} from "../../../types/chat-types";
+import { Message, TypeSendMsg, TypeUpdateMsg } from "../../../types/chat-types";
 import toast from "react-hot-toast";
 import ImageReact from "../ImageReact";
 import { pusherClient } from "@/lib/pusherClient";
@@ -31,6 +27,10 @@ import MainLoader from "../LoaderUi";
 import EmojiPicker, { Theme } from "emoji-picker-react";
 import { LiaCheckDoubleSolid, LiaCheckSolid } from "react-icons/lia";
 import useOpenModalWithHTML from "@/Hooks/useOpenModalWithHtml";
+import { debounce } from "@/utils/debounce";
+import { sendMsgViaPusher } from "@/lib/sendMsgViaPusher";
+import { UserDataInterface, UserInSession } from "@/types/Types";
+import { likeAnimationHandler } from "@/helper/likeAnimation";
 
 // Demo Component showing how to use both components
 const ChatDemoUI: React.FC = () => {
@@ -68,7 +68,7 @@ const ChatDemoUI: React.FC = () => {
     <div
       className={`sm:my-10 sm:rounded-md overflow-hidden flex flex-col items-center h-[95vh] sm:h-[85vh] max-w-4xl mx-auto  shadow-lg bg-gray-900 text-white`}
     >
-      <MainLoader isLoading={useChatData().isLoading} />
+      {/* <MainLoader isLoading={useChatData().isLoading} /> */}
       <MessageList
         messages={messages || []}
         currentUserId={currentUserId}
@@ -100,24 +100,25 @@ const MessageList: React.FC<MessageListProps> = ({
   const session = useSession();
   const userId = session?.data?.user?._id;
   const currentConvo = useChatData()?.currentConvo;
+  const [typingUsers, setTypingUsers] = useState<UserInSession[]>([]);
 
-  type TypeReactAnimation = {
-    emoji: string;
-    top: string;
-    scale: number;
-    show: boolean;
-  };
+  // type TypeReactAnimation = {
+  //   emoji: string;
+  //   top: string;
+  //   scale: number;
+  //   show: boolean;
+  // };
 
-  const initialReactAnimation: TypeReactAnimation = {
-    emoji: "",
-    top: "",
-    scale: 0,
-    show: false,
-  };
+  // const initialReactAnimation: TypeReactAnimation = {
+  //   emoji: "",
+  //   top: "",
+  //   scale: 0,
+  //   show: false,
+  // };
 
-  const [reactAnimation, setReactAnimation] = useState<TypeReactAnimation>(
-    initialReactAnimation
-  );
+  // const [reactAnimation, setReactAnimation] = useState<TypeReactAnimation>(
+  //   initialReactAnimation
+  // );
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -125,13 +126,13 @@ const MessageList: React.FC<MessageListProps> = ({
 
   // console.log(params.id);
 
-  useEffect(() => {
-    const conversationId = params?.id;
-    if (conversationId && typeof conversationId === "string") {
-      dispatch(fetchMsgsByConvoId({ conversationId }));
-      // console.log("Now call server to laod the msgs with pagination");
-    }
-  }, [params?.id]);
+  // useEffect(() => {
+  //   const conversationId = params?.id;
+  //   if (conversationId && typeof conversationId === "string") {
+  //     dispatch(fetchMsgsByConvoId({ conversationId }));
+  //     // console.log("Now call server to laod the msgs with pagination");
+  //   }
+  // }, [params?.id]);
 
   // // //  new we can bind the pusher code ----------->>
   // Subscribe to the conversation channel
@@ -149,6 +150,9 @@ const MessageList: React.FC<MessageListProps> = ({
     // // // data is going to be new message data --------->>
     channel.bind("new-message", (data: Message) => {
       dispatch(pushOneMoreMsg(data as Message));
+
+      // // // now here move the window for latest msg --------->>
+      scrollToBottom();
     });
 
     // // // data is going to be new message data --------->>
@@ -172,16 +176,61 @@ const MessageList: React.FC<MessageListProps> = ({
       //   `${data?.reactedUser?.username} reacted with ${data?.reactedemoji}`
       // );
 
-      setReactAnimation({
-        emoji: data?.reactedemoji,
-        top: "-50vh",
-        scale: 4,
-        show: true,
-      });
+      likeAnimationHandler(
+        `${window.innerWidth / 2 - 30}px`,
+        "30%",
+        data?.reactedemoji,
+        "6rem",
+        1500
+      );
+    });
 
-      setTimeout(() => {
-        setReactAnimation({ ...initialReactAnimation });
-      }, 1000);
+    // // Old emoji recation code
+    // channel.bind("reacted-emoji", (data: any) => {
+    //   // console.log({ data });
+    //   // console.log(data?.reactedemoji);
+    //   // console.log(data?.reactedUser);
+
+    //   // console.log(userId);
+    //   // console.log(data?.reactedUser?._id);
+
+    //   // if (userId !== data?.reactedUser?._id) {
+
+    //   // toast(
+    //   //   `${data?.reactedUser?.username} reacted with ${data?.reactedemoji}`
+    //   // );
+
+    //   setReactAnimation({
+    //     emoji: data?.reactedemoji,
+    //     top: "-50vh",
+    //     scale: 4,
+    //     show: true,
+    //   });
+
+    //   setTimeout(() => {
+    //     setReactAnimation({ ...initialReactAnimation });
+    //   }, 1000);
+    // });
+
+    // // // data is going to be new message data --------->>
+    channel.bind("user-typing", (data: any) => {
+      // dispatch(pushOneMoreMsg(data as Message));
+
+      // console.log({ data });
+
+      let usersArr = [...typingUsers];
+
+      if (!usersArr.map((u) => u?._id).includes(data?.userData?._id)) {
+        // if (data?.userData?._id !== userId) {
+        usersArr.push(data?.userData as UserInSession);
+        setTypingUsers(usersArr);
+        // }
+
+        setTimeout(() => {
+          usersArr = usersArr.filter((u) => u?._id !== data?.userData?._id);
+          setTypingUsers(usersArr);
+        }, 1500);
+      }
     });
 
     channel.bind("pusher:subscribe", () => {
@@ -205,7 +254,9 @@ const MessageList: React.FC<MessageListProps> = ({
   }, [params?.id]);
 
   useEffect(() => {
-    scrollToBottom();
+    if (page === 1) {
+      scrollToBottom();
+    }
   }, [messages]);
 
   const callModalFn = useOpenModalWithHTML();
@@ -259,9 +310,61 @@ const MessageList: React.FC<MessageListProps> = ({
     callModalFn({ innerHtml });
   };
 
+  const page = useChatData().msgPagination.page;
+  const totalPages = useChatData().msgPagination.totalPages;
+
+  // // // fetching via api ------------>>
+
+  const fetchData = useCallback(() => {
+    // console.log("Fuckkkkkkkkkkk");
+    // console.log({ page });
+
+    const conversationId = params?.id;
+    if (conversationId && typeof conversationId === "string") {
+      dispatch(fetchMsgsByConvoId({ conversationId, page: `${page + 1}` }));
+      // console.log("Now call server to laod the msgs with pagination");
+    }
+
+    // // // now here move the window for latest msg --------->>
+    // page === 0 && scrollToBottom();
+  }, [page, params]);
+
+  useEffect(() => {
+    const target = illFetchNewMsgs.current;
+    if (!target) return;
+
+    const observer = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            fetchData();
+
+            // obs.unobserve(entry.target); // remove if you want only once
+          }
+        });
+      },
+      { threshold: 0.5 } // 50% of div visible
+    );
+
+    observer.observe(target);
+
+    // cleanup
+    return () => {
+      if (target) observer.unobserve(target);
+    };
+  }, [page]);
+
   return (
-    <div className=" relative w-[98%] h-[85vh] flex flex-col overflow-y-auto overflow-x-hidden p-4  hide_scrollbar_totally ">
-      <div ref={illFetchNewMsgs} />
+    <div className=" relative w-[98%] h-[85vh] flex flex-col overflow-y-auto overflow-x-hidden p-4 hide_scrollbar_totally ">
+      {page < totalPages && (
+        <div
+          className=" flex justify-center items-center gap-1 my-2 relative z-10"
+          ref={illFetchNewMsgs}
+        >
+          <span className="animate-spin h-5 w-5 border-b-4 border-sky-500 rounded-full"></span>
+          <span>Loading...</span>
+        </div>
+      )}
 
       {messages.map((message) => (
         <SingleMsgDiv
@@ -311,33 +414,30 @@ const MessageList: React.FC<MessageListProps> = ({
         />
       ))}
 
+      {/* typing indicator */}
+      <span className=" rounded bg-gray-900  sticky -bottom-2 left-0 flex gap-1 items-center">
+        {typingUsers.filter((user) => user._id !== currentUserId).length >
+          0 && (
+          <>
+            {typingUsers
+              .filter((user) => user._id !== currentUserId)
+              .map((user, i) => {
+                return (
+                  <span key={i}>
+                    <ImageReact
+                      src={user.image}
+                      className=" w-5 h-5 rounded-full object-cover"
+                    />
+                  </span>
+                );
+              })}
+            <span>Typing...</span>
+          </>
+        )}
+      </span>
+
       {/* Below Div is only used to scrool the screen below --------->> */}
       <div ref={messagesEndRef} />
-
-      {true && (
-        <span
-          style={{
-            top: reactAnimation.top || "110vh",
-            scale: reactAnimation.scale || 0,
-            // animationDuration: "2s",
-          }}
-          className=" w-[90%]  flex flex-wrap justify-center items-center fixed z-[5] gap-3 text-2xl  transition-all "
-        >
-          {Array(5)
-            .fill(null)
-            .map((_, i) => (
-              <span
-                style={{
-                  rotate: `${i * 10}deg`,
-                  scale: reactAnimation.scale || 0,
-                }}
-                key={i}
-              >
-                {reactAnimation.emoji || ""}
-              </span>
-            ))}
-        </span>
-      )}
     </div>
   );
 };
@@ -714,7 +814,9 @@ const MessageInput: React.FC<MessageInputProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const { data: session } = useSession();
   const userId = session?.user?._id;
+  const userData = session?.user;
   const convoId = useChatData().currentConvo?._id;
+  const currentConvo = useChatData().currentConvo;
   const dispatch = useDispatch<AppDispatch>();
 
   const handleSubmit = () => {
@@ -766,21 +868,27 @@ const MessageInput: React.FC<MessageInputProps> = ({
     }
   };
 
+  // Debounced typing event
+  const sendTyping = useCallback(
+    debounce((isTyping: boolean) => {
+      // const payload: TypingPayload = { userId, roomId, isTyping };
+      // socket.emit("typing", payload);
+      // // // now send a pusher event to server -------->>
+
+      sendMsgViaPusher({
+        event: "user-typing",
+        channelName: `private-conversation-${convoId}`,
+        bodyData: { isTyping, userData },
+      });
+    }, 500), // 300ms debounce
+    [userId, convoId]
+  );
+
   const handleChangeFn = (e: React.ChangeEvent<HTMLInputElement>) => {
     // console.log("message", message);
     setMessage(e.target.value);
+    sendTyping(true);
   };
-
-  // const handleChangeFnForUpadating = (
-  //   e: React.ChangeEvent<HTMLInputElement>
-  // ) => {
-  //   console.log("updatingMsg", updatingMsg);
-
-  //   // setMessage(e.target.value);
-  //   setUpdatingMsg &&
-  //     // setUpdatingMsg((pre) => ({ ...pre, text: e.target.value }));
-  //     setUpdatingMsg({ ...updatingMsg, text: e.target.value });
-  // };
 
   const onUpdateMsgHandler = () => {
     if (!updatingMsg?.isUpdating && !updatingMsg?.isEditted && !message) {
@@ -833,7 +941,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
   };
 
   return (
-    <div className="border-t border-sky-600  p-3 pt-0 w-full ">
+    <div className="border-t border-sky-600  p-3 pt-2 w-full ">
       {/* <div className="  flex justify-between items-end ">
         <div className=" w-[90%">
           <EmojiPicker
@@ -856,40 +964,55 @@ const MessageInput: React.FC<MessageInputProps> = ({
         </span>
       </div> */}
 
-      {updatingMsg?.isUpdating ? (
-        <div className="rounded-lg bg-sky-600 text-white text-lg p-1 mb-1 opacity-70 flex gap-1">
-          <span className=" font-bold rounded-lg bg-green-400 px-1 text-white">
-            {updatingMsg.isEditted ? "Edi:" : "Rep:"}
-          </span>
-          <p>{decryptMessage(updatingMsg?.text || "")}</p>
-          <button
-            onClick={cancleUpdateMsg}
-            className=" ml-auto rounded-lg bg-red-500 px-2 text-white font-bold"
-          >
-            X
-          </button>
-        </div>
-      ) : null}
-      <div className="flex  space-x-3">
-        <div className="flex-1 relative">
-          <input
-            ref={inputRef}
-            type="text"
-            value={message}
-            onChange={handleChangeFn}
-            onKeyDown={handleKeyPress}
-            placeholder="Type your message..."
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 bg-inherit"
-          />
-        </div>
-        <button
-          onClick={submitBtnClickHandler}
-          disabled={!message.trim()}
-          className="bg-sky-600 hover:bg-blue-600 disabled:bg-sky-300 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg transition-colors duration-200 flex items-center justify-center"
-        >
-          <Send className="w-5 h-5" />
-        </button>
-      </div>
+      {currentConvo?.adminOnly ? (
+        <>
+          <p className="p-4  text-center">
+            Only{" "}
+            <span className=" text-center text-sky-500 font-semibold">
+              admin
+            </span>{" "}
+            can send the messages!
+          </p>
+        </>
+      ) : (
+        <>
+          {/* Input divs */}
+          {updatingMsg?.isUpdating ? (
+            <div className="rounded-lg bg-sky-600 text-white text-lg p-1 mb-1 opacity-70 flex gap-1">
+              <span className=" font-bold rounded-lg bg-green-400 px-1 text-white">
+                {updatingMsg.isEditted ? "Edi:" : "Rep:"}
+              </span>
+              <p>{decryptMessage(updatingMsg?.text || "")}</p>
+              <button
+                onClick={cancleUpdateMsg}
+                className=" ml-auto rounded-lg bg-red-500 px-2 text-white font-bold"
+              >
+                X
+              </button>
+            </div>
+          ) : null}
+          <div className="flex  space-x-3">
+            <div className="flex-1 relative">
+              <input
+                ref={inputRef}
+                type="text"
+                value={message}
+                onChange={handleChangeFn}
+                onKeyDown={handleKeyPress}
+                placeholder="Type your message..."
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 bg-inherit"
+              />
+            </div>
+            <button
+              onClick={submitBtnClickHandler}
+              disabled={!message.trim()}
+              className="bg-sky-600 hover:bg-blue-600 disabled:bg-sky-300 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg transition-colors duration-200 flex items-center justify-center"
+            >
+              <Send className="w-5 h-5" />
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 };

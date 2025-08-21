@@ -169,7 +169,7 @@ export async function GET(req: NextRequest) {
 
     const conversationId = searchParams.get("conversationId");
     const page = searchParams.get("page") || 1;
-    const limit = searchParams.get("limit") || 50;
+    const limit = searchParams.get("limit") || 10;
 
     // // // Type validation here ------->>
 
@@ -225,8 +225,8 @@ export async function GET(req: NextRequest) {
         pagination: {
           page: Number(page),
           limit: Number(limit),
+          totalPages: Math.ceil(total / Number(limit)),
           total,
-          pages: Math.ceil(total / Number(limit)),
         },
       },
       { status: 200 }
