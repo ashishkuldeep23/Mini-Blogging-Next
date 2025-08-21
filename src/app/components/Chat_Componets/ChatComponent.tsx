@@ -66,7 +66,7 @@ const ChatDemoUI: React.FC = () => {
 
   return (
     <div
-      className={`sm:my-10 sm:rounded-md overflow-hidden flex flex-col items-center h-[95vh] sm:h-[85vh] max-w-4xl mx-auto  shadow-lg bg-gray-900 text-white`}
+      className={`sm:my-10 sm:rounded-md overflow-hidden flex flex-col items-center h-[95vh] sm:h-[85vh] max-w-4xl mx-auto  shadow-lg bg-gray-900 text-white relative`}
     >
       {/* <MainLoader isLoading={useChatData().isLoading} /> */}
       <MessageList
@@ -478,13 +478,15 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
         !isCurrentUser && setOffset(e.deltaX > 100 ? e.deltaX : 0); // Limit swipe distance
       } else if (e.dir === "Left") {
         isCurrentUser && setOffset(e.deltaX > 100 ? 0 : e.deltaX); // Limit swipe distance
-      } else if (e.dir === "Up") {
-        // setOffsetY(e.deltaY > 100 ? e.deltaY : 0);
-        setShowOptions(true);
-      } else if (e.dir === "Down") {
-        // setOffsetY(e.deltaY > 100 ? e.deltaY : 0);
-        setShowOptions(false);
       }
+      // else if (e.dir === "Up") {
+      //   // setOffsetY(e.deltaY > 100 ? e.deltaY : 0);
+      //   setShowOptions(true);
+      // }
+      // else if (e.dir === "Down") {
+      //   // setOffsetY(e.deltaY > 100 ? e.deltaY : 0);
+      //   setShowOptions(false);
+      // }
     },
 
     // // // UnComment this for checking the touch events
@@ -658,7 +660,7 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
 
           {/* Main Msg Div */}
           <div
-            className={`relative !max-w-[15rem] lg:max-w-xl px-4 py-2 rounded-lg ${
+            className={`relative !max-w-[17rem] lg:max-w-xl px-4 py-2 rounded-lg ${
               isCurrentUser
                 ? "bg-sky-600 text-white"
                 : "bg-black border border-sky-500 rounded-bl-none "
@@ -695,7 +697,7 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
 
                   reactionDivHandler();
                 }}
-                className={`absolute -bottom-2 right-0 flex hover:cursor-pointer active:scale-90 transition-all z-10 ${
+                className={` scrooller_bar_small max-w-28 overflow-x-auto absolute -bottom-3 right-0 flex hover:cursor-pointer active:scale-90 transition-all z-10 px-1 text-xs ${
                   isCurrentUser
                     ? " bg-black !border border-sky-500 rounded-full  "
                     : " rounded-full bg-black !border border-sky-500 ml-9 mr-auto"
@@ -706,7 +708,7 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
                     return (
                       <span
                         key={i}
-                        className={`text-sm flex ml-auto mr-0 ${
+                        className={` flex ml-auto mr-0 ${
                           isCurrentUser
                             ? "  rounded-full  "
                             : " rounded-full  ml-9 mr-auto"
@@ -718,7 +720,7 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
                   })}
 
                   <span
-                    className={`text-sm flex ml-auto ${
+                    className={` flex ml-auto ${
                       message?.reactions.length > 1 && " mr-1 "
                     } `}
                   >
@@ -941,7 +943,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
   };
 
   return (
-    <div className="border-t border-sky-600  p-3 pt-2 w-full ">
+    <div className="border-t border-sky-600  p-3 pt-2 w-full sticky bottom-0 ">
       {/* <div className="  flex justify-between items-end ">
         <div className=" w-[90%">
           <EmojiPicker

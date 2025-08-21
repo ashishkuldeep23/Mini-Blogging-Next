@@ -134,8 +134,8 @@ export default function MessagePage() {
       )}
 
       {allConversations.length === 0 && isLoading ? (
-        <div className=" my-5 border-2 border-teal-500 text-yellow-500  rounded w-full flex flex-col justify-center items-center overflow-hidden px-1 md:w-[70%] lg:w-[60%] ">
-          {Array(5)
+        <div className=" my-5 text-yellow-500  rounded w-full flex flex-col justify-center items-center overflow-hidden px-1 md:w-[70%] lg:w-[60%] ">
+          {Array(12)
             .fill(null)
             .map((_, i) => {
               return (
@@ -157,14 +157,16 @@ export default function MessagePage() {
             return (
               <Link
                 key={i}
-                className={`block w-full ${isLoading && " opacity-50"}  `}
+                className={`block w-full overflow-hidden ${
+                  isLoading && " opacity-50"
+                }  `}
                 href={`/msgs/${ele?._id}`}
                 onClick={() => {
                   convoClickHandler(ele);
                 }}
               >
-                <div className=" my-1 bg-sky-950 text-white h-16 rounded w-full flex items-center active:scale-90 hover:bg-sky-700 active:bg-sky-700 hover:cursor-pointer ">
-                  <span className="  w-10 h-10 p-[0.1rem] rounded-full mx-4 border-2 border-sky-500 overflow-hidden">
+                <div className=" my-1 bg-sky-950 text-white min-h-16 max-h-28 rounded w-full flex items-center active:scale-90 hover:bg-sky-700 active:bg-sky-700 hover:cursor-pointer overflow-hidden ">
+                  <span className="  max-w-10 min-w-10 h-10 max-h-10 min-h-10 w-10 p-[0.1rem] rounded-full mx-4 border-2 border-sky-500 overflow-hidden">
                     <ImageReact
                       className="  w-[99%] h-[99%] rounded-full object-cover"
                       src={ele?.avatar || ""}
@@ -177,7 +179,15 @@ export default function MessagePage() {
                     </p>
                     <p className=" opacity-70 text-sm ">
                       {ele?.lastMessage?.content
-                        ? decryptMessage(ele?.lastMessage?.content)
+                        ? `${decryptMessage(ele?.lastMessage?.content).slice(
+                            0,
+                            40
+                          )} ${
+                            decryptMessage(ele?.lastMessage?.content).length >
+                            40
+                              ? "..."
+                              : ""
+                          } `
                         : "Dare to Chat."}
                     </p>
                   </div>
