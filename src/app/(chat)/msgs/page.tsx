@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Chat_User, Conversation } from "../../../../types/chat-types";
+import { Chat_User, Conversation } from "../../../types/chat-types";
 import { FaPencil } from "react-icons/fa6";
 import ImageReact from "@/app/components/ImageReact";
 import {

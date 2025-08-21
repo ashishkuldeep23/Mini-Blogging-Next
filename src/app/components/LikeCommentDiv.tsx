@@ -1,6 +1,6 @@
 'Use client'
 
-import { Comment, PostInterFace, ReplyInterFace, SinglePostType, } from "../../../types/Types"
+import { Comment, PostInterFace, ReplyInterFace, SinglePostType, } from "../../types/Types"
 import { likePost, setDeleteSinglePost, setIsLoading, setSinglePostdata, setUpdateComment, setUpdatingPost, usePostData } from '@/redux/slices/PostSlice';
 import { useSession } from 'next-auth/react'
 import { usePathname, useRouter } from 'next/navigation'
@@ -16,7 +16,7 @@ import { SlLike } from "react-icons/sl";
 import { AiOutlineRetweet, AiTwotoneDelete } from "react-icons/ai";
 import { BiPencil } from "react-icons/bi";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
-import { UserDataInterface } from '../../../types/Types';
+import { UserDataInterface } from '../../types/Types';
 import AnimatedTooltip from './ui/animated-tooltip';
 import { PiPaperPlaneRight } from "react-icons/pi";
 import useOpenModalWithHTML from '@/Hooks/useOpenModalWithHtml';

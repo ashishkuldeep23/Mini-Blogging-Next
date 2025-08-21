@@ -18,7 +18,7 @@ import {
   PostTypeForBackend,
   SearchObj,
   UpdateCommentInput,
-} from "../../../types/Types";
+} from "../../types/Types";
 
 // // // Not using now -------->
 export const getAllPosts = createAsyncThunk(

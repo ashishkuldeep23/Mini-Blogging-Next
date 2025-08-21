@@ -10,7 +10,7 @@ import {
   TypeFetchMsgsByConvoId,
   TypeSendMsg,
   TypeUpdateMsg,
-} from "../../../types/chat-types";
+} from "../../types/chat-types";
 import { RequestInit } from "next/dist/server/web/spec-extension/request";
 import toast from "react-hot-toast";
 import { encryptMessage } from "@/lib/Crypto-JS";

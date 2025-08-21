@@ -1,7 +1,7 @@
 
 'use client'
 
-import { AddMoreFeilsUserData, FriendsAllFriendData } from "../../../types/Types"
+import { AddMoreFeilsUserData, FriendsAllFriendData } from "../../types/Types"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import AnimatedTooltip from "./ui/animated-tooltip"

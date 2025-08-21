@@ -1,4 +1,4 @@
-import { PostInterFace } from "../../../types/Types";
+import { PostInterFace } from "../../types/Types";
 import React, { Fragment } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import SinglePostCardNew from "./SinglePostCardNew";

@@ -1,6 +1,6 @@
 import { setSinglePostId, usePostData } from "@/redux/slices/PostSlice";
 import { useThemeData } from "@/redux/slices/ThemeSlice";
-import { PostInterFace, TypeHeight } from "../../../types/Types";
+import { PostInterFace, TypeHeight } from "../../types/Types";
 import useOpenModalWithHTML from "@/Hooks/useOpenModalWithHtml";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";

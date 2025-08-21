@@ -9,7 +9,7 @@ import {
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import toast from "react-hot-toast";
-import { AddMoreFeilsUserData, SavedPostDataType } from "../../../types/Types";
+import { AddMoreFeilsUserData, SavedPostDataType } from "../../types/Types";
 
 type BodyData = {
   email: string;

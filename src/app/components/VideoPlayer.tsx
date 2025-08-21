@@ -5,7 +5,7 @@ import {
   usePostData,
 } from "@/redux/slices/PostSlice";
 import { AppDispatch } from "@/redux/store";
-import { PostInterFace, VideoPlayerProps } from "../../../types/Types";
+import { PostInterFace, VideoPlayerProps } from "../../types/Types";
 import React, { useRef, useState, useEffect } from "react";
 import { FaPlay, FaPause, FaVolumeUp } from "react-icons/fa";
 import { HiOutlineSpeakerWave, HiOutlineSpeakerXMark } from "react-icons/hi2";

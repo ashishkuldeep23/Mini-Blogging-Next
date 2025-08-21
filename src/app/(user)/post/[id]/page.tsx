@@ -17,7 +17,7 @@ import {
 import { useThemeData } from "@/redux/slices/ThemeSlice";
 // import { UserDataInterface } from '@/redux/slices/UserSlice'
 import { AppDispatch } from "@/redux/store";
-import { PostInterFace, SinglePostType } from "../../../../../types/Types";
+import { PostInterFace, SinglePostType } from "../../../../types/Types";
 import useOpenModalWithHTML from "@/Hooks/useOpenModalWithHtml";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";

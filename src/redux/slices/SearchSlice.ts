@@ -3,7 +3,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { useSelector } from "react-redux"
 import { RootState } from "../store"
-import { PostInterFace , FriendsAllFriendData } from "../../../types/Types"
+import { PostInterFace , FriendsAllFriendData } from "../../types/Types"
 
 
 

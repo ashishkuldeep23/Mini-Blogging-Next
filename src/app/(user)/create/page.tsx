@@ -24,7 +24,7 @@ import {
   NewPostType,
   PostCustomization,
   ValidInputFiles,
-} from "../../../../types/Types";
+} from "../../../types/Types";
 import VideoPlayer from "@/app/components/VideoPlayer";
 
 const NewPostPage = () => {

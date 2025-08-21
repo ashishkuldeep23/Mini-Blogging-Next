@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { PostInterFace } from "../../../types/Types";
+import { PostInterFace } from "../../types/Types";
 import { useThemeData } from "@/redux/slices/ThemeSlice";
 import { useSession } from "next-auth/react";
 import useEditAndDelPostFns from "@/Hooks/useEditAndDelPostFns";

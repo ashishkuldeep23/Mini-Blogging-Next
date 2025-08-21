@@ -4,7 +4,7 @@
 
 import { MdZoomOutMap } from "react-icons/md";
 import ImageReact from "./ImageReact";
-import { PostInterFace, TypeHeight } from "../../../types/Types";
+import { PostInterFace, TypeHeight } from "../../types/Types";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 

@@ -37,7 +37,7 @@ import { usePreventSwipe } from "@/Hooks/useSwipeCustom";
 import {
   AddMoreFeilsUserData,
   FriendsAllFriendData,
-} from "../../../../types/Types";
+} from "../../../types/Types";
 import SinglePostCardNew from "@/app/components/SinglePostCardNew";
 import InfinityScrollWithLogic from "@/app/components/InfinityScrollWithLogic";
 

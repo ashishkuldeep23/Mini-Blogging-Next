@@ -19,7 +19,7 @@ import {
   Message,
   TypeSendMsg,
   TypeUpdateMsg,
-} from "../../../../types/chat-types";
+} from "../../../types/chat-types";
 import toast from "react-hot-toast";
 import ImageReact from "../ImageReact";
 import { pusherClient } from "@/lib/pusherClient";
