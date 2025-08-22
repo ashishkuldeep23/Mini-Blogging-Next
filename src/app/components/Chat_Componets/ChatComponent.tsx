@@ -6,7 +6,7 @@ import { fetchConversationById, useChatData } from "@/redux/slices/ChatSlice";
 import { useSession } from "next-auth/react";
 import { AppDispatch } from "@/redux/store";
 import { useDispatch } from "react-redux";
-import { TypeUpdateMsg } from "../../../types/chat-types";
+import { Message, TypeUpdateMsg } from "../../../types/chat-types";
 import MessageList from "./MessageList";
 import MessageInput from "./MessageInput";
 
@@ -23,10 +23,17 @@ const ChatCompoMain: React.FC = () => {
   const currentUserId = session?.user?._id || "";
 
   // const messages = useChatData().allMessagesOfThisConvo;
-  const messages =
-    typeof params?.id === "string"
-      ? useChatData().msgsForConvoObj[params?.id]?.msgs || []
-      : [];
+  // const messages =
+  //   typeof params?.id === "string"
+  //     ? useChatData().msgsForConvoObj[params?.id]?.msgs || []
+  //     : [];
+
+  let messages: Message[] = [];
+
+  if (params?.id && typeof params?.id === "string") {
+    messages = useChatData().msgsForConvoObj[params?.id]?.msgs || [];
+  }
+
   // const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // / // Call to fetch convarsation data from server -------->>

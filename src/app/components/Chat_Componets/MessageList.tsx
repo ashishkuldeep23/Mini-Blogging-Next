@@ -233,14 +233,22 @@ const MessageList: React.FC<MessageListProps> = ({
 
   // const conversationId = params?.id;
 
-  const page =
-    typeof conversationId === "string"
-      ? useChatData().msgsForConvoObj[conversationId]?.page || 0
-      : 0;
-  const totalPages =
-    typeof conversationId === "string"
-      ? useChatData().msgsForConvoObj[conversationId]?.totalPages || 10
-      : 10;
+  // const page =
+  //   typeof conversationId === "string"
+  //     ? useChatData()?.msgsForConvoObj[conversationId]?.page || 0
+  //     : 0;
+  // const totalPages =
+  //   typeof conversationId === "string"
+  //     ? useChatData()?.msgsForConvoObj[conversationId]?.totalPages || 10
+  //     : 10;
+
+  let page = 0;
+  let totalPages = 10;
+  if (typeof conversationId === "string") {
+    page = useChatData()?.msgsForConvoObj[conversationId]?.page || 0;
+    totalPages =
+      useChatData()?.msgsForConvoObj[conversationId]?.totalPages || 10;
+  }
 
   // console.log({ page, totalPages });
 
