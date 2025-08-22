@@ -47,7 +47,7 @@ export interface Conversation {
 export interface Message {
   _id: string;
   conversationId: string;
-  sender: Chat_User;
+  sender: Chat_User | string;
   content: string;
   messageType: "text" | "image" | "file" | "system";
   replyTo?: Message;
@@ -82,6 +82,15 @@ export interface ChatInterface {
     limit: number;
     totalPages: number;
   };
+
+  msgsForConvoObj: {
+    [key: string]: {
+      msgs: Message[];
+      page: number;
+      totalPages: number;
+    };
+  };
+
   // // // some states for pagination for fetching conversations and messages ------------->>
 }
 

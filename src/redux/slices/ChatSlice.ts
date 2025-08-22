@@ -167,6 +167,7 @@ const initialState: ChatInterface = {
   },
   isLoadingMsg: false,
   updatingMsg: null,
+  msgsForConvoObj: {},
 };
 
 const chatSlice = createSlice({
