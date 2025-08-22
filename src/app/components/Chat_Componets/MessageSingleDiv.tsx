@@ -207,7 +207,7 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
     <div
       className={`my-2 flex flex-col ${
         (message?.isEdited || message?.reactions.length > 0) && " mb-3 "
-      } selection:text-transparent selection:bg-transparent `}
+      } no_select `}
     >
       {message?.replyTo ? (
         <div

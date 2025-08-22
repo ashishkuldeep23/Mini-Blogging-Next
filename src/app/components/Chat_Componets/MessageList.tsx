@@ -303,8 +303,8 @@ const MessageList: React.FC<MessageListProps> = ({
           className=" flex justify-center items-center gap-1 my-2 relative z-10"
           ref={illFetchNewMsgs}
         >
-          <span className="animate-spin h-5 w-5 border-b-4 border-sky-500 rounded-full"></span>
-          <span>Loading...</span>
+          {/* <span className="animate-spin h-5 w-5 border-b-4 border-sky-500 rounded-full"></span> */}
+          <span className=" animate-pulse font-bold ">Loading...</span>
         </div>
       )}
 

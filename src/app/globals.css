@@ -289,3 +289,10 @@ input[type="range"]:focus::-moz-range-thumb {
   outline-offset: 0.125rem;
   scale: 1.5;
 }
+
+.no_select {
+  user-select: none; /* Standard */
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+}
