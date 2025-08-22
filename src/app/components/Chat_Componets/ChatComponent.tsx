@@ -16,14 +16,18 @@ const ChatCompoMain: React.FC = () => {
 
   const [updatingMsg, setUpdatingMsg] = useState<TypeUpdateMsg | null>(null);
 
-  const messages = useChatData().allMessagesOfThisConvo;
-  // const messagesEndRef = useRef<HTMLDivElement>(null);
-
   const params = useParams();
   const convo = useChatData().currentConvo;
   const { data: session } = useSession();
   const dispatch = useDispatch<AppDispatch>();
   const currentUserId = session?.user?._id || "";
+
+  // const messages = useChatData().allMessagesOfThisConvo;
+  const messages =
+    typeof params?.id === "string"
+      ? useChatData().msgsForConvoObj[params?.id]?.msgs || []
+      : [];
+  // const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // / // Call to fetch convarsation data from server -------->>
   useEffect(() => {

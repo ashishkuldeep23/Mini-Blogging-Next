@@ -14,7 +14,7 @@ import {
 } from "@/redux/slices/ChatSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
-import MainLoader from "@/app/components/LoaderUi";
+// import MainLoader from "@/app/components/LoaderUi";
 
 import { TfiWorld } from "react-icons/tfi";
 import NewChatDiv from "@/app/components/Chat_Componets/NewChatDiv";
@@ -40,7 +40,9 @@ export default function MessagePage() {
   };
 
   useEffect(() => {
-    dispatch(fetchAllConversations());
+    if (allConversations.length === 0) {
+      dispatch(fetchAllConversations());
+    }
   }, []);
 
   const onClickHandlerOfStartConvo = (friend: Chat_User) => {
@@ -65,7 +67,7 @@ export default function MessagePage() {
 
   return (
     <div className=" min-h-[100vh] bg-black flex flex-col items-center relative">
-      <MainLoader isLoading={isLoading} />
+      {/* <MainLoader isLoading={isLoading} /> */}
 
       {/* New Chat Div */}
       <NewChatDiv

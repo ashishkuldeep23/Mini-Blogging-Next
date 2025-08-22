@@ -40,44 +40,15 @@ const MessageList: React.FC<MessageListProps> = ({
   const userId = session?.data?.user?._id;
   const currentConvo = useChatData()?.currentConvo;
   const [typingUsers, setTypingUsers] = useState<UserInSession[]>([]);
-
-  // type TypeReactAnimation = {
-  //   emoji: string;
-  //   top: string;
-  //   scale: number;
-  //   show: boolean;
-  // };
-
-  // const initialReactAnimation: TypeReactAnimation = {
-  //   emoji: "",
-  //   top: "",
-  //   scale: 0,
-  //   show: false,
-  // };
-
-  // const [reactAnimation, setReactAnimation] = useState<TypeReactAnimation>(
-  //   initialReactAnimation
-  // );
+  const conversationId = params?.id;
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // console.log(params.id);
-
-  // useEffect(() => {
-  //   const conversationId = params?.id;
-  //   if (conversationId && typeof conversationId === "string") {
-  //     dispatch(fetchMsgsByConvoId({ conversationId }));
-  //     // console.log("Now call server to laod the msgs with pagination");
-  //   }
-  // }, [params?.id]);
-
-  // // //  new we can bind the pusher code ----------->>
+  // // //  Now we can bind the pusher code ----------->>
   // Subscribe to the conversation channel
   useEffect(() => {
-    const conversationId = params?.id;
-
     if (!conversationId || typeof conversationId !== "string") return;
 
     // Pusher.logToConsole = true; // Enable logging
@@ -198,6 +169,11 @@ const MessageList: React.FC<MessageListProps> = ({
     }
   }, [messages]);
 
+  useEffect(() => {
+    // if (page === 1) {
+    scrollToBottom();
+  }, []);
+
   const callModalFn = useOpenModalWithHTML();
 
   const actualDeleteMsghandlerFn = (message: Message) => {
@@ -252,8 +228,21 @@ const MessageList: React.FC<MessageListProps> = ({
     callModalFn({ innerHtml });
   };
 
-  const page = useChatData().msgPagination.page;
-  const totalPages = useChatData().msgPagination.totalPages;
+  // const page = useChatData().msgPagination.page;
+  // const totalPages = useChatData().msgPagination.totalPages;
+
+  // const conversationId = params?.id;
+
+  const page =
+    typeof conversationId === "string"
+      ? useChatData().msgsForConvoObj[conversationId]?.page || 0
+      : 0;
+  const totalPages =
+    typeof conversationId === "string"
+      ? useChatData().msgsForConvoObj[conversationId]?.totalPages || 10
+      : 10;
+
+  // console.log({ page, totalPages });
 
   // // // fetching via api ------------>>
 
@@ -304,9 +293,11 @@ const MessageList: React.FC<MessageListProps> = ({
           ref={illFetchNewMsgs}
         >
           {/* <span className="animate-spin h-5 w-5 border-b-4 border-sky-500 rounded-full"></span> */}
-          <span className=" animate-pulse font-bold ">Loading...</span>
+          <span className=" animate-pulse font-bold ">Getting...</span>
         </div>
       )}
+
+      {/* <button >Scroll</button> */}
 
       {messages.map((message) => (
         <SingleMsgDiv

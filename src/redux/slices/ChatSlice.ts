@@ -399,30 +399,47 @@ const chatSlice = createSlice({
           state.errMsg = action.payload.message;
         } else {
           const { data, total, pagination } = action.payload;
+          const { page, totalPages } = pagination || {};
 
-          let msgsId =
-            state?.allMessagesOfThisConvo?.map((msg) => msg._id) || [];
+          const convoId = data[0]?.conversationId || "";
 
-          // console.log(data, total, pagination);
+          const checkMsgsInStateObj = state.msgsForConvoObj[convoId] || {};
 
-          // console.log(msgsId, data);
+          // console.log({ checkMsgsInStateObj });
 
-          const allMsgsFilteredArr = data.filter((msg: any) => {
-            return !msgsId.includes(msg._id);
-          });
+          if (Object.keys(checkMsgsInStateObj).length > 0) {
+            state.msgsForConvoObj[convoId].msgs = [
+              ...data,
+              ...(state.msgsForConvoObj[convoId]?.msgs || []),
+            ];
+            state.msgsForConvoObj[convoId].page = page || 1;
+            state.msgsForConvoObj[convoId].totalPages = totalPages || 10;
+          } else {
+            let makeObj = {
+              msgs: data,
+              page: page || 1,
+              totalPages: totalPages || 10,
+            };
 
-          state.allMessagesOfThisConvo = [
-            ...allMsgsFilteredArr,
-            ...(state.allMessagesOfThisConvo || []),
-          ];
+            state.msgsForConvoObj[convoId] = makeObj;
+          }
 
-          // console.log({ pagination });
-          // console.log("page :- ", pagination.page);
+          // let msgsId =
+          //   state?.allMessagesOfThisConvo?.map((msg) => msg._id) || [];
 
-          // // // set pagination
-          state.msgPagination.page = pagination.page;
-          state.msgPagination.limit = pagination.limit;
-          state.msgPagination.totalPages = pagination.totalPages;
+          // const allMsgsFilteredArr = data.filter((msg: any) => {
+          //   return !msgsId.includes(msg._id);
+          // });
+
+          // state.allMessagesOfThisConvo = [
+          //   ...allMsgsFilteredArr,
+          //   ...(state.allMessagesOfThisConvo || []),
+          // ];
+
+          // // // // set pagination
+          // state.msgPagination.page = pagination.page;
+          // state.msgPagination.limit = pagination.limit;
+          // state.msgPagination.totalPages = pagination.totalPages;
 
           state.isFullfilled = true;
         }

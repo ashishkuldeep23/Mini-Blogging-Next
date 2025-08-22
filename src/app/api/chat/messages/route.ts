@@ -224,8 +224,8 @@ export async function GET(req: NextRequest) {
         total,
         pagination: {
           page: Number(page),
-          limit: Number(limit),
           totalPages: Math.ceil(total / Number(limit)),
+          limit: Number(limit),
           total,
         },
       },

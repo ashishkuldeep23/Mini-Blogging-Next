@@ -49,7 +49,9 @@ const ChatNavBar = () => {
           />
         )}
         <div className=" capitalize ">
-          {path === "/msgs" ? username || "Message" : ConvoName || "Message"}
+          {path === "/msgs"
+            ? username || "All Messages"
+            : ConvoName || "Direct Message"}
         </div>
       </span>
       <div className=" ml-auto mr-4">icon</div>
