@@ -41,6 +41,7 @@ const MessageList: React.FC<MessageListProps> = ({
   const currentConvo = useChatData()?.currentConvo;
   const [typingUsers, setTypingUsers] = useState<UserInSession[]>([]);
   const conversationId = params?.id;
+  const msgsForConvoObj = useChatData().msgsForConvoObj;
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -245,9 +246,8 @@ const MessageList: React.FC<MessageListProps> = ({
   let page = 0;
   let totalPages = 10;
   if (typeof conversationId === "string") {
-    page = useChatData()?.msgsForConvoObj[conversationId]?.page || 0;
-    totalPages =
-      useChatData()?.msgsForConvoObj[conversationId]?.totalPages || 10;
+    page = msgsForConvoObj[conversationId]?.page || 0;
+    totalPages = msgsForConvoObj[conversationId]?.totalPages || 10;
   }
 
   // console.log({ page, totalPages });

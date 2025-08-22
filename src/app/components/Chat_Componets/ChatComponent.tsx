@@ -21,6 +21,7 @@ const ChatCompoMain: React.FC = () => {
   const { data: session } = useSession();
   const dispatch = useDispatch<AppDispatch>();
   const currentUserId = session?.user?._id || "";
+  const msgsForConvoObj = useChatData().msgsForConvoObj;
 
   // const messages = useChatData().allMessagesOfThisConvo;
   // const messages =
@@ -31,7 +32,7 @@ const ChatCompoMain: React.FC = () => {
   let messages: Message[] = [];
 
   if (params?.id && typeof params?.id === "string") {
-    messages = useChatData().msgsForConvoObj[params?.id]?.msgs || [];
+    messages = msgsForConvoObj[params?.id]?.msgs || [];
   }
 
   // const messagesEndRef = useRef<HTMLDivElement>(null);
