@@ -112,8 +112,16 @@ const PostSchema = new mongoose.Schema(
       default: [],
       ref: "users",
     },
-
     savedById: {
+      type: [mongoose.Schema.Types.ObjectId],
+      default: [],
+      ref: "users",
+    },
+    rank: {
+      type: Number,
+      default: 0,
+    },
+    commentsBy: {
       type: [mongoose.Schema.Types.ObjectId],
       default: [],
       ref: "users",

@@ -187,8 +187,8 @@ const SinglePostCardNew: React.FC<{
               </div>
 
               <div className=" my-1 text-sm">
-                {promptText.toString().length > charactersWant
-                  ? `${promptText.slice(0, charactersWant)}...`
+                {`${promptText}`.length > charactersWant
+                  ? `${promptText?.slice(0, charactersWant)}...`
                   : `${promptText}`}
               </div>
 
@@ -240,8 +240,8 @@ const SinglePostCardNew: React.FC<{
               </div>
 
               <div className=" flex flex-wrap gap-0.[2px] text-violet-500 font-semibold ">
-                {ele.hashthats.length > 0 &&
-                  ele.hashthats.map((hash, i) => {
+                {ele?.hashthats?.length > 0 &&
+                  ele?.hashthats?.map((hash, i) => {
                     return (
                       <p className="ml-1.5" key={i}>
                         {hash}

@@ -7,6 +7,7 @@ import { Toaster } from "react-hot-toast";
 import LogInProvider from "./components/LogInProvider";
 import Modal from "./components/ModalComponent";
 import Script from "next/script";
+// import { ToastContainer } from "react-toast-ak";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -48,7 +49,17 @@ export default function RootLayout({
 
             {/* Hot toster ---> */}
             <div>
-              <Toaster position="bottom-center" />
+              <Toaster
+                position="top-center"
+                toastOptions={{
+                  style: {
+                    backgroundColor: "black",
+                    textAlign: "center",
+                    color: "white",
+                    border: "1px solid white",
+                  },
+                }}
+              />
             </div>
 
             {children}

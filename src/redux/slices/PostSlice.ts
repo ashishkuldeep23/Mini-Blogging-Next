@@ -335,7 +335,6 @@ const psotSlice = createSlice({
       state,
       action: PayloadAction<{ userId: string; postId: string }>
     ) {
-
       state.allPost.map((ele) => {
         if (ele._id === action.payload.postId) {
           if (ele?.savedById) {
@@ -351,7 +350,6 @@ const psotSlice = createSlice({
           }
         }
       });
-
     },
 
     setSearchBrandAndCate(
@@ -397,11 +395,12 @@ const psotSlice = createSlice({
 
       .addCase(getAllPosts.fulfilled, (state, action) => {
         // console.log(action)
-
         // console.log(action.payload)
+        // console.log(action.payload.data);
 
         if (action.payload.success === true) {
-          state.allPost = action.payload.data;
+          state.allPost = [...state.allPost, ...action.payload.data];
+          // state.allPost.push(action.payload.data);
           // toast.success(`${action.payload.message}`)
           state.isFullfilled = true;
         } else {

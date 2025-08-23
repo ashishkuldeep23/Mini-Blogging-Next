@@ -118,6 +118,7 @@ export interface PostInterFace {
   blocks?: number;
   blocksId?: string[];
   savedById?: string[];
+  commentsBy?: string[];
 }
 
 // // // Baking type for single post -------->
