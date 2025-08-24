@@ -183,7 +183,7 @@ const useEditAndDelPostFns = (ele: SinglePostType | PostInterFace | null) => {
   const divClickHandler = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
-    event.stopPropagation();
+    event?.stopPropagation();
     setShowOptionPanel(false);
   };
 

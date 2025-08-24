@@ -14,6 +14,7 @@ import EmojiPicker, { Theme } from "emoji-picker-react";
 import { TiPen } from "react-icons/ti";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useLongPress } from "@uidotdev/usehooks";
+import { PiDotsThreeOutlineVertical, PiSealCheckDuotone } from "react-icons/pi";
 
 export type TypeSingleMsg = {
   message: Message;
@@ -338,10 +339,16 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
               setShowOptions(!showOptions);
             }}
             className={`mt-auto mb-4 mx-1  px-1 rounded-md bg-black border border-sky-500 font-bold text-sky-500 hover:cursor-pointer active:scale-90 transition-all ${
-              !showOptions ? " px-1.5 " : "px-0.5"
-            }`}
+              !showOptions ? " px-0  " : "px-0.5"
+            } transition-all`}
           >
-            {!showOptions ? " ⁝" : "x"}
+            {!showOptions ? (
+              <span>
+                <PiDotsThreeOutlineVertical />
+              </span>
+            ) : (
+              "x"
+            )}
           </span>
 
           {/* Edited sapn */}

@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
     // console.log("iktyutryetyr")
 
     let getAllPosts = await Post.find(searchObject)
-      .sort({ createdAt: "desc", rank: "desc" })
+      .sort({ rank: "desc", createdAt: "desc" })
       // .limit(limitOfProducts * pageNo)
       .limit(limitOfProducts)
       .skip(skip)

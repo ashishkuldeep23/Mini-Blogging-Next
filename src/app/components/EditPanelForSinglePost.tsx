@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { PostInterFace } from "../../types/Types";
 import { useThemeData } from "@/redux/slices/ThemeSlice";
 import { useSession } from "next-auth/react";
@@ -32,7 +32,7 @@ const EditPanelForSinglePost: React.FC<{ ele: PostInterFace }> = ({ ele }) => {
     e.stopPropagation();
     setShowOptionPanel((p) => !p);
   };
-
+  const optionPanelRef = useRef<HTMLDivElement | null>(null);
   const callModalFn = useOpenModalWithHTML();
 
   const savePostClickHandler = async (
@@ -50,6 +50,29 @@ const EditPanelForSinglePost: React.FC<{ ele: PostInterFace }> = ({ ele }) => {
 
   // if (!showOptionPanel) return <></>;
 
+  // // // Hide option panel on click outside --------->>
+
+  useEffect(() => {
+    const handleClickOutSide = (e: MouseEvent) => {
+      if (!showOptionPanel) return;
+
+      if (
+        // !showOptionPanel &&
+        optionPanelRef?.current &&
+        !optionPanelRef?.current.contains(e.target as Node)
+      ) {
+        setShowOptionPanel(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutSide);
+    document.addEventListener('mousedown', handleClickOutSide);
+    return () => {
+      document.removeEventListener("click", handleClickOutSide);
+      document.removeEventListener('mousedown', handleClickOutSide);
+    };
+  }, []);
+
   if (!showOptionPanel)
     return (
       <button
@@ -61,56 +84,68 @@ const EditPanelForSinglePost: React.FC<{ ele: PostInterFace }> = ({ ele }) => {
     );
 
   return (
-    <div
-      className={` flex flex-col items-end gap-1 w-full min-h-40 px-2 py-2  ${
-        !themeMode ? " bg-black text-white " : " bg-white text-black "
-      } transition-all
+    <div>
+      {!showOptionPanel ? (
+        <button
+          className=" ml-auto mt-2 px-2 rounded-md py-1 active:scale-75 transition-all absolute z-[1] top-8 right-2.5"
+          onClick={handleShowPanelClick}
+        >
+          <PiDotsThreeOutlineVertical />
+        </button>
+      ) : (
+        <div
+          className={` flex flex-col items-end gap-1 w-full min-h-40 px-2 py-2  ${
+            !themeMode ? " bg-black text-white " : " bg-white text-black "
+          } transition-all
         absolute  left-0 z-[2]  ${showOptionPanel ? "top-0" : " -top-[110%] "}
         `}
-      style={{
-        backgroundColor: ele?.customize?.bgColor || "",
-      }}
-      onClick={divClickHandler}
-    >
-      <button
-        className=" text-sm ml-auto mt-2 bg-red-600 px-1.5 py-0.5 rounded-md font-bold active:scale-75 transition-all"
-        onClick={handleShowPanelClick}
-      >
-        ✕
-      </button>
+          style={{
+            backgroundColor: ele?.customize?.bgColor || "",
+          }}
+          onClick={divClickHandler}
+          ref={optionPanelRef}
+        >
+          <button
+            className=" text-sm ml-auto mt-2 bg-red-600 px-1.5 py-0.5 rounded-md font-bold active:scale-75 transition-all"
+            onClick={handleShowPanelClick}
+          >
+            ✕
+          </button>
 
-      {ele?.author?.email === session?.user?.email && (
-        <>
+          {ele?.author?.email === session?.user?.email && (
+            <>
+              <button
+                className=" text-lg px-2 py-1 border rounded-xl active:scale-75 transition-all hover:bg-green-500 w-[50%]  flex justify-center items-center gap-1 "
+                onClick={updatePostHandler}
+              >
+                <BiPencil />
+                <span>Edit</span>
+              </button>
+              <button
+                className=" text-lg px-2 py-1 border rounded-xl active:scale-75 transition-all hover:bg-red-500 w-[60%] flex justify-center items-center gap-1 "
+                onClick={deletePostHandler}
+              >
+                <AiTwotoneDelete />
+                <span>Delete</span>
+              </button>
+            </>
+          )}
+
           <button
-            className=" text-lg px-2 py-1 border rounded-xl active:scale-75 transition-all hover:bg-green-500 w-[50%]  flex justify-center items-center gap-1 "
-            onClick={updatePostHandler}
+            className={`text-lg px-2 py-1 border rounded-xl active:scale-75 transition-all w-[70%] ${
+              session &&
+              ele?.savedById?.includes(session?.user?._id) &&
+              " bg-blue-500 text-white "
+            } `}
+            onClick={savePostClickHandler}
           >
-            <BiPencil />
-            <span>Edit</span>
+            <span>Save</span>
           </button>
-          <button
-            className=" text-lg px-2 py-1 border rounded-xl active:scale-75 transition-all hover:bg-red-500 w-[60%] flex justify-center items-center gap-1 "
-            onClick={deletePostHandler}
-          >
-            <AiTwotoneDelete />
-            <span>Delete</span>
+          <button className=" text-lg px-2 py-1 border rounded-xl active:scale-75 transition-all w-[60%] ">
+            <span>Block</span>
           </button>
-        </>
+        </div>
       )}
-
-      <button
-        className={`text-lg px-2 py-1 border rounded-xl active:scale-75 transition-all w-[70%] ${
-          session &&
-          ele?.savedById?.includes(session?.user?._id) &&
-          " bg-blue-500 text-white "
-        } `}
-        onClick={savePostClickHandler}
-      >
-        <span>Save</span>
-      </button>
-      <button className=" text-lg px-2 py-1 border rounded-xl active:scale-75 transition-all w-[60%] ">
-        <span>Block</span>
-      </button>
     </div>
   );
 };

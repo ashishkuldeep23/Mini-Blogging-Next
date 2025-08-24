@@ -2,10 +2,15 @@
 
 import { decryptMessage, encryptMessage } from "@/lib/Crypto-JS";
 import { sendMsgViaPusher } from "@/lib/sendMsgViaPusher";
-import { sendMsgPostCall, updateMsgPutReq, useChatData } from "@/redux/slices/ChatSlice";
+import {
+  sendMsgPostCall,
+  updateMsgPutReq,
+  useChatData,
+} from "@/redux/slices/ChatSlice";
 import { AppDispatch } from "@/redux/store";
 import { TypeSendMsg, TypeUpdateMsg } from "@/types/chat-types";
 import { debounce } from "@/utils/debounce";
+import { toastError } from "@/utils/toastWithStyle";
 import { Send } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -32,19 +37,25 @@ const MessageInput: React.FC<MessageInputProps> = ({
   const currentConvo = useChatData().currentConvo;
   const dispatch = useDispatch<AppDispatch>();
 
+  // // // New msgs and new msgs with reply is handled by this handler fn -------------->>
   const handleSubmit = () => {
     let sendMsg = message.trim();
 
     if (!sendMsg) {
-      toast.error("Message can't be empty");
+      toastError("Message can't be empty");
       return;
     }
     if (!userId) {
-      toast.error("User not found");
+      toastError("User not found");
       return;
     }
     if (!convoId) {
-      toast.error("Conversation not found");
+      toastError("Conversation not found");
+      return;
+    }
+
+    if (message.length > 300) {
+      toastError("Message can't be more than 300 characters");
       return;
     }
 
@@ -103,10 +114,18 @@ const MessageInput: React.FC<MessageInputProps> = ({
     sendTyping(true);
   };
 
+  // // // basically Editing of any msg is handled by this handler fn ------------->>
   const onUpdateMsgHandler = () => {
     if (!updatingMsg?.isUpdating && !updatingMsg?.isEditted && !message) {
-      toast.error("Please click on the message you want to edit");
+      toastError("Please click on the message you want to edit");
       return;
+    }
+
+    if (message.length > 300) {
+      if (message.length > 300) {
+        toastError("Message can't be more than 300 characters");
+        return;
+      }
     }
 
     // // // here logic needed to seprate update fields ------>>

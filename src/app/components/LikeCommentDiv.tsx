@@ -118,25 +118,37 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
 
     setLoading(false);
   };
-
   useEffect(() => {
-    if (post.comments.length > 0) {
-      let idsOfComments = post.comments.map((ele: any) => {
-        if (typeof ele === "string") {
-          return ele.toString();
-        } else {
-          return ele?.userId?._id.toString();
-        }
-      });
+    // console.log(post?.commentsBy, userID.toString());
 
-      // console.log(idsOfComments)
+    setCommentIds(post?.commentsBy || []);
 
-      setCommentIds(idsOfComments);
-    } else if (post.comments.length === 0) {
+    // // // Removing below logic :- not woring properly --------->>
+    // if (post.comments.length > 0) {
+    //   let idsOfComments = post.comments.map((ele: any) => {
+    //     if (typeof ele === "string") {
+    //       return ele.toString();
+    //     } else {
+    //       return ele?.userId?._id.toString();
+    //     }
+    //     //  else {
+    //     //   return ele.toString();
+    //     // }
+    //   });
 
-      // let arr = post?.commentsBy
-      setCommentIds( post?.commentsBy || []);
-    }
+    //   // console.log(idsOfComments)
+
+    //   if (idsOfComments?.length > 0) {
+    //     setCommentIds(idsOfComments);
+    //   } else {
+    //     setCommentIds(post?.commentsBy || []);
+    //   }
+    // } else if (post.comments.length === 0) {
+    //   // console.log(post?.commentsBy);
+
+    //   // let arr = post?.commentsBy
+    //   setCommentIds(post?.commentsBy || []);
+    // }
 
     if (post.likesId.length > 0) {
       let idsOflikes = post.likesId.map((ele: any) => {
@@ -744,14 +756,18 @@ const SingleCommentUI = ({
       key={comment._id}
       className={` ${
         i % 2 !== 0 && "ml-auto"
-      } border rounded m-1 my-7 p-0.5 w-[95%] sm:w-[80%] relative z-[1]`}
+      } border border-sky-500 rounded m-1 my-7 p-0.5 w-[95%] sm:w-[80%] relative z-[1]`}
       onDoubleClick={(e) => commentDoubleClickHandler(e)}
     >
       {/* <span className=' absolute -top-[2.5vh] right-0 -z-0'>{length - (i)}</span> */}
 
       <MainLoader isLoading={isLoading} />
 
-      <div className="flex gap-1 items-end justify-between">
+      <div
+        className={`flex gap-1 items-end justify-between pt-1  ${
+          comment?.userId?.email === session?.user?.email && " pt-2 "
+        } `}
+      >
         <div className="w-[90%] flex flex-col gap-1 ">
           <div
             className=" flex items-start gap-1"
@@ -768,11 +784,11 @@ const SingleCommentUI = ({
               src={comment?.userId?.profilePic}
               alt=""
             />
-            <div className=" leading-[.7rem]">
+            <div className=" leading-4">
               <p className=" capitalize underline font-semibold">
                 {comment?.userId?.username}
               </p>
-              <p className=" text-xs ">{comment?.userId?.email}</p>
+              <p className=" text-[0.6rem] ">{comment?.userId?.email}</p>
             </div>
           </div>
 
