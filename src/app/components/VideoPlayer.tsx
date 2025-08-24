@@ -321,7 +321,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
           ref={videoRef}
           className="w-full h-auto rounded-lg cursor-pointer transition-all duration-300"
           onTimeUpdate={handleProgress}
-          src={videoUrl} // Video URL passed as a prop
+          src={videoUrl.replace(/^http:\/\//i, "https://")} // Video URL passed as a prop
           muted={isMuted} // Default muted to prevent autoplay issues in browsers
           onDoubleClick={onDoubleClickHandler}
         />
