@@ -39,5 +39,11 @@ export const ENCRYPTION_KEY: string =
 
 export const JWT_SECRET: string = process.env.JWT_SECRET || "MOST_SECRET_PASS";
 
+export const SIGHTENGINE_USER_ENV: string =
+  process.env.SIGHTENGINE_USER || "MOST_SECRET_PASS";
+
+export const SIGHTENGINE_SECRET_ENV: string =
+  process.env.SIGHTENGINE_SECRET || "MOST_SECRET_PASS";
+
 // GOOGLE_SECRATE
 // GOOGLE_SECRET

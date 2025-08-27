@@ -190,7 +190,7 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
 
   return (
     <div
-      className={` sm:my-[5vh] rounded-lg  p-2 sm:p-4 w-[95%] sm:w-[80%] sm:border border-yellow-500 overflow-hidden relative  `}
+      className={` sm:my-[5vh] rounded-lg  p-2 sm:p-4 w-[95%] sm:w-[80%] sm:border border-yellow-500 overflow-hidden relative max-w-[100vw] `}
       style={{
         backgroundColor: singlePost?.customize?.bgColor,
         color: singlePost?.customize?.color,
@@ -279,7 +279,9 @@ function MainPostUI({ singlePost }: { singlePost: SinglePostType }) {
           <p className=" ml-auto text-xs">({singlePost.category})</p>
         </div>
 
-        <div className=" text-sm">{singlePost.promptReturn}</div>
+        <div className=" text-sm  overflow-x-auto overflow-y-hidden scrooller_bar_small">
+          {singlePost.promptReturn}
+        </div>
 
         <div className="  overflow-hidden ">
           {/* Here we need to impove, when we will deal with video to. */}

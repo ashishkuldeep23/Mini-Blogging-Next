@@ -6,6 +6,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getUserDataFromServer } from "../../getUserDataServer";
 import { pusherServer } from "@/lib/pusherServer";
 import User from "@/models/userModel";
+import { ContentModerator } from "@/lib/ContentModerator";
+import { decryptMessage } from "@/lib/Crypto-JS";
 
 // // // I'll create new msg for convo ------------>
 export async function POST(req: NextRequest) {
@@ -72,6 +74,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const contentModerator = new ContentModerator("en");
+
+    let bannedWord =
+      contentModerator.check(decryptMessage(content)) ||
+      contentModerator.check(messageType) ||
+      false;
+
     const newMessage = await MessageModel.create({
       conversationId,
       sender,
@@ -84,6 +93,7 @@ export async function POST(req: NextRequest) {
           readAt: new Date(),
         },
       ],
+      bannedWord,
     });
 
     await newMessage.populate("sender", " _id name username avatar");
@@ -240,7 +250,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// // // I'll create new msg for convo ------------>
+// // // I'll update  msg for convo ------------>
 export async function PUT(req: NextRequest) {
   await connect();
   console.log(modelNames());
@@ -464,6 +474,16 @@ export async function PUT(req: NextRequest) {
     if (isDeletingForMe) {
       getMsgData.deletedBy.push(userData._id);
     }
+
+    // // // Now update the bannedtype msg -------->>
+    const contentModerator = new ContentModerator("en");
+
+    let bannedWord =
+      contentModerator.check(decryptMessage(text)) ||
+      // contentModerator.check(messageType) ||
+      false;
+
+    getMsgData.bannedWord = bannedWord;
 
     // // // Now save the message --------->>
     await getMsgData.save();

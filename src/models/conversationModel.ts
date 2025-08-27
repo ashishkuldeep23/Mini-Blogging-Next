@@ -23,15 +23,29 @@ export interface IConversation extends Document {
   updatedAt: Date;
 }
 
+// // // body for creating new conversation for groups will look like ------->>
+
+{
+  type: "group";
+  name: "";
+  avatar: ""; // // // Default Url :- https://res.cloudinary.com/dlvq8n2ca/image/upload/t_Rounded%204:3/v1756146327/xzp8tpeum1yhpvk5eie6.jpg
+  participants: ["", ""];
+  admins: [""]; // // // by default creator will be admin
+  createdBy: ""; // // // User id of creator of this group
+}
+
 const ConversationSchema = new Schema<IConversation>(
   {
     type: { type: String, enum: ["direct", "group"], required: true },
     name: { type: String, trim: true, maxlength: 100 },
-    avatar: { type: String, default: "" },
+    avatar: { type: String, trim: true },
     participants: [
       { type: Schema.Types.ObjectId, ref: "users", required: true },
     ],
     admins: [{ type: Schema.Types.ObjectId, ref: "users" }],
+    createdBy: { type: Schema.Types.ObjectId, ref: "users", required: true },
+    isActive: { type: Boolean, default: true },
+    adminOnly: { type: Boolean, default: false },
     lastMessage: {
       content: String,
       sender: { type: Schema.Types.ObjectId, ref: "users" },
@@ -46,9 +60,6 @@ const ConversationSchema = new Schema<IConversation>(
       },
     },
     lastMessageAt: { type: Date, default: new Date() },
-    isActive: { type: Boolean, default: true },
-    adminOnly: { type: Boolean, default: false },
-    createdBy: { type: Schema.Types.ObjectId, ref: "users", required: true },
   },
   { timestamps: true }
 );

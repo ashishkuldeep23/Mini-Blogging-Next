@@ -28,7 +28,7 @@ const ImageReact = ({
     <>
       <span
         className={className}
-        style={{ display: isLoaded ? "none" : "inline" }}
+        style={{ display: isLoaded ? "none" : "inline", margin: "0.25rem" }}
       >
         <FiLoader />
       </span>
@@ -38,7 +38,7 @@ const ImageReact = ({
           onClick && onClick(e);
         }}
         width={width}
-        src={src.replace(/^http:\/\//i, "https://")}
+        src={src?.replace(/^http:\/\//i, "https://")}
         alt={alt || ""}
         className={`${className} `}
         style={{

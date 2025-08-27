@@ -16,6 +16,7 @@ export interface IMessage extends Document {
   isDeleted: boolean;
   createdAt: Date;
   updatedAt: Date;
+  bannedWord: boolean;
 }
 
 const MessageSchema = new Schema<IMessage>(
@@ -48,6 +49,10 @@ const MessageSchema = new Schema<IMessage>(
     isEdited: { type: Boolean, default: false },
     deletedBy: [{ type: Schema.Types.ObjectId, ref: "users" }],
     isDeleted: { type: Boolean, default: false },
+    bannedWord: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

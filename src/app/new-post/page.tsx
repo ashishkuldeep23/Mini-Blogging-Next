@@ -1,1112 +1,1035 @@
-'use client'
-
-import { useThemeData } from '@/redux/slices/ThemeSlice';
-import React, { useEffect, useState } from 'react';
-import Navbar from '../components/Navbar';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '@/redux/store';
-import { createNewPost, setWriteFullFilledVal, usePostData, updatePost, setUpdatingPost, setIsLoading } from '@/redux/slices/PostSlice';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import toast from 'react-hot-toast';
-import MainLoader from '../components/LoaderUi';
-import ImageReact from '../components/ImageReact';
-import { FaCamera } from "react-icons/fa";
-import { uploadFileInCloudinary } from '@/lib/cloudinary'
-import { NewPostType, PostCustomization } from '../../types/Types';
+// 'use client'
+
+// import { useThemeData } from '@/redux/slices/ThemeSlice';
+// import React, { useEffect, useState } from 'react';
+// import Navbar from '../components/Navbar';
+// import { useDispatch } from 'react-redux';
+// import { AppDispatch } from '@/redux/store';
+// import { createNewPost, setWriteFullFilledVal, usePostData, updatePost, setUpdatingPost, setIsLoading } from '@/redux/slices/PostSlice';
+// import { useSession } from 'next-auth/react';
+// import { useRouter } from 'next/navigation';
+// import toast from 'react-hot-toast';
+// import MainLoader from '../components/LoaderUi';
+// import ImageReact from '../components/ImageReact';
+// import { FaCamera } from "react-icons/fa";
+// import { uploadFileInCloudinary } from '@/lib/cloudinary'
+// import { NewPostType, PostCustomization } from '../../types/Types';
+
+// const NewPostPage = () => {
+
+//     const dispatch = useDispatch<AppDispatch>()
+
+//     const themeMode = useThemeData().mode
+
+//     const { singlePostdata, updatingPost, writePostFullFilled, isLoading, errMsg } = usePostData()
+
+//     const router = useRouter()
+
+//     const { data: session, status } = useSession()
+
+//     // const { userData } = useUserState()
+
+//     const initialNewPostData: NewPostType = {
+//         title: "",
+//         category: "",
+//         content: "",
+//         url: "",
+//         origin: "",
+//         hashs: [],
+//         customize: {
+//             bgColor: "",
+//             color: "",
+//             bgImage: "",
+//             font: ""
+//         },
+//         image: ""
+//     }
+
+//     const [newPostData, setNewPostData] = useState<NewPostType>(initialNewPostData)
 
+//     const [newHash, setNewHash] = useState<string>("")
 
-const NewPostPage = () => {
+//     type TypeCatAndHash = {
+//         categories: string[],
+//         hashthasts: string[]
+//     }
 
-    const dispatch = useDispatch<AppDispatch>()
-
-    const themeMode = useThemeData().mode
-
-    const { singlePostdata, updatingPost, writePostFullFilled, isLoading, errMsg } = usePostData()
-
-    const router = useRouter()
-
-    const { data: session, status } = useSession()
-
-    // const { userData } = useUserState()
+//     const [catAndHash, setCatAndHash] = useState<TypeCatAndHash>({
+//         categories: ["Self Confidence", "vvv", "update6", "General"],
+//         hashthasts: ["#ok", "#bk", "#ck"]
+//     })
 
-    const initialNewPostData: NewPostType = {
-        title: "",
-        category: "",
-        content: "",
-        url: "",
-        origin: "",
-        hashs: [],
-        customize: {
-            bgColor: "",
-            color: "",
-            bgImage: "",
-            font: ""
-        },
-        image: ""
-    }
+//     const [plusCategory, setPlusCategory] = useState<{ mode: boolean, value: string }>({ mode: false, value: "" })
 
-    const [newPostData, setNewPostData] = useState<NewPostType>(initialNewPostData)
+//     const { postCategories, posthashtags } = usePostData();
 
-    const [newHash, setNewHash] = useState<string>("")
+//     // console.log(router)
 
-    type TypeCatAndHash = {
-        categories: string[],
-        hashthasts: string[]
-    }
+//     // // // Customization added here ------------------>
 
-    const [catAndHash, setCatAndHash] = useState<TypeCatAndHash>({
-        categories: ["Self Confidence", "vvv", "update6", "General"],
-        hashthasts: ["#ok", "#bk", "#ck"]
-    })
+//     const initailCustomize = {
+//         bgColor: "",
+//         color: "",
+//         bgImage: "",
+//         font: ""
+//     }
 
-    const [plusCategory, setPlusCategory] = useState<{ mode: boolean, value: string }>({ mode: false, value: "" })
+//     const [customize, setCutomize] = useState<PostCustomization>(initailCustomize)
 
-    const { postCategories, posthashtags } = usePostData();
+//     const [bgImage, setBgImages] = useState<Array<string>>([
+//         'url("https://www.transparenttextures.com/patterns/argyle.png")',
+//         'url("https://www.transparenttextures.com/patterns/arabesque.png")',
+//         'url("https://www.transparenttextures.com/patterns/batthern.png")',
+//         'url("https://www.transparenttextures.com/patterns/cartographer.png")',
+//         'url("https://www.transparenttextures.com/patterns/checkered-pattern.png")',
+//         'url("https://www.transparenttextures.com/patterns/crisp-paper-ruffles.png")',
+//         'url("https://www.transparenttextures.com/patterns/crissxcross.png")',
+//         'url("https://www.transparenttextures.com/patterns/dark-mosaic.png")',
+//         'url("https://www.transparenttextures.com/patterns/diagmonds-light.png")',
+//         'url("https://www.transparenttextures.com/patterns/diagmonds.png")',
+//         'url("https://www.transparenttextures.com/patterns/food.png")',
+//         'url("https://www.transparenttextures.com/patterns/foggy-birds.png")'
+//     ])
 
-    // console.log(router)
+//     const [fontFamily] = useState<Array<string>>([
+//         'cursive',
+//         "emoji",
+//         "fangsong",
+//         'fantasy',
+//         'math',
+//         'monospace',
+//         'sans-serif',
+//         'system-ui',
+//         'serif'
+//     ])
 
+//     const [postImageUrl, setPostImageUrl] = useState<string>('')
 
-    // // // Customization added here ------------------>
+//     // console.log(postImageUrl)
 
+//     const [imageFile, setImageFile] = useState<File>()
 
-    const initailCustomize = {
-        bgColor: "",
-        color: "",
-        bgImage: "",
-        font: ""
-    }
+//     // console.log(imageFile)
 
-    const [customize, setCutomize] = useState<PostCustomization>(initailCustomize)
+//     function addNewHash({
+//         e,
+//         text = newHash
+//     }: {
+//         e: React.KeyboardEvent<HTMLInputElement> | React.MouseEvent<HTMLButtonElement, MouseEvent> | React.MouseEvent<HTMLDivElement, MouseEvent>,
+//         text?: string
+//     }
 
-    const [bgImage, setBgImages] = useState<Array<string>>([
-        'url("https://www.transparenttextures.com/patterns/argyle.png")',
-        'url("https://www.transparenttextures.com/patterns/arabesque.png")',
-        'url("https://www.transparenttextures.com/patterns/batthern.png")',
-        'url("https://www.transparenttextures.com/patterns/cartographer.png")',
-        'url("https://www.transparenttextures.com/patterns/checkered-pattern.png")',
-        'url("https://www.transparenttextures.com/patterns/crisp-paper-ruffles.png")',
-        'url("https://www.transparenttextures.com/patterns/crissxcross.png")',
-        'url("https://www.transparenttextures.com/patterns/dark-mosaic.png")',
-        'url("https://www.transparenttextures.com/patterns/diagmonds-light.png")',
-        'url("https://www.transparenttextures.com/patterns/diagmonds.png")',
-        'url("https://www.transparenttextures.com/patterns/food.png")',
-        'url("https://www.transparenttextures.com/patterns/foggy-birds.png")'
-    ])
+//     ) {
+//         e.preventDefault()
+//         e.stopPropagation()
 
-    const [fontFamily] = useState<Array<string>>([
-        'cursive',
-        "emoji",
-        "fangsong",
-        'fantasy',
-        'math',
-        'monospace',
-        'sans-serif',
-        'system-ui',
-        'serif'
-    ])
+//         if (!text) return
 
-    const [postImageUrl, setPostImageUrl] = useState<string>('')
+//         if (newPostData.hashs.length >= 5) {
 
-    // console.log(postImageUrl)
+//             // console.log("Yes -----------> ")
 
+//             toast.error("You can only give 5 hashtags.");
 
-    const [imageFile, setImageFile] = useState<File>()
+//             return
+//         }
 
-    // console.log(imageFile)
+//         // // // Remove hash if already have ---->
 
-    function addNewHash({
-        e,
-        text = newHash
-    }: {
-        e: React.KeyboardEvent<HTMLInputElement> | React.MouseEvent<HTMLButtonElement, MouseEvent> | React.MouseEvent<HTMLDivElement, MouseEvent>,
-        text?: string
-    }
+//         if (text[0] === "#") {
 
-    ) {
-        e.preventDefault()
-        e.stopPropagation()
+//             // console.log("54564545")
+//             text = text.slice(1)
+//         }
 
-        if (!text) return
+//         let newArr = [...newPostData?.hashs, `#${text.toLowerCase()}`]
+//         let uniqueArr = new Set(newArr)
 
-        if (newPostData.hashs.length >= 5) {
+//         // console.log([...uniqueArr])
 
-            // console.log("Yes -----------> ")
+//         setNewPostData({
+//             ...newPostData,
+//             hashs: [...uniqueArr]
+//         })
 
-            toast.error("You can only give 5 hashtags.");
+//         setNewHash("")
+//     }
 
-            return
-        }
+//     function cutOneHash(index: number) {
 
+//         newPostData.hashs.splice(index, 1)
+//         setNewPostData({
+//             ...newPostData,
+//             hashs: newPostData.hashs
+//         })
+//     }
 
-        // // // Remove hash if already have ---->
+//     function selectOnChangeHandler(e: React.ChangeEvent<HTMLSelectElement>) {
 
-        if (text[0] === "#") {
+//         if (e.target.value === "plus") {
 
-            // console.log("54564545")
-            text = text.slice(1)
-        }
+//             setNewPostData({ ...newPostData, category: "" })
 
-        let newArr = [...newPostData?.hashs, `#${text.toLowerCase()}`]
-        let uniqueArr = new Set(newArr)
+//             setPlusCategory({ ...plusCategory, mode: true })
 
-        // console.log([...uniqueArr])
+//         } else {
 
-        setNewPostData({
-            ...newPostData,
-            hashs: [...uniqueArr]
-        })
+//             setPlusCategory({ value: "", mode: false })
 
-        setNewHash("")
-    }
+//             setNewPostData({ ...newPostData, category: e.target.value })
 
-    function cutOneHash(index: number) {
+//         }
 
-        newPostData.hashs.splice(index, 1)
-        setNewPostData({
-            ...newPostData,
-            hashs: newPostData.hashs
-        })
-    }
+//     }
 
+//     function imgInputOnchangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
+//         e.stopPropagation();
+//         e.preventDefault();
 
-    function selectOnChangeHandler(e: React.ChangeEvent<HTMLSelectElement>) {
+//         if (e.target.files) {
 
-        if (e.target.value === "plus") {
+//             const file = e?.target?.files[0]
 
-            setNewPostData({ ...newPostData, category: "" })
+//             // // // Here now set file ---------->
+//             // File size should less then 2 mb.
+//             if (file.size > 2097152) {
+//                 return toast.error("File size should less then 2 mb")
+//             }
 
-            setPlusCategory({ ...plusCategory, mode: true })
+//             setImageFile(file)
+//             // // // Show img direct by here --->
+//             setPostImageUrl(URL.createObjectURL(file))
 
-        } else {
+//         }
 
+//     }
 
-            setPlusCategory({ value: "", mode: false })
+//     async function submitFormData(even: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>) {
 
-            setNewPostData({ ...newPostData, category: e.target.value })
+//         even.preventDefault()
 
-        }
+//         // console.log(session)
 
-    }
+//         if (status === "unauthenticated") {
+//             router.push("/")
+//         }
 
+//         if (session?.user?.id) {
 
-    function imgInputOnchangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
-        e.stopPropagation();
-        e.preventDefault();
+//             // // // Do 3 things here --------->
+//             // 1. check any file is present.
+//             // 2. Upload file into cloudinary.
+//             // 3. set file url to newPostData inside image key.
 
-        if (e.target.files) {
+//             let imageUrl = "";
 
-            const file = e?.target?.files[0]
+//             if (imageFile) {
 
-            // // // Here now set file ---------->
-            // File size should less then 2 mb. 
-            if (file.size > 2097152) {
-                return toast.error("File size should less then 2 mb")
-            }
+//                 dispatch(setIsLoading(true))
 
-            setImageFile(file)
-            // // // Show img direct by here --->
-            setPostImageUrl(URL.createObjectURL(file))
+//                 // // Now here we can uplaod file 2nd step ------>
+//                 imageUrl = await uploadFileInCloudinary(imageFile)
+//                 // console.log({ imageUrl })
 
+//                 /// // // now set url of image -------->
+//                 setNewPostData({ ...newPostData, image: imageUrl })
+//             }
 
-        }
+//             if (updatingPost && singlePostdata?._id) {
 
-    }
+//                 // alert("now call dispatch for update.")
 
+//                 dispatch(updatePost({
+//                     body: { ...newPostData, image: newPostData.image || imageUrl },
+//                     userId: session?.user?.id,
+//                     postId: singlePostdata?._id
+//                 }))
+//             } else {
 
+//                 dispatch(createNewPost({
+//                     body: { ...newPostData, image: imageUrl },
+//                     userId: session?.user?.id
+//                 }))
+//             }
 
-    async function submitFormData(even: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+//         }
+//         else {
 
-        even.preventDefault()
+//             toast.error("Plese Login again.")
+//             router.push("/login")
+//         }
 
-        // console.log(session)
+//     }
 
-        if (status === "unauthenticated") {
-            router.push("/")
-        }
+//     // // // Update customization here ------>
 
-        if (session?.user?.id) {
+//     useEffect(() => {
 
+//         // console.log(newPostData)
 
-            // // // Do 3 things here --------->
-            // 1. check any file is present.
-            // 2. Upload file into cloudinary.
-            // 3. set file url to newPostData inside image key.
+//         setNewPostData({ ...newPostData, customize: customize })
 
-            let imageUrl = "";
+//     }, [customize])
 
-            if (imageFile) {
+//     // // // Check user is loged in or not and also set
+//     useEffect(() => {
+//         // console.log(session?.user?.id)
 
-                dispatch(setIsLoading(true))
+//         if (status === "unauthenticated") {
+//             toast.error("Plese Login again.")
+//             router.push("/")
+//         }
 
-                // // Now here we can uplaod file 2nd step ------>
-                imageUrl = await uploadFileInCloudinary(imageFile)
-                // console.log({ imageUrl })
+//         if (status === 'authenticated' && session.user.image) {
+//             setBgImages([...bgImage, `url('${session.user.image.toString()}')`])
+//         }
 
-                /// // // now set url of image -------->
-                setNewPostData({ ...newPostData, image: imageUrl })
-            }
+//         // console.log(session?.user.image)
 
+//     }, [session, status])
 
+//     // useEffect(() => {
 
+//     //     if (userData._id && session?.user.image) {
+//     //         // setBgImages([...bgImage, `url('${userData?.profilePic.toString()}')`])
 
-            if (updatingPost && singlePostdata?._id) {
+//     //         // console.log(session?.user.image)
+//     //     }
+//     // }, [userData])
 
-                // alert("now call dispatch for update.")
+//     useEffect(() => {
 
-                dispatch(updatePost({
-                    body: { ...newPostData, image: newPostData.image || imageUrl },
-                    userId: session?.user?.id,
-                    postId: singlePostdata?._id
-                }))
-            } else {
+//         if (writePostFullFilled) {
 
+//             // // // back to normal everything -------->
+//             setNewPostData(initialNewPostData)
 
-                dispatch(createNewPost({
-                    body: { ...newPostData, image: imageUrl },
-                    userId: session?.user?.id
-                }))
-            }
+//             dispatch(setUpdatingPost(false))
+//             dispatch(setWriteFullFilledVal(false))
+//             // router.push("/")
 
+//             // router.back()
+//             // // // some logic here -------->
+//             // // Checking post got updated or created ---->
+//             if (errMsg === 'Post updated successfully.') {
+//                 router.push(`/post/${singlePostdata?._id}`)
+//             } else {
+//                 router.push("/")
+//             }
 
-        }
-        else {
+//         }
 
-            toast.error("Plese Login again.")
-            router.push("/login")
-        }
+//     }, [writePostFullFilled])
 
+//     // console.log(catAndHash.hashthasts)
+//     // console.log(catAndHash.categories)
 
-    }
+//     useEffect(() => {
 
+//         // console.log('from new post page ---> ', posthashtags)
 
+//         // if (posthashtags.length > 0) {
+//         //     setCatAndHash({ categories: catAndHash.categories, hashthasts : [...posthashtags] })
+//         // }
 
+//         if (postCategories.length > 0) {
+//             setCatAndHash({ hashthasts: posthashtags, categories: postCategories })
 
-    // // // DO THIS ON REDUX --------->
+//             setNewPostData({ ...newPostData, category: postCategories[0] })
+//         }
 
-    // async function updatePost() {
-    //     // // // when post is updated ------>
-    //     // dispatch(setSinglePostdata(post))
-    //     // dispatch(setUpdatingPost(true))
-    // }
+//     }, [postCategories, posthashtags])
 
-    // // // Update customization here ------>
+//     // // // Update post here =============>
+//     useEffect(() => {
 
-    useEffect(() => {
+//         if (updatingPost && singlePostdata?._id) {
 
-        // console.log(newPostData)
+//             setNewPostData(
+//                 {
+//                     title: singlePostdata?.title,
+//                     category: singlePostdata?.category,
+//                     content: singlePostdata?.promptReturn,
+//                     url: singlePostdata?.urlOfPrompt,
+//                     origin: singlePostdata?.aiToolName,
+//                     hashs: [...singlePostdata?.hashthats],
+//                     customize: singlePostdata?.customize,
+//                     image: singlePostdata?.image
+//                 }
+//             );
 
-        setNewPostData({ ...newPostData, customize: customize })
+//             if (singlePostdata.customize) {
+//                 setCutomize(singlePostdata?.customize)
+//             }
 
-    }, [customize])
+//             if (singlePostdata?.image) {
+//                 setPostImageUrl(singlePostdata?.image)
+//             }
 
+//         }
 
-    // // // Check user is loged in or not and also set 
-    useEffect(() => {
-        // console.log(session?.user?.id)
+//     }, [singlePostdata])
 
-        if (status === "unauthenticated") {
-            toast.error("Plese Login again.")
-            router.push("/")
-        }
+//     // // // Some common class name that used in input fields ------->
+//     const classNamesForInputs = ` w-[68%] border rounded-sm px-1 ${!themeMode ? " bg-slate-900 text-white" : " bg-slate-100 text-black"}`
 
+//     return (
+//         <>
 
-        if (status === 'authenticated' && session.user.image) {
-            setBgImages([...bgImage, `url('${session.user.image.toString()}')`])
-        }
+//             <div
+//                 className={`w-full min-h-screen flex flex-col items-center ${!themeMode ? " bg-black text-white " : " bg-white text-black"}`}
+//             >
 
-        // console.log(session?.user.image)
+//                 <MainLoader isLoading={isLoading} />
 
-    }, [session, status])
+//                 <Navbar />
 
+//                 <div className='my-14 flex flex-col items-center w-full '>
 
-    // useEffect(() => {
+//                     <p className=' my-2 border-b px-4 text-xl font-semibold'>Create a new post here👇</p>
 
-    //     if (userData._id && session?.user.image) {
-    //         // setBgImages([...bgImage, `url('${userData?.profilePic.toString()}')`])
+//                     <div className={`rounded flex flex-col border w-11/12 xs:w-[80%]  sm:w-3/4 md:w-2/3
+//                     ${themeMode ? ` ${!updatingPost ? "bg-green-100" : "bg-rose-100"}` : ` ${!updatingPost ? "bg-green-950" : "bg-rose-950"}`}
+//                     `}>
 
-    //         // console.log(session?.user.image)
-    //     }
-    // }, [userData])
+//                         <div
+//                             className='rounded mt-2 flex p-1 gap-2 flex-col sm:flex-row'
+//                         >
 
+//                             <div
+//                                 className={`rounded p-1 border w-full sm:w-3/5 ${!themeMode ? " bg-black" : " bg-white"}`}
+//                             >
 
-    useEffect(() => {
+//                                 <form
+//                                     className=' flex flex-col gap-2'
+//                                     onSubmit={(e) => { submitFormData(e) }}
+//                                 >
 
-        if (writePostFullFilled) {
+//                                     <div className=''>
+//                                         <input
+//                                             className={`${classNamesForInputs}`}
+//                                             placeholder="Give title of post"
+//                                             type={"text"}
+//                                             id="title"
+//                                             value={newPostData?.title}
+//                                             name='title'
+//                                             onChange={(e) => {
+//                                                 e.preventDefault();
+//                                                 e.stopPropagation();
+//                                                 setNewPostData((pre) => ({ ...pre, [e.target.name]: e.target.value }))
+//                                             }}
+//                                         />
 
-            // // // back to normal everything -------->
-            setNewPostData(initialNewPostData)
+//                                         <label
+//                                             className=' pl-2 pr-1 border-b font-semibold'
+//                                             htmlFor="title"
+//                                         >Title</label>
 
-            dispatch(setUpdatingPost(false))
-            dispatch(setWriteFullFilledVal(false))
-            // router.push("/")
+//                                     </div>
 
+//                                     <div>
 
-            // router.back()
-            // // // some logic here -------->
-            // // Checking post got updated or created ---->
-            if (errMsg === 'Post updated successfully.') {
-                router.push(`/post/${singlePostdata?._id}`)
-            } else {
-                router.push("/")
-            }
+//                                         <textarea
+//                                             style={{ resize: "none" }}
+//                                             placeholder="Give content of post"
+//                                             className={`${classNamesForInputs}`}
+//                                             id="content"
+//                                             rows={3}
 
+//                                             value={newPostData?.content}
+//                                             name='content'
+//                                             onChange={(e) => {
+//                                                 e.preventDefault();
+//                                                 e.stopPropagation();
+//                                                 setNewPostData((pre) => ({ ...pre, [e.target.name]: e.target.value }))
+//                                             }}
+//                                         ></textarea>
 
-        }
+//                                         <label
+//                                             className='pl-2 pr-1 border-b font-semibold'
+//                                             htmlFor="content"
+//                                         >Content</label>
 
-    }, [writePostFullFilled])
+//                                     </div>
 
-    // console.log(catAndHash.hashthasts)
-    // console.log(catAndHash.categories)
+//                                     {/* // // // // New category look like -------> */}
+//                                     <div className=" w-full px-0.5 flex flex-col ">
 
+//                                         <div className=' felx'>
 
-    useEffect(() => {
+//                                             <select
+//                                                 onChange={(e) => {
+//                                                     selectOnChangeHandler(e)
+//                                                 }}
+//                                                 // {...register("category", { required: "Category is Required" })}
+//                                                 // className=" text-black font-bold rounded capitalize py-1"
 
-        // console.log('from new post page ---> ', posthashtags)
+//                                                 className={`${classNamesForInputs} my-1`}
+//                                                 name="" id="category_product"
+//                                                 value={newPostData.category ? newPostData.category : ''}
+//                                             >
 
-        // if (posthashtags.length > 0) {
-        //     setCatAndHash({ categories: catAndHash.categories, hashthasts : [...posthashtags] })
-        // }
+//                                                 {
+//                                                     catAndHash.categories.length
+//                                                     &&
+//                                                     catAndHash.categories.map((category, i) => {
+//                                                         return (
+//                                                             <option
+//                                                                 // {...register("category", { required: "Category is Required" })}
 
-        if (postCategories.length > 0) {
-            setCatAndHash({ hashthasts: posthashtags, categories: postCategories })
+//                                                                 // selected={getValues("category") === category ? true : false}
 
-            setNewPostData({ ...newPostData, category: postCategories[0] })
-        }
+//                                                                 key={i}
+//                                                                 className="capitalize"
+//                                                                 value={`${category}`}
+//                                                             >{
+//                                                                     category
+//                                                                 }</option>
+//                                                         )
+//                                                     })
+//                                                 }
 
-    }, [postCategories, posthashtags])
+//                                                 {/* Plus option for new category -----> */}
 
+//                                                 <option
+//                                                     value="plus"
+//                                                     onClick={() => {
 
+//                                                         // setPlusCategory(true)
+//                                                     }}
+//                                                 // onClick={()=>setPlusCategory(true)}
+//                                                 // {...register("category", { required: "Category is Required" })}
+//                                                 >+Plus</option>
 
-    // // // Update post here =============> 
-    useEffect(() => {
+//                                             </select>
 
-        if (updatingPost && singlePostdata?._id) {
+//                                             <label
+//                                                 htmlFor="category_product"
+//                                                 className='pl-2 pr-1 border-b font-semibold'
+//                                             >
+//                                                 Category
+//                                             </label>
 
+//                                         </div>
 
-            setNewPostData(
-                {
-                    title: singlePostdata?.title,
-                    category: singlePostdata?.category,
-                    content: singlePostdata?.promptReturn,
-                    url: singlePostdata?.urlOfPrompt,
-                    origin: singlePostdata?.aiToolName,
-                    hashs: [...singlePostdata?.hashthats],
-                    customize: singlePostdata?.customize,
-                    image: singlePostdata?.image
-                }
-            );
+//                                         {/* Add new category All code ----> */}
 
-            if (singlePostdata.customize) {
-                setCutomize(singlePostdata?.customize)
-            }
+//                                         {
 
-            if (singlePostdata?.image) {
-                setPostImageUrl(singlePostdata?.image)
-            }
+//                                             plusCategory.mode
+//                                             &&
+//                                             // // Take new category input here --->
+//                                             <div className=" flex flex-col flex-wrap " >
 
+//                                                 {/*value get this input ---> */}
 
-        }
+//                                                 <div className=' flex items-center'>
 
+//                                                     <input
+//                                                         id="category_product" type="text"
+//                                                         placeholder="Give new category here"
+//                                                         // className={`block rounded-md border-0 py-1.5  shadow-sm ring-1 ring-inset ring-gray-300  focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${!themeMode ? " bg-white text-gray-900 " : "bg-gray-900 text-white"}`}
 
-    }, [singlePostdata])
+//                                                         value={plusCategory.value}
 
+//                                                         className={`${classNamesForInputs}`}
+//                                                         // value={plusCategoryInput.typing}
+//                                                         onChange={(e) => {
+//                                                             setPlusCategory({ ...plusCategory, value: e.target.value })
 
-    // // // Some common class name that used in input fields ------->  
-    const classNamesForInputs = ` w-[68%] border rounded-sm px-1 ${!themeMode ? " bg-slate-900 text-white" : " bg-slate-100 text-black"}`
+//                                                         }}
+//                                                     />
 
+//                                                     <button
+//                                                         className="border h-full px-1 rounded m-0.5"
+//                                                         onClick={(e) => {
+//                                                             e.preventDefault();
+//                                                             e.stopPropagation();
+//                                                             // setPlusCategoryInput({ typing: "", added: plusCategoryInput.typing });
+//                                                             // setValue("category", `${plusCategoryInput.typing}`)
 
-    return (
-        <>
+//                                                             setNewPostData({ ...newPostData, category: plusCategory.value.trim() })
 
-            <div
-                className={`w-full min-h-screen flex flex-col items-center ${!themeMode ? " bg-black text-white " : " bg-white text-black"}`}
-            >
+//                                                         }}
+//                                                     >+Add</button>
 
-                <MainLoader isLoading={isLoading} />
+//                                                 </div>
 
-                <Navbar />
+//                                                 <div className=" flex flex-wrap items-center">
 
-                <div className='my-14 flex flex-col items-center w-full '>
+//                                                     {
+//                                                         // plusCategoryInput.added
+//                                                         // &&
+//                                                         <p
+//                                                             style={{ lineBreak: "anywhere" }}
+//                                                             className="mx-2"
+//                                                         >
+//                                                             New Category added:
+//                                                             <span
+//                                                                 className=" capitalize bg-green-400 font-semibold border px-0.5 rounded "
+//                                                             >{newPostData.category}</span></p>
+//                                                     }
 
-                    <p className=' my-2 border-b px-4 text-xl font-semibold'>Create a new post here👇</p>
+//                                                     {
+//                                                         // !plusCategoryInput.added
+//                                                         // &&
 
-                    <div className={`rounded flex flex-col border w-11/12 xs:w-[80%]  sm:w-3/4 md:w-2/3 
-                    ${themeMode ? ` ${!updatingPost ? "bg-green-100" : "bg-rose-100"}` : ` ${!updatingPost ? "bg-green-950" : "bg-rose-950"}`} 
-                    `}>
+//                                                     }
 
-                        <div
-                            className='rounded mt-2 flex p-1 gap-2 flex-col sm:flex-row'
-                        >
+//                                                 </div>
 
-                            <div
-                                className={`rounded p-1 border w-full sm:w-3/5 ${!themeMode ? " bg-black" : " bg-white"}`}
-                            >
+//                                             </div>
 
-                                <form
-                                    className=' flex flex-col gap-2'
-                                    onSubmit={(e) => { submitFormData(e) }}
-                                >
+//                                         }
 
+//                                     </div>
 
-                                    <div className=''>
-                                        <input
-                                            className={`${classNamesForInputs}`}
-                                            placeholder="Give title of post"
-                                            type={"text"}
-                                            id="title"
-                                            value={newPostData?.title}
-                                            name='title'
-                                            onChange={(e) => {
-                                                e.preventDefault();
-                                                e.stopPropagation();
-                                                setNewPostData((pre) => ({ ...pre, [e.target.name]: e.target.value }))
-                                            }}
-                                        />
+//                                     {/* Here going to take an file uplad image ------> */}
 
-                                        <label
-                                            className=' pl-2 pr-1 border-b font-semibold'
-                                            htmlFor="title"
-                                        >Title</label>
+//                                     <div className=" flex justify-start">
 
-                                    </div>
+//                                         <div className=' w-[68%]' >
 
+//                                             <input
+//                                                 className={`${classNamesForInputs} hidden`}
+//                                                 type="file"
+//                                                 name=""
+//                                                 accept="image/png, image/png, image/jpeg"
+//                                                 id="change_img"
+//                                                 onChange={(e) => { imgInputOnchangeHandler(e) }}
+//                                             />
 
-                                    <div>
+//                                             {/* <i className={`ri-camera-3-line text-6xl sm:text-8xl`}></i> */}
 
-                                        <textarea
-                                            style={{ resize: "none" }}
-                                            placeholder="Give content of post"
-                                            className={`${classNamesForInputs}`}
-                                            id="content"
-                                            rows={3}
+//                                             <div
+//                                                 className={`${classNamesForInputs} w-full  `}
+//                                             >
 
-                                            value={newPostData?.content}
-                                            name='content'
-                                            onChange={(e) => {
-                                                e.preventDefault();
-                                                e.stopPropagation();
-                                                setNewPostData((pre) => ({ ...pre, [e.target.name]: e.target.value }))
-                                            }}
-                                        ></textarea>
+//                                                 <label
 
-                                        <label
-                                            className='pl-2 pr-1 border-b font-semibold'
-                                            htmlFor="content"
-                                        >Content</label>
+//                                                     className=' flex  justify-start pl-1 gap-2 flex-wrap'
+//                                                     htmlFor="change_img">
+//                                                     <FaCamera className=' mx-auto sm:mx-0 text-2xl' />
+//                                                     <p>Choose an image for post.</p>
+//                                                 </label>
 
-                                    </div>
+//                                             </div>
 
+//                                         </div>
 
-                                    {/* // // // // New category look like -------> */}
-                                    <div className=" w-full px-0.5 flex flex-col ">
+//                                         <label
+//                                             className=' pl-2 pr-1 border-b font-semibold'
+//                                             htmlFor="change_img"
+//                                         >*Image</label>
 
-                                        <div className=' felx'>
+//                                         {/* <div >
+//                                             <label htmlFor="change_img" className='text-green-500'>After changing click submit </label>
+//                                             <button className="bg-green-500 px-1 rounded text-white font-bold" onClick={(e) => {
+//                                                 e.stopPropagation();
+//                                                 // submitNewImg();
+//                                             }}>☝️Upload</button>
+//                                         </div> */}
 
+//                                     </div>
 
-                                            <select
-                                                onChange={(e) => {
-                                                    selectOnChangeHandler(e)
-                                                }}
-                                                // {...register("category", { required: "Category is Required" })}
-                                                // className=" text-black font-bold rounded capitalize py-1"
+//                                     <div>
+//                                         <input
+//                                             className={`${classNamesForInputs}`}
+//                                             placeholder="Give url of post"
+//                                             type={"text"}
+//                                             id="url"
+//                                             value={newPostData?.url}
+//                                             name='url'
+//                                             onChange={(e) => {
+//                                                 e.preventDefault();
+//                                                 e.stopPropagation();
+//                                                 setNewPostData((pre) => ({ ...pre, [e.target.name]: e.target.value }))
+//                                             }}
+//                                         />
 
-                                                className={`${classNamesForInputs} my-1`}
-                                                name="" id="category_product"
-                                                value={newPostData.category ? newPostData.category : ''}
-                                            >
+//                                         <label
+//                                             className=' pl-2 pr-1 border-b font-semibold'
+//                                             htmlFor="url"
+//                                         >*Url</label>
 
-                                                {
-                                                    catAndHash.categories.length
-                                                    &&
-                                                    catAndHash.categories.map((category, i) => {
-                                                        return (
-                                                            <option
-                                                                // {...register("category", { required: "Category is Required" })}
+//                                     </div>
 
-                                                                // selected={getValues("category") === category ? true : false}
+//                                     <div>
+//                                         <input
+//                                             className={`${classNamesForInputs}`}
+//                                             placeholder="Give origin of post"
+//                                             type={"text"}
+//                                             id="origin"
+//                                             value={newPostData?.origin}
+//                                             name='origin'
+//                                             onChange={(e) => {
+//                                                 e.preventDefault();
+//                                                 e.stopPropagation();
+//                                                 setNewPostData((pre) => ({ ...pre, [e.target.name]: e.target.value }))
+//                                             }}
+//                                         />
 
-                                                                key={i}
-                                                                className="capitalize"
-                                                                value={`${category}`}
-                                                            >{
-                                                                    category
-                                                                }</option>
-                                                        )
-                                                    })
-                                                }
+//                                         <label
+//                                             className=' pl-2 pr-1 border-b font-semibold'
+//                                             htmlFor="origin"
+//                                         >*Origin</label>
 
+//                                     </div>
 
+//                                     <div>
 
-                                                {/* Plus option for new category -----> */}
+//                                         <div className={` ${!themeMode ? "text-violet-300" : "text-violet-700"} flex flex-wrap items-center gap-1`}>
 
-                                                <option
-                                                    value="plus"
-                                                    onClick={() => {
+//                                             {
+//                                                 newPostData.hashs.map((ele, i) => {
+//                                                     return (
+//                                                         <p
+//                                                             key={i}
+//                                                             className=' border border-cyan-400 pl-2 rounded-md'
+//                                                         >{ele}
+//                                                             <span
+//                                                                 onClick={() => cutOneHash(i)}
+//                                                                 className='bg-red-500 rounded-full font-semibold px-1 mx-1 text-white hover:cursor-pointer hover:bg-red-700 '
+//                                                             >x</span>
+//                                                         </p>
+//                                                     )
+//                                                 })
+//                                             }
+//                                         </div>
 
-                                                        // setPlusCategory(true) 
-                                                    }}
-                                                // onClick={()=>setPlusCategory(true)}
-                                                // {...register("category", { required: "Category is Required" })}
-                                                >+Plus</option>
+//                                         <div className='my-1 flex'>
 
+//                                             <div
+//                                                 className={` relative flex justify-end w-[68%] border rounded `}
+//                                             // className={`flex  `}
+//                                             >
 
-                                            </select>
+//                                                 <input
+//                                                     className={`${classNamesForInputs} w-full relative z-10 rounded-e-none `}
+//                                                     placeholder="Give HasThats of post"
+//                                                     type={"text"}
+//                                                     id="HasThats"
+//                                                     name="HasThats"
+//                                                     value={newHash}
+//                                                     onChange={(e) => {
+//                                                         e.preventDefault();
+//                                                         e.stopPropagation();
+//                                                         setNewHash(() => e.target.value)
+//                                                     }
+//                                                     }
 
-                                            <label
-                                                htmlFor="category_product"
-                                                className='pl-2 pr-1 border-b font-semibold'
-                                            >
-                                                Category
-                                            </label>
+//                                                     onKeyDown={(e) => {
+//                                                         // e.preventDefault();
+//                                                         // console.log(e.key)
+//                                                         if (e.key === "Enter") {
+//                                                             addNewHash({ e })
+//                                                         }
+//                                                     }}
 
-                                        </div>
+//                                                 />
 
+//                                                 <button
+//                                                     className=' -ml-1 mb-0.5 scale-y-[1.6] scale-x-125'
+//                                                     onClick={(e) => {
+//                                                         // e.preventDefault()
+//                                                         addNewHash({ e })
+//                                                     }}
+//                                                 >⬆️</button>
 
-                                        {/* Add new category All code ----> */}
+//                                                 {
+//                                                     // // // Suggetion div with logic here ---------->
 
+//                                                     newHash
+//                                                     &&
 
-                                        {
+//                                                     <div className={`absolute z-[1] top-[110%] rounded w-full px-0.5 ${!themeMode ? "bg-black" : "bg-white"} `}>
 
-                                            plusCategory.mode
-                                            &&
-                                            // // Take new category input here --->
-                                            <div className=" flex flex-col flex-wrap " >
+//                                                         {
 
-                                                {/*value get this input ---> */}
+//                                                             catAndHash.hashthasts
+//                                                                 .filter((ele) => ele.includes(newHash))
 
-                                                <div className=' flex items-center'>
+//                                                                 .map((ele, i) => {
+//                                                                     return (
+//                                                                         <>
 
-                                                    <input
-                                                        id="category_product" type="text"
-                                                        placeholder="Give new category here"
-                                                        // className={`block rounded-md border-0 py-1.5  shadow-sm ring-1 ring-inset ring-gray-300  focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${!themeMode ? " bg-white text-gray-900 " : "bg-gray-900 text-white"}`}
+//                                                                             {
+//                                                                                 ele
+//                                                                                 &&
+//                                                                                 <div
+//                                                                                     className=' border-b'
+//                                                                                     key={i}
+//                                                                                     onClick={() => {
 
-                                                        value={plusCategory.value}
+//                                                                                         newPostData.hashs.push(ele)
 
-                                                        className={`${classNamesForInputs}`}
-                                                        // value={plusCategoryInput.typing}
-                                                        onChange={(e) => {
-                                                            setPlusCategory({ ...plusCategory, value: e.target.value })
+//                                                                                         // console.log(newPostData.hashs)
 
-                                                        }}
-                                                    />
+//                                                                                         setNewPostData({
+//                                                                                             ...newPostData,
+//                                                                                             hashs: newPostData.hashs
+//                                                                                         });
+//                                                                                         setNewHash("");
+//                                                                                     }}
+//                                                                                 >{ele}</div>
 
-                                                    <button
-                                                        className="border h-full px-1 rounded m-0.5"
-                                                        onClick={(e) => {
-                                                            e.preventDefault();
-                                                            e.stopPropagation();
-                                                            // setPlusCategoryInput({ typing: "", added: plusCategoryInput.typing });
-                                                            // setValue("category", `${plusCategoryInput.typing}`)
+//                                                                             }
+//                                                                         </>
+//                                                                     )
+//                                                                 })
 
-                                                            setNewPostData({ ...newPostData, category: plusCategory.value.trim() })
+//                                                         }
 
+//                                                     </div>
+//                                                 }
 
+//                                             </div>
 
-                                                        }}
-                                                    >+Add</button>
+//                                             <label
+//                                                 className=' pl-2 pr-1 border-b font-semibold'
+//                                                 htmlFor="HasThats"
+//                                             >*Hasthats</label>
 
+//                                         </div>
 
-                                                </div>
+//                                     </div>
 
-                                                <div className=" flex flex-wrap items-center">
+//                                 </form>
 
-                                                    {
-                                                        // plusCategoryInput.added
-                                                        // &&
-                                                        <p
-                                                            style={{ lineBreak: "anywhere" }}
-                                                            className="mx-2"
-                                                        >
-                                                            New Category added:
-                                                            <span
-                                                                className=" capitalize bg-green-400 font-semibold border px-0.5 rounded "
-                                                            >{newPostData.category}</span></p>
-                                                    }
+//                                 <p className=' text-center'>star(*) marked are optional.</p>
 
-                                                    {
-                                                        // !plusCategoryInput.added
-                                                        // &&
+//                             </div>
 
-                                                    }
+//                             {/* UI of given data shown here -------> */}
 
+//                             <div
+//                                 className={` relative overflow-hidden rounded p-1 border w-full sm:w-2/5 ${!themeMode ? " bg-black" : " bg-white"}`}
+//                                 style={{
+//                                     backgroundColor: customize.bgColor,
+//                                     color: customize.color,
+//                                     backgroundImage: customize.bgImage,
+//                                     fontFamily: `${customize.font} , sans-serif`,
 
-                                                </div>
+//                                     // // // added more style if user choosed profile pic as bg of post ------>
+//                                     backgroundRepeat: `url('${session?.user.image}')` === `${customize.bgImage}` ? "no-repeat" : "",
+//                                     backgroundPosition: `url('${session?.user.image}')` === `${customize.bgImage}` ? 'center' : "",
+//                                     backgroundSize: `url('${session?.user.image}')` === `${customize.bgImage}` ? "cover" : "",
+//                                 }}
+//                             >
 
-                                            </div>
+//                                 <div className="rounded-t flex gap-1.5 items-center border-b border-cyan-400">
 
-                                        }
+//                                     <ImageReact
+//                                         className=" rounded-full w-8 h-8 aspect-square object-cover"
+//                                         src={`${session?.user.image || "https://res.cloudinary.com/dlvq8n2ca/image/upload/v1701708322/jual47jntd2lpkgx8mfx.png"}`}
+//                                         alt=""
+//                                     />
+//                                     <p className=' font-semibold capitalize'>{session?.user.name || "Name Kumar"}</p>
+//                                 </div>
 
+//                                 <div className=" flex justify-between flex-wrap gap-1">
+//                                     <p className=" capitalize">{newPostData.title}</p>
 
-                                    </div>
+//                                     {
+//                                         newPostData.category
+//                                         &&
+//                                         <p className=" ml-auto text-xs">({newPostData.category})</p>
+//                                     }
 
-                                    {/* Here going to take an file uplad image ------> */}
+//                                 </div>
 
+//                                 <div className=" text-sm  max-h-40 overflow-y-scroll"
+//                                 >
+//                                     {
+//                                         newPostData.content
+//                                     }
+//                                 </div>
 
-                                    <div className=" flex justify-start">
+//                                 {
+//                                     (newPostData?.image || postImageUrl)
+//                                     &&
+//                                     <ImageReact
+//                                         style={{ objectFit: "cover" }}
+//                                         className=' rounded my-2 w-full'
+//                                         src={postImageUrl}
+//                                     />
+//                                 }
 
-                                        <div className=' w-[68%]' >
+//                                 <div
+//                                     className=' mt-1'
+//                                     style={{ lineBreak: "anywhere" }}
+//                                 >
 
-                                            <input
-                                                className={`${classNamesForInputs} hidden`}
-                                                type="file"
-                                                name=""
-                                                accept="image/png, image/png, image/jpeg"
-                                                id="change_img"
-                                                onChange={(e) => { imgInputOnchangeHandler(e) }}
-                                            />
+//                                     {
+//                                         newPostData.url
+//                                         &&
+//                                         <p className=' text-sm' > URl : {newPostData.url}</p>
+//                                     }
 
-                                            {/* <i className={`ri-camera-3-line text-6xl sm:text-8xl`}></i> */}
+//                                     {
+//                                         newPostData.origin
+//                                         &&
+//                                         <p className=' text-sm text-end'>By : {newPostData.origin}</p>
+//                                     }
 
-                                            <div
-                                                className={`${classNamesForInputs} w-full  `}
-                                            >
+//                                 </div>
 
-                                                <label
+//                                 <div className=" flex flex-wrap gap-2 text-violet-500 font-semibold ">
+//                                     {
 
-                                                    className=' flex  justify-start pl-1 gap-2 flex-wrap'
-                                                    htmlFor="change_img">
-                                                    <FaCamera className=' mx-auto sm:mx-0 text-2xl' />
-                                                    <p>Choose an image for post.</p>
-                                                </label>
+//                                         newPostData.hashs.length > 0
+//                                         &&
+//                                         newPostData.hashs.map((hash, i) => {
+//                                             return <p key={i}>{hash}</p>
+//                                         })
 
-                                            </div>
+//                                     }
+//                                 </div>
 
-                                        </div>
+//                             </div>
+
+//                         </div>
 
+//                         {/* Customization and create or update btn here ------> */}
+//                         <div className=' flex flex-col '>
+
+//                             <div className=' px-2'>
 
-                                        <label
-                                            className=' pl-2 pr-1 border-b font-semibold'
-                                            htmlFor="change_img"
-                                        >*Image</label>
+//                                 <div
+//                                     className=' flex gap-1.5 flex-wrap'
+//                                 >
 
+//                                     <p>Customize your Post ☝️:- </p>
 
-                                        {/* <div >
-                                            <label htmlFor="change_img" className='text-green-500'>After changing click submit </label>
-                                            <button className="bg-green-500 px-1 rounded text-white font-bold" onClick={(e) => {
-                                                e.stopPropagation();
-                                                // submitNewImg(); 
-                                            }}>☝️Upload</button>
-                                        </div> */}
+//                                     <div
+//                                         className={` flex items-center border rounded pl-1 overflow-hidden ${!themeMode ? "bg-black" : "bg-white"} `}
+//                                     >
+//                                         <label
+//                                             className=' mx-0.5 mr-1.5 font-semibold '
+//                                             htmlFor="color"
+//                                         >By Color : </label>
+//                                         <input
+//                                             type="color"
+//                                             className={`${!themeMode ? "bg-black" : "bg-white"}`}
+//                                             name="color"
+//                                             id="color"
+//                                             onChange={(e) => setCutomize({ ...customize, color: e.target.value })}
+//                                             value={customize.color}
+//                                         />
+//                                     </div>
 
-                                    </div>
+//                                     <div
+//                                         className={` flex items-center border rounded pl-1 overflow-hidden ${!themeMode ? "bg-black" : "bg-white"} `}
+//                                     >
+//                                         <label
+//                                             className=' mx-0.5 mr-1.5 font-semibold '
+//                                             htmlFor="font"
+//                                         >By Fonts : </label>
 
+//                                         <select
+//                                             className={`${!themeMode ? "bg-black" : "bg-white"}`}
+//                                             name="font"
+//                                             id="font"
+//                                             onChange={(e) => { setCutomize({ ...customize, font: e.target.value }) }}
+//                                         >
+//                                             {
+//                                                 fontFamily.map((ele, i) => {
+//                                                     return <option key={i} value={ele} >{ele}</option>
+//                                                 })
+//                                             }
 
+//                                             <option value="none" >None</option>
+//                                         </select>
+//                                     </div>
 
+//                                     <div
+//                                         className={` flex items-center border rounded pl-1 overflow-hidden ${!themeMode ? "bg-black" : "bg-white"} `}
+//                                     >
+//                                         <label
+//                                             className=' mx-0.5 mr-1.5 font-semibold'
+//                                             htmlFor="bgColor"
+//                                         >By Background Color : </label>
 
-                                    <div>
-                                        <input
-                                            className={`${classNamesForInputs}`}
-                                            placeholder="Give url of post"
-                                            type={"text"}
-                                            id="url"
-                                            value={newPostData?.url}
-                                            name='url'
-                                            onChange={(e) => {
-                                                e.preventDefault();
-                                                e.stopPropagation();
-                                                setNewPostData((pre) => ({ ...pre, [e.target.name]: e.target.value }))
-                                            }}
-                                        />
+//                                         <input
+//                                             type="color"
+//                                             name="bgColor"
+//                                             id="bgColor"
+//                                             className={`${!themeMode ? "bg-black" : "bg-white"}`}
+//                                             onChange={(e) => setCutomize({ ...customize, bgColor: e.target.value })
+//                                             }
 
-                                        <label
-                                            className=' pl-2 pr-1 border-b font-semibold'
-                                            htmlFor="url"
-                                        >*Url</label>
+//                                             value={customize.bgColor}
+//                                         />
+//                                     </div>
 
-                                    </div>
+//                                     <div
+//                                         className={` flex items-center border rounded pl-1 overflow-hidden ${!themeMode ? "bg-black" : "bg-white"} `}
+//                                     >
+//                                         <label
+//                                             className=' mx-0.5 mr-1.5 font-semibold '
+//                                             htmlFor="bgImage"
+//                                         >By Bg Images : </label>
 
+//                                         <select
+//                                             className={`${!themeMode ? "bg-black" : "bg-white"}`}
+//                                             name="bgImage"
+//                                             id="bgImage"
+//                                             onChange={(e) => {
+//                                                 setCutomize({ ...customize, bgImage: e.target.value });
+//                                                 // console.log(e.target.value)
+//                                             }}
+//                                         >
+//                                             {
+//                                                 bgImage.map((ele, i) => {
+//                                                     return <option key={i} value={ele} >Image {i + 1}</option>
+//                                                 })
+//                                             }
 
-                                    <div>
-                                        <input
-                                            className={`${classNamesForInputs}`}
-                                            placeholder="Give origin of post"
-                                            type={"text"}
-                                            id="origin"
-                                            value={newPostData?.origin}
-                                            name='origin'
-                                            onChange={(e) => {
-                                                e.preventDefault();
-                                                e.stopPropagation();
-                                                setNewPostData((pre) => ({ ...pre, [e.target.name]: e.target.value }))
-                                            }}
-                                        />
+//                                             <option value="none" >None</option>
+//                                         </select>
+//                                     </div>
 
-                                        <label
-                                            className=' pl-2 pr-1 border-b font-semibold'
-                                            htmlFor="origin"
-                                        >*Origin</label>
+//                                     <button
+//                                         onClick={() => setCutomize(initailCustomize)}
+//                                         className=' px-2 border rounded text-xs border-red-500 text-red-500 ml-auto mr-2'
+//                                     >Default</button>
 
-                                    </div>
+//                                 </div>
 
+//                                 <p className=' text-xs mt-1'>* Make sure your post should look Awesome and visiable properly.</p>
+//                                 <p className=' text-xs'>* Make your post design as better as you can and inhance look and feel.</p>
+//                             </div>
 
-                                    <div>
+//                             <div className=' flex justify-end'>
 
-                                        <div className={` ${!themeMode ? "text-violet-300" : "text-violet-700"} flex flex-wrap items-center gap-1`}>
+//                                 <button
+//                                     className={`px-8 mx-8 my-1 rounded-full font-bold bg-green-400 hover:bg-green-600 transition-all ${themeMode ? "text-green-900" : "text-green-900"}`}
+//                                     onClick={(e) => { submitFormData(e) }}
+//                                 >
+//                                     {
+//                                         !updatingPost ? "Create" : "Update"
+//                                     }
+//                                 </button>
+//                             </div>
 
-                                            {
-                                                newPostData.hashs.map((ele, i) => {
-                                                    return (
-                                                        <p
-                                                            key={i}
-                                                            className=' border border-cyan-400 pl-2 rounded-md'
-                                                        >{ele}
-                                                            <span
-                                                                onClick={() => cutOneHash(i)}
-                                                                className='bg-red-500 rounded-full font-semibold px-1 mx-1 text-white hover:cursor-pointer hover:bg-red-700 '
-                                                            >x</span>
-                                                        </p>
-                                                    )
-                                                })
-                                            }
-                                        </div>
+//                         </div>
 
+//                     </div>
 
-                                        <div className='my-1 flex'>
+//                 </div >
 
-                                            <div
-                                                className={` relative flex justify-end w-[68%] border rounded `}
-                                            // className={`flex  `}
-                                            >
+//             </div >
 
+//         </>
+//     )
+// }
 
-                                                <input
-                                                    className={`${classNamesForInputs} w-full relative z-10 rounded-e-none `}
-                                                    placeholder="Give HasThats of post"
-                                                    type={"text"}
-                                                    id="HasThats"
-                                                    name="HasThats"
-                                                    value={newHash}
-                                                    onChange={(e) => {
-                                                        e.preventDefault();
-                                                        e.stopPropagation();
-                                                        setNewHash(() => e.target.value)
-                                                    }
-                                                    }
+// export default NewPostPage
 
-                                                    onKeyDown={(e) => {
-                                                        // e.preventDefault();
-                                                        // console.log(e.key)
-                                                        if (e.key === "Enter") {
-                                                            addNewHash({ e })
-                                                        }
-                                                    }}
+import React from "react";
 
-                                                />
+const NewPostNotUsing = () => {
+  return <div>NewPostNotUsing</div>;
+};
 
-                                                <button
-                                                    className=' -ml-1 mb-0.5 scale-y-[1.6] scale-x-125'
-                                                    onClick={(e) => {
-                                                        // e.preventDefault()
-                                                        addNewHash({ e })
-                                                    }}
-                                                >⬆️</button>
-
-
-                                                {
-                                                    // // // Suggetion div with logic here ---------->
-
-                                                    newHash
-                                                    &&
-
-                                                    <div className={`absolute z-[1] top-[110%] rounded w-full px-0.5 ${!themeMode ? "bg-black" : "bg-white"} `}>
-
-                                                        {
-
-                                                            catAndHash.hashthasts
-                                                                .filter((ele) => ele.includes(newHash))
-
-                                                                .map((ele, i) => {
-                                                                    return (
-                                                                        <>
-
-                                                                            {
-                                                                                ele
-                                                                                &&
-                                                                                <div
-                                                                                    className=' border-b'
-                                                                                    key={i}
-                                                                                    onClick={() => {
-
-                                                                                        newPostData.hashs.push(ele)
-
-                                                                                        // console.log(newPostData.hashs)
-
-                                                                                        setNewPostData({
-                                                                                            ...newPostData,
-                                                                                            hashs: newPostData.hashs
-                                                                                        });
-                                                                                        setNewHash("");
-                                                                                    }}
-                                                                                >{ele}</div>
-
-                                                                            }
-                                                                        </>
-                                                                    )
-                                                                })
-
-
-
-                                                        }
-
-                                                    </div>
-                                                }
-
-
-                                            </div>
-
-
-                                            <label
-                                                className=' pl-2 pr-1 border-b font-semibold'
-                                                htmlFor="HasThats"
-                                            >*Hasthats</label>
-
-                                        </div>
-
-
-                                    </div>
-
-                                </form>
-
-                                <p className=' text-center'>star(*) marked are optional.</p>
-
-                            </div>
-
-
-
-                            {/* UI of given data shown here -------> */}
-
-                            <div
-                                className={` relative overflow-hidden rounded p-1 border w-full sm:w-2/5 ${!themeMode ? " bg-black" : " bg-white"}`}
-                                style={{
-                                    backgroundColor: customize.bgColor,
-                                    color: customize.color,
-                                    backgroundImage: customize.bgImage,
-                                    fontFamily: `${customize.font} , sans-serif`,
-
-                                    // // // added more style if user choosed profile pic as bg of post ------>
-                                    backgroundRepeat: `url('${session?.user.image}')` === `${customize.bgImage}` ? "no-repeat" : "",
-                                    backgroundPosition: `url('${session?.user.image}')` === `${customize.bgImage}` ? 'center' : "",
-                                    backgroundSize: `url('${session?.user.image}')` === `${customize.bgImage}` ? "cover" : "",
-                                }}
-                            >
-
-
-                                <div className="rounded-t flex gap-1.5 items-center border-b border-cyan-400">
-
-                                    <ImageReact
-                                        className=" rounded-full w-8 h-8 aspect-square object-cover"
-                                        src={`${session?.user.image || "https://res.cloudinary.com/dlvq8n2ca/image/upload/v1701708322/jual47jntd2lpkgx8mfx.png"}`}
-                                        alt=""
-                                    />
-                                    <p className=' font-semibold capitalize'>{session?.user.name || "Name Kumar"}</p>
-                                </div>
-
-                                <div className=" flex justify-between flex-wrap gap-1">
-                                    <p className=" capitalize">{newPostData.title}</p>
-
-                                    {
-                                        newPostData.category
-                                        &&
-                                        <p className=" ml-auto text-xs">({newPostData.category})</p>
-                                    }
-
-                                </div>
-
-                                <div className=" text-sm  max-h-40 overflow-y-scroll"
-                                >
-                                    {
-                                        newPostData.content
-                                    }
-                                </div>
-
-                                {
-                                    (newPostData?.image || postImageUrl)
-                                    &&
-                                    <ImageReact
-                                        style={{ objectFit: "cover" }}
-                                        className=' rounded my-2 w-full'
-                                        src={postImageUrl}
-                                    />
-                                }
-
-
-                                <div
-                                    className=' mt-1'
-                                    style={{ lineBreak: "anywhere" }}
-                                >
-
-                                    {
-                                        newPostData.url
-                                        &&
-                                        <p className=' text-sm' > URl : {newPostData.url}</p>
-                                    }
-
-
-                                    {
-                                        newPostData.origin
-                                        &&
-                                        <p className=' text-sm text-end'>By : {newPostData.origin}</p>
-                                    }
-
-                                </div>
-
-
-                                <div className=" flex flex-wrap gap-2 text-violet-500 font-semibold ">
-                                    {
-
-                                        newPostData.hashs.length > 0
-                                        &&
-                                        newPostData.hashs.map((hash, i) => {
-                                            return <p key={i}>{hash}</p>
-                                        })
-
-                                    }
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        {/* Customization and create or update btn here ------> */}
-                        <div className=' flex flex-col '>
-
-
-                            <div className=' px-2'>
-
-                                <div
-                                    className=' flex gap-1.5 flex-wrap'
-                                >
-
-                                    <p>Customize your Post ☝️:- </p>
-
-
-                                    <div
-                                        className={` flex items-center border rounded pl-1 overflow-hidden ${!themeMode ? "bg-black" : "bg-white"} `}
-                                    >
-                                        <label
-                                            className=' mx-0.5 mr-1.5 font-semibold '
-                                            htmlFor="color"
-                                        >By Color : </label>
-                                        <input
-                                            type="color"
-                                            className={`${!themeMode ? "bg-black" : "bg-white"}`}
-                                            name="color"
-                                            id="color"
-                                            onChange={(e) => setCutomize({ ...customize, color: e.target.value })}
-                                            value={customize.color}
-                                        />
-                                    </div>
-
-                                    <div
-                                        className={` flex items-center border rounded pl-1 overflow-hidden ${!themeMode ? "bg-black" : "bg-white"} `}
-                                    >
-                                        <label
-                                            className=' mx-0.5 mr-1.5 font-semibold '
-                                            htmlFor="font"
-                                        >By Fonts : </label>
-
-                                        <select
-                                            className={`${!themeMode ? "bg-black" : "bg-white"}`}
-                                            name="font"
-                                            id="font"
-                                            onChange={(e) => { setCutomize({ ...customize, font: e.target.value }) }}
-                                        >
-                                            {
-                                                fontFamily.map((ele, i) => {
-                                                    return <option key={i} value={ele} >{ele}</option>
-                                                })
-                                            }
-
-                                            <option value="none" >None</option>
-                                        </select>
-                                    </div>
-
-                                    <div
-                                        className={` flex items-center border rounded pl-1 overflow-hidden ${!themeMode ? "bg-black" : "bg-white"} `}
-                                    >
-                                        <label
-                                            className=' mx-0.5 mr-1.5 font-semibold'
-                                            htmlFor="bgColor"
-                                        >By Background Color : </label>
-
-                                        <input
-                                            type="color"
-                                            name="bgColor"
-                                            id="bgColor"
-                                            className={`${!themeMode ? "bg-black" : "bg-white"}`}
-                                            onChange={(e) => setCutomize({ ...customize, bgColor: e.target.value })
-                                            }
-
-                                            value={customize.bgColor}
-                                        />
-                                    </div>
-
-                                    <div
-                                        className={` flex items-center border rounded pl-1 overflow-hidden ${!themeMode ? "bg-black" : "bg-white"} `}
-                                    >
-                                        <label
-                                            className=' mx-0.5 mr-1.5 font-semibold '
-                                            htmlFor="bgImage"
-                                        >By Bg Images : </label>
-
-                                        <select
-                                            className={`${!themeMode ? "bg-black" : "bg-white"}`}
-                                            name="bgImage"
-                                            id="bgImage"
-                                            onChange={(e) => {
-                                                setCutomize({ ...customize, bgImage: e.target.value });
-                                                // console.log(e.target.value)
-                                            }}
-                                        >
-                                            {
-                                                bgImage.map((ele, i) => {
-                                                    return <option key={i} value={ele} >Image {i + 1}</option>
-                                                })
-                                            }
-
-                                            <option value="none" >None</option>
-                                        </select>
-                                    </div>
-
-
-                                    <button
-                                        onClick={() => setCutomize(initailCustomize)}
-                                        className=' px-2 border rounded text-xs border-red-500 text-red-500 ml-auto mr-2'
-                                    >Default</button>
-
-                                </div>
-
-                                <p className=' text-xs mt-1'>* Make sure your post should look Awesome and visiable properly.</p>
-                                <p className=' text-xs'>* Make your post design as better as you can and inhance look and feel.</p>
-                            </div>
-
-
-                            <div className=' flex justify-end'>
-
-                                <button
-                                    className={`px-8 mx-8 my-1 rounded-full font-bold bg-green-400 hover:bg-green-600 transition-all ${themeMode ? "text-green-900" : "text-green-900"}`}
-                                    onClick={(e) => { submitFormData(e) }}
-                                >
-                                    {
-                                        !updatingPost ? "Create" : "Update"
-                                    }
-                                </button>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div >
-
-
-            </div >
-
-        </>
-    )
-}
-
-export default NewPostPage
-
+export default NewPostNotUsing;

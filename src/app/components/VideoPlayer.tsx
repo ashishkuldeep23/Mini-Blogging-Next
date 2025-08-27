@@ -141,7 +141,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const handleProgress = () => {
     if (videoRef.current) {
       const progress =
-        (videoRef.current.currentTime / videoRef.current.duration) * 100;
+        (videoRef?.current?.currentTime / videoRef?.current?.duration) * 100;
       setProgress(progress);
     }
   };
@@ -152,7 +152,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     if (videoRef.current) {
       const time =
         (parseFloat(e.target.value) / 100) * videoRef.current.duration;
-      videoRef.current.currentTime = time;
+      videoRef.current.currentTime = time || 0;
       setProgress(parseFloat(e.target.value));
     }
   };
@@ -321,7 +321,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
           ref={videoRef}
           className="w-full h-auto rounded-lg cursor-pointer transition-all duration-300"
           onTimeUpdate={handleProgress}
-          src={videoUrl.replace(/^http:\/\//i, "https://")} // Video URL passed as a prop
+          src={videoUrl?.replace(/^http:\/\//i, "https://")} // Video URL passed as a prop
           muted={isMuted} // Default muted to prevent autoplay issues in browsers
           onDoubleClick={onDoubleClickHandler}
         />

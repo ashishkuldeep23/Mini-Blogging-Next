@@ -126,6 +126,14 @@ const PostSchema = new mongoose.Schema(
       default: [],
       ref: "users",
     },
+    tested: {
+      type: Boolean,
+      default: true, // // // Default is true means no banned thing present meta data wise.
+    },
+    bannedWord: {
+      type: Boolean,
+      default: false, // // // Default is false means no banned word found in given string.
+    },
   },
   { timestamps: true }
 );

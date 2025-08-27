@@ -119,6 +119,7 @@ export interface PostInterFace {
   blocksId?: string[];
   savedById?: string[];
   commentsBy?: string[];
+  tested?: boolean;
 }
 
 // // // Baking type for single post -------->
@@ -166,6 +167,7 @@ export interface NewPostType {
   image?: string;
   metaDataType?: ValidInputFiles;
   metaDataUrl?: string;
+  tested?: boolean;
 }
 
 export interface PostTypeForBackend {
@@ -181,6 +183,7 @@ export interface PostTypeForBackend {
   whenCreated?: string; // // // === whenCreated
   metaDataType?: ValidInputFiles; // // // === metaDataType
   metaDataUrl?: string; // // // === metaDataUrl
+  tested?: boolean;
 }
 
 export type ValidInputFiles = "image/png" | "image/jpeg" | "video/mp4" | null;

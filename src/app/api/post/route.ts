@@ -1,62 +1,83 @@
 import { connect } from "@/dbConfig/dbConfig";
+import { ContentModerator } from "@/lib/ContentModerator";
 import Post from "@/models/postModel";
 import User from "@/models/userModel";
 import { NextRequest, NextResponse } from "next/server";
 
-
-
-
 export async function POST(req: NextRequest) {
+  await connect();
 
+  try {
+    // console.log("fsdfsdfsdfsdfsfd")
 
-    await connect()
+    const reqBody = await req.json();
 
+    // console.log(reqBody)
 
-    try {
+    const { title, category, promptReturn, author } = reqBody;
 
-        // console.log("fsdfsdfsdfsdfsfd")
+    if (!category || !promptReturn)
+      return NextResponse.json(
+        { success: false, message: "Mandatory fields not given." },
+        { status: 400 }
+      );
 
-        const reqBody = await req.json()
+    if (!author)
+      return NextResponse.json(
+        { success: false, message: "Author id is not given." },
+        { status: 400 }
+      );
 
-        // console.log(reqBody)
+    // // // Check author here -------->
+    let findUser = await User.findById(author).select(
+      "-updatedAt -createdAt -__v -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password"
+    );
 
-        const { title, category, promptReturn, author } = reqBody
+    if (!findUser)
+      return NextResponse.json(
+        { success: false, message: "No User find with given post id." },
+        { status: 404 }
+      );
 
-        if (!category || !promptReturn) return NextResponse.json({ success: false, message: 'Mandatory fields not given.' }, { status: 400 })
+    // let BannedWord = false;
+    const contentModerator = new ContentModerator("en");
 
-        if (!author) return NextResponse.json({ success: false, message: 'Author id is not given.' }, { status: 400 })
+    let bannedWord =
+      contentModerator.check(reqBody.title) ||
+      contentModerator.check(reqBody.category) ||
+      contentModerator.check(reqBody.promptReturn) ||
+      contentModerator.check(reqBody.aiToolName) ||
+      false;
 
+    let createNewPost = new Post({ ...reqBody, bannedWord });
 
-        // // // Check author here -------->
-        let findUser = await User.findById(author)
-            .select("-updatedAt -createdAt -__v -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password")
+    createNewPost = await createNewPost.save();
 
-        if (!findUser) return NextResponse.json({ success: false, message: 'No User find with given post id.' }, { status: 404 })
+    await createNewPost.populate(
+      "author",
+      "-updatedAt -createdAt -__v -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password"
+    );
 
-        let createNewPost = new Post(reqBody)
+    // return NextResponse.json({ success: true, data: createNewPost, message: "User created." }, { status: 201 })
 
-        createNewPost = await createNewPost.save()
+    // let upadatedPost = createNewPost
 
-        // return NextResponse.json({ success: true, data: createNewPost, message: "User created." }, { status: 201 })
+    // upadatedPost.author = findUser
 
-        let upadatedPost = createNewPost
+    // console.log(upadatedPost)
 
-        upadatedPost.author = findUser
-
-        // console.log(upadatedPost)
-
-
-        return NextResponse.json({ success: true, data: upadatedPost, message: "New post created." }, { status: 201 })
-
-    } catch (error: any) {
-
-        console.log(error.message)
-        return NextResponse.json({ success: false, message: `${error.message} (Server Error)` }, { status: 500 })
-    }
-
+    return NextResponse.json(
+      { success: true, data: createNewPost, message: "New post created." },
+      { status: 201 }
+    );
+  } catch (error: any) {
+    console.log(error.message);
+    return NextResponse.json(
+      { success: false, message: `${error.message} (Server Error)` },
+      { status: 500 }
+    );
+  }
 }
-
-
 
 // export async function GET(req: NextRequest) {
 //     try {
@@ -76,7 +97,3 @@ export async function POST(req: NextRequest) {
 //         return NextResponse.json({ success: false, message: `${error.message} (Server Error)` }, { status: 500 })
 //     }
 // }
-
-
-
-

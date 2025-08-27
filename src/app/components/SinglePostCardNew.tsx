@@ -26,7 +26,7 @@ const SinglePostCardNew: React.FC<{
   const dispatch = useDispatch();
   const router = useRouter();
   const promptText = ele.promptReturn;
-  const charactersWant = 90;
+  const charactersWant = 70;
   const recentlyDeleted = usePostData().recentlyDeleted;
 
   const [height, setHeight] = useState<TypeHeight>("h-[45vh]");
@@ -68,6 +68,8 @@ const SinglePostCardNew: React.FC<{
     setHeight((p) => (p === "h-[45vh]" ? "h-[75vh]" : "h-[45vh]"));
   };
 
+  const reqVerifyClickHandler = () => {};
+
   return (
     <motion.div
       initial={{ scale: 0 }}
@@ -87,12 +89,30 @@ const SinglePostCardNew: React.FC<{
     >
       <div className="inter-var">
         <div
-          className={` !relative overflow-hidden sm:rounded-xl w-[95vw] sm:w-[23rem] md:w-[25rem] lg:w-[30rem] !max-w-[30rem] bg-gray-50 group/card  dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1]  dark:border-white/[0.2] border-black/[0.1] h-auto  ${
+          className={` !relative overflow-hidden sm:rounded-xl w-[95vw] sm:w-[23rem] md:w-[25rem] lg:w-[30rem] !max-w-[30rem] bg-gray-50 group/card  dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1]  dark:border-white/[0.2] border-black/[0.1] h-auto ${
             !themeMode
               ? " dark:bg-black shadow-cyan-950 "
               : " dark:bg-white shadow-cyan-50 "
           }   `}
         >
+          {/* Now here we can place tested ui -------->> */}
+
+          {ele.tested === false && !ele.tested && (
+            <span
+              className={` absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 text-center rounded-md p-1  z-10 text-yellow-500 font-bold text-xl w-[50%] sm:w-[40%] flex flex-col items-center justify-center  ${
+                !themeMode ? "bg-black  " : " bg-white  "
+              }   } `}
+            >
+              This post is not verified yet.
+              <button
+                onClick={reqVerifyClickHandler}
+                className=" px-2 text-sm  bg-green-500 text-white rounded-md"
+              >
+                Req for verification
+              </button>
+            </span>
+          )}
+
           <EditPanelForSinglePost ele={ele} />
 
           {/* Post UI */}
@@ -186,7 +206,7 @@ const SinglePostCardNew: React.FC<{
                 <p className="capitalize text-xl">{ele.title}</p>
               </div>
 
-              <div className=" my-1 text-sm">
+              <div className=" my-1 text-sm overflow-x-auto overflow-y-hidden scrooller_bar_small">
                 {`${promptText}`.length > charactersWant
                   ? `${promptText?.slice(0, charactersWant)}...`
                   : `${promptText}`}

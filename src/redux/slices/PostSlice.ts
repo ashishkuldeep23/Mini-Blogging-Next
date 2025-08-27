@@ -76,8 +76,16 @@ export const getCatAndHash = createAsyncThunk(
 
 export const createNewPost = createAsyncThunk(
   "post/createNewPost",
-  async ({ body, userId }: { body: NewPostType; userId: string }) => {
-    // console.log({ body })
+  async ({
+    body,
+    userId,
+    tested,
+  }: {
+    body: NewPostType;
+    userId: string;
+    tested?: boolean;
+  }) => {
+    // console.log({ tested });
 
     let date = new Date();
     let localDate = date.toLocaleDateString("en-GB");
@@ -95,6 +103,7 @@ export const createNewPost = createAsyncThunk(
       metaDataUrl: body.metaDataUrl,
       whenCreated: localDate,
       author: userId,
+      tested: tested || false,
     };
 
     const options: RequestInit = {
@@ -118,12 +127,15 @@ export const updatePost = createAsyncThunk(
     body,
     userId,
     postId,
+    tested,
   }: {
     body: NewPostType;
     userId: string;
     postId: string;
+    tested?: boolean;
   }) => {
     // console.log({ body })
+    // console.log({ tested });
 
     let makeBody = {
       title: body.title,
@@ -138,6 +150,7 @@ export const updatePost = createAsyncThunk(
       image: body.image,
       postId: postId,
       author: userId,
+      tested: tested || false,
     };
 
     const options: RequestInit = {
@@ -529,6 +542,10 @@ const psotSlice = createSlice({
           );
 
           state.allPost.splice(findIndex, 1, action.payload.data);
+
+
+          // // // now reirect this (Apne tareeke se)
+
 
           // state.allPost.unshift(action.payload.data)
         } else {

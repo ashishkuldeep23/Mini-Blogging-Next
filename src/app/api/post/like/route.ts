@@ -69,6 +69,7 @@ export async function PUT(req: NextRequest) {
 
       postData.likesId.splice(findIndex, 1);
       postData.likes = postData.likes - 1;
+      postData.rank = (postData?.rank || 0) - 1;
 
       MES_For_Clinet = "Unlike Done!";
     }

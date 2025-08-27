@@ -26,6 +26,7 @@ import {
   ValidInputFiles,
 } from "../../../types/Types";
 import VideoPlayer from "@/app/components/VideoPlayer";
+import useMediaCheckHook from "@/helper/checkMedia";
 
 const NewPostPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -212,6 +213,13 @@ const NewPostPage = () => {
     }
   }
 
+  const {
+    checkMediaHnadler,
+    isLoading: mediaCheckLoading,
+    mediaCheck,
+    reasons: mediaReasons,
+  } = useMediaCheckHook();
+
   function fileInputOnchangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
     e.stopPropagation();
     e.preventDefault();
@@ -232,6 +240,11 @@ const NewPostPage = () => {
       setImageFile(file);
       setPostImageUrl(URL.createObjectURL(file));
       setMetaDataType(file.type as ValidInputFiles);
+
+      // // // Experiment ---------------------------------------->>
+      // // // Now call the check fn defined in server.
+
+      checkMediaHnadler(file);
     }
   }
 
@@ -306,6 +319,7 @@ const NewPostPage = () => {
 
               userId: session?.user?.id,
               postId: singlePostdata?._id,
+              tested: imageFile ? mediaCheck : newPostData.tested || true,
             })
           );
         } else {
@@ -319,6 +333,7 @@ const NewPostPage = () => {
                 metaDataUrl,
               },
               userId: session?.user?.id,
+              tested: imageFile ? mediaCheck : true,
             })
           );
         }
@@ -409,6 +424,7 @@ const NewPostPage = () => {
         image: singlePostdata?.image,
         metaDataType: singlePostdata?.metaDataType,
         metaDataUrl: singlePostdata?.metaDataUrl,
+        tested: singlePostdata?.tested,
       });
 
       if (singlePostdata.customize) {
@@ -435,7 +451,7 @@ const NewPostPage = () => {
 
   return (
     <div
-      className={`w-full min-h-screen flex flex-col items-center ${
+      className={`w-full min-h-screen max-w-[100vw] flex flex-col items-center ${
         !themeMode ? " bg-black text-white " : " bg-white text-black"
       } 
        ${
@@ -918,7 +934,7 @@ const NewPostPage = () => {
 
           {/* Customization and create or update btn here ------> */}
           <div className=" flex flex-col ">
-            <div className=" px-2 my-5 border rounded-xl m-1 py-2">
+            <div className=" px-2 mt-4 border rounded-xl m-1 py-2">
               <p className=" my-2 ">Customize your Post ☝️:- </p>
 
               <div className=" flex gap-1.5 flex-wrap">
@@ -1054,10 +1070,37 @@ const NewPostPage = () => {
               </p>
             </div>
 
+            <div>
+              {imageFile && !mediaCheckLoading && !mediaCheck && (
+                <div className=" text-center text-red-500 border rounded-xl  p-2 flex flex-col ">
+                  <p className=" text-sm font-semibold ">
+                    Your media could not be validated by our system. Please
+                    ensure it meets the required guidelines and try again.
+                  </p>
+                  {mediaReasons?.length > 0 && (
+                    <div className=" flex gap-1 justify-center mt-2 ">
+                      <p>Reasons:</p>
+                      {mediaReasons.map((ele, i) => {
+                        return <span key={i}>{ele}</span>;
+                      })}
+                    </div>
+                  )}
+
+                  <div className=" text-white text-sm mt-2 ">
+                    <p>Check console for more details or Inform Admin</p>
+                    <p>
+                      Plz don't do this, it takes months to create this web app.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+
             <div className=" flex justify-end">
               {!isLoading && (
                 <button
-                  className={` text-3xl px-10 py-2 mb-4 mx-4 my-1 rounded-full font-bold bg-green-400 active:scale-90 hover:bg-green-600 transition-all ${
+                  disabled={isLoading}
+                  className={` text-3xl px-10 py-2 mb-4 m-4 rounded-full font-bold bg-green-400 active:scale-90 hover:bg-green-600 transition-all ${
                     themeMode ? "text-green-900" : "text-green-900"
                   }`}
                   onClick={(e) => {

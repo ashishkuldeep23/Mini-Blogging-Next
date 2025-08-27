@@ -51,7 +51,7 @@ export default function Home() {
       /> */}
 
       {/* Main home div that hold allPosts and all */}
-      <div className=" flex flex-col justify-center items-center pb-6 ">
+      <div className=" flex flex-col justify-center items-center ">
         <Navbar />
 
         <div className=" relative flex items-start  gap-5">
