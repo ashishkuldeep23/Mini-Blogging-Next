@@ -1122,12 +1122,12 @@ function SeeMoreOfComment({
           <p className=" ml-1 text-xs">
             <span className=" text-xs">
               {"-:  "}
-              {comment.whenCreated.toString()}
+              {comment?.whenCreated?.toString()}
             </span>
           </p>
 
           {(comment.likes > 0 ||
-            comment.replies.length > 0 ||
+            comment?.replies?.length > 0 ||
             commentClicked) && (
             <button
               className={`relative mt-0.5  ml-auto mr-0 flex gap-0.5 items-center justify-center border p-0.5 rounded text-[0.6rem] font-semibold font-serif ${
@@ -1202,7 +1202,7 @@ function SeeMoreOfComment({
               </div>
 
               <p className=" text-xs text-end ml-auto">
-                {comment.likes} likes and {comment.replies.length} replies.
+                {comment?.likes} likes and {comment?.replies?.length} replies.
               </p>
             </div>
 
@@ -1247,7 +1247,7 @@ function SeeMoreOfComment({
             )
           }
 
-          {likedBy.length > 0 && (
+          {likedBy?.length > 0 && (
             <div className="border rounded my-1 p-0.5 py-2 flex gap-2 items-start flex-wrap ">
               <p className=" flex gap-1 flex-wrap items-center ml-1 mt-1.5 ">
                 <span className=" font-semibold">Likes</span>
@@ -1287,7 +1287,7 @@ function SeeMoreOfComment({
             </div>
           )}
 
-          {replies.length > 0 && (
+          {replies?.length > 0 && (
             <div className=" rounded my-1 p-0.5">
               <p className=" text-center">
                 <span>Replies are</span>
@@ -1297,7 +1297,7 @@ function SeeMoreOfComment({
                 </span>
               </p>
 
-              {replies.map((ele, i) => {
+              {replies?.map((ele, i) => {
                 return (
                   <div
                     key={i}

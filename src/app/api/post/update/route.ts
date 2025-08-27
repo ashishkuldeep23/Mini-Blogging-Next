@@ -70,6 +70,8 @@ export async function PUT(req: NextRequest) {
       pending = "pending";
     }
 
+    // console.log({ reqBody });
+
     let updatedPost = await Post.findByIdAndUpdate(
       postId,
       { ...reqBody, bannedWord, pending },
@@ -90,16 +92,17 @@ export async function PUT(req: NextRequest) {
         select:
           "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password",
       })
-      // .populate({
-      //     path: "comments",
-      //     select: "-updatedAt -createdAt -__v  -postId ",
-      //     populate: {
-      //         path: "userId",
-      //         // match: { isDeleted: false },
-      //         select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password",
-      //     }
-      // })
       .select("-updatedAt -createdAt -__v ");
+    // .populate({
+    //     path: "comments",
+    //     select: "-updatedAt -createdAt -__v  -postId ",
+    //     populate: {
+    //         path: "userId",
+    //         // match: { isDeleted: false },
+    //         select: "-updatedAt -createdAt -__v  -userId -productID -isDeleted -verifyTokenExp -verifyToken -forgotPassExp -forgotPassToken -password",
+    //     }
+    // })
+
 
     // let createNewPost = new Post(reqBody)
 

@@ -322,7 +322,7 @@ const NewPostPage = () => {
                 ...newPostData,
                 metaDataUrl: newPostData.metaDataUrl || metaDataUrl,
                 metaDataType: newPostData.metaDataType || metaDataType,
-                isPrivate : newPostData.isPrivate || false
+                isPrivate: isPrivate,
               },
 
               userId: session?.user?.id,
@@ -339,7 +339,7 @@ const NewPostPage = () => {
                 category: newPostData.category || "General",
                 metaDataType,
                 metaDataUrl,
-                isPrivate
+                isPrivate,
               },
               userId: session?.user?.id,
               tested: imageFile ? mediaCheck : true,
@@ -450,6 +450,8 @@ const NewPostPage = () => {
 
       if (singlePostdata?.metaDataType)
         setMetaDataType(singlePostdata.metaDataType);
+
+      if (singlePostdata?.isPrivate) setIsPrivate(singlePostdata?.isPrivate);
     }
   }, [singlePostdata]);
 
@@ -1117,26 +1119,33 @@ const NewPostPage = () => {
 
                 <span
                   onClick={isPrivateHandler}
-                  className=" my-3 h-2 rounded-full w-16 bg-yellow-400 relative group hover:cursor-pointer active:scale-110 transition-all "
+                  className={`my-3 h-2 rounded-full w-16  relative group hover:cursor-pointer active:scale-110 transition-all ${
+                    !isPrivate ? "bg-yellow-500" : "bg-green-500"
+                  } `}
                 >
                   <span
-                    className={` group-hover:scale-110 group-hover:cursor-pointer group-hover:border-2 absolute  top-1/2 -translate-y-1/2 border border-yellow-400 rounded-full p-1 flex gap-0.5 transition-all duration-700 ${
-                      !isPrivate ? " -left-2" : " left-[85%] "
-                    } ${!updatingPost ? "bg-green-950" : "bg-rose-950"}  ${
-                      themeMode ? "text-black" : "text-white"
-                    }`}
+                    className={` group-hover:scale-110 group-hover:cursor-pointer group-hover:border-2 absolute  top-1/2 -translate-y-1/2 border  rounded-full p-1 flex gap-0.5 transition-all duration-700
+                       ${
+                         !isPrivate
+                           ? " -left-2 border-yellow-500 text-yellow-500 "
+                           : " left-[85%] border-green-500 text-green-500"
+                       } ${!updatingPost ? "bg-green-950" : "bg-rose-950"} `}
                   >
                     {isPrivate ? (
                       <CiLock className=" text-base font-bold " />
                     ) : (
-                      <CiUnlock className=" text-base font-bold " />
+                      <CiUnlock className=" text-base font-bold  " />
                     )}
                   </span>
                 </span>
 
                 <span>
                   Post is{" "}
-                  <span className=" text-yellow-500 font-semibold">
+                  <span
+                    className={` font-semibold transition-all duration-700 ${
+                      !isPrivate ? "text-yellow-500" : "text-green-500"
+                    } `}
+                  >
                     {!isPrivate ? "Public" : "Private"}
                   </span>{" "}
                   now.
