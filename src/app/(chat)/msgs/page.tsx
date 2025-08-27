@@ -33,6 +33,8 @@ export default function MessagePage() {
 
   const [newChatDiv, setNewChatDiv] = useState(false);
 
+  const [searchConvoText, setSearchConvoText] = useState<string>("");
+
   // const friendsAllFriend = useUserState().userData.friendsAllFriend;
 
   const generalClickHandler = () => {
@@ -76,11 +78,17 @@ export default function MessagePage() {
       />
 
       <div
-        className={` my-1 border-2 border-green-500 text-green-500 h-10 rounded w-full flex justify-center items-center md:w-[70%] lg:w-[60%] ${
+        className={` my-3 mx-0.5 border-2 border-green-700  h-10 rounded w-full flex justify-center items-center md:w-[70%] lg:w-[60%] ${
           isLoading && " opacity-50"
         } ${EmptyChats && "hidden"}  `}
       >
-        <p>Search Input here</p>
+        <input
+          type="text"
+          value={searchConvoText}
+          onChange={(e) => setSearchConvoText(e.target.value)}
+          className=" w-full h-full rounded text-white bg-gray-900 px-2 "
+          placeholder="Search Chats"
+        />
       </div>
 
       <div
@@ -90,25 +98,35 @@ export default function MessagePage() {
       >
         <div
           onClick={generalClickHandler}
-          className=" border-2  min-w-20 h-20 rounded-full overflow-hidden  flex flex-col  justify-end items-center p-1 m-0 active:scale-75 hover:bg-red-700 hover:cursor-pointer transition-all "
+          className=" border-2 min-w-[4.5rem] h-[4.5rem] rounded-full overflow-hidden  flex flex-col  justify-end items-center p-1 m-0 active:scale-75 hover:bg-red-700 hover:cursor-pointer transition-all "
         >
           <TfiWorld className=" h-14 w-14 " />
-          <p className=" text-[0.5rem] w-[80%] text-center  leading-[0.6rem] ">
+          <p className=" text-[0.45rem] w-[80%] text-center  leading-[0.6rem] ">
             Chat with World
           </p>
         </div>
 
         <div className=" scrooller_bar_small pl-1.5 gap-1  h-full flex  justify-start items-center overflow-y-auto">
+          <div className=" border-2 min-w-[4.5rem] h-[4.5rem] rounded-full overflow-hidden  flex flex-col  justify-end items-center p-1 m-0 active:scale-75 hover:bg-red-700 hover:cursor-pointer transition-all ">
+            <span className=" relative">
+              <TfiWorld className=" h-12 w-12 " />
+              <span className=" h-2 w-2 rounded-full bg-green-500 absolute bottom-0 right-0 "></span>
+            </span>
+            <p className=" text-[0.5rem] w-[80%] text-center  leading-[0.6rem] ">
+              Add Note
+            </p>
+          </div>
+
           {Array(5)
             .fill(null)
             .map((_, i) => {
               return (
                 <div
                   key={i}
-                  className=" border-2  min-w-20 h-20 rounded-full overflow-hidden  flex flex-col  justify-end items-center p-1 m-0 active:scale-75 hover:bg-red-700 hover:cursor-pointer transition-all "
+                  className=" border-2  min-w-[4.5rem] h-[4.5rem] rounded-full overflow-hidden  flex flex-col  justify-end items-center p-1 m-0 active:scale-75 hover:bg-red-700 hover:cursor-pointer transition-all "
                 >
                   <span className=" relative">
-                    <TfiWorld className=" h-14 w-14 " />
+                    <TfiWorld className=" h-12 w-12 " />
                     <span className=" h-2 w-2 rounded-full bg-green-500 absolute bottom-0 right-0 "></span>
                   </span>
                   <p className=" text-[0.5rem] w-[80%] text-center  leading-[0.6rem] ">
@@ -135,6 +153,28 @@ export default function MessagePage() {
         <></>
       )}
 
+      {!isLoading &&
+        allConversations.filter(
+          (ele) =>
+            ele?.name?.toLowerCase()?.includes(searchConvoText.toLowerCase()) ||
+            ele?.participants.some((ele: any) =>
+              ele?.name?.toLowerCase()?.includes(searchConvoText.toLowerCase())
+            )
+        ).length === 0 &&
+        searchConvoText && (
+          <div className=" text-center flex justify-center items-center flex-col gap-1 my-10">
+            <p className=" text-2xl w-[60%]  text-center opacity-55 font-semibold ">
+              No conversation found starting with {searchConvoText}
+            </p>
+            <button
+              className=" border-2 border-red-500 font-bold  text-sm px-3 py-1 rounded text-red-500 mt-3"
+              onClick={() => setSearchConvoText("")}
+            >
+              Reset
+            </button>
+          </div>
+        )}
+
       {allConversations.length === 0 && isLoading ? (
         <div className=" my-5 text-yellow-500  rounded w-full flex flex-col justify-center items-center overflow-hidden px-1 md:w-[70%] lg:w-[60%] ">
           {Array(12)
@@ -155,48 +195,60 @@ export default function MessagePage() {
         </div>
       ) : (
         <div className=" my-5   rounded w-full flex flex-col justify-center items-center overflow-hidden px-1 md:w-[70%] lg:w-[60%] ">
-          {allConversations?.map((ele, i) => {
-            return (
-              <Link
-                key={i}
-                className={`block w-full overflow-hidden ${
-                  isLoading && " opacity-50"
-                }  `}
-                href={`/msgs/${ele?._id}`}
-                onClick={() => {
-                  convoClickHandler(ele);
-                }}
-              >
-                <div className=" my-1 bg-sky-950 text-white min-h-16 max-h-28 rounded w-full flex items-center active:scale-90 hover:bg-sky-700 active:bg-sky-700 hover:cursor-pointer overflow-hidden ">
-                  <span className="  max-w-10 min-w-10 h-10 max-h-10 min-h-10 w-10 p-[0.1rem] rounded-full mx-4 border-2 border-sky-500 overflow-hidden">
-                    <ImageReact
-                      className="  w-[99%] h-[99%] rounded-full object-cover"
-                      src={ele?.avatar || ""}
-                    />
-                  </span>
+          {allConversations
+            .filter(
+              (ele) =>
+                ele?.name
+                  ?.toLowerCase()
+                  ?.includes(searchConvoText.toLowerCase()) ||
+                ele?.participants.some((ele: any) =>
+                  ele?.name
+                    ?.toLowerCase()
+                    ?.includes(searchConvoText.toLowerCase())
+                )
+            )
+            ?.map((ele, i) => {
+              return (
+                <Link
+                  key={i}
+                  className={`block w-full overflow-hidden ${
+                    isLoading && " opacity-50"
+                  }  `}
+                  href={`/msgs/${ele?._id}`}
+                  onClick={() => {
+                    convoClickHandler(ele);
+                  }}
+                >
+                  <div className=" my-1 bg-sky-950 text-white min-h-16 max-h-28 rounded w-full flex items-center active:scale-90 hover:bg-sky-700 active:bg-sky-700 hover:cursor-pointer overflow-hidden ">
+                    <span className="  max-w-10 min-w-10 h-10 max-h-10 min-h-10 w-10 p-[0.1rem] rounded-full mx-4 border-2 border-sky-500 overflow-hidden">
+                      <ImageReact
+                        className="  w-[99%] h-[99%] rounded-full object-cover"
+                        src={ele?.avatar || ""}
+                      />
+                    </span>
 
-                  <div>
-                    <p className=" text-lg font-semibold capitalize">
-                      {ele?.name}
-                    </p>
-                    <p className=" opacity-70 text-sm ">
-                      {ele?.lastMessage?.content
-                        ? `${decryptMessage(ele?.lastMessage?.content).slice(
-                            0,
-                            40
-                          )} ${
-                            decryptMessage(ele?.lastMessage?.content).length >
-                            40
-                              ? "..."
-                              : ""
-                          } `
-                        : "Dare to Chat."}
-                    </p>
+                    <div>
+                      <p className=" text-lg font-semibold capitalize">
+                        {ele?.name}
+                      </p>
+                      <p className=" opacity-70 text-sm ">
+                        {ele?.lastMessage?.content
+                          ? `${decryptMessage(ele?.lastMessage?.content).slice(
+                              0,
+                              40
+                            )} ${
+                              decryptMessage(ele?.lastMessage?.content).length >
+                              40
+                                ? "..."
+                                : ""
+                            } `
+                          : "Dare to Chat."}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </Link>
-            );
-          })}
+                </Link>
+              );
+            })}
         </div>
       )}
 
