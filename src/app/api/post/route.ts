@@ -14,7 +14,9 @@ export async function POST(req: NextRequest) {
 
     // console.log(reqBody)
 
-    const { title, category, promptReturn, author } = reqBody;
+    const { title, category, promptReturn, author, tested, metaDataUrl } =
+      reqBody;
+    // // // be default tested is true (Mtlb meta data check kiya aur sb shi hai ) .
 
     if (!category || !promptReturn)
       return NextResponse.json(
@@ -49,7 +51,13 @@ export async function POST(req: NextRequest) {
       contentModerator.check(reqBody.aiToolName) ||
       false;
 
-    let createNewPost = new Post({ ...reqBody, bannedWord });
+    let pending = "approved";
+
+    if (metaDataUrl && !tested) {
+      pending = "pending";
+    }
+
+    let createNewPost = new Post({ ...reqBody, bannedWord, pending });
 
     createNewPost = await createNewPost.save();
 

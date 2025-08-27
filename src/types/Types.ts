@@ -120,6 +120,7 @@ export interface PostInterFace {
   savedById?: string[];
   commentsBy?: string[];
   tested?: boolean;
+  isPrivate?: boolean;
 }
 
 // // // Baking type for single post -------->
@@ -168,6 +169,7 @@ export interface NewPostType {
   metaDataType?: ValidInputFiles;
   metaDataUrl?: string;
   tested?: boolean;
+  isPrivate?: boolean;
 }
 
 export interface PostTypeForBackend {
@@ -184,6 +186,7 @@ export interface PostTypeForBackend {
   metaDataType?: ValidInputFiles; // // // === metaDataType
   metaDataUrl?: string; // // // === metaDataUrl
   tested?: boolean;
+  isPrivate?: boolean;
 }
 
 export type ValidInputFiles = "image/png" | "image/jpeg" | "video/mp4" | null;

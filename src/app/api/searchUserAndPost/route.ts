@@ -38,6 +38,7 @@ export async function POST(req: NextRequest) {
         let getPostsFromDB = await Post.find({
             $or: [
                 { title: { $regex: key, $options: option } }, // case-insensitive
+                { promptReturn: { $regex: key, $options: option } }, // case-insensitive
                 { category: { $regex: key, $options: option } },
                 { hashthats: { $regex: `#${key}`, $options: option } }
             ],

@@ -3,6 +3,7 @@ import Post from "@/models/postModel";
 import Comment from "@/models/commentModel";
 import Reply from "@/models/replyModel";
 import { NextRequest, NextResponse } from "next/server";
+import { getUserDataFromServer } from "@/app/api/getUserDataServer";
 
 export async function PUT(req: NextRequest) {
   await connect();
@@ -65,7 +66,17 @@ export async function PUT(req: NextRequest) {
 
     // // // Now update post of comments ---->
     findPost.comments.splice(index, 1);
-    findPost.rank = (findPost?.rank || 0) - 2;
+    // findPost.rank = (findPost?.rank || 0) - 2;
+
+    const loggedUserData = await getUserDataFromServer();
+
+    if (
+      loggedUserData &&
+      loggedUserData?._id.toString() !== userId.toString()
+    ) {
+      findPost.rank = (findPost?.rank || 0) - 2;
+    }
+
     await findPost.save();
 
     // // // Now delete all replies for this comment (working so fantastic as expected) ------->

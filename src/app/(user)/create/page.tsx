@@ -27,6 +27,7 @@ import {
 } from "../../../types/Types";
 import VideoPlayer from "@/app/components/VideoPlayer";
 import useMediaCheckHook from "@/helper/checkMedia";
+import { CiLock, CiUnlock } from "react-icons/ci";
 
 const NewPostPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -150,6 +151,12 @@ const NewPostPage = () => {
   const [metaDataType, setMetaDataType] = useState<null | ValidInputFiles>(
     null
   );
+
+  const [isPrivate, setIsPrivate] = useState(false);
+
+  const isPrivateHandler = () => {
+    setIsPrivate(!isPrivate);
+  };
 
   // console.log(imageFile)
   function addNewHash({
@@ -315,6 +322,7 @@ const NewPostPage = () => {
                 ...newPostData,
                 metaDataUrl: newPostData.metaDataUrl || metaDataUrl,
                 metaDataType: newPostData.metaDataType || metaDataType,
+                isPrivate : newPostData.isPrivate || false
               },
 
               userId: session?.user?.id,
@@ -331,6 +339,7 @@ const NewPostPage = () => {
                 category: newPostData.category || "General",
                 metaDataType,
                 metaDataUrl,
+                isPrivate
               },
               userId: session?.user?.id,
               tested: imageFile ? mediaCheck : true,
@@ -885,6 +894,12 @@ const NewPostPage = () => {
                 <p className=" font-semibold capitalize">
                   {session?.user.name || "Name Kumar"}
                 </p>
+
+                {isPrivate && (
+                  <span className=" ml-auto  mr-2">
+                    <CiLock className=" text-base font-bold " />
+                  </span>
+                )}
               </div>
 
               <div className=" flex justify-between flex-wrap gap-1">
@@ -1096,11 +1111,42 @@ const NewPostPage = () => {
               )}
             </div>
 
-            <div className=" flex justify-end">
+            <div className=" flex justify-between items-center text-center gap-1 flex-wrap mb-4 p-2 pt-4 ">
+              <div className=" text-xs flex flex-col items-center mx-auto mb-2">
+                <span>Make it Private ⬇️</span>
+
+                <span
+                  onClick={isPrivateHandler}
+                  className=" my-3 h-2 rounded-full w-16 bg-yellow-400 relative group hover:cursor-pointer active:scale-110 transition-all "
+                >
+                  <span
+                    className={` group-hover:scale-110 group-hover:cursor-pointer group-hover:border-2 absolute  top-1/2 -translate-y-1/2 border border-yellow-400 rounded-full p-1 flex gap-0.5 transition-all duration-700 ${
+                      !isPrivate ? " -left-2" : " left-[85%] "
+                    } ${!updatingPost ? "bg-green-950" : "bg-rose-950"}  ${
+                      themeMode ? "text-black" : "text-white"
+                    }`}
+                  >
+                    {isPrivate ? (
+                      <CiLock className=" text-base font-bold " />
+                    ) : (
+                      <CiUnlock className=" text-base font-bold " />
+                    )}
+                  </span>
+                </span>
+
+                <span>
+                  Post is{" "}
+                  <span className=" text-yellow-500 font-semibold">
+                    {!isPrivate ? "Public" : "Private"}
+                  </span>{" "}
+                  now.
+                </span>
+              </div>
+
               {!isLoading && (
                 <button
                   disabled={isLoading}
-                  className={` text-3xl px-10 py-2 mb-4 m-4 rounded-full font-bold bg-green-400 active:scale-90 hover:bg-green-600 transition-all ${
+                  className={` mx-auto text-3xl px-10 py-2 mb-2 rounded-full font-bold bg-green-400 active:scale-90 hover:bg-green-600 transition-all ${
                     themeMode ? "text-green-900" : "text-green-900"
                   }`}
                   onClick={(e) => {

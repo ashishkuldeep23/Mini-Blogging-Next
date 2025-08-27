@@ -4,6 +4,7 @@ import Post from "@/models/postModel";
 import User from "@/models/userModel";
 import { modelNames } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
+import { getUserDataFromServer } from "../../getUserDataServer";
 
 export async function POST(req: NextRequest) {
   await connect();
@@ -54,14 +55,35 @@ export async function POST(req: NextRequest) {
 
     let skip = (pageNo - 1) * limitOfProducts;
 
+    // // // Private and public logic here ------->>
+
+    const userData = await getUserDataFromServer();
+
+    if (userData) {
+      // return NextResponse.json(
+      //   { success: false, message: "User not found. Please LogIn again." },
+      //   { status: 404 }
+      // );
+
+      searchObject["$or"] = [
+        { isPrivate: false }, // public posts
+        {
+          isPrivate: true,
+          author: { $in: [...userData.friends, userData._id] }, // private posts created by user's friends
+        },
+      ];
+    } else {
+      searchObject.isPrivate = false;
+    }
+
     // // // Jsut want to ready user model befour populating (in below code ) (I wnat just my model should be model ready here) ---------->
     await User.findById("65ffbc7cf6215d659db3b197");
 
     // console.log("iktyutryetyr")
 
     let getAllPosts = await Post.find(searchObject)
+      // .sort({ createdAt: "desc" })
       .sort({ rank: "desc", createdAt: "desc" })
-      // .limit(limitOfProducts * pageNo)
       .limit(limitOfProducts)
       .skip(skip)
       .populate({

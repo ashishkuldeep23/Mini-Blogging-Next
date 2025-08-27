@@ -35,6 +35,7 @@ import { PiPaperPlaneRight } from "react-icons/pi";
 import useOpenModalWithHTML from "@/Hooks/useOpenModalWithHtml";
 import { useCheckUserStatus } from "@/Hooks/useCheckUserStatus";
 import { likeAnimationHandler } from "@/helper/likeAnimation";
+import { CiLock } from "react-icons/ci";
 
 interface UpdatingComment {
   mode: boolean;
@@ -172,8 +173,15 @@ const LikeCommentDiv = ({ post }: { post: PostInterFace | SinglePostType }) => {
       {/* <MainLoader isLoading={isLoading} /> */}
       <div className="mt-2">
         {/* Like comments buttons (all 3 buttons here) -----> */}
-        <div className=" pt-3 flex flex-row-reverse  items-center md:flex-row gap-8 md:gap-x-16">
-          <div className="flex gap-2 flex-wrap justify-between items-center flex-row-reverse">
+        <div className=" py-3 flex flex-row flex-wrap  items-center md:flex-row gap-1 gap-y-4 md:gap-x-16">
+          {post?.isPrivate && (
+            <span className=" mr-auto  ml-2  w-24 text-center flex gap-0.5 items-center justify-center flex-wrap  ">
+              <CiLock className=" text-base  font-extrabold " />
+              <span className=" text-xs font-semibold  ">Private Post</span>
+            </span>
+          )}
+
+          <div className=" flex gap-2 flex-wrap justify-between items-center flex-row-reverse ml-auto">
             {/* Like btn */}
             <button
               className={`border h-8 w-10 px-1 py-0.5 rounded-lg flex items-center gap-1 ${

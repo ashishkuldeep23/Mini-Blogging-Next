@@ -13,7 +13,10 @@ export async function PUT(req: NextRequest) {
 
     // console.log(reqBody)
 
-    const { category, promptReturn, author, postId } = reqBody;
+    const { category, promptReturn, author, postId, tested, metaDataUrl } =
+      reqBody;
+
+    // // // be default tested is true (Mtlb meta data check kiya aur sb shi hai ) .
 
     if (!category || !promptReturn) {
       return NextResponse.json(
@@ -61,9 +64,15 @@ export async function PUT(req: NextRequest) {
 
     // console.log({ postId });
 
+    let pending = "approved";
+
+    if (metaDataUrl && !tested) {
+      pending = "pending";
+    }
+
     let updatedPost = await Post.findByIdAndUpdate(
       postId,
-      { ...reqBody, bannedWord },
+      { ...reqBody, bannedWord, pending },
       {
         new: true,
         upsert: true,

@@ -2,6 +2,8 @@ import { connect } from "@/dbConfig/dbConfig";
 import Post from "@/models/postModel";
 import Comment from "@/models/commentModel";
 import { NextRequest, NextResponse } from "next/server";
+import { getUserDataFromServer } from "../../getUserDataServer";
+import User from "@/models/userModel";
 
 export async function POST(req: NextRequest) {
   await connect();
@@ -21,6 +23,15 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+
+    // // // Check user is exist or not --------->>
+    const userData = await User.findById(userId);
+
+    if (!userData)
+      return NextResponse.json(
+        { success: false, message: "User not found. Please LogIn again." },
+        { status: 404 }
+      );
 
     // if(!author){
     //     return NextResponse.json({ success: false, message: 'Author id is not given.' }, { status: 404 })
@@ -44,7 +55,16 @@ export async function POST(req: NextRequest) {
 
     // // // Upadte post data ------>>
     findPost.comments.unshift(createComment._id);
-    findPost.rank = (findPost?.rank || 0) + 2;
+    // findPost.rank = (findPost?.rank || 0) + 2;
+
+    const loggedUserData = await getUserDataFromServer();
+
+    if (
+      loggedUserData &&
+      loggedUserData?._id.toString() !== userId.toString()
+    ) {
+      findPost.rank = (findPost?.rank || 0) + 2;
+    }
 
     if (findPost?.commentsBy) {
       findPost?.commentsBy?.push(userId);

@@ -104,6 +104,7 @@ export const createNewPost = createAsyncThunk(
       whenCreated: localDate,
       author: userId,
       tested: tested || false,
+      isPrivate: body.isPrivate || false,
     };
 
     const options: RequestInit = {
@@ -151,6 +152,7 @@ export const updatePost = createAsyncThunk(
       postId: postId,
       author: userId,
       tested: tested || false,
+      isPrivate: body.isPrivate || false,
     };
 
     const options: RequestInit = {
@@ -411,8 +413,15 @@ const psotSlice = createSlice({
         // console.log(action.payload)
         // console.log(action.payload.data);
 
-        if (action.payload.success === true) {
-          state.allPost = [...state.allPost, ...action.payload.data];
+        if (
+          action.payload.success === true &&
+          action?.payload?.data?.length > 0
+        ) {
+          let filterNewData = action.payload.data.filter(
+            (ele: any) => !state.allPost.find((post) => post._id === ele._id)
+          );
+
+          state.allPost = [...state.allPost, ...filterNewData];
           // state.allPost.push(action.payload.data);
           // toast.success(`${action.payload.message}`)
           state.isFullfilled = true;
@@ -543,9 +552,7 @@ const psotSlice = createSlice({
 
           state.allPost.splice(findIndex, 1, action.payload.data);
 
-
           // // // now reirect this (Apne tareeke se)
-
 
           // state.allPost.unshift(action.payload.data)
         } else {

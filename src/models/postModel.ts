@@ -134,6 +134,15 @@ const PostSchema = new mongoose.Schema(
       type: Boolean,
       default: false, // // // Default is false means no banned word found in given string.
     },
+    isPrivate: {
+      type: Boolean,
+      default: false,
+    },
+    pending: {
+      type: String,
+      default: "approved",
+      enum: ["pending", "approved", "rejected"],
+    },
   },
   { timestamps: true }
 );

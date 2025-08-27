@@ -3,6 +3,7 @@ import Post from "@/models/postModel";
 import User from "@/models/userModel";
 import Comment from "@/models/commentModel";
 import { NextRequest, NextResponse } from "next/server";
+import { getUserDataFromServer } from "../../getUserDataServer";
 
 export async function PUT(req: NextRequest) {
   await connect();
@@ -46,6 +47,8 @@ export async function PUT(req: NextRequest) {
         { status: 404 }
       );
 
+    const loggedUserData = await getUserDataFromServer();
+
     // // // Now written logic for likes and dislike ------>
     // // // postData.likesId should be string[] (user_ids of arr) for logic
 
@@ -54,7 +57,15 @@ export async function PUT(req: NextRequest) {
     if (!postData.likesId.includes(userId)) {
       postData.likes = postData.likes + 1;
       postData.likesId.push(userId);
-      postData.rank = (postData?.rank || 0) + 1;
+
+      if (
+        loggedUserData &&
+        loggedUserData?._id.toString() !== userId.toString()
+      ) {
+        postData.rank = (postData?.rank || 0) + 1;
+      }
+
+      // postData.rank = (postData?.rank || 0) + 1;
 
       MES_For_Clinet = "Like Done!";
     } else {
@@ -69,7 +80,15 @@ export async function PUT(req: NextRequest) {
 
       postData.likesId.splice(findIndex, 1);
       postData.likes = postData.likes - 1;
-      postData.rank = (postData?.rank || 0) - 1;
+
+      if (
+        loggedUserData &&
+        loggedUserData?._id.toString() !== userId.toString()
+      ) {
+        postData.rank = (postData?.rank || 0) - 1;
+      }
+
+      // postData.rank = (postData?.rank || 0) + 1;
 
       MES_For_Clinet = "Unlike Done!";
     }
