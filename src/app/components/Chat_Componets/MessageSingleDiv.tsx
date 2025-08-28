@@ -4,7 +4,7 @@ import useOpenModalWithHTML from "@/Hooks/useOpenModalWithHtml";
 import { useChatData } from "@/redux/slices/ChatSlice";
 import { Message } from "@/types/chat-types";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSwipeable } from "react-swipeable";
 import ImageReact from "../ImageReact";
 import { decryptMessage } from "@/lib/Crypto-JS";
@@ -45,6 +45,17 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
   const [offset, setOffset] = useState(0);
   // const [offsetY, setOffsetY] = useState(0);
   const [showOptions, setShowOptions] = useState(false);
+
+  const isFullfilled = useChatData().isFullfilled;
+
+  useEffect(() => {
+    // console.log(2);
+
+    if (isFullfilled) {
+      // console.log(20);
+      setShowOptions(false);
+    }
+  }, [isFullfilled]);
 
   const messageSender =
     typeof message.sender === "string"
@@ -206,6 +217,7 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
 
   return (
     <div
+      id={`msg_${message?._id}`}
       className={`my-2 flex flex-col ${
         (message?.isEdited || message?.reactions.length > 0) && " mb-3 "
       } no_select `}
@@ -376,6 +388,7 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
             // size={20}
             theme={Theme.DARK}
             onEmojiClick={(e) => {
+              // console.log(e);
               // console.log(e.emoji);
               onReact && onReact(message, e.emoji);
               setShowOptions(false);
@@ -388,7 +401,7 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
 
           {/* {message?.sender?._id === currentUserId && ( */}
           <div className=" mt-0.5 flex flex-nowrap gap-0.5">
-            {messageSender._id === currentUserId && (
+            {!message?.isEdited && messageSender._id === currentUserId && (
               <button
                 onClick={editMsgHandler}
                 className="   text-xl p-0.5 mx-0.5  active:scale-90 transition-all hover:bg-green-600 hover:cursor-pointer rounded-md"

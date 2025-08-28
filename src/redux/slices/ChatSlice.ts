@@ -14,6 +14,7 @@ import {
 import { RequestInit } from "next/dist/server/web/spec-extension/request";
 import toast from "react-hot-toast";
 import { encryptMessage } from "@/lib/Crypto-JS";
+import { UserInSession } from "@/types/Types";
 
 export const fetchAllConversations = createAsyncThunk(
   "chat/fetchingAllConvos",
@@ -168,6 +169,7 @@ const initialState: ChatInterface = {
   isLoadingMsg: false,
   updatingMsg: null,
   msgsForConvoObj: {},
+  typingUsers: [],
 };
 
 const chatSlice = createSlice({
@@ -178,20 +180,40 @@ const chatSlice = createSlice({
       state.currentConvo = action.payload;
     },
     pushOneMoreMsg(state, action: PayloadAction<Message>) {
-      if (state?.currentConvo?._id === action.payload.conversationId) {
-        state?.allMessagesOfThisConvo?.push(action.payload);
+      // console.log(action.payload);
+      // console.log(action.payload.conversationId);
+      // console.log(state?.currentConvo?._id);
+
+      if (
+        state?.currentConvo?._id.toString() ===
+        action.payload.conversationId.toString()
+      ) {
+        // console.log("yessss");
+
+        const convoId = action?.payload?.conversationId || "";
+
+        state.msgsForConvoObj[convoId].msgs = [
+          ...(state.msgsForConvoObj[convoId]?.msgs || []),
+          action.payload,
+        ];
+
+        // state?.allMessagesOfThisConvo?.push(action.payload);
       }
     },
     setUpdatedMsg(state, action: PayloadAction<Message>) {
-      if (state?.currentConvo?._id === action.payload.conversationId) {
-        state?.allMessagesOfThisConvo?.splice(
-          state?.allMessagesOfThisConvo?.findIndex(
-            (ele: Message) => ele._id === action.payload._id
-          ),
-          1,
-          action.payload
-        );
-      }
+      const convoId = action?.payload?.conversationId || "";
+
+      state.msgsForConvoObj[convoId].msgs?.splice(
+        state.msgsForConvoObj[convoId].msgs?.findIndex(
+          (ele: Message) => ele._id === action.payload._id
+        ),
+        1,
+        action.payload
+      );
+    },
+
+    setTypingUsersArr(state, action: PayloadAction<UserInSession[]>) {
+      state.typingUsers = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -487,8 +509,12 @@ const chatSlice = createSlice({
   },
 });
 
-export const { setCurrentConvo, pushOneMoreMsg, setUpdatedMsg } =
-  chatSlice.actions;
+export const {
+  setCurrentConvo,
+  pushOneMoreMsg,
+  setUpdatedMsg,
+  setTypingUsersArr,
+} = chatSlice.actions;
 
 export const useChatData = () =>
   useSelector((state: RootState) => state.chatReducer);

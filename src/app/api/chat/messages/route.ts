@@ -436,6 +436,7 @@ export async function PUT(req: NextRequest) {
               userData?._id?.toString() !== chcekUserId?._id.toString(),
             reactedemoji: reaction.emoji,
             reactedUser: chcekUserId,
+            divKey: message?._id?.toString(),
             // ...message,
           }
         ));
@@ -476,14 +477,14 @@ export async function PUT(req: NextRequest) {
     }
 
     // // // Now update the bannedtype msg -------->>
-    const contentModerator = new ContentModerator("en");
+    // const contentModerator = new ContentModerator("en");
 
-    let bannedWord =
-      contentModerator.check(decryptMessage(text)) ||
-      // contentModerator.check(messageType) ||
-      false;
+    // let bannedWord =
+    //   contentModerator.check(decryptMessage(text)) ||
+    //   // contentModerator.check(messageType) ||
+    //   false;
 
-    getMsgData.bannedWord = bannedWord;
+    // getMsgData.bannedWord = bannedWord;
 
     // // // Now save the message --------->>
     await getMsgData.save();

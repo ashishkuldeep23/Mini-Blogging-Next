@@ -9,7 +9,7 @@
 //   // friends: string[];
 // }
 
-import { UserDataInterface } from "./Types";
+import { UserDataInterface, UserInSession } from "./Types";
 
 export interface Chat_User extends UserDataInterface {
   bio?: string;
@@ -90,6 +90,7 @@ export interface ChatInterface {
       totalPages: number;
     };
   };
+  typingUsers: UserInSession[];
 
   // // // some states for pagination for fetching conversations and messages ------------->>
 }

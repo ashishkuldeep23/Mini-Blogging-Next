@@ -1,72 +1,72 @@
-"use client";
+// "use client";
 
-import React, { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
-import { fetchConversationById, useChatData } from "@/redux/slices/ChatSlice";
-import { useSession } from "next-auth/react";
-import { AppDispatch } from "@/redux/store";
-import { useDispatch } from "react-redux";
-import { Message, TypeUpdateMsg } from "../../../types/chat-types";
-import MessageList from "./MessageList";
-import MessageInput from "./MessageInput";
+// import React, { useState, useEffect } from "react";
+// import { useParams } from "next/navigation";
+// import { fetchConversationById, useChatData } from "@/redux/slices/ChatSlice";
+// import { useSession } from "next-auth/react";
+// import { AppDispatch } from "@/redux/store";
+// import { useDispatch } from "react-redux";
+// import { Message, TypeUpdateMsg } from "../../../types/chat-types";
+// import MessageList from "./MessageList";
+// import MessageInput from "./MessageInput";
 
-// Demo Component showing how to use both components
-const ChatCompoMain: React.FC = () => {
-  // const [messages, setMessages] = useState<Message[]>([]);
+// // Demo Component showing how to use both components
+// const ChatCompoMain: React.FC = () => {
+//   // const [messages, setMessages] = useState<Message[]>([]);
 
-  const [updatingMsg, setUpdatingMsg] = useState<TypeUpdateMsg | null>(null);
+//   const [updatingMsg, setUpdatingMsg] = useState<TypeUpdateMsg | null>(null);
 
-  const params = useParams();
-  const convo = useChatData().currentConvo;
-  const { data: session } = useSession();
-  const dispatch = useDispatch<AppDispatch>();
-  const currentUserId = session?.user?._id || "";
-  const msgsForConvoObj = useChatData().msgsForConvoObj;
+//   const params = useParams();
+//   const convo = useChatData().currentConvo;
+//   const { data: session } = useSession();
+//   const dispatch = useDispatch<AppDispatch>();
+//   const currentUserId = session?.user?._id || "";
+//   const msgsForConvoObj = useChatData().msgsForConvoObj;
 
-  // const messages = useChatData().allMessagesOfThisConvo;
-  // const messages =
-  //   typeof params?.id === "string"
-  //     ? useChatData().msgsForConvoObj[params?.id]?.msgs || []
-  //     : [];
+//   // const messages = useChatData().allMessagesOfThisConvo;
+//   // const messages =
+//   //   typeof params?.id === "string"
+//   //     ? useChatData().msgsForConvoObj[params?.id]?.msgs || []
+//   //     : [];
 
-  let messages: Message[] = [];
+//   let messages: Message[] = [];
 
-  if (params?.id && typeof params?.id === "string") {
-    messages = msgsForConvoObj[params?.id]?.msgs || [];
-  }
+//   if (params?.id && typeof params?.id === "string") {
+//     messages = msgsForConvoObj[params?.id]?.msgs || [];
+//   }
 
-  // const messagesEndRef = useRef<HTMLDivElement>(null);
+//   // const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // / // Call to fetch convarsation data from server -------->>
-  useEffect(() => {
-    if (
-      params?.id &&
-      typeof params?.id === "string" &&
-      session?.user?._id &&
-      // true
-      convo?._id !== params?.id
-    ) {
-      // // // Call to fetch convo data from server -------->>
+//   // / // Call to fetch convarsation data from server -------->>
+//   useEffect(() => {
+//     if (
+//       params?.id &&
+//       typeof params?.id === "string" &&
+//       session?.user?._id &&
+//       // true
+//       convo?._id !== params?.id
+//     ) {
+//       // // // Call to fetch convo data from server -------->>
 
-      dispatch(
-        fetchConversationById({ id: params?.id, userId: session?.user._id })
-      );
-    }
-  }, [params?.id, session?.user?._id]);
+//       dispatch(
+//         fetchConversationById({ id: params?.id, userId: session?.user._id })
+//       );
+//     }
+//   }, [params?.id, session?.user?._id]);
 
-  return (
-    <div
-      className={`sm:my-10 sm:rounded-md overflow-hidden flex flex-col items-center h-[95vh] sm:h-[85vh] max-w-4xl mx-auto  shadow-lg bg-gray-900 text-white relative`}
-    >
-      {/* <MainLoader isLoading={useChatData().isLoading} /> */}
-      <MessageList
-        messages={messages || []}
-        currentUserId={currentUserId}
-        setUpdatingMsg={setUpdatingMsg}
-      />
-      <MessageInput updatingMsg={updatingMsg} setUpdatingMsg={setUpdatingMsg} />
-    </div>
-  );
-};
+//   return (
+//     <div
+//       className={`sm:my-10 sm:rounded-md overflow-hidden flex flex-col items-center h-[95vh] sm:h-[85vh] max-w-4xl mx-auto  shadow-lg bg-gray-900 text-white relative`}
+//     >
+//       {/* <MainLoader isLoading={useChatData().isLoading} /> */}
+//       <MessageList
+//         messages={messages || []}
+//         currentUserId={currentUserId}
+//         setUpdatingMsg={setUpdatingMsg}
+//       />
+//       <MessageInput updatingMsg={updatingMsg} setUpdatingMsg={setUpdatingMsg} />
+//     </div>
+//   );
+// };
 
-export default ChatCompoMain;
+// export default ChatCompoMain;

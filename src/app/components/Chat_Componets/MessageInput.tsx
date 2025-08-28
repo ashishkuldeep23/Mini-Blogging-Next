@@ -29,7 +29,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
   setUpdatingMsg,
 }) => {
   const [message, setMessage] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const { data: session } = useSession();
   const userId = session?.user?._id;
   const userData = session?.user;
@@ -108,7 +108,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
     [userId, convoId]
   );
 
-  const handleChangeFn = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeFn = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     // console.log("message", message);
     setMessage(e.target.value);
     sendTyping(true);
@@ -239,15 +239,24 @@ const MessageInput: React.FC<MessageInputProps> = ({
 
           <div className="flex  space-x-3">
             <div className="flex-1 relative">
-              <input
+              <textarea
+                ref={inputRef}
+                value={message}
+                onChange={handleChangeFn}
+                onKeyDown={handleKeyPress}
+                placeholder="Type your message..."
+                className="  max-h-16 h-12 w-full  px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 bg-inherit"
+              ></textarea>
+
+              {/* <input
                 ref={inputRef}
                 type="text"
                 value={message}
                 onChange={handleChangeFn}
                 onKeyDown={handleKeyPress}
                 placeholder="Type your message..."
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 bg-inherit"
-              />
+                className=" min-h-5 max-h-20 w-full overscroll-none px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 bg-inherit"
+              /> */}
             </div>
             <button
               onClick={submitBtnClickHandler}
