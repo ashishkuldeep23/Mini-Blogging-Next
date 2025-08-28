@@ -7,6 +7,7 @@ import { Toaster } from "react-hot-toast";
 import LogInProvider from "./components/LogInProvider";
 import Modal from "./components/ModalComponent";
 import Script from "next/script";
+import PusherInitEvents from "./components/PusherInitEvents";
 // import { ToastContainer } from "react-toast-ak";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -46,6 +47,7 @@ export default function RootLayout({
             {/* Now i'm going to user pusher ------> */}
             {/* Pusher working code -----------> */}
             {/* <PusherTestDiv channelName="ashish" /> */}
+            <PusherInitEvents />
 
             {/* Hot toster ---> */}
             <div>

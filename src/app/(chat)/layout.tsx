@@ -92,7 +92,9 @@ const LayoutPage = ({
       let emojiSize = "12rem";
 
       if (msgDiv) {
-        x = `${msgDiv.getBoundingClientRect().left}px`;
+        x = `${
+          msgDiv.getBoundingClientRect().left + msgDiv.offsetWidth / 1.25
+        }px`;
         y = `${msgDiv.getBoundingClientRect().top - 20}px`;
 
         emojiSize = `3rem`;

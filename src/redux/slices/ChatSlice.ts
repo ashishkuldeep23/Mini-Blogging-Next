@@ -4,6 +4,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import {
+  Chat_User,
   ChatInterface,
   Conversation,
   Message,
@@ -170,6 +171,7 @@ const initialState: ChatInterface = {
   updatingMsg: null,
   msgsForConvoObj: {},
   typingUsers: [],
+  onlineUsers: {},
 };
 
 const chatSlice = createSlice({
@@ -214,6 +216,10 @@ const chatSlice = createSlice({
 
     setTypingUsersArr(state, action: PayloadAction<UserInSession[]>) {
       state.typingUsers = action.payload;
+    },
+
+    setOnlineUsers(state, action: PayloadAction<{ [key: string]: Chat_User }>) {
+      state.onlineUsers = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -514,6 +520,7 @@ export const {
   pushOneMoreMsg,
   setUpdatedMsg,
   setTypingUsersArr,
+  setOnlineUsers,
 } = chatSlice.actions;
 
 export const useChatData = () =>

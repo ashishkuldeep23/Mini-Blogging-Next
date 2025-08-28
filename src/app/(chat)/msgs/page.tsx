@@ -19,6 +19,7 @@ import { AppDispatch } from "@/redux/store";
 import { TfiWorld } from "react-icons/tfi";
 import NewChatDiv from "@/app/components/Chat_Componets/NewChatDiv";
 import { decryptMessage } from "@/lib/Crypto-JS";
+import { useUserState } from "@/redux/slices/UserSlice";
 
 export default function MessagePage() {
   const router = useRouter();
@@ -34,6 +35,13 @@ export default function MessagePage() {
   const [newChatDiv, setNewChatDiv] = useState(false);
 
   const [searchConvoText, setSearchConvoText] = useState<string>("");
+
+  const onlineUsers = useChatData().onlineUsers;
+  const userId = useUserState().userData._id;
+
+  const onlineFriends = Object.values(onlineUsers).filter(
+    (user) => user.isOnline === true && user.friends.includes(userId)
+  );
 
   // const friendsAllFriend = useUserState().userData.friendsAllFriend;
 
@@ -117,24 +125,28 @@ export default function MessagePage() {
             </p>
           </div>
 
-          {Array(5)
-            .fill(null)
-            .map((_, i) => {
-              return (
-                <div
-                  key={i}
-                  className=" border-2  min-w-[4.5rem] h-[4.5rem] rounded-full overflow-hidden  flex flex-col  justify-end items-center p-1 m-0 active:scale-75 hover:bg-red-700 hover:cursor-pointer transition-all "
-                >
-                  <span className=" relative">
-                    <TfiWorld className=" h-12 w-12 " />
-                    <span className=" h-2 w-2 rounded-full bg-green-500 absolute bottom-0 right-0 "></span>
-                  </span>
-                  <p className=" text-[0.5rem] w-[80%] text-center  leading-[0.6rem] ">
-                    Name
-                  </p>
-                </div>
-              );
-            })}
+          {onlineFriends.map((user, i) => {
+            return (
+              <div
+                key={i}
+                className=" border-2  min-w-[4.5rem] h-[4.5rem] rounded-full overflow-hidden  flex flex-col  justify-end items-center p-1 m-0 active:scale-75 hover:bg-red-700 hover:cursor-pointer transition-all "
+              >
+                {/* <span className=" relative">
+                  <TfiWorld className=" h-12 w-12 " />
+                  <span className=" h-2 w-2 rounded-full bg-green-500 absolute bottom-0 right-0 "></span>
+                </span> */}
+
+                <ImageReact
+                  src={user.profilePic}
+                  className=" h-12 w-12 rounded-full object-cover "
+                />
+
+                <p className=" text-[0.5rem] w-[80%] text-center  leading-[0.6rem] ">
+                  {user.username || "Name"}
+                </p>
+              </div>
+            );
+          })}
         </div>
       </div>
 

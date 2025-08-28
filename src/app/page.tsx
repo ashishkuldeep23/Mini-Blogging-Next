@@ -13,6 +13,7 @@ import MaskerText from "./components/MaskerText";
 import { useRouter } from "next/navigation";
 import Navbar from "./components/Navbar";
 import MainLoader from "./components/LoaderUi";
+import { pusherClient } from "@/lib/pusherClient";
 
 export default function Home() {
   const router = useRouter();

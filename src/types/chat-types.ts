@@ -91,6 +91,9 @@ export interface ChatInterface {
     };
   };
   typingUsers: UserInSession[];
+  onlineUsers:{
+    [key: string]: Chat_User
+  }
 
   // // // some states for pagination for fetching conversations and messages ------------->>
 }
