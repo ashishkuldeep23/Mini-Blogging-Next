@@ -14,7 +14,7 @@ import { useDispatch } from "react-redux";
 import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
 import {
-  getProfileData,
+  // getProfileData,
   setUserDataBySession,
   useUserState,
 } from "@/redux/slices/UserSlice";

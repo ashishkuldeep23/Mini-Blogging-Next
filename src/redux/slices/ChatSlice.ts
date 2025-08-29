@@ -145,6 +145,55 @@ export const updateMsgPutReq = createAsyncThunk(
   }
 );
 
+export const getChatStrories = createAsyncThunk(
+  "chat/getChatStrories",
+  async (userId: string) => {
+    const option: RequestInit = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    const response = await fetch(`/api/chat/story?userId=${userId}`, option); // `/api/chat/story?userId=${userId}", option);
+    let data = await response.json();
+    return data;
+  }
+);
+
+export const PostChatStory = createAsyncThunk(
+  "chat/PostChatStory",
+  async (body: { userId: string; text: string }) => {
+    const option: RequestInit = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    };
+
+    const response = await fetch(`/api/chat/story`, option); // `/api/chat/story?userId=${userId}", option);
+    let data = await response.json();
+    return data;
+  }
+);
+
+export const DeleteChatStory = createAsyncThunk(
+  "chat/DeleteChatStory",
+  async (storyId: string) => {
+    const option: RequestInit = {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    const response = await fetch(`/api/chat/story?storyId=${storyId}`, option); // `/api/chat/story?userId=${userId}", option);
+    let data = await response.json();
+    return data;
+  }
+);
+
 const initialState: ChatInterface = {
   isLoading: false,
   isFullfilled: false,
@@ -172,6 +221,7 @@ const initialState: ChatInterface = {
   msgsForConvoObj: {},
   typingUsers: [],
   onlineUsers: {},
+  chatStrories: [],
 };
 
 const chatSlice = createSlice({
@@ -249,6 +299,7 @@ const chatSlice = createSlice({
                 if (participants?._id !== userId) {
                   convoObj.name = participants?.username;
                   convoObj.avatar = participants?.profilePic;
+                  convoObj.directUserId = participants?._id;
                 }
               });
 
@@ -511,6 +562,82 @@ const chatSlice = createSlice({
         state.isError = true;
         toast.error(` ${action.error.message || "Fetching failed"}`);
         state.errMsg = action.error.message || "Fetching failed";
+      })
+      .addCase(getChatStrories.pending, (state) => {
+        // state.isLoading = true;
+        state.errMsg = "";
+        state.isError = false;
+      })
+      .addCase(getChatStrories.fulfilled, (state, action) => {
+        if (action.payload.success === false) {
+          toast.error(`${action.payload.message || "Conversation Error"}`);
+          state.isError = true;
+          state.errMsg = action.payload.message;
+        } else {
+          state.chatStrories = action.payload.data;
+          state.isFullfilled = true;
+        }
+
+        state.isLoading = false;
+      })
+      .addCase(getChatStrories.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        toast.error(` ${action.error.message || "Fetching failed"}`);
+        state.errMsg = action.error.message || "Fetching failed";
+      })
+      .addCase(PostChatStory.pending, (state) => {
+        // state.isLoading = true;
+        state.errMsg = "";
+        state.isError = false;
+      })
+      .addCase(PostChatStory.fulfilled, (state, action) => {
+        if (action.payload.success === false) {
+          toast.error(`${action.payload.message || "Conversation Error"}`);
+          state.isError = true;
+          state.errMsg = action.payload.message;
+        } else {
+          const data = action?.payload?.data;
+          state.chatStrories = [data, ...(state.chatStrories || [])];
+
+          state.isFullfilled = true;
+        }
+
+        state.isLoading = false;
+      })
+      .addCase(PostChatStory.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        toast.error(` ${action.error.message || "Fetching failed"}`);
+        state.errMsg = action.error.message || "Fetching failed";
+      })
+      .addCase(DeleteChatStory.pending, (state) => {
+        // state.isLoading = true;
+        state.errMsg = "";
+        state.isError = false;
+      })
+      .addCase(DeleteChatStory.fulfilled, (state, action) => {
+        if (action.payload.success === false) {
+          toast.error(`${action.payload.message || "Conversation Error"}`);
+          state.isError = true;
+          state.errMsg = action.payload.message;
+        } else {
+          const data = action?.payload?.data;
+          let storyId = data?._id;
+          state.chatStrories =
+            state?.chatStrories &&
+            state?.chatStrories.filter((story) => story._id !== storyId);
+
+          state.isFullfilled = true;
+        }
+
+        state.isLoading = false;
+      })
+      .addCase(DeleteChatStory.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        toast.error(` ${action.error.message || "Fetching failed"}`);
+        state.errMsg = action.error.message || "Fetching failed";
       });
   },
 });
@@ -521,6 +648,7 @@ export const {
   setUpdatedMsg,
   setTypingUsersArr,
   setOnlineUsers,
+  // setOnlineFriends,
 } = chatSlice.actions;
 
 export const useChatData = () =>

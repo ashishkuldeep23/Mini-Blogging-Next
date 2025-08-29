@@ -42,6 +42,7 @@ export interface Conversation {
   theme?: ThemeConvo;
   adminOnly: boolean;
   admins: Chat_User[];
+  directUserId?: string;
 }
 
 export interface Message {
@@ -91,11 +92,18 @@ export interface ChatInterface {
     };
   };
   typingUsers: UserInSession[];
-  onlineUsers:{
-    [key: string]: Chat_User
-  }
-
+  onlineUsers: {
+    [key: string]: Chat_User;
+  };
+  chatStrories?: IChatStory[];
   // // // some states for pagination for fetching conversations and messages ------------->>
+}
+
+export interface IChatStory {
+  _id: string;
+  author: Chat_User;
+  text: string;
+  expiresAt: Date;
 }
 
 export type TypeSendMsg = {

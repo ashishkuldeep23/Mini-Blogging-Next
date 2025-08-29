@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { pusherServer } from "@/lib/pusherServer";
 import { getUserDataFromServer } from "../../getUserDataServer";
 import User from "@/models/userModel";
+import { connect } from "@/dbConfig/dbConfig";
 
 export async function POST(req: NextRequest) {
   try {
@@ -26,6 +27,8 @@ export async function POST(req: NextRequest) {
 
     // // // check userToken here -------->>
 
+    await connect();
+
     let userData = await getUserDataFromServer();
 
     // // // console.log(userData);
@@ -35,7 +38,7 @@ export async function POST(req: NextRequest) {
       //   "Yes now we can do what we want for making user online or offline"
       // );
 
-    await User.findByIdAndUpdate(
+      await User.findByIdAndUpdate(
         userData._id,
         {
           isOnline: true,

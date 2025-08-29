@@ -9,6 +9,8 @@ import ImageReact from "../ImageReact";
 import useOpenModalWithHTML from "@/Hooks/useOpenModalWithHtml";
 import DmInfo from "./DmInfo";
 import GroupInfo from "./GroupInfo";
+import { TfiWorld } from "react-icons/tfi";
+import Link from "next/link";
 
 const ChatNavBar = () => {
   const router = useRouter();
@@ -30,6 +32,18 @@ const ChatNavBar = () => {
     }
   };
 
+  const generalChatClickHandler = () => {
+    const innerHtml = (
+      <div>
+        <p className=" text-3xl text-center text-gray-400">
+          I'm Public chat any one can chat here and test the chatting feature.
+        </p>
+      </div>
+    );
+
+    callModalFn({ innerHtml: innerHtml });
+  };
+
   return (
     <div className=" bg-black sticky top-0 h-8 text-xl flex justify-start items-center gap-1 p-1 z-10 ">
       <button
@@ -39,22 +53,45 @@ const ChatNavBar = () => {
         <TbArrowBackUpDouble />
       </button>
       <span
-        onClick={() => nameClickHandler()}
+        onClick={() =>
+          path !== "/general-msgs"
+            ? nameClickHandler()
+            : generalChatClickHandler()
+        }
         className=" flex gap-1 justify-center items-center"
       >
-        {path !== "/msgs" && (
-          <ImageReact
-            src={avatar || ""}
-            className=" w-6 h-6 rounded-full object-cover"
-          />
+        {path !== "/general-msgs" ? (
+          path !== "/msgs" && (
+            <span>
+              <ImageReact
+                src={avatar || ""}
+                className=" w-6 h-6 rounded-full object-cover"
+              />
+            </span>
+          )
+        ) : (
+          <span>
+            <TfiWorld className=" w-5 h-5 active:scale-75 transition-all hover:bg-amber-500 rounded-md " />
+          </span>
         )}
         <div className=" capitalize ">
           {path === "/msgs"
             ? username || "All Messages"
+            : path === "/general-msgs"
+            ? "Public Chatting Place"
             : ConvoName || "Direct Message"}
         </div>
       </span>
-      <div className=" ml-auto mr-4">icon</div>
+
+      <div className=" ml-auto mr-2 flex justify-center items-center gap-1">
+        {path !== "/general-msgs" && (
+          <Link href={"/general-msgs"}>
+            <TfiWorld className=" w-5 h-5 active:scale-75 transition-all hover:bg-amber-500 rounded-md " />
+          </Link>
+        )}
+
+        <span>icon</span>
+      </div>
     </div>
   );
 };

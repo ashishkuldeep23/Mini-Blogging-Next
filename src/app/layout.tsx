@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import "./normalize.css";
+import "animate.css";
+import { Inter } from "next/font/google";
+import type { Metadata } from "next";
 import { StateProviders } from "@/redux/providers";
 import { Toaster } from "react-hot-toast";
 import LogInProvider from "./components/LogInProvider";

@@ -2,6 +2,7 @@
 
 import { pusherClient } from "@/lib/pusherClient";
 import { setOnlineUsers, useChatData } from "@/redux/slices/ChatSlice";
+import { Chat_User } from "@/types/chat-types";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -30,7 +31,8 @@ const PusherInitEvents = () => {
       //   console.log({ data });
       //   console.log(data.members);
 
-      dispatch(setOnlineUsers({ ...data.members }));
+      let obj = { ...data.members };
+      dispatch(setOnlineUsers(obj));
 
       //   console.log("Yessss1000");
     });
@@ -40,7 +42,6 @@ const PusherInitEvents = () => {
       //   console.log(data);
 
       let obj = { ...onlineUsers, [data.id]: data.info };
-
       dispatch(setOnlineUsers(obj));
 
       //   console.log("Yessss2");

@@ -24,8 +24,8 @@ const NewChatDiv = ({
   const friends = useUserState()?.userData?.friendsAllFriend;
   const dispatch = useDispatch<AppDispatch>();
   const { data: session } = useSession();
-
   const [showNewGroupDiv, setShowNewGroupDiv] = useState<boolean>(false);
+  const userId = useUserState()?.userData?._id;
 
   useEffect(() => {
     if (session) {
@@ -34,7 +34,7 @@ const NewChatDiv = ({
     }
 
     // // // get user data by api (All Data) ----------->
-    if (session?.user._id) {
+    if (session?.user._id && !userId) {
       dispatch(getProfileData({ userId: session?.user._id, noPostData: true }));
     }
   }, [session]);
