@@ -2,12 +2,6 @@ import cloudinary from "@/lib/cloudinaryConfig";
 import { NextRequest, NextResponse } from "next/server";
 import { getUserDataFromServer } from "../getUserDataServer";
 
-// Disable Next.js default body parsing
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
 
 export const POST = async (req: NextRequest) => {
   try {
