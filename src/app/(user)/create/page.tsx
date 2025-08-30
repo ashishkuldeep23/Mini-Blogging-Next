@@ -16,7 +16,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { FaCamera } from "react-icons/fa";
-import { uploadFileInCloudinary } from "@/lib/cloudinary";
+import { PostFileInCloudinary } from "@/lib/cloudinaryHandlers";
 import ImageReact from "@/app/components/ImageReact";
 import MainLoader from "@/app/components/LoaderUi";
 import Navbar from "@/app/components/Navbar";
@@ -305,9 +305,11 @@ const NewPostPage = () => {
           // // Now here we can uplaod file 2nd step ------>
           // imageUrl = await uploadFileInCloudinary(imageFile)
           // //  now using diff var url
-          metaDataUrl = await uploadFileInCloudinary(imageFile);
+          metaDataUrl = await PostFileInCloudinary(imageFile);
           metaDataType = imageFile.type as ValidInputFiles;
           // console.log({ imageUrl })
+
+          // // // now here we can get user is posting or updating post. -------->>
 
           /// // // now set url of image -------->
           setNewPostData({ ...newPostData, metaDataType, metaDataUrl });

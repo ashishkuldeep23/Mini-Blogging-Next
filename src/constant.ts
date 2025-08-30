@@ -47,3 +47,15 @@ export const SIGHTENGINE_SECRET_ENV: string =
 
 // GOOGLE_SECRATE
 // GOOGLE_SECRET
+// // // Cloudinary from api ----------->>
+
+export const CLOUDINARY_API_KEY: string =
+  process.env.CLOUDINARY_API_KEY || "964747764287654";
+
+export const CLOUDINARY_API_SECRET: string =
+  process.env.CLOUDINARY_API_SECRET || "1BVMfRzdA1yxq1IFzeL07nlOR-E";
+
+export const CLOUDINARY_CLOUD_NAME: string =
+  process.env.CLOUDINARY_CLOUD_NAME || "dlvq8n2ca";
+
+

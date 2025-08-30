@@ -69,6 +69,11 @@ const PostSchema = new mongoose.Schema(
       trim: true,
       default: "",
     },
+    metaDataPublicId: {
+      type: String,
+      trim: true,
+      default: "",
+    },
 
     customize: {
       bgColor: {

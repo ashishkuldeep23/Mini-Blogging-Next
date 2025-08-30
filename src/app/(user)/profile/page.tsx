@@ -25,7 +25,7 @@ import { TbUserCancel } from "react-icons/tb";
 import { useDispatch } from "react-redux";
 // import { IoIosCloudUpload } from "react-icons/io";
 import { IoMdCloudUpload } from "react-icons/io";
-import { uploadFileInCloudinary } from "@/lib/cloudinary";
+import { PostFileInCloudinary } from "@/lib/cloudinaryHandlers";
 import { MdOutlineZoomOutMap } from "react-icons/md";
 import {
   setInnerHTMLOfModal,
@@ -204,7 +204,7 @@ function UserProfileImage() {
       if (session?.user._id) {
         if (imageFile) {
           // // Now here we can uplaod file 2nd step ------>
-          imageUrl = await uploadFileInCloudinary(imageFile);
+          imageUrl = await PostFileInCloudinary(imageFile);
           // console.log({ imageUrl })
         }
 
