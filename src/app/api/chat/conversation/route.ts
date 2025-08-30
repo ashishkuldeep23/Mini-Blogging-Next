@@ -24,10 +24,15 @@ export async function GET() {
       );
     }
 
+    // console.log(userData._id);
+
     // // // Need to include pagination here ---------->>
 
     const conversations = await ConversationModel.find({
-      participants: userData._id,
+      $or: [
+        { type: "direct", participants: { $in: [userData._id] } },
+        { type: "group", participants: { $in: [userData._id] } },
+      ],
       isActive: true,
     })
       .populate("participants", " username email profilePic isOnline lastSeen")
@@ -38,7 +43,7 @@ export async function GET() {
       .sort({ lastMessageAt: -1 })
       .lean();
 
-    // console.log({ conversations });
+    // console.log("ashish ", { conversations });
 
     const participantsUserIds = [] as any[];
 

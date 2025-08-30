@@ -196,7 +196,10 @@ const MessageInput: React.FC<MessageInputProps> = ({
         </span>
       </div> */}
 
-      {currentConvo?.adminOnly ? (
+      {currentConvo?.adminOnly &&
+      !currentConvo?.admins
+        .map((admin) => admin?._id)
+        ?.includes(userId || "") ? (
         <>
           <p className="p-4  text-center">
             Only{" "}

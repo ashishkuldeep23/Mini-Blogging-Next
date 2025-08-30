@@ -21,18 +21,20 @@ export interface IConversation extends Document {
   createdBy: string | undefined;
   createdAt: Date;
   updatedAt: Date;
+  description: string;
+  tested: boolean;
 }
 
 // // // body for creating new conversation for groups will look like ------->>
 
-{
-  type: "group";
-  name: "";
-  avatar: ""; // // // Default Url :- https://res.cloudinary.com/dlvq8n2ca/image/upload/t_Rounded%204:3/v1756146327/xzp8tpeum1yhpvk5eie6.jpg
-  participants: ["", ""];
-  admins: [""]; // // // by default creator will be admin
-  createdBy: ""; // // // User id of creator of this group
-}
+// {
+//   type: "group";
+//   name: "";
+//   avatar: ""; // // // Default Url :- https://res.cloudinary.com/dlvq8n2ca/image/upload/t_Rounded%204:3/v1756146327/xzp8tpeum1yhpvk5eie6.jpg
+//   participants: ["", ""];
+//   admins: [""]; // // // by default creator will be admin
+//   createdBy: ""; // // // User id of creator of this group
+// }
 
 const ConversationSchema = new Schema<IConversation>(
   {
@@ -60,6 +62,11 @@ const ConversationSchema = new Schema<IConversation>(
       },
     },
     lastMessageAt: { type: Date, default: new Date() },
+    description: { type: String, trim: true, default: "" },
+    tested: {
+      type: Boolean,
+      default: true, // // // Default is true means no banned thing present meta data wise.
+    },
   },
   { timestamps: true }
 );

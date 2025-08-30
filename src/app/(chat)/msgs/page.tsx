@@ -486,6 +486,7 @@ const SingleChatStory = ({ story }: { story: IChatStory }) => {
     </div>
   );
 };
+
 const SingleOnlineUserDiv = ({ user }: { user: Chat_User }) => {
   const { ref, inView } = useInViewAnimate();
   const dispatch = useDispatch<AppDispatch>();

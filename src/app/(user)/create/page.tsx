@@ -1154,19 +1154,19 @@ const NewPostPage = () => {
                 </span>
               </div>
 
-              {!isLoading && (
-                <button
-                  disabled={isLoading}
-                  className={` mx-auto text-3xl px-10 py-2 mb-2 rounded-full font-bold bg-green-400 active:scale-90 hover:bg-green-600 transition-all ${
-                    themeMode ? "text-green-900" : "text-green-900"
-                  }`}
-                  onClick={(e) => {
-                    onSubmitHandler(e);
-                  }}
-                >
-                  {!updatingPost ? "Create" : "Update"}
-                </button>
-              )}
+              <button
+                disabled={isLoading}
+                className={` mx-auto text-3xl px-10 py-2 mb-2 rounded-full font-bold bg-green-400 active:scale-90 hover:bg-green-600 transition-all ${
+                  themeMode ? "text-green-900" : "text-green-900"
+                }
+                  ${isLoading && "opacity-40"}
+                  `}
+                onClick={(e) => {
+                  onSubmitHandler(e);
+                }}
+              >
+                {!updatingPost ? "Create" : "Update"}
+              </button>
             </div>
           </div>
         </div>

@@ -28,9 +28,11 @@ export interface ThemeConvo {
 export interface Conversation {
   _id: string;
   type: "direct" | "group";
+  participants: Chat_User[];
+  adminOnly: boolean;
+  admins: Chat_User[];
   name?: string;
   avatar?: string;
-  participants: Chat_User[];
   lastMessage?: {
     content: string;
     sender: Chat_User;
@@ -40,9 +42,8 @@ export interface Conversation {
   lastMessageAt?: Date;
   unreadCount?: number;
   theme?: ThemeConvo;
-  adminOnly: boolean;
-  admins: Chat_User[];
   directUserId?: string;
+  description?: string;
 }
 
 export interface Message {

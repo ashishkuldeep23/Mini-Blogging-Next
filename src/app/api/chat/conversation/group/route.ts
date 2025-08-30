@@ -13,9 +13,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const reqBody = await req.json();
-
-    // console.log("session", session);
-
+    
     let userData = await getUserDataFromServer();
 
     if (!userData) {
@@ -25,31 +23,27 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // // // Now create logic for creating new convo.
-
-    // // // Chcek both are friends ----------------->>(latter)
-
-    // const friendUserId = reqBody.friendUserId;
-
-    // if (!friendUserId)
-    //   return NextResponse.json(
-    //     { success: false, message: "Friend's Id is not given" },
-    //     { status: 404 }
-    //   );
-
-    // // // Body data
-    // // participants will be array of user ids.
-    // // admins will be array of user ids.
-    const { name, avatar , participants , admins } = reqBody;
+    const {
+      name,
+      avatar,
+      participants,
+      admins,
+      adminOnly,
+      description,
+      tested,
+    } = reqBody;
 
     let conversation = await ConversationModel.create({
       type: "group",
       name: name,
       avatar: avatar,
-      participants: participants,
-      admins: admins,
+      participants: [userData._id, ...participants],
+      admins: [userData._id, ...admins],
       createdBy: userData._id, // Person who accepted
       lastMessageAt: new Date(),
+      adminOnly: adminOnly,
+      description: description,
+      tested: tested,
     });
 
     await conversation.populate(
@@ -62,7 +56,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         success: true,
-        data: conversation ,
+        data: conversation,
         message: "Conversation created.",
       },
       { status: 201 }

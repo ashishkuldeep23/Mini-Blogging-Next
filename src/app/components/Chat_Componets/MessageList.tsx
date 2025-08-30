@@ -37,6 +37,7 @@ const MessageList: React.FC<MessageListProps> = ({
   const currentConvo = useChatData()?.currentConvo;
   const msgsForConvoObj = useChatData().msgsForConvoObj;
   const typingUsers = useChatData().typingUsers;
+  const isLoading = useChatData().isLoading;
 
   // const isLoading = useChatData()?.isLoading;
   // const [typingUsers, setTypingUsers] = useState<UserInSession[]>([]);
@@ -114,11 +115,11 @@ const MessageList: React.FC<MessageListProps> = ({
 
   let page =
     typeof conversationId === "string"
-      ? msgsForConvoObj[conversationId]?.page || 0
+      ? msgsForConvoObj[conversationId]?.page ?? 0
       : 0;
   let totalPages =
     typeof conversationId === "string"
-      ? msgsForConvoObj[conversationId]?.totalPages || 10
+      ? msgsForConvoObj[conversationId]?.totalPages ?? 10
       : 10;
 
   // useEffect(() => {
@@ -205,6 +206,19 @@ const MessageList: React.FC<MessageListProps> = ({
       )}
 
       {/* <button >Scroll</button> */}
+
+      <div>
+        {messages.length === 0 && !isLoading && (
+          <div className={`pt-10`}>
+            <p className=" text-gray-400 text-3xl mt-10 text-center">
+              Say Hello!
+            </p>
+            <p className=" text-gray-400 text-xl text-center">
+              (No messages found)
+            </p>
+          </div>
+        )}
+      </div>
 
       {messages.map((message) => (
         <SingleMsgDiv

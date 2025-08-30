@@ -46,14 +46,14 @@ export const POST = async (req: NextRequest) => {
       folder: "MiniBlogging", // optional folder
     });
 
-    // console.log({ result });
+    console.log({ result });
 
     return NextResponse.json(
       {
         success: true,
         message: "File uploaded successfully",
         data: {
-          url: result.secure_url,
+          url: result.url,
           publicId: result.public_id,
           format: result.format,
           width: result.width,
@@ -132,7 +132,7 @@ export const PUT = async (req: NextRequest) => {
         success: true,
         message: "File uploaded successfully",
         data: {
-          url: result.secure_url,
+          url: result.url,
           public_id: result.public_id,
           format: result.format,
           width: result.width,

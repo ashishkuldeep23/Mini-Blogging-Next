@@ -487,17 +487,21 @@ const chatSlice = createSlice({
           // console.log({ checkMsgsInStateObj });
 
           if (Object.keys(checkMsgsInStateObj).length > 0) {
+            // console.log(page, totalPages);
+
             state.msgsForConvoObj[convoId].msgs = [
               ...data,
               ...(state.msgsForConvoObj[convoId]?.msgs || []),
             ];
-            state.msgsForConvoObj[convoId].page = page || 1;
-            state.msgsForConvoObj[convoId].totalPages = totalPages || 10;
+            state.msgsForConvoObj[convoId].page = page ?? 1;
+            state.msgsForConvoObj[convoId].totalPages = totalPages ?? 10;
           } else {
+            // console.log(page, totalPages);
+
             let makeObj = {
               msgs: data,
-              page: page || 1,
-              totalPages: totalPages || 10,
+              page: page,
+              totalPages: totalPages,
             };
 
             state.msgsForConvoObj[convoId] = makeObj;
