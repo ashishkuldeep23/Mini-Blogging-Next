@@ -477,10 +477,10 @@ const chatSlice = createSlice({
           state.isError = true;
           state.errMsg = action.payload.message;
         } else {
-          const { data, total, pagination } = action.payload;
+          const { data, total, pagination , convoId } = action.payload;
           const { page, totalPages } = pagination || {};
 
-          const convoId = data[0]?.conversationId || "";
+          // const convoId = data[0]?.conversationId || "";
 
           const checkMsgsInStateObj = state.msgsForConvoObj[convoId] || {};
 
@@ -503,6 +503,8 @@ const chatSlice = createSlice({
               page: page,
               totalPages: totalPages,
             };
+
+            // console.log({ makeObj });
 
             state.msgsForConvoObj[convoId] = makeObj;
           }

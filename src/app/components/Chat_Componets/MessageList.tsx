@@ -38,7 +38,16 @@ const MessageList: React.FC<MessageListProps> = ({
   const msgsForConvoObj = useChatData().msgsForConvoObj;
   const typingUsers = useChatData().typingUsers;
   const isLoading = useChatData().isLoading;
+  let page =
+    typeof conversationId === "string"
+      ? msgsForConvoObj[conversationId]?.page ?? 0
+      : 0;
+  let totalPages =
+    typeof conversationId === "string"
+      ? msgsForConvoObj[conversationId]?.totalPages ?? 10
+      : 10;
 
+  // console.log({ msgsForConvoObj });
   // const isLoading = useChatData()?.isLoading;
   // const [typingUsers, setTypingUsers] = useState<UserInSession[]>([]);
   // const setTypingUsers = (userArr: UserInSession[]) =>
@@ -112,15 +121,6 @@ const MessageList: React.FC<MessageListProps> = ({
 
     callModalFn({ innerHtml });
   };
-
-  let page =
-    typeof conversationId === "string"
-      ? msgsForConvoObj[conversationId]?.page ?? 0
-      : 0;
-  let totalPages =
-    typeof conversationId === "string"
-      ? msgsForConvoObj[conversationId]?.totalPages ?? 10
-      : 10;
 
   // useEffect(() => {
   //   if (typeof conversationId === "string") {
