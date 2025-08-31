@@ -105,6 +105,7 @@ export interface IChatStory {
   author: Chat_User;
   text: string;
   expiresAt: Date;
+  createdAt: Date;
 }
 
 export type TypeSendMsg = {

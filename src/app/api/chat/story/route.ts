@@ -72,6 +72,8 @@ export async function POST(req: Request) {
       expiresAt,
     });
 
+    await story.populate("author", "_id username email profilePic");
+
     return NextResponse.json(
       {
         success: true,

@@ -2,22 +2,28 @@
 
 import { pusherClient } from "@/lib/pusherClient";
 import { setOnlineUsers, useChatData } from "@/redux/slices/ChatSlice";
+import { useUserState } from "@/redux/slices/UserSlice";
 import { Chat_User } from "@/types/chat-types";
 import { useSession } from "next-auth/react";
+import Pusher from "pusher-js";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 // import React from "react";
 
 const PusherInitEvents = () => {
-  const session = useSession();
+  // const session = useSession();
   const dispatch = useDispatch();
   const onlineUsers = useChatData().onlineUsers;
+  const userId = useUserState().userData._id;
 
   // // // Imp Pusher calls here ----------->>
   //   console.log(onlineUsers);
 
+  // // // Online People related pusher events and their handlers ----------->>
   useEffect(() => {
+    // console.log("Yes i'm working goos.");
+
     // console.log(pusherClient);
 
     // if (!pusherClient) return;
@@ -68,7 +74,9 @@ const PusherInitEvents = () => {
       userOnlinechannel.unbind_all();
       pusherClient.unsubscribe("presence-users");
     };
-  }, [session]);
+  }, [userId]);
+
+  // // // Pusher events for user like convoList update and Notifications update (In App Events) ----------->>
 
   return <div></div>;
 };

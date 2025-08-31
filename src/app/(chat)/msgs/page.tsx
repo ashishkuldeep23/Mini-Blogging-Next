@@ -441,11 +441,27 @@ const SingleChatStory = ({ story }: { story: IChatStory }) => {
         );
       }
     } else {
+      const storyPostedDateAndTime = new Date(
+        story?.createdAt
+      )?.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+
       const innerHtml = (
-        <div className="flex flex-col items-center justify-center">
-          <p className=" text-xl font-semibold">{story?.text}</p>
-          <span>by</span>
-          <p>{story?.author?.username}</p>
+        <div className="flex flex-col items-center justify-center min-h-[20vh] ">
+          <p className=" text-3xl font-semibold">{story?.text}</p>
+          <p className=" flex gap-1">
+            <span className=" text-xs">by</span>
+            <Link className=" flex gap-1" href={`/user/${story?.author?._id}`}>
+              <ImageReact
+                src={story?.author?.profilePic}
+                className=" h-5 w-5 rounded-full object-cover"
+              />
+              <p className=" capitalize">{story?.author?.username}</p>
+            </Link>
+          </p>
+          <span className=" text-[0.5rem] ">
+            {" "}
+            At :- {storyPostedDateAndTime}
+          </span>
         </div>
       );
 
