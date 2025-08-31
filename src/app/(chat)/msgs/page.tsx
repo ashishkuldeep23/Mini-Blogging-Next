@@ -420,7 +420,13 @@ const SingleChatStory = ({ story }: { story: IChatStory }) => {
   const router = useRouter();
 
   const onlineClickHandler = () => {
-    if (isOnline) {
+    // // // Don't do this letter -------->> Once reply of chat is done.
+
+    const storyPostedDateAndTime = new Date(
+      story?.createdAt
+    )?.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+
+    const gotoDmClickHandler = () => {
       let findConvo = allDirectConvoIds.find(
         (convo) => convo?.directUserId === userId
       );
@@ -440,33 +446,45 @@ const SingleChatStory = ({ story }: { story: IChatStory }) => {
           })
         );
       }
-    } else {
-      const storyPostedDateAndTime = new Date(
-        story?.createdAt
-      )?.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+    };
 
-      const innerHtml = (
-        <div className="flex flex-col items-center justify-center min-h-[20vh] ">
-          <p className=" text-3xl font-semibold">{story?.text}</p>
-          <p className=" flex gap-1">
-            <span className=" text-xs">by</span>
-            <Link className=" flex gap-1" href={`/user/${story?.author?._id}`}>
-              <ImageReact
-                src={story?.author?.profilePic}
-                className=" h-5 w-5 rounded-full object-cover"
-              />
-              <p className=" capitalize">{story?.author?.username}</p>
-            </Link>
-          </p>
-          <span className=" text-[0.5rem] ">
-            {" "}
-            At :- {storyPostedDateAndTime}
-          </span>
+    const innerHtml = (
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="flex flex-col items-center justify-center min-h-[30vh] "
+      >
+        <p className=" text-3xl font-semibold my-2">{story?.text}</p>
+        <p className=" flex gap-3">
+          <span className=" text-xs">by</span>
+          <Link className=" flex gap-1" href={`/user/${story?.author?._id}`}>
+            <ImageReact
+              src={story?.author?.profilePic}
+              className=" h-5 w-5 rounded-full object-cover"
+            />
+            <p className=" capitalize">{story?.author?.username}</p>
+          </Link>
+        </p>
+        <span className=" text-[0.5rem] "> At :- {storyPostedDateAndTime}</span>
+
+        <div className="flex gap-0.5 justify-center my-2 rounded-md bg-slate-700 p-0.5 w-[70%] ">
+          <input className=" rounded-md bg-gray-500 w-[100%]  " type="text" />
+          <button className=" font-semibold rounded-md bg-gray-500 px-2 to-gray-200 ">
+            Reply
+          </button>
         </div>
-      );
+        <p>Make this flow letter</p>
+        {isOnline && (
+          <button
+            onClick={gotoDmClickHandler}
+            className=" text-xs px-4 py-2 rounded-md bg-green-500 my-2 active:scale-75 transition-all "
+          >
+            See DM
+          </button>
+        )}
+      </div>
+    );
 
-      callModalFn({ innerHtml });
-    }
+    callModalFn({ innerHtml });
   };
 
   return (
