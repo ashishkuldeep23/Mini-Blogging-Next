@@ -129,14 +129,52 @@ export async function POST(req: NextRequest) {
     // );
     // .populate("participants", "username email profilePic isOnline lastSeen");
 
-    await ConversationModel.findOneAndUpdate(
-      { _id: conversationId },
+    // let readByArr = [...getConvoData?.lastMessage?.readBy, userData._id];
+
+    let updatedConversation = await ConversationModel.findByIdAndUpdate(
+      conversationId,
       {
-        lastMessage: { sender, content, messageType },
-        lastMessageAt: new Date(),
+        $set: {
+          lastMessage: { sender, content, messageType },
+          lastMessageAt: new Date(),
+        },
+        $push: { "lastMessage.readBy": userData._id },
+      },
+      { new: true }
+    )
+      .populate("participants", " username email profilePic isOnline lastSeen")
+      .populate(
+        "lastMessage.sender",
+        "username email profilePic isOnline lastSeen"
+      )
+      .lean();
+
+    // // // Now here we can trigger pusher event for user for convo. ----------->>
+    if (updatedConversation && updatedConversation.participants.length > 0) {
+      for (const participantId of updatedConversation.participants) {
+        // console.log({ participantId });
+
+        participantId &&
+          (await pusherServer.trigger(
+            `user-${participantId._id.toString()}`,
+            "conversation-updated",
+            {
+              conversation: updatedConversation,
+            }
+          ));
       }
-      //   { new: true }
-    );
+    } else {
+      // console.log({ sender });
+
+      await pusherServer.trigger(
+        `user-${sender.toString()}`,
+        "conversation-updated",
+        {
+          conversation: updatedConversation,
+        }
+      );
+    }
+
     // .populate("participants", "username email profilePic isOnline lastSeen");
 
     return NextResponse.json(
@@ -183,7 +221,7 @@ export async function GET(req: NextRequest) {
 
     // // // Type validation here ------->>
 
-    console.log({ conversationId, page, limit });
+    // console.log({ conversationId, page, limit });
 
     if (!isValidObjectId(conversationId)) {
       return NextResponse.json(
@@ -226,6 +264,28 @@ export async function GET(req: NextRequest) {
 
     // Reverse to get chronological order
     messages.reverse();
+
+    let getAllIdSOfMsgs = messages.map((msg) => msg._id);
+
+    // // // Now update readBy of messages for user ----->
+    await MessageModel.updateMany(
+      { _id: { $in: getAllIdSOfMsgs }, "readBy.user": { $ne: userId } },
+      { $push: { readBy: { user: userId, readAt: new Date() } } }
+    );
+
+    if (page == 1 && messages.length > 0) {
+      // // now update readBy of lastMsg  of convo by the userId.
+      // await ConversationModel.findByIdAndUpdate(conversationId, {
+      //   $push: { "lastMessage.readBy": userId },
+      // });
+
+      await ConversationModel.updateOne(
+        { _id: conversationId, "lastMessage.readBy": { $ne: userId } },
+        {
+          $push: { "lastMessage.readBy": userId },
+        }
+      );
+    }
 
     return NextResponse.json(
       {

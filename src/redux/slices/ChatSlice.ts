@@ -271,6 +271,40 @@ const chatSlice = createSlice({
     setOnlineUsers(state, action: PayloadAction<{ [key: string]: Chat_User }>) {
       state.onlineUsers = action.payload;
     },
+
+    updateConvoList(state, action: PayloadAction<Conversation>) {
+      // console.log({ payload: action?.payload });
+
+      const findIndex = state.allConversations?.findIndex(
+        (ele) => ele?._id === action?.payload?._id
+      );
+      // state?.allConversations?.splice(findIndex, 1, action.payload);
+
+      if (findIndex === -1) {
+        // console.log(0);
+
+        state.allConversations?.unshift(action.payload);
+      } else {
+        // console.log(1);
+        // console.log(findIndex);
+
+        let preData = state.allConversations[findIndex];
+
+        state.allConversations.splice(findIndex, 1);
+
+        state.allConversations?.unshift({
+          ...preData,
+          lastMessage: action.payload?.lastMessage,
+          lastMessageAt: action.payload?.lastMessageAt,
+        });
+        // state.allConversations[findIndex].lastMessage =
+        //   action.payload?.lastMessage;
+        // state.allConversations[findIndex].lastMessageAt =
+        //   action.payload?.lastMessageAt;
+      }
+
+      // console.log(state.allConversations);
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -477,7 +511,7 @@ const chatSlice = createSlice({
           state.isError = true;
           state.errMsg = action.payload.message;
         } else {
-          const { data, total, pagination , convoId } = action.payload;
+          const { data, total, pagination, convoId } = action.payload;
           const { page, totalPages } = pagination || {};
 
           // const convoId = data[0]?.conversationId || "";
@@ -654,6 +688,7 @@ export const {
   setUpdatedMsg,
   setTypingUsersArr,
   setOnlineUsers,
+  updateConvoList,
   // setOnlineFriends,
 } = chatSlice.actions;
 

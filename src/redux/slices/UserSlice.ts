@@ -181,6 +181,7 @@ const userSlice = createSlice({
       state.userData.username = action.payload.name;
       state.userData.profilePic = action.payload.image;
       state.userData.email = action.payload.email;
+      state.userData._id = action.payload._id;
     },
 
     setIsLoading(state, action: PayloadAction<boolean>) {

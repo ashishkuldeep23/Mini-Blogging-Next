@@ -3,7 +3,12 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { Chat_User, Conversation, IChatStory } from "../../../types/chat-types";
+import {
+  Chat_User,
+  ChatInterface,
+  Conversation,
+  IChatStory,
+} from "../../../types/chat-types";
 import { FaPencil } from "react-icons/fa6";
 import ImageReact from "@/app/components/ImageReact";
 import {
@@ -36,6 +41,10 @@ export default function MessagePage() {
   const allConversations = useChatData().allConversations;
   const startConvo = useChatData().startConvo;
   const errMsg = useChatData().errMsg;
+
+  // console.log(
+  //   allConversations.map((e) => decryptMessage(e?.lastMessage?.content || ""))
+  // );
 
   const EmptyChats =
     !isLoading && allConversations.length === 0 && startConvo.length === 0;
@@ -87,6 +96,7 @@ export default function MessagePage() {
         newChatClickHandler={newChatClickHandler}
       />
 
+      {/* Search conversation div  */}
       <div
         className={` my-3 mx-0.5 border-2 border-green-700  h-10 rounded w-full flex justify-center items-center md:w-[70%] lg:w-[60%] ${
           isLoading && " opacity-50"
@@ -101,8 +111,10 @@ export default function MessagePage() {
         />
       </div>
 
+      {/* Show online members and chat story div */}
       <OnlineUsersSection />
 
+      {/* All Msg for empty chats */}
       {EmptyChats ? (
         <div className=" my-5  min-h-[40vh] rounded w-full flex flex-col justify-center items-center overflow-hidden px-1 md:w-[70%] lg:w-[60%] ">
           <p className=" text-2xl w-[60%]  text-center opacity-55 font-semibold ">
@@ -120,6 +132,7 @@ export default function MessagePage() {
         <></>
       )}
 
+      {/* Err msg when user searching conversation via input box. Div */}
       {!isLoading &&
         allConversations.filter(
           (ele) =>
@@ -142,7 +155,9 @@ export default function MessagePage() {
           </div>
         )}
 
+      {/* All convorsations div */}
       {allConversations.length === 0 && isLoading ? (
+        // // When loading ------------>>
         <div className=" my-2 text-yellow-500  rounded w-full flex flex-col justify-center items-center overflow-hidden px-1 md:w-[70%] lg:w-[60%] ">
           {Array(12)
             .fill(null)
@@ -161,19 +176,21 @@ export default function MessagePage() {
             })}
         </div>
       ) : (
+        // // // Actual UI for all conversations ------->>
         <div className=" my-2   rounded w-full flex flex-col justify-center items-center overflow-hidden px-1 md:w-[70%] lg:w-[60%] ">
           {allConversations
-            .filter(
-              (ele) =>
-                ele?.name
-                  ?.toLowerCase()
-                  ?.includes(searchConvoText.toLowerCase()) ||
-                ele?.participants.some((ele: any) =>
-                  ele?.name
-                    ?.toLowerCase()
-                    ?.includes(searchConvoText.toLowerCase())
-                )
-            )
+            // .filter(
+            //   (ele) =>
+            //     ele?.name
+            //       ?.toLowerCase()
+            //       ?.includes(searchConvoText.toLowerCase()) ||
+            //     ele?.participants?.some((ele: any) =>
+            //       ele?.name
+            //         ?.toLowerCase()
+            //         ?.includes(searchConvoText.toLowerCase())
+            //     )
+            // )
+            // .sort((a: any, b: any) => b?.lastMessageAt - a?.lastMessageAt)
             ?.map((ele, i) => {
               return (
                 <SingleConvoDiv
@@ -187,6 +204,7 @@ export default function MessagePage() {
         </div>
       )}
 
+      {/* When a user become a friend and you havn't started a conversation with yet then show this particular div  */}
       {startConvo.length > 0 ? (
         <div className=" mx-auto my-5  bg-teal-950 p-2  min-h-[10vh] rounded w-full flex flex-col justify-center overflow-hidden px-1 md:w-[70%] lg:w-[60%] ">
           <h3 className=" ml-4 py-2 opacity-80">
@@ -223,6 +241,8 @@ export default function MessagePage() {
       ) : (
         <></>
       )}
+
+      {/* Create new chat and new group Pencil icon div */}
       {!isLoading && (
         <div
           onClick={newChatClickHandler}
@@ -367,17 +387,26 @@ const AddChatStoryDiv = () => {
 
   if (findChatStory)
     return (
-      <div className=" relative min-w-28 flex justify-center items-center flex-col">
-        <p>{findChatStory?.text}</p>
-        <p>{`${leftTimeInHourAndMint}H left`}</p>
-        <button
-          className=" absolute bottom-0 right-0 rounded-md hover:bg-red-200 active:scale-75 transition-all text-red-500 border-1 border-red-500"
-          onClick={() => dispatch(DeleteChatStory(findChatStory?._id))}
-        >
-          <MdDelete />
-        </button>
-      </div>
+      <SingleChatStoryModalDiv
+        story={findChatStory}
+        deleteClickHandler={() => {
+          dispatch(DeleteChatStory(findChatStory?._id));
+          dispatch(setCloseMoadal());
+        }}
+      />
     );
+  // return (
+  //   <div className=" relative min-w-28 flex justify-center items-center flex-col">
+  //     <p>{findChatStory?.text}</p>
+  //     <p>{`${leftTimeInHourAndMint}H left`}</p>
+  //     <button
+  //       className=" absolute bottom-0 right-0 rounded-md hover:bg-red-200 active:scale-75 transition-all text-red-500 border-1 border-red-500"
+  //       onClick={() => dispatch(DeleteChatStory(findChatStory?._id))}
+  //     >
+  //       <MdDelete />
+  //     </button>
+  //   </div>
+  // );
 
   return (
     <div
@@ -420,11 +449,9 @@ const SingleChatStory = ({ story }: { story: IChatStory }) => {
   const router = useRouter();
 
   const onlineClickHandler = () => {
-    // // // Don't do this letter -------->> Once reply of chat is done.
+    // // // now here we can call api readBy
 
-    const storyPostedDateAndTime = new Date(
-      story?.createdAt
-    )?.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+    // // // Don't do this letter -------->> Once reply of chat is done.
 
     const gotoDmClickHandler = () => {
       let findConvo = allDirectConvoIds.find(
@@ -449,39 +476,10 @@ const SingleChatStory = ({ story }: { story: IChatStory }) => {
     };
 
     const innerHtml = (
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="flex flex-col items-center justify-center min-h-[30vh] "
-      >
-        <p className=" text-3xl font-semibold my-2">{story?.text}</p>
-        <p className=" flex gap-3">
-          <span className=" text-xs">by</span>
-          <Link className=" flex gap-1" href={`/user/${story?.author?._id}`}>
-            <ImageReact
-              src={story?.author?.profilePic}
-              className=" h-5 w-5 rounded-full object-cover"
-            />
-            <p className=" capitalize">{story?.author?.username}</p>
-          </Link>
-        </p>
-        <span className=" text-[0.5rem] "> At :- {storyPostedDateAndTime}</span>
-
-        <div className="flex gap-0.5 justify-center my-2 rounded-md bg-slate-700 p-0.5 w-[70%] ">
-          <input className=" rounded-md bg-gray-500 w-[100%]  " type="text" />
-          <button className=" font-semibold rounded-md bg-gray-500 px-2 to-gray-200 ">
-            Reply
-          </button>
-        </div>
-        <p>Make this flow letter</p>
-        {isOnline && (
-          <button
-            onClick={gotoDmClickHandler}
-            className=" text-xs px-4 py-2 rounded-md bg-green-500 my-2 active:scale-75 transition-all "
-          >
-            See DM
-          </button>
-        )}
-      </div>
+      <SingleChatStoryModalDiv
+        story={story}
+        gotoDmClickHandler={gotoDmClickHandler}
+      />
     );
 
     callModalFn({ innerHtml });
@@ -517,6 +515,78 @@ const SingleChatStory = ({ story }: { story: IChatStory }) => {
       <p className=" text-[0.5rem]  text-center  leading-[0.6rem] capitalize ">
         {story.author.username || "Name"}
       </p>
+    </div>
+  );
+};
+
+const SingleChatStoryModalDiv = ({
+  story,
+  gotoDmClickHandler,
+  deleteClickHandler,
+}: {
+  story: IChatStory;
+  gotoDmClickHandler?: () => void;
+  deleteClickHandler?: () => void;
+}) => {
+  const onlineUsers = useChatData().onlineUsers;
+  const userId = useUserState().userData._id;
+  const onlineFriendsIdes = Object.values(onlineUsers)
+    .filter((user) => user.isOnline === true && user.friends.includes(userId))
+    .map((u) => u?._id);
+
+  const isOnline = onlineFriendsIdes.includes(story?.author?._id);
+
+  const storyPostedDateAndTime = new Date(story?.createdAt)?.toLocaleTimeString(
+    "en-IN",
+    { hour: "2-digit", minute: "2-digit" }
+  );
+
+  return (
+    <div
+      onClick={(e) => e.stopPropagation()}
+      className="flex flex-col items-center justify-center min-h-[30vh] relative "
+    >
+      <p className=" text-3xl font-semibold my-2">{story?.text}</p>
+      <p className=" flex gap-3">
+        <span className=" text-xs">by</span>
+        <Link className=" flex gap-1" href={`/user/${story?.author?._id}`}>
+          <ImageReact
+            src={story?.author?.profilePic}
+            className=" h-5 w-5 rounded-full object-cover"
+          />
+          <p className=" capitalize">{story?.author?.username}</p>
+        </Link>
+      </p>
+      <span className=" text-[0.5rem] "> At :- {storyPostedDateAndTime}</span>
+
+      {gotoDmClickHandler && (
+        <>
+          <div className="flex gap-0.5 justify-center my-2 rounded-md bg-slate-700 p-0.5 w-[70%] ">
+            <input className=" rounded-md bg-gray-500 w-[100%]  " type="text" />
+            <button className=" font-semibold rounded-md bg-gray-500 px-2 to-gray-200 ">
+              Reply
+            </button>
+          </div>
+          <p>Make this flow letter</p>
+          {isOnline && (
+            <button
+              onClick={gotoDmClickHandler}
+              className=" text-xs px-4 py-2 rounded-md bg-green-500 my-2 active:scale-75 transition-all "
+            >
+              See DM
+            </button>
+          )}
+        </>
+      )}
+
+      {deleteClickHandler && (
+        <button
+          className=" absolute bottom-4 right-0 rounded-md hover:bg-red-200 active:scale-75 transition-all text-red-500 border-1 border-red-500"
+          onClick={deleteClickHandler}
+        >
+          <MdDelete className=" h-6 w-6 " />
+        </button>
+      )}
     </div>
   );
 };
@@ -595,8 +665,6 @@ const SingleConvoDiv = ({
   isLoading?: boolean;
   convoClickHandler?: (c: Conversation) => void;
 }) => {
-  // console.log(convo?.directUserId);
-
   const isOnline = useChatData()?.onlineUsers?.[convo?.directUserId || ""];
 
   return (

@@ -38,7 +38,7 @@ export async function GET() {
       .populate("participants", " username email profilePic isOnline lastSeen")
       .populate(
         "lastMessage.sender",
-        " username email profilePic isOnline lastSeen"
+        " username email profilePic isOnline lastSeen "
       )
       .sort({ lastMessageAt: -1 })
       .lean();

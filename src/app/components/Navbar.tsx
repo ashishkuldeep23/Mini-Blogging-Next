@@ -108,7 +108,6 @@ const Navbar = ({ className }: { className?: string }) => {
     let getPrivousThemeValue = localStorage.getItem("authNextDark");
     if (getPrivousThemeValue) {
       getPrivousThemeValue = JSON.parse(getPrivousThemeValue);
-
       // console.log(getPrivousThemeValue)
       dispatch(setModeOnLoad({ mode: getPrivousThemeValue }));
     }

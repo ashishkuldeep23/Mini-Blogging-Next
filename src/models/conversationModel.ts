@@ -15,6 +15,7 @@ export interface IConversation extends Document {
     sender: string;
     timestamp: Date;
     messageType: "text" | "image" | "file";
+    readBy: string[];
   };
   lastMessageAt: Date;
   isActive: boolean;
@@ -60,6 +61,7 @@ const ConversationSchema = new Schema<IConversation>(
         enum: ["text", "image", "file"],
         default: "text",
       },
+      readBy: [{ type: Schema.Types.ObjectId, ref: "users" }],
     },
     lastMessageAt: { type: Date, default: new Date() },
     description: { type: String, trim: true, default: "" },

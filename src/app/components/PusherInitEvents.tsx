@@ -1,7 +1,11 @@
 "use client";
 
 import { pusherClient } from "@/lib/pusherClient";
-import { setOnlineUsers, useChatData } from "@/redux/slices/ChatSlice";
+import {
+  setOnlineUsers,
+  updateConvoList,
+  useChatData,
+} from "@/redux/slices/ChatSlice";
 import { useUserState } from "@/redux/slices/UserSlice";
 import { Chat_User } from "@/types/chat-types";
 import { useSession } from "next-auth/react";
@@ -15,8 +19,9 @@ const PusherInitEvents = () => {
   // const session = useSession();
   const dispatch = useDispatch();
   const onlineUsers = useChatData().onlineUsers;
-  const userId = useUserState().userData._id;
+  const userId = useUserState()?.userData?._id;
 
+  // console.log({ userId });
   // // // Imp Pusher calls here ----------->>
   //   console.log(onlineUsers);
 
@@ -77,6 +82,46 @@ const PusherInitEvents = () => {
   }, [userId]);
 
   // // // Pusher events for user like convoList update and Notifications update (In App Events) ----------->>
+
+  useEffect(() => {
+    if (!userId) return;
+
+    let nameOfChannel = `user-${userId}`;
+
+    // Pusher.logToConsole = true; // Enable logging
+
+    const userChannel = pusherClient.subscribe(nameOfChannel);
+
+    userChannel.bind("pusher:subscription_succeeded", (user: any) => {
+      // console.log({user});
+
+      console.log("User channel connected");
+    });
+
+    userChannel.bind("pusher:subscription_error", (err: any) => {
+      // setOnlineUsers(members.members);
+
+      console.log("Error", err);
+    });
+
+    // // // now write all events related to user here ---------->>
+
+    // // // when new convo is created ------------>
+    userChannel.bind("conversation-updated", (data: any) => {
+      // console.log(data);
+
+      data.conversation && dispatch(updateConvoList(data?.conversation));
+
+      // // // now send the in notification (In App) (May be Both) ------->>
+
+      // console.log("Yes i'm working goos.");
+    });
+
+    return () => {
+      userChannel.unbind_all();
+      pusherClient.unsubscribe(nameOfChannel);
+    };
+  }, [userId]);
 
   return <div></div>;
 };

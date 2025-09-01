@@ -5,6 +5,7 @@ import MessageModel from "@/models/messageModel";
 import { isValidObjectId, modelNames } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
+// // // This is used to get conversation data, when user press on a conversation on ui.
 export async function GET(req: NextRequest, context: any) {
   await connect();
   console.log(modelNames());

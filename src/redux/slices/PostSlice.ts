@@ -252,7 +252,7 @@ const initialState: PostSliceInterFace = {
 };
 
 const psotSlice = createSlice({
-  name: "theme",
+  name: "post",
   initialState,
   reducers: {
     setWriteFullFilledVal(state, action) {

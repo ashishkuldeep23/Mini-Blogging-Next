@@ -48,13 +48,11 @@ const ChatNavBar = () => {
   // console.log(currentConvo);
 
   const showMenuConvoCliked = () => {
-
-    if(currentConvo?.type === "direct"){
+    if (currentConvo?.type === "direct") {
       callModalFn({ innerHtml: <DmInfo /> });
-    }else if(currentConvo?.type === "group"){
+    } else if (currentConvo?.type === "group") {
       callModalFn({ innerHtml: <GroupInfo /> });
     }
-
   };
 
   return (
@@ -89,7 +87,9 @@ const ChatNavBar = () => {
         )}
         <span className=" capitalize font-bold text-2xl  ">
           {path === "/msgs"
-            ? username || "All Messages"
+            ? username
+              ? `${username}'s Dm`
+              : "All Messages"
             : path === "/general-msgs"
             ? "Public Chatting Place"
             : ConvoName || "Direct Message"}
