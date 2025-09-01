@@ -1,7 +1,9 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
 export interface IStory extends Document {
+  seenBy: mongoose.Types.ObjectId;
   author: mongoose.Types.ObjectId;
+  likedBy: mongoose.Types.ObjectId;
   text: string; // image/video
   expiresAt: Date;
 }
@@ -9,6 +11,8 @@ export interface IStory extends Document {
 const ChatStorySchema = new Schema<IStory>(
   {
     author: { type: Schema.Types.ObjectId, ref: "users", required: true },
+    seenBy: { type: Schema.Types.ObjectId, ref: "users" },
+    likedBy: { type: Schema.Types.ObjectId, ref: "users" },
     text: { type: String, required: true },
     expiresAt: { type: Date, required: true }, // e.g. 24h from creation
   },

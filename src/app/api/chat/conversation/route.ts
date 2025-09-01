@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getUserDataFromServer } from "../../getUserDataServer";
 import MessageModel from "@/models/messageModel";
 
-// // // Used to get all conversations
+// // // Used to get all conversations. (All DM page used this ui.)
 export async function GET() {
   await connect();
   console.log(modelNames());
@@ -36,10 +36,14 @@ export async function GET() {
       isActive: true,
     })
       .populate("participants", " username email profilePic isOnline lastSeen")
-      .populate(
-        "lastMessage.sender",
-        " username email profilePic isOnline lastSeen "
-      )
+      .populate({
+        path: "lastMessage",
+        select: "content messageType sender readBy",
+        populate: {
+          path: "sender",
+          select: " username email profilePic isOnline lastSeen",
+        },
+      })
       .sort({ lastMessageAt: -1 })
       .lean();
 

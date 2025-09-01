@@ -33,12 +33,13 @@ export interface Conversation {
   admins: Chat_User[];
   name?: string;
   avatar?: string;
-  lastMessage?: {
-    content: string;
-    sender: Chat_User;
-    timestamp: Date;
-    messageType: "text" | "image" | "file";
-  };
+  // lastMessage?: {
+  //   content: string;
+  //   sender: Chat_User;
+  //   timestamp: Date;
+  //   messageType: "text" | "image" | "file";
+  // };
+  lastMessage?: Message;
   lastMessageAt?: Date;
   unreadCount?: number;
   theme?: ThemeConvo;

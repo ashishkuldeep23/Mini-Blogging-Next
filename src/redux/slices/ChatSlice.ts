@@ -244,10 +244,21 @@ const chatSlice = createSlice({
 
         const convoId = action?.payload?.conversationId || "";
 
-        state.msgsForConvoObj[convoId].msgs = [
-          ...(state.msgsForConvoObj[convoId]?.msgs || []),
-          action.payload,
-        ];
+        if(convoId){
+
+          if (state.msgsForConvoObj[convoId]) {
+            state.msgsForConvoObj[convoId].msgs = [
+              ...(state.msgsForConvoObj[convoId]?.msgs || []),
+              action.payload,
+            ];
+          }else{
+            state.msgsForConvoObj[convoId] = {
+              msgs: [action.payload],
+              page : 1,
+              totalPages : 10
+            };
+          }
+        }
 
         // state?.allMessagesOfThisConvo?.push(action.payload);
       }
@@ -297,10 +308,6 @@ const chatSlice = createSlice({
           lastMessage: action.payload?.lastMessage,
           lastMessageAt: action.payload?.lastMessageAt,
         });
-        // state.allConversations[findIndex].lastMessage =
-        //   action.payload?.lastMessage;
-        // state.allConversations[findIndex].lastMessageAt =
-        //   action.payload?.lastMessageAt;
       }
 
       // console.log(state.allConversations);
@@ -319,6 +326,8 @@ const chatSlice = createSlice({
           state.isError = true;
           state.errMsg = action.payload.message;
         } else {
+          // console.log(action);
+
           const { data, startConvo, userId } = action.payload;
 
           // console.log({ data, startConvo });

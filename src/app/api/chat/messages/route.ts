@@ -135,18 +135,15 @@ export async function POST(req: NextRequest) {
       conversationId,
       {
         $set: {
-          lastMessage: { sender, content, messageType },
+          lastMessage: newMessage._id,
           lastMessageAt: new Date(),
         },
-        $push: { "lastMessage.readBy": userData._id },
+        // $push: { "lastMessage.readBy": userData._id },
       },
       { new: true }
     )
       .populate("participants", " username email profilePic isOnline lastSeen")
-      .populate(
-        "lastMessage.sender",
-        "username email profilePic isOnline lastSeen"
-      )
+      .populate("lastMessage", "content messageType sender readBy")
       .lean();
 
     // // // Now here we can trigger pusher event for user for convo. ----------->>
@@ -273,19 +270,19 @@ export async function GET(req: NextRequest) {
       { $push: { readBy: { user: userId, readAt: new Date() } } }
     );
 
-    if (page == 1 && messages.length > 0) {
-      // // now update readBy of lastMsg  of convo by the userId.
-      // await ConversationModel.findByIdAndUpdate(conversationId, {
-      //   $push: { "lastMessage.readBy": userId },
-      // });
+    // if (page == 1 && messages.length > 0) {
+    //   // // now update readBy of lastMsg  of convo by the userId.
+    //   // await ConversationModel.findByIdAndUpdate(conversationId, {
+    //   //   $push: { "lastMessage.readBy": userId },
+    //   // });
 
-      await ConversationModel.updateOne(
-        { _id: conversationId, "lastMessage.readBy": { $ne: userId } },
-        {
-          $push: { "lastMessage.readBy": userId },
-        }
-      );
-    }
+    //   await ConversationModel.updateOne(
+    //     { _id: conversationId, "lastMessage.readBy": { $ne: userId } },
+    //     {
+    //       $push: { "lastMessage.readBy": userId },
+    //     }
+    //   );
+    // }
 
     return NextResponse.json(
       {

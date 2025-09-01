@@ -35,10 +35,19 @@ export async function GET(req: NextRequest, context: any) {
 
     const convoData = await ConversationModel.findById(convoId)
       .populate("participants", " username email profilePic isOnline lastSeen")
-      .populate(
-        "lastMessage.sender",
-        " username email profilePic isOnline lastSeen"
-      )
+      // .populate(
+      //   "lastMessage.sender",
+      //   " username email profilePic isOnline lastSeen"
+      // )
+      // "lastMessage", "content messageType sender readBy"
+      .populate({
+        path: "lastMessage",
+        select: "content messageType sender readBy",
+        populate: {
+          path: "sender",
+          select: " username email profilePic isOnline lastSeen",
+        },
+      })
       .populate("admins", "username email profilePic isOnline lastSeen")
       .sort({ lastMessageAt: -1 })
       .lean();

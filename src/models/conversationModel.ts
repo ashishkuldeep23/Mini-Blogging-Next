@@ -10,13 +10,14 @@ export interface IConversation extends Document {
   participants: any[];
   admins: string[];
   adminOnly: boolean;
-  lastMessage?: {
-    content: string;
-    sender: string;
-    timestamp: Date;
-    messageType: "text" | "image" | "file";
-    readBy: string[];
-  };
+  // lastMessage?: {
+  //   content: string;
+  //   sender: string;
+  //   timestamp: Date;
+  //   messageType: "text" | "image" | "file";
+  //   readBy: string[];
+  // };
+  lastMessage?: string | undefined;
   lastMessageAt: Date;
   isActive: boolean;
   createdBy: string | undefined;
@@ -49,20 +50,21 @@ const ConversationSchema = new Schema<IConversation>(
     createdBy: { type: Schema.Types.ObjectId, ref: "users", required: true },
     isActive: { type: Boolean, default: true },
     adminOnly: { type: Boolean, default: false },
-    lastMessage: {
-      content: String,
-      sender: { type: Schema.Types.ObjectId, ref: "users" },
-      timestamp: {
-        type: Date,
-        default: new Date(),
-      },
-      messageType: {
-        type: String,
-        enum: ["text", "image", "file"],
-        default: "text",
-      },
-      readBy: [{ type: Schema.Types.ObjectId, ref: "users" }],
-    },
+    // lastMessage: {
+    //   content: String,
+    //   sender: { type: Schema.Types.ObjectId, ref: "users" },
+    //   timestamp: {
+    //     type: Date,
+    //     default: new Date(),
+    //   },
+    //   messageType: {
+    //     type: String,
+    //     enum: ["text", "image", "file"],
+    //     default: "text",
+    //   },
+    //   readBy: [{ type: Schema.Types.ObjectId, ref: "users" }],
+    // },
+    lastMessage: { type: Schema.Types.ObjectId, ref: "Message" },
     lastMessageAt: { type: Date, default: new Date() },
     description: { type: String, trim: true, default: "" },
     tested: {

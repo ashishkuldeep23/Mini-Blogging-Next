@@ -9,6 +9,7 @@ export interface IMessage extends Document {
   content: string;
   messageType: "text" | "image" | "file" | "system";
   replyTo?: string;
+  replyToChatStory?: string;
   readBy: { user: string; readAt: Date }[];
   reactions: { emoji: string; user: string }[];
   deletedBy: string[];
@@ -46,6 +47,10 @@ const MessageSchema = new Schema<IMessage>(
         user: { type: Schema.Types.ObjectId, ref: "users" },
       },
     ],
+    replyToChatStory: {
+      type: Schema.Types.ObjectId,
+      ref: "chat_story",
+    },
     isEdited: { type: Boolean, default: false },
     deletedBy: [{ type: Schema.Types.ObjectId, ref: "users" }],
     isDeleted: { type: Boolean, default: false },
