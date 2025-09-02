@@ -161,11 +161,48 @@ export const getChatStrories = createAsyncThunk(
   }
 );
 
+export const getChatStroryById = createAsyncThunk(
+  "chat/getChatStroryById",
+  async (chatStoryId: string) => {
+    const option: RequestInit = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    const response = await fetch(`/api/chat/story/${chatStoryId}`, option); // `/api/chat/story?userId=${userId}", option);
+    let data = await response.json();
+    return data;
+  }
+);
+
 export const PostChatStory = createAsyncThunk(
   "chat/PostChatStory",
   async (body: { userId: string; text: string }) => {
     const option: RequestInit = {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    };
+
+    const response = await fetch(`/api/chat/story`, option); // `/api/chat/story?userId=${userId}", option);
+    let data = await response.json();
+    return data;
+  }
+);
+export const PutChatStory = createAsyncThunk(
+  "chat/PutChatStory",
+  async (body: {
+    userId: string;
+    chatStoryId: string;
+    seenUpdate?: boolean;
+    likeUpdate?: boolean;
+  }) => {
+    const option: RequestInit = {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
@@ -244,18 +281,17 @@ const chatSlice = createSlice({
 
         const convoId = action?.payload?.conversationId || "";
 
-        if(convoId){
-
+        if (convoId) {
           if (state.msgsForConvoObj[convoId]) {
             state.msgsForConvoObj[convoId].msgs = [
               ...(state.msgsForConvoObj[convoId]?.msgs || []),
               action.payload,
             ];
-          }else{
+          } else {
             state.msgsForConvoObj[convoId] = {
               msgs: [action.payload],
-              page : 1,
-              totalPages : 10
+              page: 1,
+              totalPages: 10,
             };
           }
         }
@@ -635,6 +671,48 @@ const chatSlice = createSlice({
         toast.error(` ${action.error.message || "Fetching failed"}`);
         state.errMsg = action.error.message || "Fetching failed";
       })
+      .addCase(getChatStroryById.pending, (state) => {
+        // state.isLoading = true;
+        state.errMsg = "";
+        state.isError = false;
+      })
+      .addCase(getChatStroryById.fulfilled, (state, action) => {
+        if (action.payload.success === false) {
+          toast.error(`${action.payload.message || "Conversation Error"}`);
+          state.isError = true;
+          state.errMsg = action.payload.message;
+        } else {
+          let data = action.payload?.data;
+
+          // console.log({ data });
+
+          // state.chatStrories = action.payload.data;
+
+          // // // now we need to update this in state ------>>
+
+          let findIndex = state.chatStrories?.findIndex((s) => {
+            if (s?._id === data?._id) {
+              return data;
+            } else {
+              return s;
+            }
+          });
+
+          if (findIndex && findIndex !== -1) {
+            state.chatStrories?.splice(findIndex, 1, data);
+          }
+
+          state.isFullfilled = true;
+        }
+
+        state.isLoading = false;
+      })
+      .addCase(getChatStroryById.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        toast.error(` ${action.error.message || "Fetching failed"}`);
+        state.errMsg = action.error.message || "Fetching failed";
+      })
       .addCase(PostChatStory.pending, (state) => {
         // state.isLoading = true;
         state.errMsg = "";
@@ -655,6 +733,45 @@ const chatSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(PostChatStory.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        toast.error(` ${action.error.message || "Fetching failed"}`);
+        state.errMsg = action.error.message || "Fetching failed";
+      })
+      .addCase(PutChatStory.pending, (state) => {
+        // state.isLoading = true;
+        state.errMsg = "";
+        state.isError = false;
+      })
+      .addCase(PutChatStory.fulfilled, (state, action) => {
+        if (action.payload.success === false) {
+          toast.error(`${action.payload.message || "Conversation Error"}`);
+          state.isError = true;
+          state.errMsg = action.payload.message;
+        } else {
+          // // // data will be chatStory Data ---------->>
+          const data = action?.payload?.data;
+
+          // console.log(JSON.stringify(data, null, 2));
+
+          // state.chatStrories = [data, ...(state.chatStrories || [])];
+
+          let findIndex = state.chatStrories?.findIndex(
+            (s) => s?._id === data?._id
+          );
+
+          // console.log(findIndex);
+
+          if (findIndex && findIndex !== -1) {
+            state.chatStrories?.splice(findIndex, 1, data);
+          }
+
+          state.isFullfilled = true;
+        }
+
+        state.isLoading = false;
+      })
+      .addCase(PutChatStory.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         toast.error(` ${action.error.message || "Fetching failed"}`);

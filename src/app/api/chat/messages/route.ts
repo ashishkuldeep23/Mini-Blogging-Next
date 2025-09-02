@@ -256,6 +256,7 @@ export async function GET(req: NextRequest) {
       .limit(Number(limit))
       .populate("sender", "name username avatar")
       .populate("replyTo", "content sender")
+      // .populate("chat_story", "text author expiresAt")
       .populate("reactions.user", " _id username email profilePic ")
       .lean();
 

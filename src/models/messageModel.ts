@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 import User from "./userModel";
 import conversationModel from "./conversationModel";
+import chatStoryModel from "./chatStoryModel";
 
 export interface IMessage extends Document {
   _id: string;
@@ -49,7 +50,8 @@ const MessageSchema = new Schema<IMessage>(
     ],
     replyToChatStory: {
       type: Schema.Types.ObjectId,
-      ref: "chat_story",
+      // ref: "chat_story",
+      ref: "chat_stories",
     },
     isEdited: { type: Boolean, default: false },
     deletedBy: [{ type: Schema.Types.ObjectId, ref: "users" }],

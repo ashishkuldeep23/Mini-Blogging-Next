@@ -107,6 +107,8 @@ export interface IChatStory {
   text: string;
   expiresAt: Date;
   createdAt: Date;
+  seenBy?: (Chat_User | string)[];
+  likedBy?: (Chat_User | string)[];
 }
 
 export type TypeSendMsg = {
