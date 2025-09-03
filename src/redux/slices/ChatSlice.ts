@@ -1,6 +1,11 @@
 "use client";
 
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSlice,
+  PayloadAction,
+  // current,
+} from "@reduxjs/toolkit";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import {
@@ -751,7 +756,6 @@ const chatSlice = createSlice({
         } else {
           // // // data will be chatStory Data ---------->>
           const data = action?.payload?.data;
-
           // console.log(JSON.stringify(data, null, 2));
 
           // state.chatStrories = [data, ...(state.chatStrories || [])];
@@ -762,7 +766,7 @@ const chatSlice = createSlice({
 
           // console.log(findIndex);
 
-          if (findIndex && findIndex !== -1) {
+          if (typeof findIndex === "number" && findIndex !== -1) {
             state.chatStrories?.splice(findIndex, 1, data);
           }
 

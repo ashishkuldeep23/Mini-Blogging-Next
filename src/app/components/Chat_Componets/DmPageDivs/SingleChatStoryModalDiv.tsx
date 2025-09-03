@@ -81,7 +81,7 @@ const SingleChatStoryModalDiv = ({
 
     setIsLiked(!isLiked);
 
-    console.log("Now call dispatch for like and unLike.");
+    // console.log("Now call dispatch for like and unLike.");
 
     dispatch(
       PutChatStory({

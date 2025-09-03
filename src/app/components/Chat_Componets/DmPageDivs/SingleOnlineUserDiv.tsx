@@ -39,7 +39,6 @@ const SingleOnlineUserDiv = ({
 
   const router = useRouter();
   const userId = user?._id || story?.author?._id || "";
-
   const isOnline = onlineFriendsIdes.includes(userId);
 
   const gotoDmClickHandler = () => {
