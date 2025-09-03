@@ -4,10 +4,11 @@ import Link from "next/link";
 import {
   getChatStroryById,
   PutChatStory,
+  sendMsgPostCall,
   useChatData,
 } from "@/redux/slices/ChatSlice";
 import { useUserState } from "@/redux/slices/UserSlice";
-import { Chat_User, IChatStory } from "@/types/chat-types";
+import { Chat_User, IChatStory, TypeSendMsg } from "@/types/chat-types";
 import { useEffect, useState } from "react";
 import { FcLike, FcLikePlaceholder } from "react-icons/fc";
 import { likeAnimationHandler } from "@/helper/likeAnimation";
@@ -63,6 +64,24 @@ const SingleChatStoryModalDiv = ({
     // setReplyText("")
 
     console.log("Now call dispatch.");
+
+    let makeBodyData: TypeSendMsg = {
+      conversationId: '',
+      sender: story?.author?._id,
+      content: replyText,
+      messageType: "text",
+      chatStoryId : story?._id
+    };
+
+    // if (updatingMsg?.isUpdating && updatingMsg?.replyTo) {
+    //   makeBodyData = {
+    //     ...makeBodyData,
+    //     replyTo: updatingMsg?.replyTo,
+    //   };
+    // }
+
+    // // // Final Call to send message to server -------->>
+    dispatch(sendMsgPostCall(makeBodyData));
 
     setReplyText("");
     dispatch(setCloseMoadal());

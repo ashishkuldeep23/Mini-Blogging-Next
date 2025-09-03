@@ -20,8 +20,20 @@ export async function POST(req: NextRequest) {
     const reqBody = await req.json();
 
     // // // replyTo , readBy ,reactions ,  these are we'll use it later for PUT request ---------->>
-    const { conversationId, sender, content, messageType, replyTo, readBy } =
-      reqBody;
+    const {
+      // conversationId,
+      sender,
+      content,
+      messageType,
+      replyTo,
+      readBy,
+      chatStoryId,
+      storyId,
+      commentId,
+      postId,
+    } = reqBody;
+
+    let { conversationId } = reqBody;
 
     // console.log(reqBody);
 
@@ -35,7 +47,7 @@ export async function POST(req: NextRequest) {
     }
 
     // // // Server validation
-    if (!conversationId || !sender || !content || !messageType) {
+    if (!sender || !content || !messageType) {
       return NextResponse.json(
         { success: false, message: "All fields are required" },
         { status: 400 }
@@ -43,7 +55,7 @@ export async function POST(req: NextRequest) {
     }
 
     // // // Check convoId is mongoid or not
-    if (!isValidObjectId(conversationId) || !isValidObjectId(sender)) {
+    if (!isValidObjectId(sender)) {
       return NextResponse.json(
         { success: false, message: "Given id's is invailid." },
         { status: 400 }
@@ -58,7 +70,46 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const getConvoData = await ConversationModel.findById(conversationId);
+    // // // ValidateSender ----------------->>
+
+    const findSender = await User.findById(sender);
+
+    if (!findSender) {
+      return NextResponse.json(
+        { success: false, message: "Sender not found." },
+        { status: 404 }
+      );
+    }
+
+    // const getConvoData = await ConversationModel.findById(conversationId);
+
+    let getConvoData = null;
+
+    if (conversationId) {
+      getConvoData = await ConversationModel.findById(conversationId);
+    } else {
+      // // // here need to change the logic  ------------------>>
+
+      // // // sender is going to be friendUserId ( when user is replying on chatStory and story is given)
+      const friendUserId = sender;
+
+      getConvoData = await ConversationModel.findOne({
+        type: "direct",
+        participants: {
+          $all: [userData._id, friendUserId],
+          $size: 2,
+        },
+      });
+
+      if (!getConvoData) {
+        getConvoData = await ConversationModel.create({
+          type: "direct",
+          participants: [userData._id, friendUserId],
+          createdBy: userData._id, // Person who accepted
+          lastMessageAt: new Date(),
+        });
+      }
+    }
 
     if (!getConvoData)
       return NextResponse.json(
@@ -74,6 +125,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // // // Now putting convoId in conversationId ------------>>
+    conversationId = getConvoData._id;
+
+    // // // Now checking banned word (Just for testing) ------------>
     const contentModerator = new ContentModerator("en");
 
     let bannedWord =
@@ -94,10 +149,19 @@ export async function POST(req: NextRequest) {
         },
       ],
       bannedWord,
+      // // // Here putting Id when ever user will reply something ------------------->>
+      replyFor: {
+        chatStoryId,
+        storyId,
+        commentId,
+        postId,
+      },
     });
 
     await newMessage.populate("sender", " _id name username avatar");
     await newMessage.populate("replyTo", "content sender");
+
+    // console.log({ newMessage });
 
     // // // now send pusher msg here ----->>
 

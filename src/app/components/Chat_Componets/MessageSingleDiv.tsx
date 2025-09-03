@@ -196,6 +196,36 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
     callModalFn({ innerHtml });
   };
 
+  const msgTextDivHandler = (e: React.MouseEvent<HTMLDivElement | null>) => {
+    e?.stopPropagation();
+    setShowOptions((p) => !p);
+    clickAnimationForOptionDiv();
+  };
+
+  const clickAnimationForOptionDiv = () => {
+    let getOptionDiv = document.getElementById(
+      `msg_options_div_${message?._id}`
+    );
+
+    if (getOptionDiv) {
+      getOptionDiv.style.scale = "0.5";
+
+      setTimeout(() => {
+        getOptionDiv.style.scale = "1";
+      }, 1);
+    }
+  };
+
+  const optionClickHandler = () => {
+    setShowOptions(!showOptions);
+    clickAnimationForOptionDiv();
+  };
+
+  // // // we'll work letter for this --------->>
+  console.log(message?.replyFor);
+
+  // // // UI begans here --------->>>>>
+
   if (message?.isDeleted) {
     return (
       <p className=" text-center text-red-500 text-sm">
@@ -209,7 +239,6 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
     // return <p> This message is deleted by you!</p>;
     return <></>;
   }
-
   // console.log(message?.replyTo);
   // console.log(message?.replyTo?.sender._id);
   // console.log(message?.replyTo?.sender._id === currentUserId);
@@ -222,6 +251,7 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
         (message?.isEdited || message?.reactions.length > 0) && " mb-3 "
       } no_select `}
     >
+      {/* // // When you replying someone --------->>  */}
       {message?.replyTo ? (
         <div
           className={`-mb-1 opacity-70 max-w-xs lg:max-w-xl px-2 py-1 rounded-lg flex 
@@ -273,12 +303,14 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
           )}
 
           {/* Main Msg Div */}
+          {/* I'm the main handler ---------->> */}
           <div
             className={`relative !max-w-[17rem] lg:max-w-xl px-4 py-2 rounded-lg ${
               isCurrentUser
                 ? "bg-sky-600 text-white"
                 : "bg-black border border-sky-500 rounded-bl-none "
             }`}
+            onClick={msgTextDivHandler}
           >
             <div className="break-words">{decryptMessage(message.content)}</div>
             <div
@@ -347,9 +379,8 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
 
           {/* Show option btn  */}
           <span
-            onClick={() => {
-              setShowOptions(!showOptions);
-            }}
+            id={`msg_options_div_${message?._id}`}
+            onClick={optionClickHandler}
             className={`mt-auto mb-4 mx-1  px-1 rounded-md bg-black border border-sky-500 font-bold text-sky-500 hover:cursor-pointer active:scale-90 transition-all ${
               !showOptions ? " px-0  " : "px-0.5"
             } transition-all`}

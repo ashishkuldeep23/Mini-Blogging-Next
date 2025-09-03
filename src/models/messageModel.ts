@@ -19,6 +19,14 @@ export interface IMessage extends Document {
   createdAt: Date;
   updatedAt: Date;
   bannedWord: boolean;
+
+  // // // adding link for other replies ------->>
+  replyFor: {
+    chatStoryId: string;
+    storyId: string;
+    commentId: string;
+    postId: string;
+  };
 }
 
 const MessageSchema = new Schema<IMessage>(
@@ -59,6 +67,12 @@ const MessageSchema = new Schema<IMessage>(
     bannedWord: {
       type: Boolean,
       default: false,
+    },
+    replyFor: {
+      chatStoryId: String,
+      storyId: String,
+      commentId: String,
+      postId: String,
     },
   },
   { timestamps: true }

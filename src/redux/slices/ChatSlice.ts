@@ -198,6 +198,7 @@ export const PostChatStory = createAsyncThunk(
     return data;
   }
 );
+
 export const PutChatStory = createAsyncThunk(
   "chat/PutChatStory",
   async (body: {
@@ -519,6 +520,9 @@ const chatSlice = createSlice({
         state.isLoadingMsg = true;
       })
       .addCase(sendMsgPostCall.fulfilled, (state, action) => {
+
+        // console.log(action);
+
         if (action.payload.success === false) {
           toast.error(`${action.payload.message || "Conversation Error"}`);
           state.isError = true;

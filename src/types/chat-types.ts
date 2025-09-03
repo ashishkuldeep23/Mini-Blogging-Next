@@ -67,6 +67,12 @@ export interface Message {
   // deletedBy?: (Chat_User | string)[];
   deletedBy?: string[];
   isDeleted?: boolean;
+  replyFor?: {
+    chatStoryId: string;
+    storyId: string;
+    commentId: string;
+    postId: string;
+  };
 }
 
 export interface ChatInterface {
@@ -118,6 +124,10 @@ export type TypeSendMsg = {
   messageType: "text" | "image" | "file" | "system";
   successFn?: (id: any) => void;
   replyTo?: string;
+  chatStoryId?: string;
+  storyId?: string;
+  commentId?: string;
+  postId?: string;
 };
 
 export type TypeFetchMsgsByConvoId = {
