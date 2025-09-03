@@ -66,11 +66,11 @@ const SingleChatStoryModalDiv = ({
     console.log("Now call dispatch.");
 
     let makeBodyData: TypeSendMsg = {
-      conversationId: '',
+      conversationId: "",
       sender: story?.author?._id,
       content: replyText,
       messageType: "text",
-      chatStoryId : story?._id
+      chatStoryId: story?._id,
     };
 
     // if (updatingMsg?.isUpdating && updatingMsg?.replyTo) {
@@ -146,6 +146,12 @@ const SingleChatStoryModalDiv = ({
     }
   }, []);
 
+  const hoursLeft =
+    Math.ceil(
+      (new Date(story?.expiresAt).getTime() - new Date().getTime()) /
+        (1000 * 60 * 60 * 24)
+    ) || 0;
+
   return (
     <div
       onClick={(e) => e.stopPropagation()}
@@ -162,7 +168,13 @@ const SingleChatStoryModalDiv = ({
           <p className=" capitalize">{story?.author?.username}</p>
         </Link>
       </div>
-      <span className=" text-[0.5rem] "> At :- {storyPostedDateAndTime}</span>
+      <span className=" text-[0.5rem] ">
+        {" "}
+        At :- {storyPostedDateAndTime}{" "}
+        <span className=" text-blue-400 ml-1 font-semibold ">
+          ({hoursLeft} H Left)
+        </span>
+      </span>
 
       {gotoDmClickHandler && (
         <>

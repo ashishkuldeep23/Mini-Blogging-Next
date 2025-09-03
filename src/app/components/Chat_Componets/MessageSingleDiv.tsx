@@ -15,6 +15,7 @@ import { TiPen } from "react-icons/ti";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useLongPress } from "@uidotdev/usehooks";
 import { PiDotsThreeOutlineVertical, PiSealCheckDuotone } from "react-icons/pi";
+import useInViewAnimate from "@/Hooks/useInViewAnimate";
 
 export type TypeSingleMsg = {
   message: Message;
@@ -222,7 +223,7 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
   };
 
   // // // we'll work letter for this --------->>
-  console.log(message?.replyFor);
+  // console.log(message?.replyFor);
 
   // // // UI begans here --------->>>>>
 
@@ -244,6 +245,8 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
   // console.log(message?.replyTo?.sender._id === currentUserId);
   // console.log(message?.replyTo?.sender);
 
+  const { ref: viewDivRef, inView } = useInViewAnimate();
+
   return (
     <div
       id={`msg_${message?._id}`}
@@ -251,6 +254,26 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
         (message?.isEdited || message?.reactions.length > 0) && " mb-3 "
       } no_select `}
     >
+      {/* here we'll use to show reply for */}
+      {message?.replyFor && (
+        <div
+          ref={viewDivRef as React.LegacyRef<HTMLDivElement>}
+          className={` p-0.5 w-[60%] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500
+             rounded-md overflow-y-auto ${
+               isCurrentUser
+                 ? "justify-end ml-auto mr-6 "
+                 : " justify-start ml-9 mr-auto"
+             }
+             
+               ${inView ? "animate__animated animate__bounceIn " : ""}
+             `}
+        >
+          <div className=" bg-gray-900 p-1 rounded-md h-full w-full flex justify-center items-center flex-col">
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+          </div>
+        </div>
+      )}
+
       {/* // // When you replying someone --------->>  */}
       {message?.replyTo ? (
         <div
@@ -271,7 +294,6 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
           </div>
         </div>
       ) : null}
-
       <div
         {...handlers}
         style={{
