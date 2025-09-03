@@ -1,22 +1,16 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import {
   Chat_User,
-  ChatInterface,
   Conversation,
-  IChatStory,
 } from "../../../types/chat-types";
 import { FaPencil } from "react-icons/fa6";
 import ImageReact from "@/app/components/ImageReact";
 import {
   CreateConversations,
-  DeleteChatStory,
   fetchAllConversations,
-  getChatStrories,
-  PostChatStory,
   setCurrentConvo,
   useChatData,
 } from "@/redux/slices/ChatSlice";
@@ -24,15 +18,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 // import MainLoader from "@/app/components/LoaderUi";
 
-import { TfiWorld } from "react-icons/tfi";
 import NewChatDiv from "@/app/components/Chat_Componets/NewChatDiv";
-import { decryptMessage } from "@/lib/Crypto-JS";
-import { useUserState } from "@/redux/slices/UserSlice";
-import useInViewAnimate from "@/Hooks/useInViewAnimate";
-import useOpenModalWithHTML from "@/Hooks/useOpenModalWithHtml";
-import { useSession } from "next-auth/react";
-import { setCloseMoadal } from "@/redux/slices/ModalSlice";
-import { MdDelete } from "react-icons/md";
 import OnlineUsersSection from "@/app/components/Chat_Componets/DmPageDivs/OnlineUsersSection";
 import SingleConvoDiv from "@/app/components/Chat_Componets/DmPageDivs/SingleConvoDiv";
 
@@ -161,7 +147,7 @@ export default function MessagePage() {
       {allConversations.length === 0 && isLoading ? (
         // // When loading ------------>>
         <div className=" my-2 text-yellow-500  rounded w-full flex flex-col justify-center items-center overflow-hidden px-1 md:w-[70%] lg:w-[60%] ">
-          {Array(12)
+          {Array(7)
             .fill(null)
             .map((_, i) => {
               return (

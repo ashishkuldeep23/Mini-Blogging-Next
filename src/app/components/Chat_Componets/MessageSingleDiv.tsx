@@ -46,8 +46,8 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
   const [offset, setOffset] = useState(0);
   // const [offsetY, setOffsetY] = useState(0);
   const [showOptions, setShowOptions] = useState(false);
-
   const isFullfilled = useChatData().isFullfilled;
+  const { ref: viewDivRef, inView } = useInViewAnimate();
 
   useEffect(() => {
     // console.log(2);
@@ -245,8 +245,6 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
   // console.log(message?.replyTo?.sender._id === currentUserId);
   // console.log(message?.replyTo?.sender);
 
-  const { ref: viewDivRef, inView } = useInViewAnimate();
-
   return (
     <div
       id={`msg_${message?._id}`}
@@ -255,24 +253,25 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
       } no_select `}
     >
       {/* here we'll use to show reply for */}
-      {message?.replyFor && (
-        <div
-          ref={viewDivRef as React.LegacyRef<HTMLDivElement>}
-          className={` p-0.5 w-[60%] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500
+      <div
+        className={` ${inView ? "animate__animated animate__bounceIn " : ""} `}
+      >
+        {message?.replyFor && (
+          <div
+            ref={viewDivRef as React.LegacyRef<HTMLDivElement>}
+            className={` p-0.5 w-[60%] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500
              rounded-md overflow-y-auto ${
                isCurrentUser
                  ? "justify-end ml-auto mr-6 "
                  : " justify-start ml-9 mr-auto"
-             }
-             
-               ${inView ? "animate__animated animate__bounceIn " : ""}
-             `}
-        >
-          <div className=" bg-gray-900 p-1 rounded-md h-full w-full flex justify-center items-center flex-col">
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+             }`}
+          >
+            <div className=" bg-gray-900 p-1 rounded-md h-full w-full flex justify-center items-center flex-col">
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* // // When you replying someone --------->>  */}
       {message?.replyTo ? (
