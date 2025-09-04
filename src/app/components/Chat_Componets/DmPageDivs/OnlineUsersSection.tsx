@@ -72,7 +72,10 @@ const OnlineUsersSection = () => {
              `}
         onClick={selfDivClickHandler}
       >
-        <span className=" absolute -top-1 border-2 border-gray-500 rounded-md px-1 py-0.5 z-[5] text-[0.5rem] bg-black ">
+        <span
+          style={{ lineBreak: "anywhere" }}
+          className=" max-w-28 absolute -top-1 border-2 border-gray-500 rounded-md px-1 py-0.5 z-[5] text-[0.5rem] bg-black "
+        >
           {ownChatStrory?.text
             ? ownChatStrory?.text?.length > 25
               ? `${ownChatStrory?.text?.slice(0, 25)}...`

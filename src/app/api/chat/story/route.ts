@@ -101,7 +101,10 @@ export async function POST(req: NextRequest) {
       );
 
     // expires in 24 hours
-    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+    let forSeconds = 24 * 60 * 60 * 1000;
+    // let forSeconds = 1000;
+    const expiresAt = new Date(Date.now() + forSeconds);
 
     const story = await ChatStoryModel.create({
       author: userId,

@@ -2,9 +2,9 @@
 
 import useOpenModalWithHTML from "@/Hooks/useOpenModalWithHtml";
 import { useChatData } from "@/redux/slices/ChatSlice";
-import { Message } from "@/types/chat-types";
+import { IChatStory, Message } from "@/types/chat-types";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSwipeable } from "react-swipeable";
 import ImageReact from "../ImageReact";
 import { decryptMessage } from "@/lib/Crypto-JS";
@@ -16,6 +16,9 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { useLongPress } from "@uidotdev/usehooks";
 import { PiDotsThreeOutlineVertical, PiSealCheckDuotone } from "react-icons/pi";
 import useInViewAnimate from "@/Hooks/useInViewAnimate";
+import { Comment, PostInterFace } from "@/types/Types";
+import toast from "react-hot-toast";
+import SingleChatStoryModalDiv from "./DmPageDivs/SingleChatStoryModalDiv";
 
 export type TypeSingleMsg = {
   message: Message;
@@ -49,6 +52,14 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
   const isFullfilled = useChatData().isFullfilled;
   const { ref: viewDivRef, inView } = useInViewAnimate();
 
+  const [replyForData, setReplyForData] = useState<{
+    chatStoryData?: IChatStory;
+    postData?: PostInterFace;
+    commentData?: Comment;
+    storyData?: null; // // Change it latter with actual type;
+  } | null>(null);
+
+  // // // This useEffect is used to close the options when the message is fullfilled via RTK Query -------->>
   useEffect(() => {
     // console.log(2);
 
@@ -57,6 +68,61 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
       setShowOptions(false);
     }
   }, [isFullfilled]);
+
+  // // // Now fetch the data acc. to replyFor id ----------->>
+
+  useEffect(() => {
+    if (message.replyFor) {
+      if (message?.replyFor?.chatStoryId) {
+        // // // now fetch reply and set into state ------->>
+        chatStoryFetchById(message?.replyFor?.chatStoryId);
+      }
+    }
+  }, [message.replyFor]);
+
+  const chatStoryFetchById = useCallback(
+    (id: string) => {
+      try {
+        const opitions = {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+
+        const req = fetch(`/api/chat/story/${id}`, opitions);
+        req.then((res) => {
+          res.json().then((json) => {
+            // setReplyForData(data);
+
+            // console.log({ json });
+            // console.log("Not set this into state");
+
+            setReplyForData({ chatStoryData: json.data });
+          });
+        });
+      } catch (error: any) {
+        console.log({ error });
+        toast.error(`${error.message}`);
+      } finally {
+      }
+    },
+    [message.replyFor?.chatStoryId]
+  );
+
+  const chatStoryDivClickHandler = () => {
+    if (replyForData?.chatStoryData) {
+      const innerHtml = (
+        <SingleChatStoryModalDiv
+          story={replyForData?.chatStoryData}
+          usedInChat={true}
+          // gotoDmClickHandler={gotoDmClickHandler}
+        />
+      );
+
+      callModalFn({ innerHtml });
+    }
+  };
 
   const messageSender =
     typeof message.sender === "string"
@@ -256,7 +322,7 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
       <div
         className={` ${inView ? "animate__animated animate__bounceIn " : ""} `}
       >
-        {message?.replyFor && (
+        {replyForData && (
           <div
             ref={viewDivRef as React.LegacyRef<HTMLDivElement>}
             className={` p-0.5 w-[60%] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500
@@ -266,8 +332,30 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
                  : " justify-start ml-9 mr-auto"
              }`}
           >
-            <div className=" bg-gray-900 p-1 rounded-md h-full w-full flex justify-center items-center flex-col">
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+            <div className=" bg-gray-900 p-0.5 rounded-md h-full w-full flex justify-center items-center flex-col">
+              {replyForData.chatStoryData && (
+                <div
+                  className=" flex flex-col justify-center items-center"
+                  onClick={chatStoryDivClickHandler}
+                >
+                  <p className=" text-xl">
+                    {" "}
+                    {replyForData.chatStoryData?.text}
+                  </p>
+
+                  <span className=" text-[0.5rem] ">
+                    {" "}
+                    At :-{" "}
+                    {new Date(
+                      replyForData.chatStoryData?.createdAt
+                    ).toDateString()}{" "}
+                  </span>
+
+                  <span className=" text-[0.5rem] border-t px-2 mt-0.5 ">
+                    chat story
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         )}

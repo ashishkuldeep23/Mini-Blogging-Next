@@ -111,7 +111,10 @@ const SingleOnlineUserDiv = ({
             isLiked ? " pl-4 " : " pl-0 "
           } `}
         >
-          <span className="  border-2 border-gray-500 rounded-md px-1 py-0.5 z-[5] text-[0.5rem] bg-black flex  ">
+          <span
+            style={{ lineBreak: "anywhere" }}
+            className="  max-w-28 border-2 border-gray-500 rounded-md px-1 py-0.5 z-[5] text-[0.5rem] bg-black flex  "
+          >
             {story?.text
               ? story?.text?.length > 25
                 ? `${story?.text?.slice(0, 25)}...`

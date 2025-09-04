@@ -23,10 +23,12 @@ const SingleChatStoryModalDiv = ({
   story,
   gotoDmClickHandler,
   deleteClickHandler,
+  usedInChat = false,
 }: {
   story: IChatStory;
   gotoDmClickHandler?: () => void;
   deleteClickHandler?: () => void;
+  usedInChat?: boolean;
 }) => {
   const onlineUsers = useChatData().onlineUsers;
   const userId = useUserState().userData._id;
@@ -135,7 +137,11 @@ const SingleChatStoryModalDiv = ({
       }
     });
 
-    if (!seenByUserIds?.includes(userId) && story?.author?._id !== userId) {
+    if (
+      !seenByUserIds?.includes(userId) &&
+      story?.author?._id !== userId &&
+      usedInChat === false
+    ) {
       dispatch(
         PutChatStory({
           userId: userId,
@@ -146,18 +152,28 @@ const SingleChatStoryModalDiv = ({
     }
   }, []);
 
-  const hoursLeft =
-    Math.ceil(
+  const hoursLeft = Math.max(
+    0,
+    Math.floor(
       (new Date(story?.expiresAt).getTime() - new Date().getTime()) /
-        (1000 * 60 * 60 * 24)
-    ) || 0;
+        (1000 * 60 * 60)
+    )
+  );
+
+  // console.log(new Date(story?.expiresAt).toString());
+  // console.log({ hoursLeft });
 
   return (
     <div
       onClick={(e) => e.stopPropagation()}
       className="flex flex-col items-center justify-center min-h-[30vh] relative "
     >
-      <p className=" text-3xl font-semibold my-2">{story?.text}</p>
+      <p
+        style={{ lineBreak: "anywhere" }}
+        className=" text-center text-3xl font-semibold my-2"
+      >
+        {story?.text}
+      </p>
       <div className=" flex gap-3">
         <span className=" text-xs">by</span>
         <Link className=" flex gap-1" href={`/user/${story?.author?._id}`}>
@@ -171,9 +187,11 @@ const SingleChatStoryModalDiv = ({
       <span className=" text-[0.5rem] ">
         {" "}
         At :- {storyPostedDateAndTime}{" "}
-        <span className=" text-blue-400 ml-1 font-semibold ">
-          ({hoursLeft} H Left)
-        </span>
+        {hoursLeft > 0 && (
+          <span className=" text-blue-400 ml-1 font-semibold ">
+            ({hoursLeft} H Left)
+          </span>
+        )}
       </span>
 
       {gotoDmClickHandler && (
@@ -257,23 +275,6 @@ const SingleChatStoryModalDiv = ({
                 .map((user, i) => (
                   <SingleSeenOrLikedByDiv key={i} user={user} />
                 ))}
-
-            {/* {story?.seenBy &&
-              story?.seenBy?.length > 0 &&
-              story?.seenBy
-                ?.filter((user) =>
-                  // story?.likedBy?.find((u) => u?._id !== user?._id)
-                  story?.likedBy?.find((u) => {
-                    if (typeof u === "string") {
-                      return u !== user?._id;
-                    } else {
-                      return u?._id !== user?._id;
-                    }
-                  })
-                )
-                .map((user, i) => (
-                  <SingleSeenOrLikedByDiv key={i} user={user} />
-                ))} */}
           </div>
 
           <button

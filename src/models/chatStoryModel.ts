@@ -20,7 +20,10 @@ const ChatStorySchema = new Schema<IStory>(
 );
 
 // Optional index to auto-remove expired stories
-ChatStorySchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+// ChatStorySchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });      // // // This is used to delete doc as soon as it expires (But we don't need it, now)
+
+ChatStorySchema.index({ expiresAt: 1 });
+
 
 // export default mongoose.models.ChatStoryModel ||
 //   mongoose.model<IStory>("chat_story", ChatStorySchema);
