@@ -43,6 +43,14 @@ const SingleChatStoryModalDiv = ({
     { hour: "2-digit", minute: "2-digit" }
   );
 
+  const hoursLeft = Math.max(
+    0,
+    Math.floor(
+      (new Date(story?.expiresAt).getTime() - new Date().getTime()) /
+        (1000 * 60 * 60)
+    )
+  );
+
   const [replyText, setReplyText] = useState<string>("");
   const dispatch = useDispatch<AppDispatch>();
 
@@ -152,14 +160,6 @@ const SingleChatStoryModalDiv = ({
     }
   }, []);
 
-  const hoursLeft = Math.max(
-    0,
-    Math.floor(
-      (new Date(story?.expiresAt).getTime() - new Date().getTime()) /
-        (1000 * 60 * 60)
-    )
-  );
-
   // console.log(new Date(story?.expiresAt).toString());
   // console.log({ hoursLeft });
 
@@ -187,11 +187,9 @@ const SingleChatStoryModalDiv = ({
       <span className=" text-[0.5rem] ">
         {" "}
         At :- {storyPostedDateAndTime}{" "}
-        {hoursLeft > 0 && (
-          <span className=" text-blue-400 ml-1 font-semibold ">
-            ({hoursLeft} H Left)
-          </span>
-        )}
+        <span className=" text-blue-400 ml-1 font-semibold ">
+          {hoursLeft > 0 ? <>{hoursLeft} H Left</> : <>Expired</>}
+        </span>
       </span>
 
       {gotoDmClickHandler && (

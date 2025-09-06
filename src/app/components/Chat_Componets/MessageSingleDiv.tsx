@@ -59,6 +59,24 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
     storyData?: null; // // Change it latter with actual type;
   } | null>(null);
 
+  const storyPostedDateAndTime =
+    replyForData?.chatStoryData &&
+    new Date(replyForData?.chatStoryData.createdAt)?.toLocaleTimeString(
+      "en-IN",
+      { hour: "2-digit", minute: "2-digit" }
+    );
+
+  const hoursLeft =
+    replyForData?.chatStoryData &&
+    Math.max(
+      0,
+      Math.floor(
+        (new Date(replyForData?.chatStoryData?.expiresAt).getTime() -
+          new Date().getTime()) /
+          (1000 * 60 * 60)
+      )
+    );
+
   // // // This useEffect is used to close the options when the message is fullfilled via RTK Query -------->>
   useEffect(() => {
     // console.log(2);
@@ -333,6 +351,7 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
              }`}
           >
             <div className=" bg-gray-900 p-0.5 rounded-md h-full w-full flex justify-center items-center flex-col">
+              {/* When user replyed on Chat story */}
               {replyForData.chatStoryData && (
                 <div
                   className=" flex flex-col justify-center items-center"
@@ -343,15 +362,26 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
                     {replyForData.chatStoryData?.text}
                   </p>
 
-                  <span className=" text-[0.5rem] ">
+                  <span className=" text-[0.5rem] text-center ">
                     {" "}
                     At :-{" "}
                     {new Date(
                       replyForData.chatStoryData?.createdAt
                     ).toDateString()}{" "}
+                    <span className=" text-[0.5rem] ">
+                      {" "}
+                      At :- {storyPostedDateAndTime}{" "}
+                    </span>
+                    <span className=" text-blue-400 ml-1 font-semibold ">
+                      {hoursLeft && hoursLeft > 0 ? (
+                        <>{hoursLeft} H Left</>
+                      ) : (
+                        <>Expired</>
+                      )}
+                    </span>
                   </span>
 
-                  <span className=" text-[0.5rem] border-t px-2 mt-0.5 ">
+                  <span className=" text-[0.5rem] border-t px-5 sm:px-10 mt-0.5 ">
                     chat story
                   </span>
                 </div>
