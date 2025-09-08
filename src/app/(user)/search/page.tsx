@@ -240,7 +240,7 @@ const SearchPage = () => {
 
                 </div>
 
-                <div className=' w-11/12 sm:w-4/6 mt-1'>
+                <div className=' w-11/12 sm:w-4/6 mt-1 bg-red-500'>
                     <p
                         className={`text-xs text-opacity-50 text-start ml-5
                                          ${!themeMode ? "text-white/50 " : "text-black/50 "}

@@ -37,7 +37,7 @@ const SingleConvoDiv = ({
           )}
         </span>
 
-        <div className=" flex flex-col justify-center mt-1.5">
+        <div className=" flex flex-col justify-center mt-1.5 ">
           <p className=" text-lg font-semibold capitalize leading-[0.85rem] ">
             {convo?.name}
           </p>
@@ -58,14 +58,14 @@ const SingleConvoDiv = ({
               </p>
             </div>
           ) : (
-            <div>
+            <div className=" opacity-70 text-[0.45rem] ">
               {!isOnline &&
                 convo.participants &&
                 convo?.participants.find(
                   (user) =>
                     user?.username?.toString() === convo?.name?.toString()
                 )?.lastSeen && (
-                  <p className=" opacity-70 text-[0.6rem] ">
+                  <p>
                     {formatDateToDDMMYYYY(
                       convo?.participants.find(
                         (user) =>
@@ -77,8 +77,8 @@ const SingleConvoDiv = ({
                 )}
 
               {isOnline && (
-                <p className=" opacity-70 text-[0.6rem] ">
-                  <span className=" text-green-200 font-semibold ">Active</span>
+                <p>
+                  <span className=" text-green-200 font-semibold animate-pulse ">Active</span>
                 </p>
               )}
             </div>

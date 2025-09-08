@@ -344,17 +344,17 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
           <div
             ref={viewDivRef as React.LegacyRef<HTMLDivElement>}
             className={` p-0.5 w-[60%] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500
-             rounded-md overflow-y-auto ${
+             rounded-md overflow-y-auto  focus:scale-75 transition-all relative z-[1] hover:cursor-pointer ${
                isCurrentUser
                  ? "justify-end ml-auto mr-6 "
                  : " justify-start ml-9 mr-auto"
              }`}
           >
-            <div className=" bg-gray-900 p-0.5 rounded-md h-full w-full flex justify-center items-center flex-col">
+            <div className=" bg-gray-900 p-0.5 rounded-md h-full w-full flex justify-center items-center flex-col  ">
               {/* When user replyed on Chat story */}
               {replyForData.chatStoryData && (
                 <div
-                  className=" flex flex-col justify-center items-center"
+                  className=" w-full flex flex-col justify-center items-center "
                   onClick={chatStoryDivClickHandler}
                 >
                   <p className=" text-xl">
@@ -367,10 +367,10 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
                     At :-{" "}
                     {new Date(
                       replyForData.chatStoryData?.createdAt
-                    ).toDateString()}{" "}
+                    ).toDateString()}
+                    {", "}
                     <span className=" text-[0.5rem] ">
-                      {" "}
-                      At :- {storyPostedDateAndTime}{" "}
+                      {storyPostedDateAndTime}{" "}
                     </span>
                     <span className=" text-blue-400 ml-1 font-semibold ">
                       {hoursLeft && hoursLeft > 0 ? (
