@@ -183,7 +183,8 @@ async function moderateVideo(buffer: Buffer, filename: string) {
   formData.append("api_secret", SIGHTENGINE_SECRET!);
 
   const response = await fetch(
-    "https://api.sightengine.com/1.0/video/check-sync.json",
+    "https://api.sightengine.com/1.0/video/check.json",
+    // "https://api.sightengine.com/1.0/video/moderate.json",
     {
       method: "POST",
       body: formData,

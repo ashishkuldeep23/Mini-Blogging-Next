@@ -1099,9 +1099,7 @@ const NewPostPage = () => {
                   {mediaReasons?.length > 0 && (
                     <div className=" flex gap-1 justify-center mt-2 ">
                       <p>Reasons:</p>
-                      {mediaReasons.map((ele, i) => {
-                        return <span key={i}>{ele}</span>;
-                      })}
+                      <p>[${mediaReasons}]</p>
                     </div>
                   )}
 
