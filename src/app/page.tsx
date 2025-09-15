@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import Navbar from "./components/Navbar";
 import MainLoader from "./components/LoaderUi";
 import { pusherClient } from "@/lib/pusherClient";
+import LandingPage from "./components/LandingPage";
 
 export default function Home() {
   const router = useRouter();
@@ -43,7 +44,9 @@ export default function Home() {
       }`}
     >
       {/* Loading animation on landing page. */}
-      <MainLoader isLoading={isLoading} className=" !top-[85vh]" />
+      {/* <MainLoader isLoading={isLoading} className=" !top-[85vh]" /> */}
+
+      <LandingPage />
 
       {/* Now i'm going to user pusher ------> */}
       {/* Pusher working code -----------> */}
@@ -52,9 +55,8 @@ export default function Home() {
       /> */}
 
       {/* Main home div that hold allPosts and all */}
-      <div className=" flex flex-col justify-center items-center ">
+      {/* <div className=" flex flex-col justify-center items-center ">
         <Navbar />
-
         <div className=" relative flex items-start  gap-5">
           <div className=" w-[100%]">
             <div className="flex flex-col items-center ">
@@ -62,18 +64,18 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
-      <div>
+      {/* <div>
         <button
           className=" border rounded px-2 focus:scale-90"
           onClick={() => router.push("/home")}
         >
           Home
         </button>
-      </div>
+      </div> */}
 
-      {allPostData.length > 0 && <FooterDiv />}
+      {/* {allPostData.length > 0 && <FooterDiv />} */}
     </main>
   );
 }
@@ -84,20 +86,20 @@ function FeatureDetailShowHomeFirstTime() {
   const router = useRouter();
 
   // // // This code was responsiable for show and hide feature section.
-  useEffect(() => {
-    let chcekAlreadyVisited = localStorage.getItem("alreadyVisited");
+  // useEffect(() => {
+  //   let chcekAlreadyVisited = localStorage.getItem("alreadyVisited");
 
-    if (chcekAlreadyVisited) {
-      chcekAlreadyVisited = JSON.parse(chcekAlreadyVisited);
+  //   if (chcekAlreadyVisited) {
+  //     chcekAlreadyVisited = JSON.parse(chcekAlreadyVisited);
 
-      if (chcekAlreadyVisited) {
-        setFirstTime(chcekAlreadyVisited);
-        router.push("/home");
-      }
-    }
+  //     if (chcekAlreadyVisited) {
+  //       setFirstTime(chcekAlreadyVisited);
+  //        router.push("/home");
+  //     }
+  //   }
 
-    localStorage.setItem("alreadyVisited", JSON.stringify("yes"));
-  }, []);
+  //   localStorage.setItem("alreadyVisited", JSON.stringify("yes"));
+  // }, []);
 
   return (
     <>
