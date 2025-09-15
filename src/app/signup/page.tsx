@@ -86,7 +86,7 @@ const SignUpPage = () => {
       <MainLoader isLoading={isLoading} />
 
       <div
-        className={`w-full h-screen flex flex-col items-center py-[17vh] ${
+        className={`w-full h-screen flex flex-col items-center  py-[20vh] ${
           !themeMode ? " bg-black text-white " : " bg-white text-black"
         }`}
       >
@@ -94,7 +94,10 @@ const SignUpPage = () => {
 
         <LogInWithGoogle />
 
-        <div className={`border px-4 py-4 rounded-md md:w-1/4`}>
+        {/* remove : hidden */}
+        <div
+          className={` hidden shadow shadow-white px-4 py-4 rounded-md md:w-1/4`}
+        >
           <p className=" text-4xl font-bold  text-center px-5 py-1 ">SingUp</p>
 
           {errMsgWithStatus.status && (
@@ -191,6 +194,13 @@ const SignUpPage = () => {
           </div>
 
           <div className=" flex">
+            <Link
+              href={"/login"}
+              className=" px-4 py-2  mt-3 rounded-md font-bold ml-auto mr-10"
+            >
+              LogIn
+            </Link>
+
             <button
               className=" px-4 py-2 border bg-green-400 text-white mt-3 rounded-md font-bold ml-auto mr-10"
               onClick={(e) => onSignup(e, userData)}
@@ -198,10 +208,10 @@ const SignUpPage = () => {
               SingUp
             </button>
           </div>
-        </div>
 
-        <div className=" md:w-1/4 mt-2 flex  justify-end  text-sm ">
-          <Link href={"/login"}>Already have account!</Link>
+          {/* <div className="  mt-2 flex  justify-end  text-sm ">
+            <Link href={"/login"}>Already have account!</Link>
+          </div> */}
         </div>
       </div>
     </>

@@ -98,7 +98,7 @@ const LoginPage = () => {
 
         <LogInWithGoogle />
 
-        <div className=" border px-4 py-4 rounded-md md:w-1/4">
+        <div className="  shadow shadow-white px-4 py-4 rounded-md md:w-1/4">
           <p className=" text-4xl font-bold  text-center px-5 py-1 ">LogIn</p>
           {errMsg && (
             <p className=" text-red-500 font-semibold text-sm text-center">
@@ -172,6 +172,13 @@ const LoginPage = () => {
             </div>
 
             <div className=" flex">
+              <Link
+                href={"/signup"}
+                className=" px-4 py-2  mt-3 rounded-md font-bold ml-auto mr-10"
+              >
+                SingUp
+              </Link>
+
               <button
                 type="submit"
                 className=" px-4 py-2 border bg-green-400 text-white mt-3 rounded-md font-bold ml-auto mr-10"
@@ -181,9 +188,9 @@ const LoginPage = () => {
             </div>
           </form>
         </div>
-        <div className=" md:w-1/4 mt-2 flex  justify-end text-sm">
+        {/* <div className=" md:w-1/4 mt-2 flex  justify-end text-sm">
           <Link href={"/signup"}>Create a account!</Link>
-        </div>
+        </div> */}
       </div>
     </>
   );

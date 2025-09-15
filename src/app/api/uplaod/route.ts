@@ -2,7 +2,6 @@ import cloudinary from "@/lib/cloudinaryConfig";
 import { NextRequest, NextResponse } from "next/server";
 import { getUserDataFromServer } from "../getUserDataServer";
 
-
 export const POST = async (req: NextRequest) => {
   try {
     //   console.log("Content-Type:", req.headers.get("content-type"));
@@ -20,6 +19,7 @@ export const POST = async (req: NextRequest) => {
     }
 
     // console.log(file);
+    // console.log(file.type);
 
     // // // Here check user status --------->>
 
@@ -44,6 +44,7 @@ export const POST = async (req: NextRequest) => {
     // Upload to Cloudinary
     const result = await cloudinary.uploader.upload(base64, {
       folder: "MiniBlogging", // optional folder
+      resource_type: "auto", // auto-detects image/video/raw
     });
 
     console.log({ result });

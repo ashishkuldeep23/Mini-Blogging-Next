@@ -8,7 +8,6 @@ import { DOMAIN, GOOGLE_ID, GOOGLE_SECRATE, NEXTAUTH_SECRET } from "@/constant";
 const clientIdText = GOOGLE_ID!;
 const clientSecretText = GOOGLE_SECRATE!;
 
-
 const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
@@ -38,7 +37,8 @@ const authOptions: NextAuthOptions = {
       },
 
       async authorize(credentials, req) {
-        // console.log({ req })
+        // console.log({ req });
+        // console.log(req?.body);
         // console.log({ credentials })
 
         // You need to provide your own logic here that takes the credentials
@@ -47,13 +47,23 @@ const authOptions: NextAuthOptions = {
         // e.g. return { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
         // You can also use the `req` object to obtain additional parameters
         // (i.e., the request IP address)
-        const res = await fetch(`${DOMAIN}/api/users/loginAuth`, {
+
+        const frontEndUrl = req?.headers?.get("origin") || DOMAIN;
+        console.log({ frontEndUrl });
+
+        const res = await fetch(`${frontEndUrl}/api/users/loginAuth`, {
           method: "POST",
           body: JSON.stringify(credentials),
           headers: { "Content-Type": "application/json" },
         });
 
-        // console.log({ res })
+        // const res = await fetch(`/api/users/loginAuth`, {
+        //   method: "POST",
+        //   body: JSON.stringify(credentials),
+        //   headers: { "Content-Type": "application/json" },
+        // });
+
+        // console.log({ res });
 
         const user = await res.json();
 
@@ -81,7 +91,6 @@ const authOptions: NextAuthOptions = {
         const sessionUserData = await User.findOne({
           email: session.user.email,
         });
-
 
         // // // Store user image url in session ------>
         session.user.image = sessionUserData.profilePic.toString();

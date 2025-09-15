@@ -35,7 +35,7 @@ const LogInWithGoogle = () => {
   }, [session]);
 
   return (
-    <div className=" flex flex-col items-center justify-center w-60">
+    <div className=" my-5 shadow shadow-white flex flex-col items-center justify-center p-2 rounded-md ">
       {/* <div className=" w-full flex justify-center border-b-2 relative bg-red-500">
             <p className=" absolute -top-1/2 left-5 -top-8 bg-green-500">OR</p>
         </div> */}
@@ -59,13 +59,13 @@ const LogInWithGoogle = () => {
               }}
             >
               <p
-                className={` font-semibold flex gap-1 justify-center items-center mb-1  rounded text-white px-4 py-1 m-1 hover:text-gray-300 transition-all ${
+                className={` font-semibold flex gap-1 justify-center items-center mb-1  rounded text-white px-7 py-3 m-1 hover:text-gray-300 transition-all text-xl ${
                   prov.id === "google" ? "bg-red-500" : "bg-blue-500"
                 }`}
               >
                 <span>
                   {prov?.id === "google" && (
-                    <FaGoogle className="w-4 h-4 pt-0.5" />
+                    <FaGoogle className="w-5 h-5  " />
                   )}{" "}
                 </span>
                 <span>Continue with {prov?.name}</span>
@@ -74,7 +74,7 @@ const LogInWithGoogle = () => {
           );
         })}
 
-      <div className=" w-full flex justify-center  mb-5 ">
+      {/* <div className=" w-full flex justify-center  mb-5 ">
         <p className=" border-b-2 w-full text-center relative">
           <span
             className={` ${
@@ -84,7 +84,9 @@ const LogInWithGoogle = () => {
             OR
           </span>
         </p>
-      </div>
+      </div> */}
+
+
     </div>
   );
 };

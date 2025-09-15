@@ -63,7 +63,7 @@ const ProfilePageParams = () => {
   useEffect(() => {
     if (status === "unauthenticated") {
       toast.error("You are unauthenticated person.");
-      router.push("/home");
+      router.push("/login");
     }
 
     if (

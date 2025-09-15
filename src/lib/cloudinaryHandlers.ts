@@ -75,7 +75,7 @@ export async function PostFileInCloudinary(file: File): Promise<string> {
 
     let json = await request.json();
 
-    // console.log({ json });
+    console.log({ json });
     if (json?.success) {
       return json?.data?.url;
     } else {
