@@ -14,9 +14,9 @@ import PusherInitEvents from "./components/PusherInitEvents";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "AAposto - Post. Connect. Explore.",
+  title: "Apostio",
   description:
-    "A modern social platform where you can post freely, connect with people, and explore a whole new world of ideas and stories. Join us now and be part of the AAposto community!",
+    "A modern social platform where you can post freely, connect with people, and explore a whole new world of ideas and stories. Join us now and be part of the Apostio community!",
   icons: {
     icon: "https://res.cloudinary.com/dlvq8n2ca/image/upload/v1701708322/jual47jntd2lpkgx8mfx.png", // /public path
   },

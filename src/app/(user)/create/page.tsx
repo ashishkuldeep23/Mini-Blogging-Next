@@ -250,7 +250,6 @@ const NewPostPage = () => {
 
       // // // Experiment ---------------------------------------->>
       // // // Now call the check fn defined in server.
-
       checkMediaHnadler(file);
     }
   }

@@ -30,7 +30,7 @@ export default function Home() {
       chcekAlreadyVisited = JSON.parse(chcekAlreadyVisited);
 
       if (chcekAlreadyVisited) {
-         router.push("/home");
+        router.push("/home");
       }
     }
 
@@ -47,7 +47,7 @@ export default function Home() {
           transition={{ duration: 0.3 }}
           className="text-xl sm:text-2xl font-bold text-sky-500 flex flex-col items-center justify-center"
         >
-          <span>Aaposto</span>
+          <span>Apostio</span>
           {/* <span className=" leading-3 text-[0.5rem] text-white ">Social Media</span> */}
         </motion.h1>
 
@@ -141,7 +141,7 @@ export default function Home() {
         >
           <MaskerText
             text={
-              "Aaposto is a modern social platform where you can share your voice, connect with people, and explore a whole new world of ideas and stories."
+              "Apostio is a modern social platform where you can share your voice, connect with people, and explore a whole new world of ideas and stories."
             }
           />
         </motion.div>
@@ -203,11 +203,11 @@ export default function Home() {
       {/* Features Section */}
       <section id="features" className=" px-6 sm:px-10 text-center">
         <h3 className="text-2xl sm:text-3xl font-bold text-white">
-          Why Aaposto?
+          Why Apostio?
         </h3>
         <p className="mt-3 sm:mt-4 text-gray-400 max-w-lg sm:max-w-2xl mx-auto text-sm sm:text-base">
           Designed for people and communities who want to discover, share, and
-          grow, Aaposto is a fresh and modern space where everyone comes
+          grow, Apostio is a fresh and modern space where everyone comes
           together to explore a new world of social discovery.
         </p>
 
@@ -247,7 +247,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="mt-24 sm:mt-32 py-6 sm:py-10 bg-zinc-950 text-center text-gray-500 text-sm sm:text-base">
-        <p>© {new Date().getFullYear()} Aaposto. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} Apostio. All rights reserved.</p>
         <p>Developed by Ashish Kuldeep</p>
         <p>Developing now</p>
       </footer>

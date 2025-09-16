@@ -98,30 +98,71 @@ const SinglePostCardNew: React.FC<{
           {/* Now here we can place tested ui -------->> */}
 
           {ele.tested === false && !ele.tested && (
-            <span
-              className={` absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 text-center rounded-md p-1  z-10 text-yellow-500 font-bold text-xl w-[50%] sm:w-[40%] flex flex-col items-center justify-center  ${
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className={` absolute bottom-[0%] left-[50%] z-[999] -translate-x-1/2  text-center rounded-md p-1  font-bold text-xl w-full h-[100%] min-w-32 min-h-32 flex flex-col items-center justify-center  ${
                 !themeMode ? "bg-black  " : " bg-white  "
               }   } `}
             >
-              This post is not verified yet.
+              <span className=" text-yellow-500 ">
+                {" "}
+                This post is not verified yet.
+              </span>
               <button
                 onClick={reqVerifyClickHandler}
                 className=" px-2 text-sm  bg-green-500 text-white rounded-md"
               >
                 Req for verification
               </button>
-            </span>
+              <div
+                className=" my-5 rounded-t flex items-start p-0.5 gap-1.5  "
+                onClick={(e) => {
+                  seeFullSizeHandler(e, ele);
+                  e.stopPropagation();
+                }}
+              >
+                <ImageReact
+                  className={`mt-2 rounded-full  w-8 h-8 scale-[1.65] aspect-square !object-cover border p-[1px] border-[${ele?.customize?.color}] `}
+                  src={`${
+                    ele?.author?.profilePic ||
+                    "https://res.cloudinary.com/dlvq8n2ca/image/upload/v1701708322/jual47jntd2lpkgx8mfx.png"
+                  }`}
+                  style={{
+                    borderColor: ele?.customize?.color,
+                  }}
+                  alt=""
+                />
+
+                <div
+                  className={`mt-1 rounded-br-2xlll pr-4 pl-8 -ml-5 relative  `}
+                  style={{
+                    borderColor: ele?.customize?.color || "",
+                  }}
+                >
+                  <p className="  capitalize ">
+                    {ele?.author?.username || "Name Kumar"}
+                  </p>
+                  <p className=" text-[0.6rem] -mt-[1.5vh]">
+                    {ele?.author?.email || "xyz100@gmail.com"}
+                  </p>
+                </div>
+              </div>
+            </div>
           )}
 
           <EditPanelForSinglePost ele={ele} />
 
           {/* Post UI */}
           <div
-            className={` sm:rounded-xl p-2 py-5 sm:p-4  border-y ${
-              !themeMode
-                ? " bg-black text-white border-slate-700 shadow-slate-700 "
-                : " bg-white text-black border-slate-300 shadow-slate-300"
-            } ${index === 0 && " border-t-0 "}`}
+            className={` sm:rounded-xl p-2 py-5 sm:p-4  border-y 
+
+              ${ele.tested === false && !ele.tested && "hidden"}
+              
+              ${
+                !themeMode
+                  ? " bg-black text-white border-slate-700 shadow-slate-700 "
+                  : " bg-white text-black border-slate-300 shadow-slate-300"
+              } ${index === 0 && " border-t-0 "}`}
             style={{
               backgroundColor: ele?.customize?.bgColor || "",
               color: ele?.customize?.color || "",
