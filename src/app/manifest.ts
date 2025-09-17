@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Apostio",
     short_name: "Apostio",
     description: "A modern social platform ",
-    start_url: "/",
+    start_url: "/home",
     display: "fullscreen",
     background_color: "#000000",
     theme_color: "#000000",
