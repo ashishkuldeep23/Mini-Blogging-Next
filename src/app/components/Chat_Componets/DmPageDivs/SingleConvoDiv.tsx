@@ -25,7 +25,7 @@ const SingleConvoDiv = ({
         convoClickHandler && convoClickHandler(convo);
       }}
     >
-      <div className=" my-1 bg-sky-950 text-white min-h-16 max-h-28 rounded w-full flex gap-1 sm:gap-3 items-center flex-wrap active:scale-90 hover:bg-sky-700 active:bg-sky-700 hover:cursor-pointer overflow-hidden ">
+      <div className=" my-1 bg-sky-950 text-white min-h-16 max-h-28 rounded w-full flex gap-1 sm:gap-3 items-center active:scale-90 hover:bg-sky-700 active:bg-sky-700 hover:cursor-pointer overflow-hidden ">
         <span className=" ml-2 relative max-w-14 min-w-14 h-14 max-h-14 min-h-14 w-14 p-[0.1rem] rounded-full overflow-hidden">
           <ImageReact
             className="  w-[99%] h-[99%] rounded-full object-cover object-center "
@@ -41,7 +41,7 @@ const SingleConvoDiv = ({
           <p className=" text-lg font-semibold capitalize leading-[0.85rem] ">
             {convo?.name}
           </p>
-          <p className=" opacity-70 text-sm ">
+          <p className="opacity-70 text-sm w-full max-h-5 overflow-hidden ">
             {convo?.lastMessage?.content
               ? `${decryptMessage(convo?.lastMessage?.content).slice(0, 40)} ${
                   decryptMessage(convo?.lastMessage?.content).length > 40
@@ -53,12 +53,12 @@ const SingleConvoDiv = ({
 
           {convo?.type === "group" ? (
             <div>
-              <p className=" opacity-70 text-[0.6rem] ">
+              <p className=" opacity-70 text-[0.5rem] max-h-5 overflow-hidden ">
                 {formatDateToDDMMYYYY(convo?.lastMessageAt)} (Last msg at)
               </p>
             </div>
           ) : (
-            <div className=" opacity-70 text-[0.45rem] ">
+            <div className=" opacity-70 text-[0.5rem] max-h-5 overflow-hidden ">
               {!isOnline &&
                 convo.participants &&
                 convo?.participants.find(
@@ -78,7 +78,9 @@ const SingleConvoDiv = ({
 
               {isOnline && (
                 <p>
-                  <span className=" text-green-200 font-semibold animate-pulse ">Active</span>
+                  <span className=" text-green-200 font-semibold animate-pulse ">
+                    Active
+                  </span>
                 </p>
               )}
             </div>

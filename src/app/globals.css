@@ -220,7 +220,7 @@ input[type="range"] {
   width: 100%;
   background: transparent;
   cursor: pointer;
-  width: 15rem;
+  /* width: 15rem; */
 }
 
 /* Removes default focus */

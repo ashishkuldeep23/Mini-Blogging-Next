@@ -86,7 +86,7 @@ const LoginPage = () => {
   // }, [isFullfilled])
 
   return (
-    <>
+    <div onContextMenu={(e) => e?.preventDefault()}>
       <MainLoader isLoading={isLoading} />
 
       <div
@@ -192,7 +192,7 @@ const LoginPage = () => {
           <Link href={"/signup"}>Create a account!</Link>
         </div> */}
       </div>
-    </>
+    </div>
   );
 };
 

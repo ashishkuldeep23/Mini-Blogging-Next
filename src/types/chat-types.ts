@@ -52,7 +52,8 @@ export interface Message {
   conversationId: string;
   sender: Chat_User | string;
   content: string;
-  messageType: "text" | "image" | "file" | "system";
+  messageType: "text" | "image" | "video" | "file" | "system";
+  fileUrl?: string;
   replyTo?: Message;
   readBy: {
     user: string;
@@ -121,7 +122,8 @@ export type TypeSendMsg = {
   conversationId: string;
   sender: string;
   content: string;
-  messageType: "text" | "image" | "file" | "system";
+  messageType: "text" | "image" | "video" | "file" | "system";
+  fileUrl?: string;
   successFn?: (id: any) => void;
   replyTo?: string;
   chatStoryId?: string;

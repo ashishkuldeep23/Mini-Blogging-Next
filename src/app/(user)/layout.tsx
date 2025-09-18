@@ -150,6 +150,7 @@ const LayoutPage = ({
 
   return (
     <div
+      onContextMenu={(e) => e?.preventDefault()}
       className={`relative flex flex-col justify-center items-center pb-6 ${
         themeMode ? " bg-white" : " bg-black"
       }`}

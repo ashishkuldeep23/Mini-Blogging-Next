@@ -19,6 +19,8 @@ import useInViewAnimate from "@/Hooks/useInViewAnimate";
 import { Comment, PostInterFace } from "@/types/Types";
 import toast from "react-hot-toast";
 import SingleChatStoryModalDiv from "./DmPageDivs/SingleChatStoryModalDiv";
+import VideoPlayer from "../VideoPlayer";
+import { ImFilePdf, ImDownload } from "react-icons/im";
 
 export type TypeSingleMsg = {
   message: Message;
@@ -306,6 +308,31 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
     clickAnimationForOptionDiv();
   };
 
+  const repliedDivOnClickHandler = (id: string) => {
+    let getMsgDiv = document.getElementById(`msg_${id}`);
+    let msgListDiv = document.querySelector("#message_list_div");
+
+    if (getMsgDiv) {
+      msgListDiv?.scrollTo(0, getMsgDiv.offsetTop - 100);
+
+      getMsgDiv.style.scale = "0.7";
+
+      setTimeout(() => {
+        getMsgDiv.style.scale = "1";
+      }, 100);
+    }
+  };
+
+  const handleDownload = (fileUrl: string) => {
+    const link = document.createElement("a");
+    link.href = fileUrl;
+    // link.download = "download";
+    link.download = "true";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   // // // we'll work letter for this --------->>
   // console.log(message?.replyFor);
 
@@ -394,7 +421,8 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
       {/* // // When you replying someone --------->>  */}
       {message?.replyTo ? (
         <div
-          className={`-mb-1 opacity-70 max-w-xs lg:max-w-xl px-2 py-1 rounded-lg flex 
+          onClick={() => repliedDivOnClickHandler(message?.replyTo?._id || "")}
+          className={`-mb-1 opacity-70 max-w-xs lg:max-w-xl px-2 py-1 rounded-lg flex flex-col 
             ${
               isCurrentUser
                 ? "justify-end ml-auto mr-6 "
@@ -408,6 +436,38 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
         >
           <div className="break-words">
             {decryptMessage(message?.replyTo?.content)}
+          </div>
+
+          {/* For files --------->> use this at input also when you replying  */}
+          <div>
+            {message?.replyTo?.messageType === "image" && (
+              <ImageReact
+                src={message?.replyTo?.fileUrl || ""}
+                className="  w-7 h-7 rounded object-cover "
+              />
+            )}
+            {message?.replyTo?.messageType === "video" && (
+              <video
+                controls
+                muted
+                className="  w-7 h-7 rounded  "
+                src={message?.replyTo?.fileUrl || ""}
+                controlsList="nodownload noremoteplayback noplaybackrate"
+              />
+            )}
+
+            {!message?.replyTo?.messageType.includes("image") &&
+              !message?.replyTo?.messageType.includes("video") && (
+                <div>
+                  <div className=" flex gap-1">
+                    {" "}
+                    <span>
+                      <ImFilePdf />
+                    </span>{" "}
+                    File
+                  </div>
+                </div>
+              )}
           </div>
         </div>
       ) : null}
@@ -452,6 +512,44 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
             onClick={msgTextDivHandler}
           >
             <div className="break-words">{decryptMessage(message.content)}</div>
+
+            {/* Now here we can give ui for file -------->> */}
+            <>
+              {message.messageType === "image" && (
+                <ImageReact
+                  className=" min-h-20 min-w-20 max-w-40 max-h-40 rounded-md object-cover "
+                  src={message?.fileUrl || ""}
+                />
+              )}
+
+              {message.messageType === "video" && (
+                <VideoPlayer videoUrl={message?.fileUrl || ""} />
+              )}
+
+              {message.messageType === "file" && (
+                <div>
+                  <div className=" flex gap-1">
+                    {" "}
+                    <span>
+                      <ImFilePdf />
+                    </span>{" "}
+                    <p>
+                      {"." +
+                        message?.fileUrl?.split("/").pop()?.split(".")?.pop()}
+                    </p>
+                    <a
+                      className=" ml-5 text-xs flex items-center gap-1"
+                      // onClick={() => handleDownload(message?.fileUrl || "")}
+                      href={message?.fileUrl || ""}
+                      download={true}
+                    >
+                      <ImDownload className=" w-4 h-4 " />
+                    </a>
+                  </div>
+                </div>
+              )}
+            </>
+
             <div
               className={`text-xs mt-1 flex items-center justify-between gap-1 flex-wrap ${
                 isCurrentUser ? "text-blue-100" : "text-gray-500"

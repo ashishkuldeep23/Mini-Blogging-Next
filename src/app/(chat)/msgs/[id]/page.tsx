@@ -35,7 +35,7 @@ const ChatUI = () => {
       // true
       convo?._id !== params?.id
     ) {
-      console.log("Check i'm running or not -------->> ");
+      // console.log("Check i'm running or not -------->> ");
 
       // // // Call to fetch convo data from server -------->>
 

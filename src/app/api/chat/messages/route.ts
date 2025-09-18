@@ -25,6 +25,7 @@ export async function POST(req: NextRequest) {
       sender,
       content,
       messageType,
+      fileUrl,
       replyTo,
       readBy,
       chatStoryId,
@@ -35,7 +36,7 @@ export async function POST(req: NextRequest) {
 
     let { conversationId } = reqBody;
 
-    // console.log(reqBody);
+    // console.log({ reqBody });
 
     const userData = await getUserDataFromServer();
 
@@ -47,9 +48,16 @@ export async function POST(req: NextRequest) {
     }
 
     // // // Server validation
-    if (!sender || !content || !messageType) {
+    if (!sender || !messageType) {
       return NextResponse.json(
         { success: false, message: "All fields are required" },
+        { status: 400 }
+      );
+    }
+
+    if (!content && !fileUrl) {
+      return NextResponse.json(
+        { success: false, message: "Content is required" },
         { status: 400 }
       );
     }
@@ -142,6 +150,7 @@ export async function POST(req: NextRequest) {
       content,
       messageType,
       replyTo,
+      fileUrl,
       readBy: [
         {
           user: userData._id,
@@ -159,7 +168,7 @@ export async function POST(req: NextRequest) {
     });
 
     await newMessage.populate("sender", " _id name username avatar");
-    await newMessage.populate("replyTo", "content sender");
+    await newMessage.populate("replyTo", "content sender messageType fleUrl ");
 
     // console.log({ newMessage });
 
@@ -319,7 +328,7 @@ export async function GET(req: NextRequest) {
       .skip(skip)
       .limit(Number(limit))
       .populate("sender", "name username avatar")
-      .populate("replyTo", "content sender")
+      .populate("replyTo", "content sender messageType fleUrl ")
       // .populate("chat_story", "text author expiresAt")
       .populate("reactions.user", " _id username email profilePic ")
       .lean();

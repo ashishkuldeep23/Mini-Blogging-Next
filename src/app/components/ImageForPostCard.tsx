@@ -14,7 +14,7 @@ const ImageForPostCard: React.FC<{
   zoomImageHandler: (e: React.MouseEvent<SVGElement, MouseEvent>) => void;
 }> = ({ height, ele, zoomImageHandler }) => {
   return (
-    <div className="relative">
+    <div onContextMenu={(e) => e?.preventDefault()} className="relative">
       <ImageReact
         className={`w-full my-2 rounded !object-top !object-cover transition-all duration-300 ${height} `}
         src={ele.metaDataUrl || ""}

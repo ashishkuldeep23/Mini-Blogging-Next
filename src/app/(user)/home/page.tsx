@@ -15,7 +15,10 @@ import { useDispatch } from "react-redux";
 
 const HomePage = () => {
   return (
-    <div className=" text-white w-[100%] relative ">
+    <div
+      onContextMenu={(e) => e?.preventDefault()}
+      className=" text-white w-[100%] relative "
+    >
       {/* Checking ads here ----->> */}
       {/*  Make Add in absoulute position in Future -------------------------->>> */}
       {/* <AdBanner /> */}

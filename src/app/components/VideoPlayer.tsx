@@ -307,6 +307,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
 
   return (
     <div
+      onContextMenu={(e) => e?.preventDefault()}
       className="relative w-full max-w-4xl mx-auto min-h-[43vh] "
       onClick={videoClickOutsideHandler}
       onDoubleClick={onDoubleClickHandler}
@@ -314,6 +315,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     >
       {!isLoading && (
         <video
+          onContextMenu={(e) => e?.preventDefault()}
           style={{
             objectFit: objectFit || "contain",
             height: newHeight || "auto",

@@ -82,7 +82,7 @@ const SignUpPage = () => {
   }, [isFullfilled]);
 
   return (
-    <>
+    <div onContextMenu={(e) => e?.preventDefault()}>
       <MainLoader isLoading={isLoading} />
 
       <div
@@ -214,7 +214,7 @@ const SignUpPage = () => {
           </div> */}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

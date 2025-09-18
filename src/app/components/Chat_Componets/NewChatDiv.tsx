@@ -329,7 +329,7 @@ const CreateNewGroupDiv = ({
                 <span className=" min-w-20 h-20 rounded-full overflow-hidden">
                   <ImageReact
                     className="
-                  min-w-20 h-20 rounded-full object-cover"
+                  min-w-20 h-20 rounded-full object-cover  "
                     src={newGroupData.avatar || ""}
                   />
                 </span>
@@ -426,7 +426,7 @@ const CreateNewGroupDiv = ({
         </div>
 
         <div className=" mt-2 flex items-center gap-4 justify-center ">
-          <p className=" text-base font-semibold">Admins can send messages</p>
+          <p className=" text-base font-semibold">Only Admin send Messages</p>
           <div className=" flex items-center gap-0.5">
             <input
               type="radio"

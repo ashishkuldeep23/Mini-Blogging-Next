@@ -66,10 +66,10 @@ const EditPanelForSinglePost: React.FC<{ ele: PostInterFace }> = ({ ele }) => {
     };
 
     document.addEventListener("click", handleClickOutSide);
-    document.addEventListener('mousedown', handleClickOutSide);
+    document.addEventListener("mousedown", handleClickOutSide);
     return () => {
       document.removeEventListener("click", handleClickOutSide);
-      document.removeEventListener('mousedown', handleClickOutSide);
+      document.removeEventListener("mousedown", handleClickOutSide);
     };
   }, []);
 

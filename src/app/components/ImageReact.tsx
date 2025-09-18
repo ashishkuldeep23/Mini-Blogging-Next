@@ -27,6 +27,7 @@ const ImageReact = ({
   return (
     <>
       <span
+        onContextMenu={(e) => e?.preventDefault()}
         className={className}
         style={{ display: isLoaded ? "none" : "inline", margin: "0.25rem" }}
       >
@@ -34,6 +35,7 @@ const ImageReact = ({
       </span>
 
       <img
+        onContextMenu={(e) => e?.preventDefault()}
         onClick={(e: any | React.MouseEvent<HTMLImageElement, MouseEvent>) => {
           onClick && onClick(e);
         }}

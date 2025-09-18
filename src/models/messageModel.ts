@@ -8,7 +8,8 @@ export interface IMessage extends Document {
   conversationId: string | undefined;
   sender: (string | { _id: string }) | undefined;
   content: string;
-  messageType: "text" | "image" | "file" | "system";
+  messageType: "text" | "image" | "video" | "file" | "system";
+  fileUrl?: string;
   replyTo?: string;
   replyToChatStory?: string;
   readBy: { user: string; readAt: Date }[];
@@ -40,8 +41,12 @@ const MessageSchema = new Schema<IMessage>(
     content: { type: String, required: true, maxlength: 5000 },
     messageType: {
       type: String,
-      enum: ["text", "image", "file", "system"],
+      enum: ["text", "image", "video", "file", "system"],
       default: "text",
+    },
+    fileUrl: {
+      type: String,
+      default: "",
     },
     replyTo: { type: Schema.Types.ObjectId, ref: "Message", default: null },
     readBy: [

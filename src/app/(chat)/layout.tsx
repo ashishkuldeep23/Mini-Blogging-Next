@@ -200,7 +200,7 @@ const LayoutPage = ({
   }, [params?.id]);
 
   return (
-    <div>
+    <div onContextMenu={(e) => e?.preventDefault()}>
       {/* <Navbar /> */}
       <ChatNavBar />
       <div className=" w-full sm:w-[80%]  mx-auto">{children}</div>

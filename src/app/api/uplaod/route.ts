@@ -47,7 +47,7 @@ export const POST = async (req: NextRequest) => {
       resource_type: "auto", // auto-detects image/video/raw
     });
 
-    console.log({ result });
+    // console.log({ result });
 
     return NextResponse.json(
       {
