@@ -2,7 +2,7 @@
 
 import useOpenModalWithHTML from "@/Hooks/useOpenModalWithHtml";
 import { useChatData } from "@/redux/slices/ChatSlice";
-import { IChatStory, Message } from "@/types/chat-types";
+import { Chat_User, IChatStory, Message } from "@/types/chat-types";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 import { useSwipeable } from "react-swipeable";
@@ -21,6 +21,8 @@ import toast from "react-hot-toast";
 import SingleChatStoryModalDiv from "./DmPageDivs/SingleChatStoryModalDiv";
 import VideoPlayer from "../VideoPlayer";
 import { ImFilePdf, ImDownload } from "react-icons/im";
+import { MdZoomOutMap } from "react-icons/md";
+import isSingleEmoji from "@/helper/singleEmojiChecker";
 
 export type TypeSingleMsg = {
   message: Message;
@@ -29,11 +31,13 @@ export type TypeSingleMsg = {
   onDel?: (m: Message) => void;
   onEdit?: (m: Message) => void;
   onReact?: (m: Message, reaction: string, delReaction?: boolean) => void;
+  lastMsgUser?: string | Chat_User;
 };
 
 const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
   message,
   currentUserId,
+  lastMsgUser,
   onReply,
   onEdit,
   onDel,
@@ -359,9 +363,16 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
   return (
     <div
       id={`msg_${message?._id}`}
-      className={`my-2 flex flex-col ${
+      className={`my-2  flex flex-col ${
         (message?.isEdited || message?.reactions.length > 0) && " mb-3 "
-      } no_select `}
+      }
+
+      ${
+        typeof lastMsgUser === "string"
+          ? lastMsgUser === senderId && " !my-0 "
+          : lastMsgUser?._id === senderId && " !my-0"
+      }
+      no_select `}
     >
       {/* here we'll use to show reply for */}
       <div
@@ -504,20 +515,38 @@ const SingleMsgDiv: React.FC<TypeSingleMsg> = ({
           {/* Main Msg Div */}
           {/* I'm the main handler ---------->> */}
           <div
-            className={`relative !max-w-[17rem] lg:max-w-xl px-4 py-2 rounded-lg ${
-              isCurrentUser
-                ? "bg-sky-600 text-white"
-                : "bg-black border border-sky-500 rounded-bl-none "
-            }`}
+            className={`relative !max-w-[17rem] lg:max-w-xl px-4 py-2 rounded-lg
+               ${
+                 isCurrentUser
+                   ? "bg-sky-600 text-white"
+                   : "bg-black border border-sky-500 rounded-bl-none "
+               }
+                ${
+                  isSingleEmoji(decryptMessage(message.content))
+                    ? " !bg-transparent !border-none "
+                    : ""
+                }
+            `}
             onClick={msgTextDivHandler}
           >
-            <div className="break-words">{decryptMessage(message.content)}</div>
+            <div
+              className={`break-words
+              
+                ${
+                  isSingleEmoji(decryptMessage(message.content))
+                    ? " text-5xl -ml-3 "
+                    : ""
+                }
+              `}
+            >
+              {decryptMessage(message.content)}
+            </div>
 
             {/* Now here we can give ui for file -------->> */}
             <>
               {message.messageType === "image" && (
                 <ImageReact
-                  className=" min-h-20 min-w-20 max-w-40 max-h-40 rounded-md object-cover "
+                  className=" min-h-20 min-w-20 max-h-[45vh] rounded-md object-cover  "
                   src={message?.fileUrl || ""}
                 />
               )}

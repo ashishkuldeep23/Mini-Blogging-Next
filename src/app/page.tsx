@@ -11,16 +11,13 @@ import {
 import { AppDispatch } from "@/redux/store";
 import MaskerText from "./components/MaskerText";
 import { useRouter } from "next/navigation";
-import Navbar from "./components/Navbar";
-import MainLoader from "./components/LoaderUi";
-import { pusherClient } from "@/lib/pusherClient";
 import LandingPage from "./components/LandingPage";
 
 export default function Home() {
-  const router = useRouter();
+  // const router = useRouter();
   const themeMode = useThemeData().mode;
   const allPostData = usePostData().allPost;
-  const isLoading = usePostData().isLoading;
+  // const isLoading = usePostData().isLoading;
   const dispatch = useDispatch<AppDispatch>();
 
   function fetchAllPostData() {

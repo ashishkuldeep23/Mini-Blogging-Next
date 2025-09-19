@@ -4,6 +4,7 @@ import { decryptMessage, encryptMessage } from "@/lib/Crypto-JS";
 import { sendMsgViaPusher } from "@/lib/sendMsgViaPusher";
 import {
   sendMsgPostCall,
+  setDraftMsg,
   updateMsgPutReq,
   useChatData,
 } from "@/redux/slices/ChatSlice";
@@ -38,11 +39,15 @@ const MessageInput: React.FC<MessageInputProps> = ({
   const { data: session } = useSession();
   const userId = session?.user?._id;
   const userData = session?.user;
+  const isLoading = useChatData().isLoading;
   const convoId = useChatData().currentConvo?._id;
   const currentConvo = useChatData().currentConvo;
+  const draftMsg = useChatData().currentConvo?.draftMsg;
   const dispatch = useDispatch<AppDispatch>();
   const [showSendFileOption, setShowSendFileOption] = useState(false);
   const [sendingFile, setSendingFile] = useState<File | null>(null);
+
+  const setDraftMsgFn = (message: string) => dispatch(setDraftMsg(message));
 
   // // // New msgs and new msgs with reply is handled by this handler fn -------------->>
   const handleSubmit = async () => {
@@ -137,6 +142,14 @@ const MessageInput: React.FC<MessageInputProps> = ({
   const handleChangeFn = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     // console.log("message", message);
     setMessage(e.target.value);
+    setDraftMsgFn(e.target.value);
+    sendTyping(true);
+  };
+
+  const reactHandler = (emoji: string) => {
+    inputRef.current?.focus();
+    setMessage(message + emoji);
+    setDraftMsgFn(message + emoji);
     sendTyping(true);
   };
 
@@ -263,7 +276,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
         setTimeout(() => {
           setSendingFile(null);
           setShowSendFileOption(false);
-        }, 100);
+        }, 200);
       }
     };
     document.addEventListener("click", handleClickOutside);
@@ -274,8 +287,15 @@ const MessageInput: React.FC<MessageInputProps> = ({
     };
   }, [showSendFileOption]);
 
+  // // // Set msg by draftMsg ---------->>
+  useEffect(() => {
+    if (draftMsg) {
+      setMessage(draftMsg);
+    }
+  }, []);
+
   return (
-    <div className="border-t border-sky-600 pt-2 w-full sticky bottom-0 ">
+    <div className="border-t border-sky-600 w-full sticky bottom-0 ">
       {currentConvo?.adminOnly &&
       !currentConvo?.admins
         .map((admin) => admin?._id)
@@ -352,6 +372,45 @@ const MessageInput: React.FC<MessageInputProps> = ({
             >
               X
             </button>
+          </div>
+
+          {/* Emoji Div */}
+          <div
+            className={` overflow-hidden transition-all duration-500 px-3 ${
+              !showSendFileOption
+                ? " top-0  relative "
+                : " top-[100%] h-0 absolute "
+            } `}
+          >
+            <div className=" h-8 w-full rounded overflow-x-auto overflow-y-hidden flex scrooller_bar_hidden ">
+              {[
+                "😂",
+                "🤣",
+                "😍",
+                "👍",
+                "👏",
+                "🙏",
+                "😊",
+                "😃",
+                "😄",
+                "😆",
+                "😔",
+                "😖",
+                "😡",
+                "😠",
+                "👎",
+                "👏",
+                "👀",
+              ].map((emoji, i) => (
+                <span
+                  key={i}
+                  onClick={() => reactHandler(emoji)}
+                  className=" cursor-pointer text-xl mx-1  active:scale-90 hover:scale-110 transition-all duration-200 "
+                >
+                  {emoji}
+                </span>
+              ))}
+            </div>
           </div>
 
           {/* When user select file for sending ------>> */}
@@ -510,7 +569,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
             </div>
             <button
               onClick={submitBtnClickHandler}
-              disabled={!message.trim() && !sendingFile}
+              disabled={(!message.trim() && !sendingFile) || isLoading}
               className="bg-sky-600 hover:bg-blue-600 disabled:bg-sky-300 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg transition-colors duration-200 flex items-center justify-center"
             >
               <Send className="w-5 h-5" />

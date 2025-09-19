@@ -37,7 +37,7 @@ const SingleConvoDiv = ({
           )}
         </span>
 
-        <div className=" flex flex-col justify-center mt-1.5 ">
+        <div className=" flex flex-col justify-center gap-0.5 mt-1.5 ">
           <p className=" text-lg font-semibold capitalize leading-[0.85rem] ">
             {convo?.name}
           </p>

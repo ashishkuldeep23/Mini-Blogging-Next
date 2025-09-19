@@ -24,9 +24,8 @@ const LoginPage = () => {
 
   const [passType, setPassType] = useState(false);
 
-  const isFullfilled = useUserState().isFullfilled;
-
-  const router = useRouter();
+  // const isFullfilled = useUserState().isFullfilled;
+  // const router = useRouter();
 
   const userBackeData = useUserState().userData;
 

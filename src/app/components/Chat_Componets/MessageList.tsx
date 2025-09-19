@@ -220,7 +220,7 @@ const MessageList: React.FC<MessageListProps> = ({
         )}
       </div>
 
-      {messages.map((message) => (
+      {messages.map((message, i) => (
         <SingleMsgDiv
           key={message._id}
           message={message}
@@ -250,6 +250,7 @@ const MessageList: React.FC<MessageListProps> = ({
           onDel={(message) => {
             actualDeleteMsghandlerFn(message);
           }}
+          lastMsgUser={messages[i - 1]?.sender}
         />
       ))}
 

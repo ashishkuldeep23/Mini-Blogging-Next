@@ -354,6 +354,12 @@ const chatSlice = createSlice({
 
       // console.log(state.allConversations);
     },
+
+    setDraftMsg(state, action: PayloadAction<string>) {
+      if (state.currentConvo) {
+        state.currentConvo.draftMsg = action.payload;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -520,7 +526,6 @@ const chatSlice = createSlice({
         state.isLoadingMsg = true;
       })
       .addCase(sendMsgPostCall.fulfilled, (state, action) => {
-
         // console.log(action);
 
         if (action.payload.success === false) {
@@ -823,6 +828,7 @@ export const {
   setTypingUsersArr,
   setOnlineUsers,
   updateConvoList,
+  setDraftMsg,
   // setOnlineFriends,
 } = chatSlice.actions;
 

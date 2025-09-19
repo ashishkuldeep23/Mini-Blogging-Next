@@ -45,6 +45,7 @@ export interface Conversation {
   theme?: ThemeConvo;
   directUserId?: string;
   description?: string;
+  draftMsg?: string;
 }
 
 export interface Message {
